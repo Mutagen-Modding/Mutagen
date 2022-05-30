@@ -143,6 +143,12 @@ namespace Mutagen.Bethesda.Fallout4
             _DefaultObjectManagers_Object = new Fallout4Group<DefaultObjectManager>(this);
             _DefaultObjects_Object = new Fallout4Group<DefaultObject>(this);
             _LightingTemplates_Object = new Fallout4Group<LightingTemplate>(this);
+            _MusicTypes_Object = new Fallout4Group<MusicType>(this);
+            _Footsteps_Object = new Fallout4Group<Footstep>(this);
+            _FootstepSets_Object = new Fallout4Group<FootstepSet>(this);
+            _StoryManagerBranchNodes_Object = new Fallout4Group<StoryManagerBranchNode>(this);
+            _StoryManagerQuestNodes_Object = new Fallout4Group<StoryManagerQuestNode>(this);
+            _StoryManagerEventNodes_Object = new Fallout4Group<StoryManagerEventNode>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -757,6 +763,48 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ILightingTemplateGetter> IFallout4ModGetter.LightingTemplates => _LightingTemplates_Object;
         #endregion
+        #region MusicTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<MusicType> _MusicTypes_Object;
+        public Fallout4Group<MusicType> MusicTypes => _MusicTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IMusicTypeGetter> IFallout4ModGetter.MusicTypes => _MusicTypes_Object;
+        #endregion
+        #region Footsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Footstep> _Footsteps_Object;
+        public Fallout4Group<Footstep> Footsteps => _Footsteps_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IFootstepGetter> IFallout4ModGetter.Footsteps => _Footsteps_Object;
+        #endregion
+        #region FootstepSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<FootstepSet> _FootstepSets_Object;
+        public Fallout4Group<FootstepSet> FootstepSets => _FootstepSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IFootstepSetGetter> IFallout4ModGetter.FootstepSets => _FootstepSets_Object;
+        #endregion
+        #region StoryManagerBranchNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<StoryManagerBranchNode> _StoryManagerBranchNodes_Object;
+        public Fallout4Group<StoryManagerBranchNode> StoryManagerBranchNodes => _StoryManagerBranchNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IStoryManagerBranchNodeGetter> IFallout4ModGetter.StoryManagerBranchNodes => _StoryManagerBranchNodes_Object;
+        #endregion
+        #region StoryManagerQuestNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<StoryManagerQuestNode> _StoryManagerQuestNodes_Object;
+        public Fallout4Group<StoryManagerQuestNode> StoryManagerQuestNodes => _StoryManagerQuestNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IStoryManagerQuestNodeGetter> IFallout4ModGetter.StoryManagerQuestNodes => _StoryManagerQuestNodes_Object;
+        #endregion
+        #region StoryManagerEventNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<StoryManagerEventNode> _StoryManagerEventNodes_Object;
+        public Fallout4Group<StoryManagerEventNode> StoryManagerEventNodes => _StoryManagerEventNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IStoryManagerEventNodeGetter> IFallout4ModGetter.StoryManagerEventNodes => _StoryManagerEventNodes_Object;
+        #endregion
 
         #region To String
 
@@ -883,6 +931,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultObjectManagers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.LightingTemplates = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.MusicTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Footsteps = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.FootstepSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.StoryManagerBranchNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.StoryManagerQuestNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.StoryManagerEventNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -972,7 +1026,13 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Messages,
                 TItem DefaultObjectManagers,
                 TItem DefaultObjects,
-                TItem LightingTemplates)
+                TItem LightingTemplates,
+                TItem MusicTypes,
+                TItem Footsteps,
+                TItem FootstepSets,
+                TItem StoryManagerBranchNodes,
+                TItem StoryManagerQuestNodes,
+                TItem StoryManagerEventNodes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1061,6 +1121,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultObjectManagers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(DefaultObjectManagers, new Fallout4Group.Mask<TItem>(DefaultObjectManagers));
                 this.DefaultObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(DefaultObjects, new Fallout4Group.Mask<TItem>(DefaultObjects));
                 this.LightingTemplates = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LightingTemplates, new Fallout4Group.Mask<TItem>(LightingTemplates));
+                this.MusicTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MusicTypes, new Fallout4Group.Mask<TItem>(MusicTypes));
+                this.Footsteps = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Footsteps, new Fallout4Group.Mask<TItem>(Footsteps));
+                this.FootstepSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(FootstepSets, new Fallout4Group.Mask<TItem>(FootstepSets));
+                this.StoryManagerBranchNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(StoryManagerBranchNodes, new Fallout4Group.Mask<TItem>(StoryManagerBranchNodes));
+                this.StoryManagerQuestNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(StoryManagerQuestNodes, new Fallout4Group.Mask<TItem>(StoryManagerQuestNodes));
+                this.StoryManagerEventNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(StoryManagerEventNodes, new Fallout4Group.Mask<TItem>(StoryManagerEventNodes));
             }
 
             #pragma warning disable CS8618
@@ -1159,6 +1225,12 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? DefaultObjectManagers { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? DefaultObjects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LightingTemplates { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MusicTypes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Footsteps { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? FootstepSets { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? StoryManagerBranchNodes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? StoryManagerQuestNodes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? StoryManagerEventNodes { get; set; }
             #endregion
 
             #region Equals
@@ -1258,6 +1330,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
                 if (!object.Equals(this.LightingTemplates, rhs.LightingTemplates)) return false;
+                if (!object.Equals(this.MusicTypes, rhs.MusicTypes)) return false;
+                if (!object.Equals(this.Footsteps, rhs.Footsteps)) return false;
+                if (!object.Equals(this.FootstepSets, rhs.FootstepSets)) return false;
+                if (!object.Equals(this.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes)) return false;
+                if (!object.Equals(this.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
+                if (!object.Equals(this.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1350,6 +1428,12 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DefaultObjectManagers);
                 hash.Add(this.DefaultObjects);
                 hash.Add(this.LightingTemplates);
+                hash.Add(this.MusicTypes);
+                hash.Add(this.Footsteps);
+                hash.Add(this.FootstepSets);
+                hash.Add(this.StoryManagerBranchNodes);
+                hash.Add(this.StoryManagerQuestNodes);
+                hash.Add(this.StoryManagerEventNodes);
                 return hash.ToHashCode();
             }
 
@@ -1793,6 +1877,36 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.LightingTemplates.Overall)) return false;
                     if (this.LightingTemplates.Specific != null && !this.LightingTemplates.Specific.All(eval)) return false;
                 }
+                if (MusicTypes != null)
+                {
+                    if (!eval(this.MusicTypes.Overall)) return false;
+                    if (this.MusicTypes.Specific != null && !this.MusicTypes.Specific.All(eval)) return false;
+                }
+                if (Footsteps != null)
+                {
+                    if (!eval(this.Footsteps.Overall)) return false;
+                    if (this.Footsteps.Specific != null && !this.Footsteps.Specific.All(eval)) return false;
+                }
+                if (FootstepSets != null)
+                {
+                    if (!eval(this.FootstepSets.Overall)) return false;
+                    if (this.FootstepSets.Specific != null && !this.FootstepSets.Specific.All(eval)) return false;
+                }
+                if (StoryManagerBranchNodes != null)
+                {
+                    if (!eval(this.StoryManagerBranchNodes.Overall)) return false;
+                    if (this.StoryManagerBranchNodes.Specific != null && !this.StoryManagerBranchNodes.Specific.All(eval)) return false;
+                }
+                if (StoryManagerQuestNodes != null)
+                {
+                    if (!eval(this.StoryManagerQuestNodes.Overall)) return false;
+                    if (this.StoryManagerQuestNodes.Specific != null && !this.StoryManagerQuestNodes.Specific.All(eval)) return false;
+                }
+                if (StoryManagerEventNodes != null)
+                {
+                    if (!eval(this.StoryManagerEventNodes.Overall)) return false;
+                    if (this.StoryManagerEventNodes.Specific != null && !this.StoryManagerEventNodes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2235,6 +2349,36 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.LightingTemplates.Overall)) return true;
                     if (this.LightingTemplates.Specific != null && this.LightingTemplates.Specific.Any(eval)) return true;
                 }
+                if (MusicTypes != null)
+                {
+                    if (eval(this.MusicTypes.Overall)) return true;
+                    if (this.MusicTypes.Specific != null && this.MusicTypes.Specific.Any(eval)) return true;
+                }
+                if (Footsteps != null)
+                {
+                    if (eval(this.Footsteps.Overall)) return true;
+                    if (this.Footsteps.Specific != null && this.Footsteps.Specific.Any(eval)) return true;
+                }
+                if (FootstepSets != null)
+                {
+                    if (eval(this.FootstepSets.Overall)) return true;
+                    if (this.FootstepSets.Specific != null && this.FootstepSets.Specific.Any(eval)) return true;
+                }
+                if (StoryManagerBranchNodes != null)
+                {
+                    if (eval(this.StoryManagerBranchNodes.Overall)) return true;
+                    if (this.StoryManagerBranchNodes.Specific != null && this.StoryManagerBranchNodes.Specific.Any(eval)) return true;
+                }
+                if (StoryManagerQuestNodes != null)
+                {
+                    if (eval(this.StoryManagerQuestNodes.Overall)) return true;
+                    if (this.StoryManagerQuestNodes.Specific != null && this.StoryManagerQuestNodes.Specific.Any(eval)) return true;
+                }
+                if (StoryManagerEventNodes != null)
+                {
+                    if (eval(this.StoryManagerEventNodes.Overall)) return true;
+                    if (this.StoryManagerEventNodes.Specific != null && this.StoryManagerEventNodes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2336,6 +2480,12 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.DefaultObjectManagers = this.DefaultObjectManagers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.DefaultObjectManagers.Overall), this.DefaultObjectManagers.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
                 obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
+                obj.MusicTypes = this.MusicTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MusicTypes.Overall), this.MusicTypes.Specific?.Translate(eval));
+                obj.Footsteps = this.Footsteps == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Footsteps.Overall), this.Footsteps.Specific?.Translate(eval));
+                obj.FootstepSets = this.FootstepSets == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.FootstepSets.Overall), this.FootstepSets.Specific?.Translate(eval));
+                obj.StoryManagerBranchNodes = this.StoryManagerBranchNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.StoryManagerBranchNodes.Overall), this.StoryManagerBranchNodes.Specific?.Translate(eval));
+                obj.StoryManagerQuestNodes = this.StoryManagerQuestNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.StoryManagerQuestNodes.Overall), this.StoryManagerQuestNodes.Specific?.Translate(eval));
+                obj.StoryManagerEventNodes = this.StoryManagerEventNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.StoryManagerEventNodes.Overall), this.StoryManagerEventNodes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2702,6 +2852,30 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         LightingTemplates?.Print(sb);
                     }
+                    if (printMask?.MusicTypes?.Overall ?? true)
+                    {
+                        MusicTypes?.Print(sb);
+                    }
+                    if (printMask?.Footsteps?.Overall ?? true)
+                    {
+                        Footsteps?.Print(sb);
+                    }
+                    if (printMask?.FootstepSets?.Overall ?? true)
+                    {
+                        FootstepSets?.Print(sb);
+                    }
+                    if (printMask?.StoryManagerBranchNodes?.Overall ?? true)
+                    {
+                        StoryManagerBranchNodes?.Print(sb);
+                    }
+                    if (printMask?.StoryManagerQuestNodes?.Overall ?? true)
+                    {
+                        StoryManagerQuestNodes?.Print(sb);
+                    }
+                    if (printMask?.StoryManagerEventNodes?.Overall ?? true)
+                    {
+                        StoryManagerEventNodes?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2813,6 +2987,12 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<DefaultObjectManager.ErrorMask>?>? DefaultObjectManagers;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<MusicType.ErrorMask>?>? MusicTypes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Footstep.ErrorMask>?>? Footsteps;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<FootstepSet.ErrorMask>?>? FootstepSets;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>? StoryManagerBranchNodes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>? StoryManagerQuestNodes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>? StoryManagerEventNodes;
             #endregion
 
             #region IErrorMask
@@ -2995,6 +3175,18 @@ namespace Mutagen.Bethesda.Fallout4
                         return DefaultObjects;
                     case Fallout4Mod_FieldIndex.LightingTemplates:
                         return LightingTemplates;
+                    case Fallout4Mod_FieldIndex.MusicTypes:
+                        return MusicTypes;
+                    case Fallout4Mod_FieldIndex.Footsteps:
+                        return Footsteps;
+                    case Fallout4Mod_FieldIndex.FootstepSets:
+                        return FootstepSets;
+                    case Fallout4Mod_FieldIndex.StoryManagerBranchNodes:
+                        return StoryManagerBranchNodes;
+                    case Fallout4Mod_FieldIndex.StoryManagerQuestNodes:
+                        return StoryManagerQuestNodes;
+                    case Fallout4Mod_FieldIndex.StoryManagerEventNodes:
+                        return StoryManagerEventNodes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3265,6 +3457,24 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.LightingTemplates:
                         this.LightingTemplates = new MaskItem<Exception?, Fallout4Group.ErrorMask<LightingTemplate.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.MusicTypes:
+                        this.MusicTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<MusicType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Footsteps:
+                        this.Footsteps = new MaskItem<Exception?, Fallout4Group.ErrorMask<Footstep.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.FootstepSets:
+                        this.FootstepSets = new MaskItem<Exception?, Fallout4Group.ErrorMask<FootstepSet.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.StoryManagerBranchNodes:
+                        this.StoryManagerBranchNodes = new MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.StoryManagerQuestNodes:
+                        this.StoryManagerQuestNodes = new MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.StoryManagerEventNodes:
+                        this.StoryManagerEventNodes = new MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3537,6 +3747,24 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.LightingTemplates:
                         this.LightingTemplates = (MaskItem<Exception?, Fallout4Group.ErrorMask<LightingTemplate.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.MusicTypes:
+                        this.MusicTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<MusicType.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Footsteps:
+                        this.Footsteps = (MaskItem<Exception?, Fallout4Group.ErrorMask<Footstep.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.FootstepSets:
+                        this.FootstepSets = (MaskItem<Exception?, Fallout4Group.ErrorMask<FootstepSet.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.StoryManagerBranchNodes:
+                        this.StoryManagerBranchNodes = (MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.StoryManagerQuestNodes:
+                        this.StoryManagerQuestNodes = (MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.StoryManagerEventNodes:
+                        this.StoryManagerEventNodes = (MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3632,6 +3860,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DefaultObjectManagers != null) return true;
                 if (DefaultObjects != null) return true;
                 if (LightingTemplates != null) return true;
+                if (MusicTypes != null) return true;
+                if (Footsteps != null) return true;
+                if (FootstepSets != null) return true;
+                if (StoryManagerBranchNodes != null) return true;
+                if (StoryManagerQuestNodes != null) return true;
+                if (StoryManagerEventNodes != null) return true;
                 return false;
             }
             #endregion
@@ -3744,6 +3978,12 @@ namespace Mutagen.Bethesda.Fallout4
                 DefaultObjectManagers?.Print(sb);
                 DefaultObjects?.Print(sb);
                 LightingTemplates?.Print(sb);
+                MusicTypes?.Print(sb);
+                Footsteps?.Print(sb);
+                FootstepSets?.Print(sb);
+                StoryManagerBranchNodes?.Print(sb);
+                StoryManagerQuestNodes?.Print(sb);
+                StoryManagerEventNodes?.Print(sb);
             }
             #endregion
 
@@ -3839,6 +4079,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DefaultObjectManagers = this.DefaultObjectManagers.Combine(rhs.DefaultObjectManagers, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
                 ret.LightingTemplates = this.LightingTemplates.Combine(rhs.LightingTemplates, (l, r) => l.Combine(r));
+                ret.MusicTypes = this.MusicTypes.Combine(rhs.MusicTypes, (l, r) => l.Combine(r));
+                ret.Footsteps = this.Footsteps.Combine(rhs.Footsteps, (l, r) => l.Combine(r));
+                ret.FootstepSets = this.FootstepSets.Combine(rhs.FootstepSets, (l, r) => l.Combine(r));
+                ret.StoryManagerBranchNodes = this.StoryManagerBranchNodes.Combine(rhs.StoryManagerBranchNodes, (l, r) => l.Combine(r));
+                ret.StoryManagerQuestNodes = this.StoryManagerQuestNodes.Combine(rhs.StoryManagerQuestNodes, (l, r) => l.Combine(r));
+                ret.StoryManagerEventNodes = this.StoryManagerEventNodes.Combine(rhs.StoryManagerEventNodes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3949,6 +4195,12 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<DefaultObjectManager.TranslationMask>? DefaultObjectManagers;
             public Fallout4Group.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
             public Fallout4Group.TranslationMask<LightingTemplate.TranslationMask>? LightingTemplates;
+            public Fallout4Group.TranslationMask<MusicType.TranslationMask>? MusicTypes;
+            public Fallout4Group.TranslationMask<Footstep.TranslationMask>? Footsteps;
+            public Fallout4Group.TranslationMask<FootstepSet.TranslationMask>? FootstepSets;
+            public Fallout4Group.TranslationMask<StoryManagerBranchNode.TranslationMask>? StoryManagerBranchNodes;
+            public Fallout4Group.TranslationMask<StoryManagerQuestNode.TranslationMask>? StoryManagerQuestNodes;
+            public Fallout4Group.TranslationMask<StoryManagerEventNode.TranslationMask>? StoryManagerEventNodes;
             #endregion
 
             #region Ctors
@@ -4060,6 +4312,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DefaultObjectManagers != null ? DefaultObjectManagers.OnOverall : DefaultOn, DefaultObjectManagers?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
                 ret.Add((LightingTemplates != null ? LightingTemplates.OnOverall : DefaultOn, LightingTemplates?.GetCrystal()));
+                ret.Add((MusicTypes != null ? MusicTypes.OnOverall : DefaultOn, MusicTypes?.GetCrystal()));
+                ret.Add((Footsteps != null ? Footsteps.OnOverall : DefaultOn, Footsteps?.GetCrystal()));
+                ret.Add((FootstepSets != null ? FootstepSets.OnOverall : DefaultOn, FootstepSets?.GetCrystal()));
+                ret.Add((StoryManagerBranchNodes != null ? StoryManagerBranchNodes.OnOverall : DefaultOn, StoryManagerBranchNodes?.GetCrystal()));
+                ret.Add((StoryManagerQuestNodes != null ? StoryManagerQuestNodes.OnOverall : DefaultOn, StoryManagerQuestNodes?.GetCrystal()));
+                ret.Add((StoryManagerEventNodes != null ? StoryManagerEventNodes.OnOverall : DefaultOn, StoryManagerEventNodes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4186,6 +4444,12 @@ namespace Mutagen.Bethesda.Fallout4
             _DefaultObjectManagers_Object = new Fallout4Group<DefaultObjectManager>(this);
             _DefaultObjects_Object = new Fallout4Group<DefaultObject>(this);
             _LightingTemplates_Object = new Fallout4Group<LightingTemplate>(this);
+            _MusicTypes_Object = new Fallout4Group<MusicType>(this);
+            _Footsteps_Object = new Fallout4Group<Footstep>(this);
+            _FootstepSets_Object = new Fallout4Group<FootstepSet>(this);
+            _StoryManagerBranchNodes_Object = new Fallout4Group<StoryManagerBranchNode>(this);
+            _StoryManagerQuestNodes_Object = new Fallout4Group<StoryManagerQuestNode>(this);
+            _StoryManagerEventNodes_Object = new Fallout4Group<StoryManagerEventNode>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4539,6 +4803,30 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.LightingTemplates.RecordCache.Set(rhsMod.LightingTemplates.RecordCache.Items);
             }
+            if (mask?.MusicTypes ?? true)
+            {
+                this.MusicTypes.RecordCache.Set(rhsMod.MusicTypes.RecordCache.Items);
+            }
+            if (mask?.Footsteps ?? true)
+            {
+                this.Footsteps.RecordCache.Set(rhsMod.Footsteps.RecordCache.Items);
+            }
+            if (mask?.FootstepSets ?? true)
+            {
+                this.FootstepSets.RecordCache.Set(rhsMod.FootstepSets.RecordCache.Items);
+            }
+            if (mask?.StoryManagerBranchNodes ?? true)
+            {
+                this.StoryManagerBranchNodes.RecordCache.Set(rhsMod.StoryManagerBranchNodes.RecordCache.Items);
+            }
+            if (mask?.StoryManagerQuestNodes ?? true)
+            {
+                this.StoryManagerQuestNodes.RecordCache.Set(rhsMod.StoryManagerQuestNodes.RecordCache.Items);
+            }
+            if (mask?.StoryManagerEventNodes ?? true)
+            {
+                this.StoryManagerEventNodes.RecordCache.Set(rhsMod.StoryManagerEventNodes.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -4635,6 +4923,12 @@ namespace Mutagen.Bethesda.Fallout4
             count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Footsteps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += FootstepSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4972,6 +5266,12 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<DefaultObjectManager> DefaultObjectManagers { get; }
         new Fallout4Group<DefaultObject> DefaultObjects { get; }
         new Fallout4Group<LightingTemplate> LightingTemplates { get; }
+        new Fallout4Group<MusicType> MusicTypes { get; }
+        new Fallout4Group<Footstep> Footsteps { get; }
+        new Fallout4Group<FootstepSet> FootstepSets { get; }
+        new Fallout4Group<StoryManagerBranchNode> StoryManagerBranchNodes { get; }
+        new Fallout4Group<StoryManagerQuestNode> StoryManagerQuestNodes { get; }
+        new Fallout4Group<StoryManagerEventNode> StoryManagerEventNodes { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -5077,6 +5377,12 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers { get; }
         IFallout4GroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
         IFallout4GroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
+        IFallout4GroupGetter<IMusicTypeGetter> MusicTypes { get; }
+        IFallout4GroupGetter<IFootstepGetter> Footsteps { get; }
+        IFallout4GroupGetter<IFootstepSetGetter> FootstepSets { get; }
+        IFallout4GroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes { get; }
+        IFallout4GroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes { get; }
+        IFallout4GroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes { get; }
 
     }
 
@@ -5734,6 +6040,12 @@ namespace Mutagen.Bethesda.Fallout4
         DefaultObjectManagers = 84,
         DefaultObjects = 85,
         LightingTemplates = 86,
+        MusicTypes = 87,
+        Footsteps = 88,
+        FootstepSets = 89,
+        StoryManagerBranchNodes = 90,
+        StoryManagerQuestNodes = 91,
+        StoryManagerEventNodes = 92,
     }
     #endregion
 
@@ -5751,9 +6063,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 87;
+        public const ushort AdditionalFieldCount = 93;
 
-        public const ushort FieldCount = 87;
+        public const ushort FieldCount = 93;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -5907,6 +6219,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.DefaultObjectManagers.Clear();
             item.DefaultObjects.Clear();
             item.LightingTemplates.Clear();
+            item.MusicTypes.Clear();
+            item.Footsteps.Clear();
+            item.FootstepSets.Clear();
+            item.StoryManagerBranchNodes.Clear();
+            item.StoryManagerQuestNodes.Clear();
+            item.StoryManagerEventNodes.Clear();
         }
         
         #region Mutagen
@@ -5987,6 +6305,12 @@ namespace Mutagen.Bethesda.Fallout4
             obj.DefaultObjectManagers.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
             obj.LightingTemplates.RemapLinks(mapping);
+            obj.MusicTypes.RemapLinks(mapping);
+            obj.Footsteps.RemapLinks(mapping);
+            obj.FootstepSets.RemapLinks(mapping);
+            obj.StoryManagerBranchNodes.RemapLinks(mapping);
+            obj.StoryManagerQuestNodes.RemapLinks(mapping);
+            obj.StoryManagerEventNodes.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -6107,6 +6431,12 @@ namespace Mutagen.Bethesda.Fallout4
             obj.DefaultObjectManagers.Remove(keys);
             obj.DefaultObjects.Remove(keys);
             obj.LightingTemplates.Remove(keys);
+            obj.MusicTypes.Remove(keys);
+            obj.Footsteps.Remove(keys);
+            obj.FootstepSets.Remove(keys);
+            obj.StoryManagerBranchNodes.Remove(keys);
+            obj.StoryManagerQuestNodes.Remove(keys);
+            obj.StoryManagerEventNodes.Remove(keys);
         }
         
         public void Remove(
@@ -6850,6 +7180,54 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    obj.MusicTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Footstep":
+                case "IFootstepGetter":
+                case "IFootstep":
+                case "IFootstepInternal":
+                    obj.Footsteps.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "FootstepSet":
+                case "IFootstepSetGetter":
+                case "IFootstepSet":
+                case "IFootstepSetInternal":
+                    obj.FootstepSets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "StoryManagerBranchNode":
+                case "IStoryManagerBranchNodeGetter":
+                case "IStoryManagerBranchNode":
+                case "IStoryManagerBranchNodeInternal":
+                    obj.StoryManagerBranchNodes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "StoryManagerQuestNode":
+                case "IStoryManagerQuestNodeGetter":
+                case "IStoryManagerQuestNode":
+                case "IStoryManagerQuestNodeInternal":
+                    obj.StoryManagerQuestNodes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "StoryManagerEventNode":
+                case "IStoryManagerEventNodeGetter":
+                case "IStoryManagerEventNode":
+                case "IStoryManagerEventNodeInternal":
+                    obj.StoryManagerEventNodes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -7425,6 +7803,12 @@ namespace Mutagen.Bethesda.Fallout4
             ret.DefaultObjectManagers = MaskItemExt.Factory(item.DefaultObjectManagers.GetEqualsMask(rhs.DefaultObjectManagers, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
             ret.LightingTemplates = MaskItemExt.Factory(item.LightingTemplates.GetEqualsMask(rhs.LightingTemplates, include), include);
+            ret.MusicTypes = MaskItemExt.Factory(item.MusicTypes.GetEqualsMask(rhs.MusicTypes, include), include);
+            ret.Footsteps = MaskItemExt.Factory(item.Footsteps.GetEqualsMask(rhs.Footsteps, include), include);
+            ret.FootstepSets = MaskItemExt.Factory(item.FootstepSets.GetEqualsMask(rhs.FootstepSets, include), include);
+            ret.StoryManagerBranchNodes = MaskItemExt.Factory(item.StoryManagerBranchNodes.GetEqualsMask(rhs.StoryManagerBranchNodes, include), include);
+            ret.StoryManagerQuestNodes = MaskItemExt.Factory(item.StoryManagerQuestNodes.GetEqualsMask(rhs.StoryManagerQuestNodes, include), include);
+            ret.StoryManagerEventNodes = MaskItemExt.Factory(item.StoryManagerEventNodes.GetEqualsMask(rhs.StoryManagerEventNodes, include), include);
         }
         
         public string Print(
@@ -7816,6 +8200,30 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.LightingTemplates?.Overall ?? true)
             {
                 item.LightingTemplates?.Print(sb, "LightingTemplates");
+            }
+            if (printMask?.MusicTypes?.Overall ?? true)
+            {
+                item.MusicTypes?.Print(sb, "MusicTypes");
+            }
+            if (printMask?.Footsteps?.Overall ?? true)
+            {
+                item.Footsteps?.Print(sb, "Footsteps");
+            }
+            if (printMask?.FootstepSets?.Overall ?? true)
+            {
+                item.FootstepSets?.Print(sb, "FootstepSets");
+            }
+            if (printMask?.StoryManagerBranchNodes?.Overall ?? true)
+            {
+                item.StoryManagerBranchNodes?.Print(sb, "StoryManagerBranchNodes");
+            }
+            if (printMask?.StoryManagerQuestNodes?.Overall ?? true)
+            {
+                item.StoryManagerQuestNodes?.Print(sb, "StoryManagerQuestNodes");
+            }
+            if (printMask?.StoryManagerEventNodes?.Overall ?? true)
+            {
+                item.StoryManagerEventNodes?.Print(sb, "StoryManagerEventNodes");
             }
         }
         
@@ -8522,6 +8930,54 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLightingTemplatesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MusicTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MusicTypes, rhs.MusicTypes, out var lhsMusicTypes, out var rhsMusicTypes, out var isMusicTypesEqual))
+                {
+                    if (!object.Equals(lhsMusicTypes, rhsMusicTypes)) return false;
+                }
+                else if (!isMusicTypesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Footsteps) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Footsteps, rhs.Footsteps, out var lhsFootsteps, out var rhsFootsteps, out var isFootstepsEqual))
+                {
+                    if (!object.Equals(lhsFootsteps, rhsFootsteps)) return false;
+                }
+                else if (!isFootstepsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.FootstepSets) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FootstepSets, rhs.FootstepSets, out var lhsFootstepSets, out var rhsFootstepSets, out var isFootstepSetsEqual))
+                {
+                    if (!object.Equals(lhsFootstepSets, rhsFootstepSets)) return false;
+                }
+                else if (!isFootstepSetsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerBranchNodes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes, out var lhsStoryManagerBranchNodes, out var rhsStoryManagerBranchNodes, out var isStoryManagerBranchNodesEqual))
+                {
+                    if (!object.Equals(lhsStoryManagerBranchNodes, rhsStoryManagerBranchNodes)) return false;
+                }
+                else if (!isStoryManagerBranchNodesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerQuestNodes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes, out var lhsStoryManagerQuestNodes, out var rhsStoryManagerQuestNodes, out var isStoryManagerQuestNodesEqual))
+                {
+                    if (!object.Equals(lhsStoryManagerQuestNodes, rhsStoryManagerQuestNodes)) return false;
+                }
+                else if (!isStoryManagerQuestNodesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerEventNodes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.StoryManagerEventNodes, rhs.StoryManagerEventNodes, out var lhsStoryManagerEventNodes, out var rhsStoryManagerEventNodes, out var isStoryManagerEventNodesEqual))
+                {
+                    if (!object.Equals(lhsStoryManagerEventNodes, rhsStoryManagerEventNodes)) return false;
+                }
+                else if (!isStoryManagerEventNodesEqual) return false;
+            }
             return true;
         }
         
@@ -8615,6 +9071,12 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.DefaultObjectManagers);
             hash.Add(item.DefaultObjects);
             hash.Add(item.LightingTemplates);
+            hash.Add(item.MusicTypes);
+            hash.Add(item.Footsteps);
+            hash.Add(item.FootstepSets);
+            hash.Add(item.StoryManagerBranchNodes);
+            hash.Add(item.StoryManagerQuestNodes);
+            hash.Add(item.StoryManagerEventNodes);
             return hash.ToHashCode();
         }
         
@@ -9062,6 +9524,36 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ILightingTemplate":
                 case "ILightingTemplateInternal":
                     return obj.LightingTemplates;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    return obj.MusicTypes;
+                case "Footstep":
+                case "IFootstepGetter":
+                case "IFootstep":
+                case "IFootstepInternal":
+                    return obj.Footsteps;
+                case "FootstepSet":
+                case "IFootstepSetGetter":
+                case "IFootstepSet":
+                case "IFootstepSetInternal":
+                    return obj.FootstepSets;
+                case "StoryManagerBranchNode":
+                case "IStoryManagerBranchNodeGetter":
+                case "IStoryManagerBranchNode":
+                case "IStoryManagerBranchNodeInternal":
+                    return obj.StoryManagerBranchNodes;
+                case "StoryManagerQuestNode":
+                case "IStoryManagerQuestNodeGetter":
+                case "IStoryManagerQuestNode":
+                case "IStoryManagerQuestNodeInternal":
+                    return obj.StoryManagerQuestNodes;
+                case "StoryManagerEventNode":
+                case "IStoryManagerEventNodeGetter":
+                case "IStoryManagerEventNode":
+                case "IStoryManagerEventNodeInternal":
+                    return obj.StoryManagerEventNodes;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -9086,7 +9578,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[86];
+            Stream[] outputStreams = new Stream[92];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -9174,6 +9666,12 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, 83, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 84, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 85, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, 86, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Footsteps, 87, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FootstepSets, 88, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, 89, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, 90, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, 91, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -9518,6 +10016,30 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.LightingTemplates.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTypes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Footsteps.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FootstepSets.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerBranchNodes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerQuestNodes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerEventNodes.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -9867,6 +10389,30 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.LightingTemplates.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Footsteps.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FootstepSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10666,6 +11212,60 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ILightingTemplate":
                 case "ILightingTemplateInternal":
                     foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Footstep":
+                case "IFootstepGetter":
+                case "IFootstep":
+                case "IFootstepInternal":
+                    foreach (var item in obj.Footsteps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FootstepSet":
+                case "IFootstepSetGetter":
+                case "IFootstepSet":
+                case "IFootstepSetInternal":
+                    foreach (var item in obj.FootstepSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerBranchNode":
+                case "IStoryManagerBranchNodeGetter":
+                case "IStoryManagerBranchNode":
+                case "IStoryManagerBranchNodeInternal":
+                    foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerQuestNode":
+                case "IStoryManagerQuestNodeGetter":
+                case "IStoryManagerQuestNode":
+                case "IStoryManagerQuestNodeInternal":
+                    foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerEventNode":
+                case "IStoryManagerEventNodeGetter":
+                case "IStoryManagerEventNode":
+                case "IStoryManagerEventNodeInternal":
+                    foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11603,6 +12203,60 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.LightingTemplates,
                 groupGetter: (m) => m.LightingTemplates))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MusicType, IMusicTypeGetter>(
+                srcGroup: obj.MusicTypes,
+                type: typeof(IMusicTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MusicTypes,
+                groupGetter: (m) => m.MusicTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Footstep, IFootstepGetter>(
+                srcGroup: obj.Footsteps,
+                type: typeof(IFootstepGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Footsteps,
+                groupGetter: (m) => m.Footsteps))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, FootstepSet, IFootstepSetGetter>(
+                srcGroup: obj.FootstepSets,
+                type: typeof(IFootstepSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FootstepSets,
+                groupGetter: (m) => m.FootstepSets))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, StoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
+                srcGroup: obj.StoryManagerBranchNodes,
+                type: typeof(IStoryManagerBranchNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.StoryManagerBranchNodes,
+                groupGetter: (m) => m.StoryManagerBranchNodes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, StoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
+                srcGroup: obj.StoryManagerQuestNodes,
+                type: typeof(IStoryManagerQuestNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.StoryManagerQuestNodes,
+                groupGetter: (m) => m.StoryManagerQuestNodes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, StoryManagerEventNode, IStoryManagerEventNodeGetter>(
+                srcGroup: obj.StoryManagerEventNodes,
+                type: typeof(IStoryManagerEventNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.StoryManagerEventNodes,
+                groupGetter: (m) => m.StoryManagerEventNodes))
             {
                 yield return item;
             }
@@ -12823,6 +13477,90 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.LightingTemplates,
                         groupGetter: (m) => m.LightingTemplates))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MusicType, IMusicTypeGetter>(
+                        srcGroup: obj.MusicTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MusicTypes,
+                        groupGetter: (m) => m.MusicTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Footstep":
+                case "IFootstepGetter":
+                case "IFootstep":
+                case "IFootstepInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Footstep, IFootstepGetter>(
+                        srcGroup: obj.Footsteps,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Footsteps,
+                        groupGetter: (m) => m.Footsteps))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FootstepSet":
+                case "IFootstepSetGetter":
+                case "IFootstepSet":
+                case "IFootstepSetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, FootstepSet, IFootstepSetGetter>(
+                        srcGroup: obj.FootstepSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FootstepSets,
+                        groupGetter: (m) => m.FootstepSets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerBranchNode":
+                case "IStoryManagerBranchNodeGetter":
+                case "IStoryManagerBranchNode":
+                case "IStoryManagerBranchNodeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, StoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
+                        srcGroup: obj.StoryManagerBranchNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StoryManagerBranchNodes,
+                        groupGetter: (m) => m.StoryManagerBranchNodes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerQuestNode":
+                case "IStoryManagerQuestNodeGetter":
+                case "IStoryManagerQuestNode":
+                case "IStoryManagerQuestNodeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, StoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
+                        srcGroup: obj.StoryManagerQuestNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StoryManagerQuestNodes,
+                        groupGetter: (m) => m.StoryManagerQuestNodes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerEventNode":
+                case "IStoryManagerEventNodeGetter":
+                case "IStoryManagerEventNode":
+                case "IStoryManagerEventNodeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, StoryManagerEventNode, IStoryManagerEventNodeGetter>(
+                        srcGroup: obj.StoryManagerEventNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StoryManagerEventNodes,
+                        groupGetter: (m) => m.StoryManagerEventNodes))
                     {
                         yield return item;
                     }
@@ -14861,6 +15599,126 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MusicTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.MusicTypes);
+                try
+                {
+                    item.MusicTypes.DeepCopyIn(
+                        rhs: rhs.MusicTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.MusicTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Footsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Footsteps);
+                try
+                {
+                    item.Footsteps.DeepCopyIn(
+                        rhs: rhs.Footsteps,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Footsteps));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.FootstepSets) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.FootstepSets);
+                try
+                {
+                    item.FootstepSets.DeepCopyIn(
+                        rhs: rhs.FootstepSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.FootstepSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerBranchNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.StoryManagerBranchNodes);
+                try
+                {
+                    item.StoryManagerBranchNodes.DeepCopyIn(
+                        rhs: rhs.StoryManagerBranchNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.StoryManagerBranchNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerQuestNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.StoryManagerQuestNodes);
+                try
+                {
+                    item.StoryManagerQuestNodes.DeepCopyIn(
+                        rhs: rhs.StoryManagerQuestNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.StoryManagerQuestNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerEventNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.StoryManagerEventNodes);
+                try
+                {
+                    item.StoryManagerEventNodes.DeepCopyIn(
+                        rhs: rhs.StoryManagerEventNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.StoryManagerEventNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -15037,6 +15895,12 @@ namespace Mutagen.Bethesda.Fallout4
         public bool DefaultObjectManagers;
         public bool DefaultObjects;
         public bool LightingTemplates;
+        public bool MusicTypes;
+        public bool Footsteps;
+        public bool FootstepSets;
+        public bool StoryManagerBranchNodes;
+        public bool StoryManagerQuestNodes;
+        public bool StoryManagerEventNodes;
         public GroupMask()
         {
         }
@@ -15128,6 +15992,12 @@ namespace Mutagen.Bethesda.Fallout4
             DefaultObjectManagers = defaultValue;
             DefaultObjects = defaultValue;
             LightingTemplates = defaultValue;
+            MusicTypes = defaultValue;
+            Footsteps = defaultValue;
+            FootstepSets = defaultValue;
+            StoryManagerBranchNodes = defaultValue;
+            StoryManagerQuestNodes = defaultValue;
+            StoryManagerEventNodes = defaultValue;
         }
     }
 
@@ -16101,6 +16971,72 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LightingTemplatesItem).BinaryWriteTranslator).Write<ILightingTemplateGetter>(
                         item: LightingTemplatesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MusicTypes ?? true)
+            {
+                var MusicTypesItem = item.MusicTypes;
+                if (MusicTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MusicTypesItem).BinaryWriteTranslator).Write<IMusicTypeGetter>(
+                        item: MusicTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Footsteps ?? true)
+            {
+                var FootstepsItem = item.Footsteps;
+                if (FootstepsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)FootstepsItem).BinaryWriteTranslator).Write<IFootstepGetter>(
+                        item: FootstepsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.FootstepSets ?? true)
+            {
+                var FootstepSetsItem = item.FootstepSets;
+                if (FootstepSetsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)FootstepSetsItem).BinaryWriteTranslator).Write<IFootstepSetGetter>(
+                        item: FootstepSetsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.StoryManagerBranchNodes ?? true)
+            {
+                var StoryManagerBranchNodesItem = item.StoryManagerBranchNodes;
+                if (StoryManagerBranchNodesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerBranchNodesItem).BinaryWriteTranslator).Write<IStoryManagerBranchNodeGetter>(
+                        item: StoryManagerBranchNodesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.StoryManagerQuestNodes ?? true)
+            {
+                var StoryManagerQuestNodesItem = item.StoryManagerQuestNodes;
+                if (StoryManagerQuestNodesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerQuestNodesItem).BinaryWriteTranslator).Write<IStoryManagerQuestNodeGetter>(
+                        item: StoryManagerQuestNodesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.StoryManagerEventNodes ?? true)
+            {
+                var StoryManagerEventNodesItem = item.StoryManagerEventNodes;
+                if (StoryManagerEventNodesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerEventNodesItem).BinaryWriteTranslator).Write<IStoryManagerEventNodeGetter>(
+                        item: StoryManagerEventNodesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -17375,6 +18311,90 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.LightingTemplates;
                 }
+                case RecordTypeInts.MUSC:
+                {
+                    if (importMask?.MusicTypes ?? true)
+                    {
+                        item.MusicTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.MusicTypes;
+                }
+                case RecordTypeInts.FSTP:
+                {
+                    if (importMask?.Footsteps ?? true)
+                    {
+                        item.Footsteps.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Footsteps;
+                }
+                case RecordTypeInts.FSTS:
+                {
+                    if (importMask?.FootstepSets ?? true)
+                    {
+                        item.FootstepSets.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.FootstepSets;
+                }
+                case RecordTypeInts.SMBN:
+                {
+                    if (importMask?.StoryManagerBranchNodes ?? true)
+                    {
+                        item.StoryManagerBranchNodes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.StoryManagerBranchNodes;
+                }
+                case RecordTypeInts.SMQN:
+                {
+                    if (importMask?.StoryManagerQuestNodes ?? true)
+                    {
+                        item.StoryManagerQuestNodes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.StoryManagerQuestNodes;
+                }
+                case RecordTypeInts.SMEN:
+                {
+                    if (importMask?.StoryManagerEventNodes ?? true)
+                    {
+                        item.StoryManagerEventNodes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.StoryManagerEventNodes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -17967,6 +18987,36 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _LightingTemplatesLocations;
         private IFallout4GroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? Fallout4GroupBinaryOverlay<ILightingTemplateGetter>.Fallout4GroupFactory(_data, _LightingTemplatesLocations, _package) : default;
         public IFallout4GroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new Fallout4Group<LightingTemplate>(this);
+        #endregion
+        #region MusicTypes
+        private List<RangeInt64>? _MusicTypesLocations;
+        private IFallout4GroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? Fallout4GroupBinaryOverlay<IMusicTypeGetter>.Fallout4GroupFactory(_data, _MusicTypesLocations, _package) : default;
+        public IFallout4GroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new Fallout4Group<MusicType>(this);
+        #endregion
+        #region Footsteps
+        private List<RangeInt64>? _FootstepsLocations;
+        private IFallout4GroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? Fallout4GroupBinaryOverlay<IFootstepGetter>.Fallout4GroupFactory(_data, _FootstepsLocations, _package) : default;
+        public IFallout4GroupGetter<IFootstepGetter> Footsteps => _Footsteps ?? new Fallout4Group<Footstep>(this);
+        #endregion
+        #region FootstepSets
+        private List<RangeInt64>? _FootstepSetsLocations;
+        private IFallout4GroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? Fallout4GroupBinaryOverlay<IFootstepSetGetter>.Fallout4GroupFactory(_data, _FootstepSetsLocations, _package) : default;
+        public IFallout4GroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new Fallout4Group<FootstepSet>(this);
+        #endregion
+        #region StoryManagerBranchNodes
+        private List<RangeInt64>? _StoryManagerBranchNodesLocations;
+        private IFallout4GroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerBranchNodeGetter>.Fallout4GroupFactory(_data, _StoryManagerBranchNodesLocations, _package) : default;
+        public IFallout4GroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes => _StoryManagerBranchNodes ?? new Fallout4Group<StoryManagerBranchNode>(this);
+        #endregion
+        #region StoryManagerQuestNodes
+        private List<RangeInt64>? _StoryManagerQuestNodesLocations;
+        private IFallout4GroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerQuestNodeGetter>.Fallout4GroupFactory(_data, _StoryManagerQuestNodesLocations, _package) : default;
+        public IFallout4GroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes => _StoryManagerQuestNodes ?? new Fallout4Group<StoryManagerQuestNode>(this);
+        #endregion
+        #region StoryManagerEventNodes
+        private List<RangeInt64>? _StoryManagerEventNodesLocations;
+        private IFallout4GroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerEventNodeGetter>.Fallout4GroupFactory(_data, _StoryManagerEventNodesLocations, _package) : default;
+        public IFallout4GroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new Fallout4Group<StoryManagerEventNode>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -18570,6 +19620,42 @@ namespace Mutagen.Bethesda.Fallout4
                     _LightingTemplatesLocations ??= new();
                     _LightingTemplatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.LightingTemplates;
+                }
+                case RecordTypeInts.MUSC:
+                {
+                    _MusicTypesLocations ??= new();
+                    _MusicTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.MusicTypes;
+                }
+                case RecordTypeInts.FSTP:
+                {
+                    _FootstepsLocations ??= new();
+                    _FootstepsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Footsteps;
+                }
+                case RecordTypeInts.FSTS:
+                {
+                    _FootstepSetsLocations ??= new();
+                    _FootstepSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.FootstepSets;
+                }
+                case RecordTypeInts.SMBN:
+                {
+                    _StoryManagerBranchNodesLocations ??= new();
+                    _StoryManagerBranchNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.StoryManagerBranchNodes;
+                }
+                case RecordTypeInts.SMQN:
+                {
+                    _StoryManagerQuestNodesLocations ??= new();
+                    _StoryManagerQuestNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.StoryManagerQuestNodes;
+                }
+                case RecordTypeInts.SMEN:
+                {
+                    _StoryManagerEventNodesLocations ??= new();
+                    _StoryManagerEventNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.StoryManagerEventNodes;
                 }
                 default:
                     return default(int?);

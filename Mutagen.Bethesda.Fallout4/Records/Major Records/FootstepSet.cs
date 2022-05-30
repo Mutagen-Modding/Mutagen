@@ -21,11 +21,11 @@ partial class FootstepSetBinaryCreateTranslation
             }
         }
 
-        item.WalkForwardFootsteps.SetTo(ReadIn(counts[0]));
-        item.RunForwardFootsteps.SetTo(ReadIn(counts[1]));
-        item.WalkForwardAlternateFootsteps.SetTo(ReadIn(counts[2]));
-        item.RunForwardAlternateFootsteps.SetTo(ReadIn(counts[3]));
-        item.WalkForwardAlternateFootsteps2.SetTo(ReadIn(counts[4]));
+        item.WalkFootsteps.SetTo(ReadIn(counts[0]));
+        item.RunFootsteps.SetTo(ReadIn(counts[1]));
+        item.SprintFootsteps.SetTo(ReadIn(counts[2]));
+        item.SneakFootsteps.SetTo(ReadIn(counts[3]));
+        item.SwimFootsteps.SetTo(ReadIn(counts[4]));
 
         return null;
     }
@@ -60,15 +60,19 @@ partial class FootstepSetBinaryWriteTranslation
 {
     public static partial void WriteBinaryCountCustom(MutagenWriter writer, IFootstepSetGetter item)
     {
-        var walkForwardFootsteps = item.WalkForwardFootsteps;
+        var walkFootsteps = item.WalkFootsteps;
+        var runFootsteps = item.RunFootsteps;
+        var sprint = item.SprintFootsteps;
+        var sneak = item.SneakFootsteps;
+        var swim = item.SwimFootsteps;
 
         using (HeaderExport.Subrecord(writer, RecordTypes.XCNT))
         {
-            writer.Write(walkForwardFootsteps.Count);
-            writer.Write(item.RunForwardFootsteps.Count);
-            writer.Write(item.WalkForwardAlternateFootsteps.Count);
-            writer.Write(item.RunForwardAlternateFootsteps.Count);
-            writer.Write(item.WalkForwardAlternateFootsteps2.Count);
+            writer.Write(walkFootsteps.Count);
+            writer.Write(runFootsteps.Count);
+            writer.Write(sprint.Count);
+            writer.Write(sneak.Count);
+            writer.Write(swim.Count);
         }
 
         void WriteListOfFormKeys(IReadOnlyList<IFormLinkGetter<IFootstepGetter>> formKeys)
@@ -81,26 +85,26 @@ partial class FootstepSetBinaryWriteTranslation
 
         using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
         {
-            WriteListOfFormKeys(walkForwardFootsteps);
-            WriteListOfFormKeys(item.RunForwardFootsteps);
-            WriteListOfFormKeys(item.WalkForwardAlternateFootsteps);
-            WriteListOfFormKeys(item.RunForwardAlternateFootsteps);
-            WriteListOfFormKeys(item.WalkForwardAlternateFootsteps2);
+            WriteListOfFormKeys(walkFootsteps);
+            WriteListOfFormKeys(runFootsteps);
+            WriteListOfFormKeys(sprint);
+            WriteListOfFormKeys(sneak);
+            WriteListOfFormKeys(swim);
         }
     }
 }
 
 partial class FootstepSetBinaryOverlay
 {
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SneakFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SwimFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
     public partial ParseResult CountCustomParse(OverlayStream stream, int offset)
     {
@@ -118,11 +122,11 @@ partial class FootstepSetBinaryOverlay
             return ret;
         }
 
-        WalkForwardFootsteps = Get(0);
-        RunForwardFootsteps = Get(1);
-        WalkForwardAlternateFootsteps = Get(2);
-        RunForwardAlternateFootsteps = Get(3);
-        WalkForwardAlternateFootsteps2 = Get(4);
+        WalkFootsteps = Get(0);
+        RunFootsteps = Get(1);
+        SprintFootsteps = Get(2);
+        SneakFootsteps = Get(3);
+        SwimFootsteps = Get(4);
 
         return null;
     }

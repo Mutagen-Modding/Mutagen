@@ -59,6 +59,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.FLST, ProcessFormLists);
         AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
         AddDynamicProcessing(RecordTypes.DFOB, ProcessDefaultObjects);
+        AddDynamicProcessing(RecordTypes.SMQN, ProcessStoryManagerQuestNodes);
     }
 
     private void ProcessGameSettings(
@@ -574,6 +575,24 @@ public class Fallout4Processor : Processor
         if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var data))
         {
             ProcessFormIDOverflow(data, fileOffset);
+        }
+    }
+
+    private void ProcessStoryManagerQuestNodes(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.NNAM, out var data))
+        {
+            ProcessFormIDOverflow(data, fileOffset);
+        }
+        foreach (var ctda in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDA))
+        {
+            int i = BinaryPrimitives.ReadInt32LittleEndian(ctda.Content.Slice(12));
+            if (i == 0x0100080E)
+            {
+                _instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
+            }
         }
     }
 

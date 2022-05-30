@@ -93,6 +93,12 @@
       <Group name="DefaultObjectManagers" refName="DefaultObjectManager" />
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="LightingTemplates" refName="LightingTemplate" />
+      <Group name="MusicTypes" refName="MusicType" />
+      <Group name="Footsteps" refName="Footstep" />
+      <Group name="FootstepSets" refName="FootstepSet" />
+      <Group name="StoryManagerBranchNodes" refName="StoryManagerBranchNode" />
+      <Group name="StoryManagerQuestNodes" refName="StoryManagerQuestNode" />
+      <Group name="StoryManagerEventNodes" refName="StoryManagerEventNode" />
     </Fields>
   </Object>
 </Loqui>

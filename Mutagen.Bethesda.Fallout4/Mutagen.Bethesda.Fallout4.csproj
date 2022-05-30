@@ -209,6 +209,9 @@
     <Compile Include="Records\Major Records\ArtObject.cs">
       <DependentUpon>ArtObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AStoryManagerNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\BipedObjectData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -661,6 +664,12 @@
     </Compile>
     <Compile Include="Records\Major Records\StaticCollection.cs">
       <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerEventNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuestNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Subgraph.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -2232,6 +2241,22 @@
     </Compile>
     <Compile Include="Records\Major Records\DefaultObjectUse_Generated.cs">
       <DependentUpon>DefaultObjectManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IStoryManagerItem_Generated.cs" />
+    <Compile Include="Records\Major Records\AStoryManagerNode_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerBranchNode_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuestNode_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuest_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerEventNode_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

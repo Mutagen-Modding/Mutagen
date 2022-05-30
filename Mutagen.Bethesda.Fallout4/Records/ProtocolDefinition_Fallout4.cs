@@ -497,7 +497,12 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             LocationCellEnablePoint_Registration.Instance,
             DefaultObjectManager_Registration.Instance,
             DefaultObjectUse_Registration.Instance,
-            DefaultObject_Registration.Instance
+            DefaultObject_Registration.Instance,
+            AStoryManagerNode_Registration.Instance,
+            StoryManagerBranchNode_Registration.Instance,
+            StoryManagerQuestNode_Registration.Instance,
+            StoryManagerQuest_Registration.Instance,
+            StoryManagerEventNode_Registration.Instance
         );
     }
 }

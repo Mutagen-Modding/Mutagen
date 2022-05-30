@@ -54,73 +54,73 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region WalkForwardFootsteps
+        #region WalkFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkForwardFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
-        public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps
         {
-            get => this._WalkForwardFootsteps;
-            init => this._WalkForwardFootsteps = value;
+            get => this._WalkFootsteps;
+            init => this._WalkFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.WalkForwardFootsteps => _WalkForwardFootsteps;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.WalkFootsteps => _WalkFootsteps;
         #endregion
 
         #endregion
-        #region RunForwardFootsteps
+        #region RunFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _RunForwardFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
-        public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _RunFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunFootsteps
         {
-            get => this._RunForwardFootsteps;
-            init => this._RunForwardFootsteps = value;
+            get => this._RunFootsteps;
+            init => this._RunFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.RunForwardFootsteps => _RunForwardFootsteps;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.RunFootsteps => _RunFootsteps;
         #endregion
 
         #endregion
-        #region WalkForwardAlternateFootsteps
+        #region SprintFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkForwardAlternateFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
-        public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _SprintFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps
         {
-            get => this._WalkForwardAlternateFootsteps;
-            init => this._WalkForwardAlternateFootsteps = value;
+            get => this._SprintFootsteps;
+            init => this._SprintFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.WalkForwardAlternateFootsteps => _WalkForwardAlternateFootsteps;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.SprintFootsteps => _SprintFootsteps;
         #endregion
 
         #endregion
-        #region RunForwardAlternateFootsteps
+        #region SneakFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _RunForwardAlternateFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
-        public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _SneakFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> SneakFootsteps
         {
-            get => this._RunForwardAlternateFootsteps;
-            init => this._RunForwardAlternateFootsteps = value;
+            get => this._SneakFootsteps;
+            init => this._SneakFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.RunForwardAlternateFootsteps => _RunForwardAlternateFootsteps;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.SneakFootsteps => _SneakFootsteps;
         #endregion
 
         #endregion
-        #region WalkForwardAlternateFootsteps2
+        #region SwimFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkForwardAlternateFootsteps2 = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
-        public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _SwimFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> SwimFootsteps
         {
-            get => this._WalkForwardAlternateFootsteps2;
-            init => this._WalkForwardAlternateFootsteps2 = value;
+            get => this._SwimFootsteps;
+            init => this._SwimFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.WalkForwardAlternateFootsteps2 => _WalkForwardAlternateFootsteps2;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.SwimFootsteps => _SwimFootsteps;
         #endregion
 
         #endregion
@@ -149,11 +149,11 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WalkForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WalkForwardAlternateFootsteps2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SneakFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SwimFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -163,11 +163,11 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem WalkForwardFootsteps,
-                TItem RunForwardFootsteps,
-                TItem WalkForwardAlternateFootsteps,
-                TItem RunForwardAlternateFootsteps,
-                TItem WalkForwardAlternateFootsteps2)
+                TItem WalkFootsteps,
+                TItem RunFootsteps,
+                TItem SprintFootsteps,
+                TItem SneakFootsteps,
+                TItem SwimFootsteps)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -176,11 +176,11 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WalkForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardAlternateFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardAlternateFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WalkForwardAlternateFootsteps2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardAlternateFootsteps2, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SprintFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SneakFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SneakFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SwimFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SwimFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -192,11 +192,11 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkForwardFootsteps;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RunForwardFootsteps;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkForwardAlternateFootsteps;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RunForwardAlternateFootsteps;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkForwardAlternateFootsteps2;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RunFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SprintFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SneakFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SwimFootsteps;
             #endregion
 
             #region Equals
@@ -210,21 +210,21 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.WalkForwardFootsteps, rhs.WalkForwardFootsteps)) return false;
-                if (!object.Equals(this.RunForwardFootsteps, rhs.RunForwardFootsteps)) return false;
-                if (!object.Equals(this.WalkForwardAlternateFootsteps, rhs.WalkForwardAlternateFootsteps)) return false;
-                if (!object.Equals(this.RunForwardAlternateFootsteps, rhs.RunForwardAlternateFootsteps)) return false;
-                if (!object.Equals(this.WalkForwardAlternateFootsteps2, rhs.WalkForwardAlternateFootsteps2)) return false;
+                if (!object.Equals(this.WalkFootsteps, rhs.WalkFootsteps)) return false;
+                if (!object.Equals(this.RunFootsteps, rhs.RunFootsteps)) return false;
+                if (!object.Equals(this.SprintFootsteps, rhs.SprintFootsteps)) return false;
+                if (!object.Equals(this.SneakFootsteps, rhs.SneakFootsteps)) return false;
+                if (!object.Equals(this.SwimFootsteps, rhs.SwimFootsteps)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.WalkForwardFootsteps);
-                hash.Add(this.RunForwardFootsteps);
-                hash.Add(this.WalkForwardAlternateFootsteps);
-                hash.Add(this.RunForwardAlternateFootsteps);
-                hash.Add(this.WalkForwardAlternateFootsteps2);
+                hash.Add(this.WalkFootsteps);
+                hash.Add(this.RunFootsteps);
+                hash.Add(this.SprintFootsteps);
+                hash.Add(this.SneakFootsteps);
+                hash.Add(this.SwimFootsteps);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -235,56 +235,56 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (this.WalkForwardFootsteps != null)
+                if (this.WalkFootsteps != null)
                 {
-                    if (!eval(this.WalkForwardFootsteps.Overall)) return false;
-                    if (this.WalkForwardFootsteps.Specific != null)
+                    if (!eval(this.WalkFootsteps.Overall)) return false;
+                    if (this.WalkFootsteps.Specific != null)
                     {
-                        foreach (var item in this.WalkForwardFootsteps.Specific)
+                        foreach (var item in this.WalkFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.RunForwardFootsteps != null)
+                if (this.RunFootsteps != null)
                 {
-                    if (!eval(this.RunForwardFootsteps.Overall)) return false;
-                    if (this.RunForwardFootsteps.Specific != null)
+                    if (!eval(this.RunFootsteps.Overall)) return false;
+                    if (this.RunFootsteps.Specific != null)
                     {
-                        foreach (var item in this.RunForwardFootsteps.Specific)
+                        foreach (var item in this.RunFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.WalkForwardAlternateFootsteps != null)
+                if (this.SprintFootsteps != null)
                 {
-                    if (!eval(this.WalkForwardAlternateFootsteps.Overall)) return false;
-                    if (this.WalkForwardAlternateFootsteps.Specific != null)
+                    if (!eval(this.SprintFootsteps.Overall)) return false;
+                    if (this.SprintFootsteps.Specific != null)
                     {
-                        foreach (var item in this.WalkForwardAlternateFootsteps.Specific)
+                        foreach (var item in this.SprintFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.RunForwardAlternateFootsteps != null)
+                if (this.SneakFootsteps != null)
                 {
-                    if (!eval(this.RunForwardAlternateFootsteps.Overall)) return false;
-                    if (this.RunForwardAlternateFootsteps.Specific != null)
+                    if (!eval(this.SneakFootsteps.Overall)) return false;
+                    if (this.SneakFootsteps.Specific != null)
                     {
-                        foreach (var item in this.RunForwardAlternateFootsteps.Specific)
+                        foreach (var item in this.SneakFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.WalkForwardAlternateFootsteps2 != null)
+                if (this.SwimFootsteps != null)
                 {
-                    if (!eval(this.WalkForwardAlternateFootsteps2.Overall)) return false;
-                    if (this.WalkForwardAlternateFootsteps2.Specific != null)
+                    if (!eval(this.SwimFootsteps.Overall)) return false;
+                    if (this.SwimFootsteps.Specific != null)
                     {
-                        foreach (var item in this.WalkForwardAlternateFootsteps2.Specific)
+                        foreach (var item in this.SwimFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -298,56 +298,56 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (this.WalkForwardFootsteps != null)
+                if (this.WalkFootsteps != null)
                 {
-                    if (eval(this.WalkForwardFootsteps.Overall)) return true;
-                    if (this.WalkForwardFootsteps.Specific != null)
+                    if (eval(this.WalkFootsteps.Overall)) return true;
+                    if (this.WalkFootsteps.Specific != null)
                     {
-                        foreach (var item in this.WalkForwardFootsteps.Specific)
+                        foreach (var item in this.WalkFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.RunForwardFootsteps != null)
+                if (this.RunFootsteps != null)
                 {
-                    if (eval(this.RunForwardFootsteps.Overall)) return true;
-                    if (this.RunForwardFootsteps.Specific != null)
+                    if (eval(this.RunFootsteps.Overall)) return true;
+                    if (this.RunFootsteps.Specific != null)
                     {
-                        foreach (var item in this.RunForwardFootsteps.Specific)
+                        foreach (var item in this.RunFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.WalkForwardAlternateFootsteps != null)
+                if (this.SprintFootsteps != null)
                 {
-                    if (eval(this.WalkForwardAlternateFootsteps.Overall)) return true;
-                    if (this.WalkForwardAlternateFootsteps.Specific != null)
+                    if (eval(this.SprintFootsteps.Overall)) return true;
+                    if (this.SprintFootsteps.Specific != null)
                     {
-                        foreach (var item in this.WalkForwardAlternateFootsteps.Specific)
+                        foreach (var item in this.SprintFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.RunForwardAlternateFootsteps != null)
+                if (this.SneakFootsteps != null)
                 {
-                    if (eval(this.RunForwardAlternateFootsteps.Overall)) return true;
-                    if (this.RunForwardAlternateFootsteps.Specific != null)
+                    if (eval(this.SneakFootsteps.Overall)) return true;
+                    if (this.SneakFootsteps.Specific != null)
                     {
-                        foreach (var item in this.RunForwardAlternateFootsteps.Specific)
+                        foreach (var item in this.SneakFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.WalkForwardAlternateFootsteps2 != null)
+                if (this.SwimFootsteps != null)
                 {
-                    if (eval(this.WalkForwardAlternateFootsteps2.Overall)) return true;
-                    if (this.WalkForwardAlternateFootsteps2.Specific != null)
+                    if (eval(this.SwimFootsteps.Overall)) return true;
+                    if (this.SwimFootsteps.Specific != null)
                     {
-                        foreach (var item in this.WalkForwardAlternateFootsteps2.Specific)
+                        foreach (var item in this.SwimFootsteps.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -368,70 +368,70 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                if (WalkForwardFootsteps != null)
+                if (WalkFootsteps != null)
                 {
-                    obj.WalkForwardFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (WalkForwardFootsteps.Specific != null)
+                    obj.WalkFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (WalkFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.WalkForwardFootsteps.Specific = l;
-                        foreach (var item in WalkForwardFootsteps.Specific)
+                        obj.WalkFootsteps.Specific = l;
+                        foreach (var item in WalkFootsteps.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (RunForwardFootsteps != null)
+                if (RunFootsteps != null)
                 {
-                    obj.RunForwardFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunForwardFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (RunForwardFootsteps.Specific != null)
+                    obj.RunFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RunFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.RunForwardFootsteps.Specific = l;
-                        foreach (var item in RunForwardFootsteps.Specific)
+                        obj.RunFootsteps.Specific = l;
+                        foreach (var item in RunFootsteps.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (WalkForwardAlternateFootsteps != null)
+                if (SprintFootsteps != null)
                 {
-                    obj.WalkForwardAlternateFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardAlternateFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (WalkForwardAlternateFootsteps.Specific != null)
+                    obj.SprintFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SprintFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SprintFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.WalkForwardAlternateFootsteps.Specific = l;
-                        foreach (var item in WalkForwardAlternateFootsteps.Specific)
+                        obj.SprintFootsteps.Specific = l;
+                        foreach (var item in SprintFootsteps.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (RunForwardAlternateFootsteps != null)
+                if (SneakFootsteps != null)
                 {
-                    obj.RunForwardAlternateFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunForwardAlternateFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (RunForwardAlternateFootsteps.Specific != null)
+                    obj.SneakFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SneakFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SneakFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.RunForwardAlternateFootsteps.Specific = l;
-                        foreach (var item in RunForwardAlternateFootsteps.Specific)
+                        obj.SneakFootsteps.Specific = l;
+                        foreach (var item in SneakFootsteps.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (WalkForwardAlternateFootsteps2 != null)
+                if (SwimFootsteps != null)
                 {
-                    obj.WalkForwardAlternateFootsteps2 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardAlternateFootsteps2.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (WalkForwardAlternateFootsteps2.Specific != null)
+                    obj.SwimFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SwimFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SwimFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.WalkForwardAlternateFootsteps2.Specific = l;
-                        foreach (var item in WalkForwardAlternateFootsteps2.Specific)
+                        obj.SwimFootsteps.Specific = l;
+                        foreach (var item in SwimFootsteps.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
@@ -456,16 +456,16 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(FootstepSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if ((printMask?.WalkForwardFootsteps?.Overall ?? true)
-                        && WalkForwardFootsteps is {} WalkForwardFootstepsItem)
+                    if ((printMask?.WalkFootsteps?.Overall ?? true)
+                        && WalkFootsteps is {} WalkFootstepsItem)
                     {
-                        sb.AppendLine("WalkForwardFootsteps =>");
+                        sb.AppendLine("WalkFootsteps =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(WalkForwardFootstepsItem.Overall);
-                            if (WalkForwardFootstepsItem.Specific != null)
+                            sb.AppendItem(WalkFootstepsItem.Overall);
+                            if (WalkFootstepsItem.Specific != null)
                             {
-                                foreach (var subItem in WalkForwardFootstepsItem.Specific)
+                                foreach (var subItem in WalkFootstepsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -477,16 +477,16 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if ((printMask?.RunForwardFootsteps?.Overall ?? true)
-                        && RunForwardFootsteps is {} RunForwardFootstepsItem)
+                    if ((printMask?.RunFootsteps?.Overall ?? true)
+                        && RunFootsteps is {} RunFootstepsItem)
                     {
-                        sb.AppendLine("RunForwardFootsteps =>");
+                        sb.AppendLine("RunFootsteps =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(RunForwardFootstepsItem.Overall);
-                            if (RunForwardFootstepsItem.Specific != null)
+                            sb.AppendItem(RunFootstepsItem.Overall);
+                            if (RunFootstepsItem.Specific != null)
                             {
-                                foreach (var subItem in RunForwardFootstepsItem.Specific)
+                                foreach (var subItem in RunFootstepsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -498,16 +498,16 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if ((printMask?.WalkForwardAlternateFootsteps?.Overall ?? true)
-                        && WalkForwardAlternateFootsteps is {} WalkForwardAlternateFootstepsItem)
+                    if ((printMask?.SprintFootsteps?.Overall ?? true)
+                        && SprintFootsteps is {} SprintFootstepsItem)
                     {
-                        sb.AppendLine("WalkForwardAlternateFootsteps =>");
+                        sb.AppendLine("SprintFootsteps =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(WalkForwardAlternateFootstepsItem.Overall);
-                            if (WalkForwardAlternateFootstepsItem.Specific != null)
+                            sb.AppendItem(SprintFootstepsItem.Overall);
+                            if (SprintFootstepsItem.Specific != null)
                             {
-                                foreach (var subItem in WalkForwardAlternateFootstepsItem.Specific)
+                                foreach (var subItem in SprintFootstepsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -519,16 +519,16 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if ((printMask?.RunForwardAlternateFootsteps?.Overall ?? true)
-                        && RunForwardAlternateFootsteps is {} RunForwardAlternateFootstepsItem)
+                    if ((printMask?.SneakFootsteps?.Overall ?? true)
+                        && SneakFootsteps is {} SneakFootstepsItem)
                     {
-                        sb.AppendLine("RunForwardAlternateFootsteps =>");
+                        sb.AppendLine("SneakFootsteps =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(RunForwardAlternateFootstepsItem.Overall);
-                            if (RunForwardAlternateFootstepsItem.Specific != null)
+                            sb.AppendItem(SneakFootstepsItem.Overall);
+                            if (SneakFootstepsItem.Specific != null)
                             {
-                                foreach (var subItem in RunForwardAlternateFootstepsItem.Specific)
+                                foreach (var subItem in SneakFootstepsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -540,16 +540,16 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if ((printMask?.WalkForwardAlternateFootsteps2?.Overall ?? true)
-                        && WalkForwardAlternateFootsteps2 is {} WalkForwardAlternateFootsteps2Item)
+                    if ((printMask?.SwimFootsteps?.Overall ?? true)
+                        && SwimFootsteps is {} SwimFootstepsItem)
                     {
-                        sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
+                        sb.AppendLine("SwimFootsteps =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(WalkForwardAlternateFootsteps2Item.Overall);
-                            if (WalkForwardAlternateFootsteps2Item.Specific != null)
+                            sb.AppendItem(SwimFootstepsItem.Overall);
+                            if (SwimFootstepsItem.Specific != null)
                             {
-                                foreach (var subItem in WalkForwardAlternateFootsteps2Item.Specific)
+                                foreach (var subItem in SwimFootstepsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -572,11 +572,11 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkForwardFootsteps;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RunForwardFootsteps;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkForwardAlternateFootsteps;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RunForwardAlternateFootsteps;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkForwardAlternateFootsteps2;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RunFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SprintFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SneakFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SwimFootsteps;
             #endregion
 
             #region IErrorMask
@@ -585,16 +585,16 @@ namespace Mutagen.Bethesda.Fallout4
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case FootstepSet_FieldIndex.WalkForwardFootsteps:
-                        return WalkForwardFootsteps;
-                    case FootstepSet_FieldIndex.RunForwardFootsteps:
-                        return RunForwardFootsteps;
-                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
-                        return WalkForwardAlternateFootsteps;
-                    case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
-                        return RunForwardAlternateFootsteps;
-                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
-                        return WalkForwardAlternateFootsteps2;
+                    case FootstepSet_FieldIndex.WalkFootsteps:
+                        return WalkFootsteps;
+                    case FootstepSet_FieldIndex.RunFootsteps:
+                        return RunFootsteps;
+                    case FootstepSet_FieldIndex.SprintFootsteps:
+                        return SprintFootsteps;
+                    case FootstepSet_FieldIndex.SneakFootsteps:
+                        return SneakFootsteps;
+                    case FootstepSet_FieldIndex.SwimFootsteps:
+                        return SwimFootsteps;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -605,20 +605,20 @@ namespace Mutagen.Bethesda.Fallout4
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case FootstepSet_FieldIndex.WalkForwardFootsteps:
-                        this.WalkForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case FootstepSet_FieldIndex.WalkFootsteps:
+                        this.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case FootstepSet_FieldIndex.RunForwardFootsteps:
-                        this.RunForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case FootstepSet_FieldIndex.RunFootsteps:
+                        this.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
-                        this.WalkForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case FootstepSet_FieldIndex.SprintFootsteps:
+                        this.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
-                        this.RunForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case FootstepSet_FieldIndex.SneakFootsteps:
+                        this.SneakFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
-                        this.WalkForwardAlternateFootsteps2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case FootstepSet_FieldIndex.SwimFootsteps:
+                        this.SwimFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -631,20 +631,20 @@ namespace Mutagen.Bethesda.Fallout4
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case FootstepSet_FieldIndex.WalkForwardFootsteps:
-                        this.WalkForwardFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case FootstepSet_FieldIndex.WalkFootsteps:
+                        this.WalkFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case FootstepSet_FieldIndex.RunForwardFootsteps:
-                        this.RunForwardFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case FootstepSet_FieldIndex.RunFootsteps:
+                        this.RunFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
-                        this.WalkForwardAlternateFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case FootstepSet_FieldIndex.SprintFootsteps:
+                        this.SprintFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
-                        this.RunForwardAlternateFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case FootstepSet_FieldIndex.SneakFootsteps:
+                        this.SneakFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
-                        this.WalkForwardAlternateFootsteps2 = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case FootstepSet_FieldIndex.SwimFootsteps:
+                        this.SwimFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -655,11 +655,11 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (WalkForwardFootsteps != null) return true;
-                if (RunForwardFootsteps != null) return true;
-                if (WalkForwardAlternateFootsteps != null) return true;
-                if (RunForwardAlternateFootsteps != null) return true;
-                if (WalkForwardAlternateFootsteps2 != null) return true;
+                if (WalkFootsteps != null) return true;
+                if (RunFootsteps != null) return true;
+                if (SprintFootsteps != null) return true;
+                if (SneakFootsteps != null) return true;
+                if (SwimFootsteps != null) return true;
                 return false;
             }
             #endregion
@@ -686,15 +686,15 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                if (WalkForwardFootsteps is {} WalkForwardFootstepsItem)
+                if (WalkFootsteps is {} WalkFootstepsItem)
                 {
-                    sb.AppendLine("WalkForwardFootsteps =>");
+                    sb.AppendLine("WalkFootsteps =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(WalkForwardFootstepsItem.Overall);
-                        if (WalkForwardFootstepsItem.Specific != null)
+                        sb.AppendItem(WalkFootstepsItem.Overall);
+                        if (WalkFootstepsItem.Specific != null)
                         {
-                            foreach (var subItem in WalkForwardFootstepsItem.Specific)
+                            foreach (var subItem in WalkFootstepsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -706,15 +706,15 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (RunForwardFootsteps is {} RunForwardFootstepsItem)
+                if (RunFootsteps is {} RunFootstepsItem)
                 {
-                    sb.AppendLine("RunForwardFootsteps =>");
+                    sb.AppendLine("RunFootsteps =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(RunForwardFootstepsItem.Overall);
-                        if (RunForwardFootstepsItem.Specific != null)
+                        sb.AppendItem(RunFootstepsItem.Overall);
+                        if (RunFootstepsItem.Specific != null)
                         {
-                            foreach (var subItem in RunForwardFootstepsItem.Specific)
+                            foreach (var subItem in RunFootstepsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -726,15 +726,15 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (WalkForwardAlternateFootsteps is {} WalkForwardAlternateFootstepsItem)
+                if (SprintFootsteps is {} SprintFootstepsItem)
                 {
-                    sb.AppendLine("WalkForwardAlternateFootsteps =>");
+                    sb.AppendLine("SprintFootsteps =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(WalkForwardAlternateFootstepsItem.Overall);
-                        if (WalkForwardAlternateFootstepsItem.Specific != null)
+                        sb.AppendItem(SprintFootstepsItem.Overall);
+                        if (SprintFootstepsItem.Specific != null)
                         {
-                            foreach (var subItem in WalkForwardAlternateFootstepsItem.Specific)
+                            foreach (var subItem in SprintFootstepsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -746,15 +746,15 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (RunForwardAlternateFootsteps is {} RunForwardAlternateFootstepsItem)
+                if (SneakFootsteps is {} SneakFootstepsItem)
                 {
-                    sb.AppendLine("RunForwardAlternateFootsteps =>");
+                    sb.AppendLine("SneakFootsteps =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(RunForwardAlternateFootstepsItem.Overall);
-                        if (RunForwardAlternateFootstepsItem.Specific != null)
+                        sb.AppendItem(SneakFootstepsItem.Overall);
+                        if (SneakFootstepsItem.Specific != null)
                         {
-                            foreach (var subItem in RunForwardAlternateFootstepsItem.Specific)
+                            foreach (var subItem in SneakFootstepsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -766,15 +766,15 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (WalkForwardAlternateFootsteps2 is {} WalkForwardAlternateFootsteps2Item)
+                if (SwimFootsteps is {} SwimFootstepsItem)
                 {
-                    sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
+                    sb.AppendLine("SwimFootsteps =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(WalkForwardAlternateFootsteps2Item.Overall);
-                        if (WalkForwardAlternateFootsteps2Item.Specific != null)
+                        sb.AppendItem(SwimFootstepsItem.Overall);
+                        if (SwimFootstepsItem.Specific != null)
                         {
-                            foreach (var subItem in WalkForwardAlternateFootsteps2Item.Specific)
+                            foreach (var subItem in SwimFootstepsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -794,11 +794,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.WalkForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardFootsteps?.Overall, rhs.WalkForwardFootsteps?.Overall), ExceptionExt.Combine(this.WalkForwardFootsteps?.Specific, rhs.WalkForwardFootsteps?.Specific));
-                ret.RunForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunForwardFootsteps?.Overall, rhs.RunForwardFootsteps?.Overall), ExceptionExt.Combine(this.RunForwardFootsteps?.Specific, rhs.RunForwardFootsteps?.Specific));
-                ret.WalkForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardAlternateFootsteps?.Overall, rhs.WalkForwardAlternateFootsteps?.Overall), ExceptionExt.Combine(this.WalkForwardAlternateFootsteps?.Specific, rhs.WalkForwardAlternateFootsteps?.Specific));
-                ret.RunForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunForwardAlternateFootsteps?.Overall, rhs.RunForwardAlternateFootsteps?.Overall), ExceptionExt.Combine(this.RunForwardAlternateFootsteps?.Specific, rhs.RunForwardAlternateFootsteps?.Specific));
-                ret.WalkForwardAlternateFootsteps2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardAlternateFootsteps2?.Overall, rhs.WalkForwardAlternateFootsteps2?.Overall), ExceptionExt.Combine(this.WalkForwardAlternateFootsteps2?.Specific, rhs.WalkForwardAlternateFootsteps2?.Specific));
+                ret.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkFootsteps?.Overall, rhs.WalkFootsteps?.Overall), ExceptionExt.Combine(this.WalkFootsteps?.Specific, rhs.WalkFootsteps?.Specific));
+                ret.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunFootsteps?.Overall, rhs.RunFootsteps?.Overall), ExceptionExt.Combine(this.RunFootsteps?.Specific, rhs.RunFootsteps?.Specific));
+                ret.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SprintFootsteps?.Overall, rhs.SprintFootsteps?.Overall), ExceptionExt.Combine(this.SprintFootsteps?.Specific, rhs.SprintFootsteps?.Specific));
+                ret.SneakFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SneakFootsteps?.Overall, rhs.SneakFootsteps?.Overall), ExceptionExt.Combine(this.SneakFootsteps?.Specific, rhs.SneakFootsteps?.Specific));
+                ret.SwimFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SwimFootsteps?.Overall, rhs.SwimFootsteps?.Overall), ExceptionExt.Combine(this.SwimFootsteps?.Specific, rhs.SwimFootsteps?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -821,11 +821,11 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool WalkForwardFootsteps;
-            public bool RunForwardFootsteps;
-            public bool WalkForwardAlternateFootsteps;
-            public bool RunForwardAlternateFootsteps;
-            public bool WalkForwardAlternateFootsteps2;
+            public bool WalkFootsteps;
+            public bool RunFootsteps;
+            public bool SprintFootsteps;
+            public bool SneakFootsteps;
+            public bool SwimFootsteps;
             #endregion
 
             #region Ctors
@@ -834,11 +834,11 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.WalkForwardFootsteps = defaultOn;
-                this.RunForwardFootsteps = defaultOn;
-                this.WalkForwardAlternateFootsteps = defaultOn;
-                this.RunForwardAlternateFootsteps = defaultOn;
-                this.WalkForwardAlternateFootsteps2 = defaultOn;
+                this.WalkFootsteps = defaultOn;
+                this.RunFootsteps = defaultOn;
+                this.SprintFootsteps = defaultOn;
+                this.SneakFootsteps = defaultOn;
+                this.SwimFootsteps = defaultOn;
             }
 
             #endregion
@@ -846,11 +846,11 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((WalkForwardFootsteps, null));
-                ret.Add((RunForwardFootsteps, null));
-                ret.Add((WalkForwardAlternateFootsteps, null));
-                ret.Add((RunForwardAlternateFootsteps, null));
-                ret.Add((WalkForwardAlternateFootsteps2, null));
+                ret.Add((WalkFootsteps, null));
+                ret.Add((RunFootsteps, null));
+                ret.Add((SprintFootsteps, null));
+                ret.Add((SneakFootsteps, null));
+                ret.Add((SwimFootsteps, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -991,11 +991,11 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IFootstepSetInternal>
     {
-        new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; }
-        new ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; }
-        new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
-        new ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
-        new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> RunFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> SneakFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> SwimFootsteps { get; }
     }
 
     public partial interface IFootstepSetInternal :
@@ -1014,11 +1014,11 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IFootstepSetGetter>
     {
         static new ILoquiRegistration StaticRegistration => FootstepSet_Registration.Instance;
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; }
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; }
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
-        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SneakFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SwimFootsteps { get; }
 
     }
 
@@ -1183,11 +1183,11 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        WalkForwardFootsteps = 6,
-        RunForwardFootsteps = 7,
-        WalkForwardAlternateFootsteps = 8,
-        RunForwardAlternateFootsteps = 9,
-        WalkForwardAlternateFootsteps2 = 10,
+        WalkFootsteps = 6,
+        RunFootsteps = 7,
+        SprintFootsteps = 8,
+        SneakFootsteps = 9,
+        SwimFootsteps = 10,
     }
     #endregion
 
@@ -1285,11 +1285,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFootstepSetInternal item)
         {
             ClearPartial();
-            item.WalkForwardFootsteps.Clear();
-            item.RunForwardFootsteps.Clear();
-            item.WalkForwardAlternateFootsteps.Clear();
-            item.RunForwardAlternateFootsteps.Clear();
-            item.WalkForwardAlternateFootsteps2.Clear();
+            item.WalkFootsteps.Clear();
+            item.RunFootsteps.Clear();
+            item.SprintFootsteps.Clear();
+            item.SneakFootsteps.Clear();
+            item.SwimFootsteps.Clear();
             base.Clear(item);
         }
         
@@ -1307,11 +1307,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IFootstepSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.WalkForwardFootsteps.RemapLinks(mapping);
-            obj.RunForwardFootsteps.RemapLinks(mapping);
-            obj.WalkForwardAlternateFootsteps.RemapLinks(mapping);
-            obj.RunForwardAlternateFootsteps.RemapLinks(mapping);
-            obj.WalkForwardAlternateFootsteps2.RemapLinks(mapping);
+            obj.WalkFootsteps.RemapLinks(mapping);
+            obj.RunFootsteps.RemapLinks(mapping);
+            obj.SprintFootsteps.RemapLinks(mapping);
+            obj.SneakFootsteps.RemapLinks(mapping);
+            obj.SwimFootsteps.RemapLinks(mapping);
         }
         
         #endregion
@@ -1380,24 +1380,24 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.WalkForwardFootsteps = item.WalkForwardFootsteps.CollectionEqualsHelper(
-                rhs.WalkForwardFootsteps,
+            ret.WalkFootsteps = item.WalkFootsteps.CollectionEqualsHelper(
+                rhs.WalkFootsteps,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.RunForwardFootsteps = item.RunForwardFootsteps.CollectionEqualsHelper(
-                rhs.RunForwardFootsteps,
+            ret.RunFootsteps = item.RunFootsteps.CollectionEqualsHelper(
+                rhs.RunFootsteps,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.WalkForwardAlternateFootsteps = item.WalkForwardAlternateFootsteps.CollectionEqualsHelper(
-                rhs.WalkForwardAlternateFootsteps,
+            ret.SprintFootsteps = item.SprintFootsteps.CollectionEqualsHelper(
+                rhs.SprintFootsteps,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.RunForwardAlternateFootsteps = item.RunForwardAlternateFootsteps.CollectionEqualsHelper(
-                rhs.RunForwardAlternateFootsteps,
+            ret.SneakFootsteps = item.SneakFootsteps.CollectionEqualsHelper(
+                rhs.SneakFootsteps,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.WalkForwardAlternateFootsteps2 = item.WalkForwardAlternateFootsteps2.CollectionEqualsHelper(
-                rhs.WalkForwardAlternateFootsteps2,
+            ret.SwimFootsteps = item.SwimFootsteps.CollectionEqualsHelper(
+                rhs.SwimFootsteps,
                 (l, r) => object.Equals(l, r),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1449,12 +1449,12 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.WalkForwardFootsteps?.Overall ?? true)
+            if (printMask?.WalkFootsteps?.Overall ?? true)
             {
-                sb.AppendLine("WalkForwardFootsteps =>");
+                sb.AppendLine("WalkFootsteps =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.WalkForwardFootsteps)
+                    foreach (var subItem in item.WalkFootsteps)
                     {
                         using (sb.Brace())
                         {
@@ -1463,12 +1463,12 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.RunForwardFootsteps?.Overall ?? true)
+            if (printMask?.RunFootsteps?.Overall ?? true)
             {
-                sb.AppendLine("RunForwardFootsteps =>");
+                sb.AppendLine("RunFootsteps =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.RunForwardFootsteps)
+                    foreach (var subItem in item.RunFootsteps)
                     {
                         using (sb.Brace())
                         {
@@ -1477,12 +1477,12 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.WalkForwardAlternateFootsteps?.Overall ?? true)
+            if (printMask?.SprintFootsteps?.Overall ?? true)
             {
-                sb.AppendLine("WalkForwardAlternateFootsteps =>");
+                sb.AppendLine("SprintFootsteps =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.WalkForwardAlternateFootsteps)
+                    foreach (var subItem in item.SprintFootsteps)
                     {
                         using (sb.Brace())
                         {
@@ -1491,12 +1491,12 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.RunForwardAlternateFootsteps?.Overall ?? true)
+            if (printMask?.SneakFootsteps?.Overall ?? true)
             {
-                sb.AppendLine("RunForwardAlternateFootsteps =>");
+                sb.AppendLine("SneakFootsteps =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.RunForwardAlternateFootsteps)
+                    foreach (var subItem in item.SneakFootsteps)
                     {
                         using (sb.Brace())
                         {
@@ -1505,12 +1505,12 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.WalkForwardAlternateFootsteps2?.Overall ?? true)
+            if (printMask?.SwimFootsteps?.Overall ?? true)
             {
-                sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
+                sb.AppendLine("SwimFootsteps =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.WalkForwardAlternateFootsteps2)
+                    foreach (var subItem in item.SwimFootsteps)
                     {
                         using (sb.Brace())
                         {
@@ -1567,25 +1567,25 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkFootsteps) ?? true))
             {
-                if (!lhs.WalkForwardFootsteps.SequenceEqualNullable(rhs.WalkForwardFootsteps)) return false;
+                if (!lhs.WalkFootsteps.SequenceEqualNullable(rhs.WalkFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunFootsteps) ?? true))
             {
-                if (!lhs.RunForwardFootsteps.SequenceEqualNullable(rhs.RunForwardFootsteps)) return false;
+                if (!lhs.RunFootsteps.SequenceEqualNullable(rhs.RunFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.SprintFootsteps) ?? true))
             {
-                if (!lhs.WalkForwardAlternateFootsteps.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps)) return false;
+                if (!lhs.SprintFootsteps.SequenceEqualNullable(rhs.SprintFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.SneakFootsteps) ?? true))
             {
-                if (!lhs.RunForwardAlternateFootsteps.SequenceEqualNullable(rhs.RunForwardAlternateFootsteps)) return false;
+                if (!lhs.SneakFootsteps.SequenceEqualNullable(rhs.SneakFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.SwimFootsteps) ?? true))
             {
-                if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps2)) return false;
+                if (!lhs.SwimFootsteps.SequenceEqualNullable(rhs.SwimFootsteps)) return false;
             }
             return true;
         }
@@ -1615,11 +1615,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IFootstepSetGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.WalkForwardFootsteps);
-            hash.Add(item.RunForwardFootsteps);
-            hash.Add(item.WalkForwardAlternateFootsteps);
-            hash.Add(item.RunForwardAlternateFootsteps);
-            hash.Add(item.WalkForwardAlternateFootsteps2);
+            hash.Add(item.WalkFootsteps);
+            hash.Add(item.RunFootsteps);
+            hash.Add(item.SprintFootsteps);
+            hash.Add(item.SneakFootsteps);
+            hash.Add(item.SwimFootsteps);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1649,23 +1649,23 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
-            foreach (var item in obj.WalkForwardFootsteps)
+            foreach (var item in obj.WalkFootsteps)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.RunForwardFootsteps)
+            foreach (var item in obj.RunFootsteps)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.WalkForwardAlternateFootsteps)
+            foreach (var item in obj.SprintFootsteps)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.RunForwardAlternateFootsteps)
+            foreach (var item in obj.SneakFootsteps)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.WalkForwardAlternateFootsteps2)
+            foreach (var item in obj.SwimFootsteps)
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1743,13 +1743,13 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkFootsteps) ?? true))
             {
-                errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardFootsteps);
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkFootsteps);
                 try
                 {
-                    item.WalkForwardFootsteps.SetTo(
-                        rhs.WalkForwardFootsteps
+                    item.WalkFootsteps.SetTo(
+                        rhs.WalkFootsteps
                         .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
@@ -1762,13 +1762,13 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunFootsteps) ?? true))
             {
-                errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunForwardFootsteps);
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunFootsteps);
                 try
                 {
-                    item.RunForwardFootsteps.SetTo(
-                        rhs.RunForwardFootsteps
+                    item.RunFootsteps.SetTo(
+                        rhs.RunFootsteps
                         .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
@@ -1781,13 +1781,13 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SprintFootsteps) ?? true))
             {
-                errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps);
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.SprintFootsteps);
                 try
                 {
-                    item.WalkForwardAlternateFootsteps.SetTo(
-                        rhs.WalkForwardAlternateFootsteps
+                    item.SprintFootsteps.SetTo(
+                        rhs.SprintFootsteps
                         .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
@@ -1800,13 +1800,13 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SneakFootsteps) ?? true))
             {
-                errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps);
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.SneakFootsteps);
                 try
                 {
-                    item.RunForwardAlternateFootsteps.SetTo(
-                        rhs.RunForwardAlternateFootsteps
+                    item.SneakFootsteps.SetTo(
+                        rhs.SneakFootsteps
                         .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
@@ -1819,13 +1819,13 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SwimFootsteps) ?? true))
             {
-                errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2);
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.SwimFootsteps);
                 try
                 {
-                    item.WalkForwardAlternateFootsteps2.SetTo(
-                        rhs.WalkForwardAlternateFootsteps2
+                    item.SwimFootsteps.SetTo(
+                        rhs.SwimFootsteps
                         .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
