@@ -166,6 +166,9 @@
     <Compile Include="Records\Major Records\NavigationMeshData.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\StoryManagerEventNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\SkyrimGroupWrapper.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>

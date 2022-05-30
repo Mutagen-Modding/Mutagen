@@ -42,6 +42,7 @@ public partial class RecordTypes
     public static readonly RecordType CTDA = new(0x41445443);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DEBR = new(0x52424544);
+    public static readonly RecordType DFOB = new(0x424F4644);
     public static readonly RecordType DIAL = new(0x4C414944);
     public static readonly RecordType DLBR = new(0x52424C44);
     public static readonly RecordType DLVW = new(0x57564C44);

@@ -61,15 +61,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IQuestGetter> IStoryManagerQuestGetter.Quest => this.Quest;
         #endregion
         #region FNAM
+        public UInt32? FNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FNAM;
-        public MemorySlice<Byte>? FNAM
-        {
-            get => this._FNAM;
-            set => this._FNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IStoryManagerQuestGetter.FNAM => this.FNAM;
+        UInt32? IStoryManagerQuestGetter.FNAM => this.FNAM;
         #endregion
         #region HoursUntilReset
         public Single? HoursUntilReset { get; set; }
@@ -503,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         IStoryManagerQuestGetter
     {
         new IFormLinkNullable<IQuestGetter> Quest { get; set; }
-        new MemorySlice<Byte>? FNAM { get; set; }
+        new UInt32? FNAM { get; set; }
         new Single? HoursUntilReset { get; set; }
     }
 
@@ -521,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => StoryManagerQuest_Registration.Instance;
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
-        ReadOnlyMemorySlice<Byte>? FNAM { get; }
+        UInt32? FNAM { get; }
         Single? HoursUntilReset { get; }
 
     }
@@ -847,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (rhs == null) return;
             ret.Quest = item.Quest.Equals(rhs.Quest);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
+            ret.FNAM = item.FNAM == rhs.FNAM;
             ret.HoursUntilReset = item.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset);
         }
         
@@ -900,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.FNAM ?? true)
                 && item.FNAM is {} FNAMItem)
             {
-                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+                sb.AppendItem(FNAMItem, "FNAM");
             }
             if ((printMask?.HoursUntilReset ?? true)
                 && item.HoursUntilReset is {} HoursUntilResetItem)
@@ -922,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+                if (lhs.FNAM != rhs.FNAM) return false;
             }
             if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.HoursUntilReset) ?? true))
             {
@@ -935,9 +929,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.FNAM is {} FNAMItem)
+            if (item.FNAM is {} FNAMitem)
             {
-                hash.Add(FNAMItem);
+                hash.Add(FNAMitem);
             }
             if (item.HoursUntilReset is {} HoursUntilResetitem)
             {
@@ -985,14 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
             {
-                if(rhs.FNAM is {} FNAMrhs)
-                {
-                    item.FNAM = FNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.FNAM = default;
-                }
+                item.FNAM = rhs.FNAM;
             }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.HoursUntilReset) ?? true))
             {
@@ -1099,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Quest,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
@@ -1167,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StoryManagerQuest_FieldIndex.FNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.FNAM = frame.ReadUInt32();
                     return (int)StoryManagerQuest_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.RNAM:
@@ -1254,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FNAM
         private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public UInt32? FNAM => _FNAMLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region HoursUntilReset
         private int? _HoursUntilResetLocation;

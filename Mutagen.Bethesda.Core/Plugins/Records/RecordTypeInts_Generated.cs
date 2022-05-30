@@ -40,6 +40,7 @@ public partial class RecordTypeInts
     public const int CTDA = 0x41445443;
     public const int DATA = 0x41544144;
     public const int DEBR = 0x52424544;
+    public const int DFOB = 0x424F4644;
     public const int DIAL = 0x4C414944;
     public const int DLBR = 0x52424C44;
     public const int DLVW = 0x57564C44;
