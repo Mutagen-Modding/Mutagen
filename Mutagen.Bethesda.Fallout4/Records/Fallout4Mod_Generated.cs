@@ -153,6 +153,8 @@ namespace Mutagen.Bethesda.Fallout4
             _DialogViews_Object = new Fallout4Group<DialogView>(this);
             _EquipTypes_Object = new Fallout4Group<EquipType>(this);
             _Relationships_Object = new Fallout4Group<Relationship>(this);
+            _AssociationTypes_Object = new Fallout4Group<AssociationType>(this);
+            _Outfits_Object = new Fallout4Group<Outfit>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -837,6 +839,20 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IRelationshipGetter> IFallout4ModGetter.Relationships => _Relationships_Object;
         #endregion
+        #region AssociationTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<AssociationType> _AssociationTypes_Object;
+        public Fallout4Group<AssociationType> AssociationTypes => _AssociationTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAssociationTypeGetter> IFallout4ModGetter.AssociationTypes => _AssociationTypes_Object;
+        #endregion
+        #region Outfits
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Outfit> _Outfits_Object;
+        public Fallout4Group<Outfit> Outfits => _Outfits_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IOutfitGetter> IFallout4ModGetter.Outfits => _Outfits_Object;
+        #endregion
 
         #region To String
 
@@ -973,6 +989,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DialogViews = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.EquipTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Relationships = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.AssociationTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Outfits = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1072,7 +1090,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem MusicTracks,
                 TItem DialogViews,
                 TItem EquipTypes,
-                TItem Relationships)
+                TItem Relationships,
+                TItem AssociationTypes,
+                TItem Outfits)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1171,6 +1191,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DialogViews = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(DialogViews, new Fallout4Group.Mask<TItem>(DialogViews));
                 this.EquipTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(EquipTypes, new Fallout4Group.Mask<TItem>(EquipTypes));
                 this.Relationships = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Relationships, new Fallout4Group.Mask<TItem>(Relationships));
+                this.AssociationTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AssociationTypes, new Fallout4Group.Mask<TItem>(AssociationTypes));
+                this.Outfits = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Outfits, new Fallout4Group.Mask<TItem>(Outfits));
             }
 
             #pragma warning disable CS8618
@@ -1279,6 +1301,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? DialogViews { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? EquipTypes { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Relationships { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AssociationTypes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Outfits { get; set; }
             #endregion
 
             #region Equals
@@ -1388,6 +1412,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DialogViews, rhs.DialogViews)) return false;
                 if (!object.Equals(this.EquipTypes, rhs.EquipTypes)) return false;
                 if (!object.Equals(this.Relationships, rhs.Relationships)) return false;
+                if (!object.Equals(this.AssociationTypes, rhs.AssociationTypes)) return false;
+                if (!object.Equals(this.Outfits, rhs.Outfits)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1490,6 +1516,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DialogViews);
                 hash.Add(this.EquipTypes);
                 hash.Add(this.Relationships);
+                hash.Add(this.AssociationTypes);
+                hash.Add(this.Outfits);
                 return hash.ToHashCode();
             }
 
@@ -1983,6 +2011,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Relationships.Overall)) return false;
                     if (this.Relationships.Specific != null && !this.Relationships.Specific.All(eval)) return false;
                 }
+                if (AssociationTypes != null)
+                {
+                    if (!eval(this.AssociationTypes.Overall)) return false;
+                    if (this.AssociationTypes.Specific != null && !this.AssociationTypes.Specific.All(eval)) return false;
+                }
+                if (Outfits != null)
+                {
+                    if (!eval(this.Outfits.Overall)) return false;
+                    if (this.Outfits.Specific != null && !this.Outfits.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2475,6 +2513,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Relationships.Overall)) return true;
                     if (this.Relationships.Specific != null && this.Relationships.Specific.Any(eval)) return true;
                 }
+                if (AssociationTypes != null)
+                {
+                    if (eval(this.AssociationTypes.Overall)) return true;
+                    if (this.AssociationTypes.Specific != null && this.AssociationTypes.Specific.Any(eval)) return true;
+                }
+                if (Outfits != null)
+                {
+                    if (eval(this.Outfits.Overall)) return true;
+                    if (this.Outfits.Specific != null && this.Outfits.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2586,6 +2634,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.DialogViews = this.DialogViews == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.DialogViews.Overall), this.DialogViews.Specific?.Translate(eval));
                 obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
                 obj.Relationships = this.Relationships == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Relationships.Overall), this.Relationships.Specific?.Translate(eval));
+                obj.AssociationTypes = this.AssociationTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AssociationTypes.Overall), this.AssociationTypes.Specific?.Translate(eval));
+                obj.Outfits = this.Outfits == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2992,6 +3042,14 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Relationships?.Print(sb);
                     }
+                    if (printMask?.AssociationTypes?.Overall ?? true)
+                    {
+                        AssociationTypes?.Print(sb);
+                    }
+                    if (printMask?.Outfits?.Overall ?? true)
+                    {
+                        Outfits?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3113,6 +3171,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<DialogView.ErrorMask>?>? DialogViews;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Relationship.ErrorMask>?>? Relationships;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<AssociationType.ErrorMask>?>? AssociationTypes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Outfit.ErrorMask>?>? Outfits;
             #endregion
 
             #region IErrorMask
@@ -3315,6 +3375,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return EquipTypes;
                     case Fallout4Mod_FieldIndex.Relationships:
                         return Relationships;
+                    case Fallout4Mod_FieldIndex.AssociationTypes:
+                        return AssociationTypes;
+                    case Fallout4Mod_FieldIndex.Outfits:
+                        return Outfits;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3615,6 +3679,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Relationships:
                         this.Relationships = new MaskItem<Exception?, Fallout4Group.ErrorMask<Relationship.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.AssociationTypes:
+                        this.AssociationTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<AssociationType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Outfits:
+                        this.Outfits = new MaskItem<Exception?, Fallout4Group.ErrorMask<Outfit.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3917,6 +3987,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Relationships:
                         this.Relationships = (MaskItem<Exception?, Fallout4Group.ErrorMask<Relationship.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.AssociationTypes:
+                        this.AssociationTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<AssociationType.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Outfits:
+                        this.Outfits = (MaskItem<Exception?, Fallout4Group.ErrorMask<Outfit.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4022,6 +4098,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DialogViews != null) return true;
                 if (EquipTypes != null) return true;
                 if (Relationships != null) return true;
+                if (AssociationTypes != null) return true;
+                if (Outfits != null) return true;
                 return false;
             }
             #endregion
@@ -4144,6 +4222,8 @@ namespace Mutagen.Bethesda.Fallout4
                 DialogViews?.Print(sb);
                 EquipTypes?.Print(sb);
                 Relationships?.Print(sb);
+                AssociationTypes?.Print(sb);
+                Outfits?.Print(sb);
             }
             #endregion
 
@@ -4249,6 +4329,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DialogViews = this.DialogViews.Combine(rhs.DialogViews, (l, r) => l.Combine(r));
                 ret.EquipTypes = this.EquipTypes.Combine(rhs.EquipTypes, (l, r) => l.Combine(r));
                 ret.Relationships = this.Relationships.Combine(rhs.Relationships, (l, r) => l.Combine(r));
+                ret.AssociationTypes = this.AssociationTypes.Combine(rhs.AssociationTypes, (l, r) => l.Combine(r));
+                ret.Outfits = this.Outfits.Combine(rhs.Outfits, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4369,6 +4451,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<DialogView.TranslationMask>? DialogViews;
             public Fallout4Group.TranslationMask<EquipType.TranslationMask>? EquipTypes;
             public Fallout4Group.TranslationMask<Relationship.TranslationMask>? Relationships;
+            public Fallout4Group.TranslationMask<AssociationType.TranslationMask>? AssociationTypes;
+            public Fallout4Group.TranslationMask<Outfit.TranslationMask>? Outfits;
             #endregion
 
             #region Ctors
@@ -4490,6 +4574,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DialogViews != null ? DialogViews.OnOverall : DefaultOn, DialogViews?.GetCrystal()));
                 ret.Add((EquipTypes != null ? EquipTypes.OnOverall : DefaultOn, EquipTypes?.GetCrystal()));
                 ret.Add((Relationships != null ? Relationships.OnOverall : DefaultOn, Relationships?.GetCrystal()));
+                ret.Add((AssociationTypes != null ? AssociationTypes.OnOverall : DefaultOn, AssociationTypes?.GetCrystal()));
+                ret.Add((Outfits != null ? Outfits.OnOverall : DefaultOn, Outfits?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4626,6 +4712,8 @@ namespace Mutagen.Bethesda.Fallout4
             _DialogViews_Object = new Fallout4Group<DialogView>(this);
             _EquipTypes_Object = new Fallout4Group<EquipType>(this);
             _Relationships_Object = new Fallout4Group<Relationship>(this);
+            _AssociationTypes_Object = new Fallout4Group<AssociationType>(this);
+            _Outfits_Object = new Fallout4Group<Outfit>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5019,6 +5107,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Relationships.RecordCache.Set(rhsMod.Relationships.RecordCache.Items);
             }
+            if (mask?.AssociationTypes ?? true)
+            {
+                this.AssociationTypes.RecordCache.Set(rhsMod.AssociationTypes.RecordCache.Items);
+            }
+            if (mask?.Outfits ?? true)
+            {
+                this.Outfits.RecordCache.Set(rhsMod.Outfits.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5125,6 +5221,8 @@ namespace Mutagen.Bethesda.Fallout4
             count += DialogViews.RecordCache.Count > 0 ? 1 : default(uint);
             count += EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Relationships.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AssociationTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5472,6 +5570,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<DialogView> DialogViews { get; }
         new Fallout4Group<EquipType> EquipTypes { get; }
         new Fallout4Group<Relationship> Relationships { get; }
+        new Fallout4Group<AssociationType> AssociationTypes { get; }
+        new Fallout4Group<Outfit> Outfits { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -5587,6 +5687,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IDialogViewGetter> DialogViews { get; }
         IFallout4GroupGetter<IEquipTypeGetter> EquipTypes { get; }
         IFallout4GroupGetter<IRelationshipGetter> Relationships { get; }
+        IFallout4GroupGetter<IAssociationTypeGetter> AssociationTypes { get; }
+        IFallout4GroupGetter<IOutfitGetter> Outfits { get; }
 
     }
 
@@ -6254,6 +6356,8 @@ namespace Mutagen.Bethesda.Fallout4
         DialogViews = 94,
         EquipTypes = 95,
         Relationships = 96,
+        AssociationTypes = 97,
+        Outfits = 98,
     }
     #endregion
 
@@ -6271,9 +6375,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 97;
+        public const ushort AdditionalFieldCount = 99;
 
-        public const ushort FieldCount = 97;
+        public const ushort FieldCount = 99;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -6437,6 +6541,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.DialogViews.Clear();
             item.EquipTypes.Clear();
             item.Relationships.Clear();
+            item.AssociationTypes.Clear();
+            item.Outfits.Clear();
         }
         
         #region Mutagen
@@ -6527,6 +6633,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.DialogViews.RemapLinks(mapping);
             obj.EquipTypes.RemapLinks(mapping);
             obj.Relationships.RemapLinks(mapping);
+            obj.Outfits.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -6657,6 +6764,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.DialogViews.Remove(keys);
             obj.EquipTypes.Remove(keys);
             obj.Relationships.Remove(keys);
+            obj.AssociationTypes.Remove(keys);
+            obj.Outfits.Remove(keys);
         }
         
         public void Remove(
@@ -7480,6 +7589,22 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "AssociationType":
+                case "IAssociationTypeGetter":
+                case "IAssociationType":
+                case "IAssociationTypeInternal":
+                    obj.AssociationTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    obj.Outfits.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -8065,6 +8190,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.DialogViews = MaskItemExt.Factory(item.DialogViews.GetEqualsMask(rhs.DialogViews, include), include);
             ret.EquipTypes = MaskItemExt.Factory(item.EquipTypes.GetEqualsMask(rhs.EquipTypes, include), include);
             ret.Relationships = MaskItemExt.Factory(item.Relationships.GetEqualsMask(rhs.Relationships, include), include);
+            ret.AssociationTypes = MaskItemExt.Factory(item.AssociationTypes.GetEqualsMask(rhs.AssociationTypes, include), include);
+            ret.Outfits = MaskItemExt.Factory(item.Outfits.GetEqualsMask(rhs.Outfits, include), include);
         }
         
         public string Print(
@@ -8496,6 +8623,14 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Relationships?.Overall ?? true)
             {
                 item.Relationships?.Print(sb, "Relationships");
+            }
+            if (printMask?.AssociationTypes?.Overall ?? true)
+            {
+                item.AssociationTypes?.Print(sb, "AssociationTypes");
+            }
+            if (printMask?.Outfits?.Overall ?? true)
+            {
+                item.Outfits?.Print(sb, "Outfits");
             }
         }
         
@@ -9282,6 +9417,22 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isRelationshipsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AssociationTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AssociationTypes, rhs.AssociationTypes, out var lhsAssociationTypes, out var rhsAssociationTypes, out var isAssociationTypesEqual))
+                {
+                    if (!object.Equals(lhsAssociationTypes, rhsAssociationTypes)) return false;
+                }
+                else if (!isAssociationTypesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Outfits) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Outfits, rhs.Outfits, out var lhsOutfits, out var rhsOutfits, out var isOutfitsEqual))
+                {
+                    if (!object.Equals(lhsOutfits, rhsOutfits)) return false;
+                }
+                else if (!isOutfitsEqual) return false;
+            }
             return true;
         }
         
@@ -9385,6 +9536,8 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.DialogViews);
             hash.Add(item.EquipTypes);
             hash.Add(item.Relationships);
+            hash.Add(item.AssociationTypes);
+            hash.Add(item.Outfits);
             return hash.ToHashCode();
         }
         
@@ -9882,6 +10035,16 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IRelationship":
                 case "IRelationshipInternal":
                     return obj.Relationships;
+                case "AssociationType":
+                case "IAssociationTypeGetter":
+                case "IAssociationType":
+                case "IAssociationTypeInternal":
+                    return obj.AssociationTypes;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    return obj.Outfits;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -9906,7 +10069,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[96];
+            Stream[] outputStreams = new Stream[98];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10004,6 +10167,8 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.DialogViews, 93, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.EquipTypes, 94, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Relationships, 95, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, 96, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 97, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10388,6 +10553,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.Relationships.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Outfits.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -10777,6 +10946,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.Relationships.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AssociationTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Outfits.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11666,6 +11843,24 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IRelationship":
                 case "IRelationshipInternal":
                     foreach (var item in obj.Relationships.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AssociationType":
+                case "IAssociationTypeGetter":
+                case "IAssociationType":
+                case "IAssociationTypeInternal":
+                    foreach (var item in obj.AssociationTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    foreach (var item in obj.Outfits.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12693,6 +12888,24 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.Relationships,
                 groupGetter: (m) => m.Relationships))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AssociationType, IAssociationTypeGetter>(
+                srcGroup: obj.AssociationTypes,
+                type: typeof(IAssociationTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AssociationTypes,
+                groupGetter: (m) => m.AssociationTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Outfit, IOutfitGetter>(
+                srcGroup: obj.Outfits,
+                type: typeof(IOutfitGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Outfits,
+                groupGetter: (m) => m.Outfits))
             {
                 yield return item;
             }
@@ -14053,6 +14266,34 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.Relationships,
                         groupGetter: (m) => m.Relationships))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AssociationType":
+                case "IAssociationTypeGetter":
+                case "IAssociationType":
+                case "IAssociationTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AssociationType, IAssociationTypeGetter>(
+                        srcGroup: obj.AssociationTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AssociationTypes,
+                        groupGetter: (m) => m.AssociationTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Outfit, IOutfitGetter>(
+                        srcGroup: obj.Outfits,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Outfits,
+                        groupGetter: (m) => m.Outfits))
                     {
                         yield return item;
                     }
@@ -16291,6 +16532,46 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AssociationTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.AssociationTypes);
+                try
+                {
+                    item.AssociationTypes.DeepCopyIn(
+                        rhs: rhs.AssociationTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.AssociationTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Outfits) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Outfits);
+                try
+                {
+                    item.Outfits.DeepCopyIn(
+                        rhs: rhs.Outfits,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Outfits));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -16477,6 +16758,8 @@ namespace Mutagen.Bethesda.Fallout4
         public bool DialogViews;
         public bool EquipTypes;
         public bool Relationships;
+        public bool AssociationTypes;
+        public bool Outfits;
         public GroupMask()
         {
         }
@@ -16578,6 +16861,8 @@ namespace Mutagen.Bethesda.Fallout4
             DialogViews = defaultValue;
             EquipTypes = defaultValue;
             Relationships = defaultValue;
+            AssociationTypes = defaultValue;
+            Outfits = defaultValue;
         }
     }
 
@@ -17661,6 +17946,28 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)RelationshipsItem).BinaryWriteTranslator).Write<IRelationshipGetter>(
                         item: RelationshipsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AssociationTypes ?? true)
+            {
+                var AssociationTypesItem = item.AssociationTypes;
+                if (AssociationTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AssociationTypesItem).BinaryWriteTranslator).Write<IAssociationTypeGetter>(
+                        item: AssociationTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Outfits ?? true)
+            {
+                var OutfitsItem = item.Outfits;
+                if (OutfitsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)OutfitsItem).BinaryWriteTranslator).Write<IOutfitGetter>(
+                        item: OutfitsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19075,6 +19382,34 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.Relationships;
                 }
+                case RecordTypeInts.ASTP:
+                {
+                    if (importMask?.AssociationTypes ?? true)
+                    {
+                        item.AssociationTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.AssociationTypes;
+                }
+                case RecordTypeInts.OTFT:
+                {
+                    if (importMask?.Outfits ?? true)
+                    {
+                        item.Outfits.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Outfits;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -19717,6 +20052,16 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _RelationshipsLocations;
         private IFallout4GroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocations != null ? Fallout4GroupBinaryOverlay<IRelationshipGetter>.Fallout4GroupFactory(_data, _RelationshipsLocations, _package) : default;
         public IFallout4GroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new Fallout4Group<Relationship>(this);
+        #endregion
+        #region AssociationTypes
+        private List<RangeInt64>? _AssociationTypesLocations;
+        private IFallout4GroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocations != null ? Fallout4GroupBinaryOverlay<IAssociationTypeGetter>.Fallout4GroupFactory(_data, _AssociationTypesLocations, _package) : default;
+        public IFallout4GroupGetter<IAssociationTypeGetter> AssociationTypes => _AssociationTypes ?? new Fallout4Group<AssociationType>(this);
+        #endregion
+        #region Outfits
+        private List<RangeInt64>? _OutfitsLocations;
+        private IFallout4GroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? Fallout4GroupBinaryOverlay<IOutfitGetter>.Fallout4GroupFactory(_data, _OutfitsLocations, _package) : default;
+        public IFallout4GroupGetter<IOutfitGetter> Outfits => _Outfits ?? new Fallout4Group<Outfit>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -20380,6 +20725,18 @@ namespace Mutagen.Bethesda.Fallout4
                     _RelationshipsLocations ??= new();
                     _RelationshipsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Relationships;
+                }
+                case RecordTypeInts.ASTP:
+                {
+                    _AssociationTypesLocations ??= new();
+                    _AssociationTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.AssociationTypes;
+                }
+                case RecordTypeInts.OTFT:
+                {
+                    _OutfitsLocations ??= new();
+                    _OutfitsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Outfits;
                 }
                 default:
                     return default(int?);

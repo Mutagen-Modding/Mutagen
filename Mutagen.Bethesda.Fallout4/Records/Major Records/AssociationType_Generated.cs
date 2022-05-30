@@ -53,6 +53,19 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region ParentTitle
+        public IGenderedItem<String?>? ParentTitle { get; set; }
+        IGenderedItemGetter<String?>? IAssociationTypeGetter.ParentTitle => this.ParentTitle;
+        #endregion
+        #region Title
+        public IGenderedItem<String?>? Title { get; set; }
+        IGenderedItemGetter<String?>? IAssociationTypeGetter.Title => this.Title;
+        #endregion
+        #region IsFamily
+        public Boolean? IsFamily { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IAssociationTypeGetter.IsFamily => this.IsFamily;
+        #endregion
 
         #region To String
 
@@ -78,6 +91,9 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.IsFamily = initialValue;
             }
 
             public Mask(
@@ -86,7 +102,10 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ParentTitle,
+                TItem Title,
+                TItem IsFamily)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +114,9 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(ParentTitle, default);
+                this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(Title, default);
+                this.IsFamily = IsFamily;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +125,12 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, GenderedItem<TItem>?>? ParentTitle;
+            public MaskItem<TItem, GenderedItem<TItem>?>? Title;
+            public TItem IsFamily;
             #endregion
 
             #region Equals
@@ -116,11 +144,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ParentTitle, rhs.ParentTitle)) return false;
+                if (!object.Equals(this.Title, rhs.Title)) return false;
+                if (!object.Equals(this.IsFamily, rhs.IsFamily)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ParentTitle);
+                hash.Add(this.Title);
+                hash.Add(this.IsFamily);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +165,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!GenderedItem.All(
+                    this.ParentTitle,
+                    eval: eval)) return false;
+                if (!GenderedItem.All(
+                    this.Title,
+                    eval: eval)) return false;
+                if (!eval(this.IsFamily)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +180,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (GenderedItem.Any(
+                    this.ParentTitle,
+                    eval: eval)) return true;
+                if (GenderedItem.Any(
+                    this.Title,
+                    eval: eval)) return true;
+                if (eval(this.IsFamily)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +202,13 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ParentTitle = GenderedItem.TranslateHelper(
+                    this.ParentTitle,
+                    eval);
+                obj.Title = GenderedItem.TranslateHelper(
+                    this.Title,
+                    eval);
+                obj.IsFamily = eval(this.IsFamily);
             }
             #endregion
 
@@ -172,6 +227,20 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(AssociationType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (ParentTitle != null
+                        && (printMask?.ParentTitle?.Overall ?? true))
+                    {
+                        sb.AppendLine($"ParentTitle => {ParentTitle}");
+                    }
+                    if (Title != null
+                        && (printMask?.Title?.Overall ?? true))
+                    {
+                        sb.AppendLine($"Title => {Title}");
+                    }
+                    if (printMask?.IsFamily ?? true)
+                    {
+                        sb.AppendItem(IsFamily, "IsFamily");
+                    }
                 }
             }
             #endregion
@@ -182,12 +251,24 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? ParentTitle;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Title;
+            public Exception? IsFamily;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
+                    case AssociationType_FieldIndex.ParentTitle:
+                        return ParentTitle;
+                    case AssociationType_FieldIndex.Title:
+                        return Title;
+                    case AssociationType_FieldIndex.IsFamily:
+                        return IsFamily;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +279,15 @@ namespace Mutagen.Bethesda.Fallout4
                 AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
+                    case AssociationType_FieldIndex.ParentTitle:
+                        this.ParentTitle = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case AssociationType_FieldIndex.Title:
+                        this.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case AssociationType_FieldIndex.IsFamily:
+                        this.IsFamily = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +299,15 @@ namespace Mutagen.Bethesda.Fallout4
                 AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
+                    case AssociationType_FieldIndex.ParentTitle:
+                        this.ParentTitle = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case AssociationType_FieldIndex.Title:
+                        this.Title = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case AssociationType_FieldIndex.IsFamily:
+                        this.IsFamily = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +317,9 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ParentTitle != null) return true;
+                if (Title != null) return true;
+                if (IsFamily != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +346,17 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (ParentTitle != null)
+                {
+                    sb.AppendLine($"ParentTitle => {ParentTitle}");
+                }
+                if (Title != null)
+                {
+                    sb.AppendLine($"Title => {Title}");
+                }
+                {
+                    sb.AppendItem(IsFamily, "IsFamily");
+                }
             }
             #endregion
 
@@ -252,6 +365,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ParentTitle = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.ParentTitle?.Overall, rhs.ParentTitle?.Overall), GenderedItem.Combine(this.ParentTitle?.Specific, rhs.ParentTitle?.Specific));
+                ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
+                ret.IsFamily = this.IsFamily.Combine(rhs.IsFamily);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +389,30 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public GenderedItem<bool>? ParentTitle;
+            public GenderedItem<bool>? Title;
+            public bool IsFamily;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.IsFamily = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ParentTitle != null || DefaultOn, null));
+                ret.Add((Title != null || DefaultOn, null));
+                ret.Add((IsFamily, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -418,6 +549,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IAssociationTypeInternal>
     {
+        new IGenderedItem<String?>? ParentTitle { get; set; }
+        new IGenderedItem<String?>? Title { get; set; }
+        new Boolean? IsFamily { get; set; }
     }
 
     public partial interface IAssociationTypeInternal :
@@ -425,6 +559,8 @@ namespace Mutagen.Bethesda.Fallout4
         IAssociationType,
         IAssociationTypeGetter
     {
+        new IGenderedItem<String?>? ParentTitle { get; set; }
+        new IGenderedItem<String?>? Title { get; set; }
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.ASTP)]
@@ -435,6 +571,9 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IAssociationTypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => AssociationType_Registration.Instance;
+        IGenderedItemGetter<String?>? ParentTitle { get; }
+        IGenderedItemGetter<String?>? Title { get; }
+        Boolean? IsFamily { get; }
 
     }
 
@@ -599,6 +738,9 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ParentTitle = 6,
+        Title = 7,
+        IsFamily = 8,
     }
     #endregion
 
@@ -616,9 +758,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "cc28a383-4ee7-46d3-a08a-82b1b3515e70";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(AssociationType.Mask<>);
 
@@ -648,8 +790,15 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.ASTP);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.ASTP);
+            var all = RecordCollection.Factory(
+                RecordTypes.ASTP,
+                RecordTypes.MPRT,
+                RecordTypes.FPRT,
+                RecordTypes.MCHT,
+                RecordTypes.FCHT,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AssociationTypeBinaryWriteTranslation);
         #region Interface
@@ -693,6 +842,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAssociationTypeInternal item)
         {
             ClearPartial();
+            item.ParentTitle = null;
+            item.Title = null;
+            item.IsFamily = default;
             base.Clear(item);
         }
         
@@ -778,6 +930,17 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ParentTitle = GenderedItem.EqualityMaskHelper(
+                lhs: item.ParentTitle,
+                rhs: rhs.ParentTitle,
+                maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
+                include: include);
+            ret.Title = GenderedItem.EqualityMaskHelper(
+                lhs: item.Title,
+                rhs: rhs.Title,
+                maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
+                include: include);
+            ret.IsFamily = item.IsFamily == rhs.IsFamily;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +990,21 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.ParentTitle?.Overall ?? true)
+                && item.ParentTitle is {} ParentTitleItem)
+            {
+                ParentTitleItem?.Print(sb, "ParentTitle");
+            }
+            if ((printMask?.Title?.Overall ?? true)
+                && item.Title is {} TitleItem)
+            {
+                TitleItem?.Print(sb, "Title");
+            }
+            if ((printMask?.IsFamily ?? true)
+                && item.IsFamily is {} IsFamilyItem)
+            {
+                sb.AppendItem(IsFamilyItem, "IsFamily");
+            }
         }
         
         public static AssociationType_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1053,18 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.ParentTitle) ?? true))
+            {
+                if (!Equals(lhs.ParentTitle, rhs.ParentTitle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.Title) ?? true))
+            {
+                if (!Equals(lhs.Title, rhs.Title)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
+            {
+                if (lhs.IsFamily != rhs.IsFamily) return false;
+            }
             return true;
         }
         
@@ -903,6 +1093,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IAssociationTypeGetter item)
         {
             var hash = new HashCode();
+            if (item.ParentTitle is {} ParentTitleitem)
+            {
+                hash.Add(HashCode.Combine(ParentTitleitem.Male, ParentTitleitem.Female));
+            }
+            if (item.Title is {} Titleitem)
+            {
+                hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
+            }
+            if (item.IsFamily is {} IsFamilyitem)
+            {
+                hash.Add(IsFamilyitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1006,6 +1208,30 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if (rhs.ParentTitle is not {} rhsParentTitleitem)
+            {
+                item.ParentTitle = null;
+            }
+            else
+            {
+                item.ParentTitle = new GenderedItem<String?>(
+                    male: rhsParentTitleitem.Male,
+                    female: rhsParentTitleitem.Female);
+            }
+            if (rhs.Title is not {} rhsTitleitem)
+            {
+                item.Title = null;
+            }
+            else
+            {
+                item.Title = new GenderedItem<String?>(
+                    male: rhsTitleitem.Male,
+                    female: rhsTitleitem.Female);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
+            {
+                item.IsFamily = rhs.IsFamily;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1380,34 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static AssociationTypeBinaryWriteTranslation Instance = new AssociationTypeBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IAssociationTypeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.ParentTitle,
+                maleMarker: RecordTypes.MPRT,
+                femaleMarker: RecordTypes.FPRT,
+                transl: StringBinaryTranslation.Instance.WriteNullable);
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.Title,
+                maleMarker: RecordTypes.MCHT,
+                femaleMarker: RecordTypes.FCHT,
+                transl: StringBinaryTranslation.Instance.WriteNullable);
+            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.IsFamily,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA),
+                byteLength: 4);
+        }
+
         public void Write(
             MutagenWriter writer,
             IAssociationTypeGetter item,
@@ -1168,10 +1422,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1485,59 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IAssociationTypeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MPRT:
+                case RecordTypeInts.FPRT:
+                {
+                    item.ParentTitle = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MPRT,
+                        femaleMarker: RecordTypes.FPRT,
+                        transl: StringBinaryTranslation.Instance.Parse,
+                        skipMarker: false);
+                    return (int)AssociationType_FieldIndex.ParentTitle;
+                }
+                case RecordTypeInts.MCHT:
+                case RecordTypeInts.FCHT:
+                {
+                    item.Title = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MCHT,
+                        femaleMarker: RecordTypes.FCHT,
+                        transl: StringBinaryTranslation.Instance.Parse,
+                        skipMarker: false);
+                    return (int)AssociationType_FieldIndex.Title;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.IsFamily = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        byteLength: 4);
+                    return (int)AssociationType_FieldIndex.IsFamily;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1275,6 +1584,18 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IAssociationType);
 
 
+        #region ParentTitle
+        private IGenderedItemGetter<String?>? _ParentTitleOverlay;
+        public IGenderedItemGetter<String?>? ParentTitle => _ParentTitleOverlay;
+        #endregion
+        #region Title
+        private IGenderedItemGetter<String?>? _TitleOverlay;
+        public IGenderedItemGetter<String?>? Title => _TitleOverlay;
+        #endregion
+        #region IsFamily
+        private int? _IsFamilyLocation;
+        public Boolean? IsFamily => _IsFamilyLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IsFamilyLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +1650,55 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MPRT:
+                case RecordTypeInts.FPRT:
+                {
+                    _ParentTitleOverlay = GenderedItemBinaryOverlay.Factory<String>(
+                        package: _package,
+                        male: RecordTypes.MPRT,
+                        female: RecordTypes.FPRT,
+                        stream: stream,
+                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                    return (int)AssociationType_FieldIndex.ParentTitle;
+                }
+                case RecordTypeInts.MCHT:
+                case RecordTypeInts.FCHT:
+                {
+                    _TitleOverlay = GenderedItemBinaryOverlay.Factory<String>(
+                        package: _package,
+                        male: RecordTypes.MCHT,
+                        female: RecordTypes.FCHT,
+                        stream: stream,
+                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                    return (int)AssociationType_FieldIndex.Title;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _IsFamilyLocation = (stream.Position - offset);
+                    return (int)AssociationType_FieldIndex.IsFamily;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

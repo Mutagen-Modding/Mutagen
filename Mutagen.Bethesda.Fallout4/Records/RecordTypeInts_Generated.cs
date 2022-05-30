@@ -211,6 +211,7 @@ public partial class RecordTypeInts
     public const int ETYP = 0x50595445;
     public const int EXPL = 0x4C505845;
     public const int FACT = 0x54434146;
+    public const int FCHT = 0x54484346;
     public const int FCPL = 0x4C504346;
     public const int FIAD = 0x44414946;
     public const int FIMD = 0x444D4946;
@@ -226,6 +227,7 @@ public partial class RecordTypeInts
     public const int FMRS = 0x53524D46;
     public const int FNAM = 0x4D414E46;
     public const int FNPR = 0x52504E46;
+    public const int FPRT = 0x54525046;
     public const int FSTP = 0x50545346;
     public const int FSTS = 0x53545346;
     public const int FTSF = 0x46535446;
@@ -350,6 +352,7 @@ public partial class RecordTypeInts
     public const int MASE = 0x4553414D;
     public const int MAST = 0x5453414D;
     public const int MATT = 0x5454414D;
+    public const int MCHT = 0x5448434D;
     public const int MDOB = 0x424F444D;
     public const int MESG = 0x4753454D;
     public const int MGEF = 0x4645474D;
@@ -396,6 +399,7 @@ public partial class RecordTypeInts
     public const int MPPM = 0x4D50504D;
     public const int MPPN = 0x4E50504D;
     public const int MPPT = 0x5450504D;
+    public const int MPRT = 0x5452504D;
     public const int MRSV = 0x5653524D;
     public const int MSDK = 0x4B44534D;
     public const int MSDV = 0x5644534D;

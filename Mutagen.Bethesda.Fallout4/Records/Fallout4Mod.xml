@@ -103,6 +103,8 @@
       <Group name="DialogViews" refName="DialogView" />
       <Group name="EquipTypes" refName="EquipType" />
       <Group name="Relationships" refName="Relationship" />
+      <Group name="AssociationTypes" refName="AssociationType" />
+      <Group name="Outfits" refName="Outfit" />
     </Fields>
   </Object>
 </Loqui>

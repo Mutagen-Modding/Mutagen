@@ -213,6 +213,7 @@ public partial class RecordTypes
     public static readonly RecordType ETYP = new(0x50595445);
     public static readonly RecordType EXPL = new(0x4C505845);
     public static readonly RecordType FACT = new(0x54434146);
+    public static readonly RecordType FCHT = new(0x54484346);
     public static readonly RecordType FCPL = new(0x4C504346);
     public static readonly RecordType FIAD = new(0x44414946);
     public static readonly RecordType FIMD = new(0x444D4946);
@@ -228,6 +229,7 @@ public partial class RecordTypes
     public static readonly RecordType FMRS = new(0x53524D46);
     public static readonly RecordType FNAM = new(0x4D414E46);
     public static readonly RecordType FNPR = new(0x52504E46);
+    public static readonly RecordType FPRT = new(0x54525046);
     public static readonly RecordType FSTP = new(0x50545346);
     public static readonly RecordType FSTS = new(0x53545346);
     public static readonly RecordType FTSF = new(0x46535446);
@@ -352,6 +354,7 @@ public partial class RecordTypes
     public static readonly RecordType MASE = new(0x4553414D);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MATT = new(0x5454414D);
+    public static readonly RecordType MCHT = new(0x5448434D);
     public static readonly RecordType MDOB = new(0x424F444D);
     public static readonly RecordType MESG = new(0x4753454D);
     public static readonly RecordType MGEF = new(0x4645474D);
@@ -398,6 +401,7 @@ public partial class RecordTypes
     public static readonly RecordType MPPM = new(0x4D50504D);
     public static readonly RecordType MPPN = new(0x4E50504D);
     public static readonly RecordType MPPT = new(0x5450504D);
+    public static readonly RecordType MPRT = new(0x5452504D);
     public static readonly RecordType MRSV = new(0x5653524D);
     public static readonly RecordType MSDK = new(0x4B44534D);
     public static readonly RecordType MSDV = new(0x5644534D);
