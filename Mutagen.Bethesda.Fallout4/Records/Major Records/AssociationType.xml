@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AssociationType" objType="Record" recordType="ASTP" baseClass="Fallout4MajorRecord" GUID="cc28a383-4ee7-46d3-a08a-82b1b3515e70" ID="631">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

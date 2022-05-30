@@ -632,6 +632,9 @@
     <Compile Include="Records\Major Records\RegionSound.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Relationship.cs">
+      <DependentUpon>Relationship.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Scene.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
@@ -2263,6 +2266,12 @@
     </Compile>
     <Compile Include="Records\Major Records\DialogView_Generated.cs">
       <DependentUpon>DialogView.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AssociationType_Generated.cs">
+      <DependentUpon>AssociationType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Relationship_Generated.cs">
+      <DependentUpon>Relationship.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -73,6 +73,7 @@ public partial class RecordTypeInts
     public const int ARTO = 0x4F545241;
     public const int ASPC = 0x43505341;
     public const int ASSU = 0x55535341;
+    public const int ASTP = 0x50545341;
     public const int ATKD = 0x444B5441;
     public const int ATKE = 0x454B5441;
     public const int ATKR = 0x524B5441;
@@ -527,6 +528,7 @@ public partial class RecordTypeInts
     public const int RDWT = 0x54574452;
     public const int REFR = 0x52464552;
     public const int REGN = 0x4E474552;
+    public const int RELA = 0x414C4552;
     public const int REMP = 0x504D4552;
     public const int REPT = 0x54504552;
     public const int REVB = 0x42564552;

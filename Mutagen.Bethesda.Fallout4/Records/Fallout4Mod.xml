@@ -102,6 +102,7 @@
       <Group name="MusicTracks" refName="MusicTrack" />
       <Group name="DialogViews" refName="DialogView" />
       <Group name="EquipTypes" refName="EquipType" />
+      <Group name="Relationships" refName="Relationship" />
     </Fields>
   </Object>
 </Loqui>

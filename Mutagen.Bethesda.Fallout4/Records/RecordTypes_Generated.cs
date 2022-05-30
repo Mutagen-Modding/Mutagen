@@ -75,6 +75,7 @@ public partial class RecordTypes
     public static readonly RecordType ARTO = new(0x4F545241);
     public static readonly RecordType ASPC = new(0x43505341);
     public static readonly RecordType ASSU = new(0x55535341);
+    public static readonly RecordType ASTP = new(0x50545341);
     public static readonly RecordType ATKD = new(0x444B5441);
     public static readonly RecordType ATKE = new(0x454B5441);
     public static readonly RecordType ATKR = new(0x524B5441);
@@ -529,6 +530,7 @@ public partial class RecordTypes
     public static readonly RecordType RDWT = new(0x54574452);
     public static readonly RecordType REFR = new(0x52464552);
     public static readonly RecordType REGN = new(0x4E474552);
+    public static readonly RecordType RELA = new(0x414C4552);
     public static readonly RecordType REMP = new(0x504D4552);
     public static readonly RecordType REPT = new(0x54504552);
     public static readonly RecordType REVB = new(0x42564552);

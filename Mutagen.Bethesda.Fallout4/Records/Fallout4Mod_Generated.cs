@@ -152,6 +152,7 @@ namespace Mutagen.Bethesda.Fallout4
             _MusicTracks_Object = new Fallout4Group<MusicTrack>(this);
             _DialogViews_Object = new Fallout4Group<DialogView>(this);
             _EquipTypes_Object = new Fallout4Group<EquipType>(this);
+            _Relationships_Object = new Fallout4Group<Relationship>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -829,6 +830,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IEquipTypeGetter> IFallout4ModGetter.EquipTypes => _EquipTypes_Object;
         #endregion
+        #region Relationships
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Relationship> _Relationships_Object;
+        public Fallout4Group<Relationship> Relationships => _Relationships_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IRelationshipGetter> IFallout4ModGetter.Relationships => _Relationships_Object;
+        #endregion
 
         #region To String
 
@@ -964,6 +972,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MusicTracks = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.DialogViews = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.EquipTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Relationships = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1062,7 +1071,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem StoryManagerEventNodes,
                 TItem MusicTracks,
                 TItem DialogViews,
-                TItem EquipTypes)
+                TItem EquipTypes,
+                TItem Relationships)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1160,6 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MusicTracks = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MusicTracks, new Fallout4Group.Mask<TItem>(MusicTracks));
                 this.DialogViews = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(DialogViews, new Fallout4Group.Mask<TItem>(DialogViews));
                 this.EquipTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(EquipTypes, new Fallout4Group.Mask<TItem>(EquipTypes));
+                this.Relationships = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Relationships, new Fallout4Group.Mask<TItem>(Relationships));
             }
 
             #pragma warning disable CS8618
@@ -1267,6 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MusicTracks { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? DialogViews { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? EquipTypes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Relationships { get; set; }
             #endregion
 
             #region Equals
@@ -1375,6 +1387,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.MusicTracks, rhs.MusicTracks)) return false;
                 if (!object.Equals(this.DialogViews, rhs.DialogViews)) return false;
                 if (!object.Equals(this.EquipTypes, rhs.EquipTypes)) return false;
+                if (!object.Equals(this.Relationships, rhs.Relationships)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1476,6 +1489,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.MusicTracks);
                 hash.Add(this.DialogViews);
                 hash.Add(this.EquipTypes);
+                hash.Add(this.Relationships);
                 return hash.ToHashCode();
             }
 
@@ -1964,6 +1978,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.EquipTypes.Overall)) return false;
                     if (this.EquipTypes.Specific != null && !this.EquipTypes.Specific.All(eval)) return false;
                 }
+                if (Relationships != null)
+                {
+                    if (!eval(this.Relationships.Overall)) return false;
+                    if (this.Relationships.Specific != null && !this.Relationships.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2451,6 +2470,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.EquipTypes.Overall)) return true;
                     if (this.EquipTypes.Specific != null && this.EquipTypes.Specific.Any(eval)) return true;
                 }
+                if (Relationships != null)
+                {
+                    if (eval(this.Relationships.Overall)) return true;
+                    if (this.Relationships.Specific != null && this.Relationships.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2561,6 +2585,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MusicTracks = this.MusicTracks == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MusicTracks.Overall), this.MusicTracks.Specific?.Translate(eval));
                 obj.DialogViews = this.DialogViews == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.DialogViews.Overall), this.DialogViews.Specific?.Translate(eval));
                 obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
+                obj.Relationships = this.Relationships == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Relationships.Overall), this.Relationships.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2963,6 +2988,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         EquipTypes?.Print(sb);
                     }
+                    if (printMask?.Relationships?.Overall ?? true)
+                    {
+                        Relationships?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3083,6 +3112,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MusicTrack.ErrorMask>?>? MusicTracks;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<DialogView.ErrorMask>?>? DialogViews;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Relationship.ErrorMask>?>? Relationships;
             #endregion
 
             #region IErrorMask
@@ -3283,6 +3313,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return DialogViews;
                     case Fallout4Mod_FieldIndex.EquipTypes:
                         return EquipTypes;
+                    case Fallout4Mod_FieldIndex.Relationships:
+                        return Relationships;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3580,6 +3612,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.EquipTypes:
                         this.EquipTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<EquipType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Relationships:
+                        this.Relationships = new MaskItem<Exception?, Fallout4Group.ErrorMask<Relationship.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3879,6 +3914,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.EquipTypes:
                         this.EquipTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<EquipType.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Relationships:
+                        this.Relationships = (MaskItem<Exception?, Fallout4Group.ErrorMask<Relationship.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3983,6 +4021,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (MusicTracks != null) return true;
                 if (DialogViews != null) return true;
                 if (EquipTypes != null) return true;
+                if (Relationships != null) return true;
                 return false;
             }
             #endregion
@@ -4104,6 +4143,7 @@ namespace Mutagen.Bethesda.Fallout4
                 MusicTracks?.Print(sb);
                 DialogViews?.Print(sb);
                 EquipTypes?.Print(sb);
+                Relationships?.Print(sb);
             }
             #endregion
 
@@ -4208,6 +4248,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MusicTracks = this.MusicTracks.Combine(rhs.MusicTracks, (l, r) => l.Combine(r));
                 ret.DialogViews = this.DialogViews.Combine(rhs.DialogViews, (l, r) => l.Combine(r));
                 ret.EquipTypes = this.EquipTypes.Combine(rhs.EquipTypes, (l, r) => l.Combine(r));
+                ret.Relationships = this.Relationships.Combine(rhs.Relationships, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4327,6 +4368,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<MusicTrack.TranslationMask>? MusicTracks;
             public Fallout4Group.TranslationMask<DialogView.TranslationMask>? DialogViews;
             public Fallout4Group.TranslationMask<EquipType.TranslationMask>? EquipTypes;
+            public Fallout4Group.TranslationMask<Relationship.TranslationMask>? Relationships;
             #endregion
 
             #region Ctors
@@ -4447,6 +4489,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((MusicTracks != null ? MusicTracks.OnOverall : DefaultOn, MusicTracks?.GetCrystal()));
                 ret.Add((DialogViews != null ? DialogViews.OnOverall : DefaultOn, DialogViews?.GetCrystal()));
                 ret.Add((EquipTypes != null ? EquipTypes.OnOverall : DefaultOn, EquipTypes?.GetCrystal()));
+                ret.Add((Relationships != null ? Relationships.OnOverall : DefaultOn, Relationships?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4582,6 +4625,7 @@ namespace Mutagen.Bethesda.Fallout4
             _MusicTracks_Object = new Fallout4Group<MusicTrack>(this);
             _DialogViews_Object = new Fallout4Group<DialogView>(this);
             _EquipTypes_Object = new Fallout4Group<EquipType>(this);
+            _Relationships_Object = new Fallout4Group<Relationship>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4971,6 +5015,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.EquipTypes.RecordCache.Set(rhsMod.EquipTypes.RecordCache.Items);
             }
+            if (mask?.Relationships ?? true)
+            {
+                this.Relationships.RecordCache.Set(rhsMod.Relationships.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5076,6 +5124,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
             count += DialogViews.RecordCache.Count > 0 ? 1 : default(uint);
             count += EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Relationships.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5422,6 +5471,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<MusicTrack> MusicTracks { get; }
         new Fallout4Group<DialogView> DialogViews { get; }
         new Fallout4Group<EquipType> EquipTypes { get; }
+        new Fallout4Group<Relationship> Relationships { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -5536,6 +5586,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IMusicTrackGetter> MusicTracks { get; }
         IFallout4GroupGetter<IDialogViewGetter> DialogViews { get; }
         IFallout4GroupGetter<IEquipTypeGetter> EquipTypes { get; }
+        IFallout4GroupGetter<IRelationshipGetter> Relationships { get; }
 
     }
 
@@ -6202,6 +6253,7 @@ namespace Mutagen.Bethesda.Fallout4
         MusicTracks = 93,
         DialogViews = 94,
         EquipTypes = 95,
+        Relationships = 96,
     }
     #endregion
 
@@ -6219,9 +6271,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 96;
+        public const ushort AdditionalFieldCount = 97;
 
-        public const ushort FieldCount = 96;
+        public const ushort FieldCount = 97;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -6384,6 +6436,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.MusicTracks.Clear();
             item.DialogViews.Clear();
             item.EquipTypes.Clear();
+            item.Relationships.Clear();
         }
         
         #region Mutagen
@@ -6473,6 +6526,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MusicTracks.RemapLinks(mapping);
             obj.DialogViews.RemapLinks(mapping);
             obj.EquipTypes.RemapLinks(mapping);
+            obj.Relationships.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -6602,6 +6656,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MusicTracks.Remove(keys);
             obj.DialogViews.Remove(keys);
             obj.EquipTypes.Remove(keys);
+            obj.Relationships.Remove(keys);
         }
         
         public void Remove(
@@ -7417,6 +7472,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "Relationship":
+                case "IRelationshipGetter":
+                case "IRelationship":
+                case "IRelationshipInternal":
+                    obj.Relationships.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -8001,6 +8064,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.MusicTracks = MaskItemExt.Factory(item.MusicTracks.GetEqualsMask(rhs.MusicTracks, include), include);
             ret.DialogViews = MaskItemExt.Factory(item.DialogViews.GetEqualsMask(rhs.DialogViews, include), include);
             ret.EquipTypes = MaskItemExt.Factory(item.EquipTypes.GetEqualsMask(rhs.EquipTypes, include), include);
+            ret.Relationships = MaskItemExt.Factory(item.Relationships.GetEqualsMask(rhs.Relationships, include), include);
         }
         
         public string Print(
@@ -8428,6 +8492,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.EquipTypes?.Overall ?? true)
             {
                 item.EquipTypes?.Print(sb, "EquipTypes");
+            }
+            if (printMask?.Relationships?.Overall ?? true)
+            {
+                item.Relationships?.Print(sb, "Relationships");
             }
         }
         
@@ -9206,6 +9274,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isEquipTypesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Relationships) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Relationships, rhs.Relationships, out var lhsRelationships, out var rhsRelationships, out var isRelationshipsEqual))
+                {
+                    if (!object.Equals(lhsRelationships, rhsRelationships)) return false;
+                }
+                else if (!isRelationshipsEqual) return false;
+            }
             return true;
         }
         
@@ -9308,6 +9384,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.MusicTracks);
             hash.Add(item.DialogViews);
             hash.Add(item.EquipTypes);
+            hash.Add(item.Relationships);
             return hash.ToHashCode();
         }
         
@@ -9800,6 +9877,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IEquipType":
                 case "IEquipTypeInternal":
                     return obj.EquipTypes;
+                case "Relationship":
+                case "IRelationshipGetter":
+                case "IRelationship":
+                case "IRelationshipInternal":
+                    return obj.Relationships;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -9824,7 +9906,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[95];
+            Stream[] outputStreams = new Stream[96];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -9921,6 +10003,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.MusicTracks, 92, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.DialogViews, 93, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.EquipTypes, 94, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Relationships, 95, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10301,6 +10384,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.EquipTypes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Relationships.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -10686,6 +10773,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.EquipTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Relationships.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11566,6 +11657,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IEquipType":
                 case "IEquipTypeInternal":
                     foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Relationship":
+                case "IRelationshipGetter":
+                case "IRelationship":
+                case "IRelationshipInternal":
+                    foreach (var item in obj.Relationships.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12584,6 +12684,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.EquipTypes,
                 groupGetter: (m) => m.EquipTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Relationship, IRelationshipGetter>(
+                srcGroup: obj.Relationships,
+                type: typeof(IRelationshipGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Relationships,
+                groupGetter: (m) => m.Relationships))
             {
                 yield return item;
             }
@@ -13930,6 +14039,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.EquipTypes,
                         groupGetter: (m) => m.EquipTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Relationship":
+                case "IRelationshipGetter":
+                case "IRelationship":
+                case "IRelationshipInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Relationship, IRelationshipGetter>(
+                        srcGroup: obj.Relationships,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Relationships,
+                        groupGetter: (m) => m.Relationships))
                     {
                         yield return item;
                     }
@@ -16148,6 +16271,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Relationships) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Relationships);
+                try
+                {
+                    item.Relationships.DeepCopyIn(
+                        rhs: rhs.Relationships,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Relationships));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -16333,6 +16476,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool MusicTracks;
         public bool DialogViews;
         public bool EquipTypes;
+        public bool Relationships;
         public GroupMask()
         {
         }
@@ -16433,6 +16577,7 @@ namespace Mutagen.Bethesda.Fallout4
             MusicTracks = defaultValue;
             DialogViews = defaultValue;
             EquipTypes = defaultValue;
+            Relationships = defaultValue;
         }
     }
 
@@ -17505,6 +17650,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)EquipTypesItem).BinaryWriteTranslator).Write<IEquipTypeGetter>(
                         item: EquipTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Relationships ?? true)
+            {
+                var RelationshipsItem = item.Relationships;
+                if (RelationshipsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)RelationshipsItem).BinaryWriteTranslator).Write<IRelationshipGetter>(
+                        item: RelationshipsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -18905,6 +19061,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.EquipTypes;
                 }
+                case RecordTypeInts.RELA:
+                {
+                    if (importMask?.Relationships ?? true)
+                    {
+                        item.Relationships.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Relationships;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -19542,6 +19712,11 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _EquipTypesLocations;
         private IFallout4GroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? Fallout4GroupBinaryOverlay<IEquipTypeGetter>.Fallout4GroupFactory(_data, _EquipTypesLocations, _package) : default;
         public IFallout4GroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new Fallout4Group<EquipType>(this);
+        #endregion
+        #region Relationships
+        private List<RangeInt64>? _RelationshipsLocations;
+        private IFallout4GroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocations != null ? Fallout4GroupBinaryOverlay<IRelationshipGetter>.Fallout4GroupFactory(_data, _RelationshipsLocations, _package) : default;
+        public IFallout4GroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new Fallout4Group<Relationship>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -20199,6 +20374,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _EquipTypesLocations ??= new();
                     _EquipTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.EquipTypes;
+                }
+                case RecordTypeInts.RELA:
+                {
+                    _RelationshipsLocations ??= new();
+                    _RelationshipsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Relationships;
                 }
                 default:
                     return default(int?);
