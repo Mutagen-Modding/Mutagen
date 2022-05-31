@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -31,6 +33,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -53,6 +56,97 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IMaterialObjectGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region DNAMs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SliceList<byte> _DNAMs = new SliceList<byte>();
+        public SliceList<byte> DNAMs
+        {
+            get => this._DNAMs;
+            init => this._DNAMs = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ReadOnlyMemorySlice<Byte>> IMaterialObjectGetter.DNAMs => _DNAMs;
+        #endregion
+
+        #endregion
+        #region FalloffScale
+        public Single FalloffScale { get; set; } = default;
+        #endregion
+        #region FalloffBias
+        public Single FalloffBias { get; set; } = default;
+        #endregion
+        #region NoiseUvScale
+        public Single NoiseUvScale { get; set; } = default;
+        #endregion
+        #region MaterialUvScale
+        public Single MaterialUvScale { get; set; } = default;
+        #endregion
+        #region ProjectionVector
+        public P3Float ProjectionVector { get; set; } = default;
+        #endregion
+        #region NormalDampener
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _NormalDampener;
+        public Single NormalDampener
+        {
+            get => this._NormalDampener;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._NormalDampener = value;
+            }
+        }
+        #endregion
+        #region SinglePassColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _SinglePassColor;
+        public Color SinglePassColor
+        {
+            get => this._SinglePassColor;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._SinglePassColor = value;
+            }
+        }
+        #endregion
+        #region IsSinglePass
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Boolean _IsSinglePass;
+        public Boolean IsSinglePass
+        {
+            get => this._IsSinglePass;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._IsSinglePass = value;
+            }
+        }
+        #endregion
+        #region DATADataTypeState
+        public MaterialObject.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +172,17 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FalloffScale = initialValue;
+                this.FalloffBias = initialValue;
+                this.NoiseUvScale = initialValue;
+                this.MaterialUvScale = initialValue;
+                this.ProjectionVector = initialValue;
+                this.NormalDampener = initialValue;
+                this.SinglePassColor = initialValue;
+                this.IsSinglePass = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +191,18 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Model,
+                TItem DNAMs,
+                TItem FalloffScale,
+                TItem FalloffBias,
+                TItem NoiseUvScale,
+                TItem MaterialUvScale,
+                TItem ProjectionVector,
+                TItem NormalDampener,
+                TItem SinglePassColor,
+                TItem IsSinglePass,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +211,17 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DNAMs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FalloffScale = FalloffScale;
+                this.FalloffBias = FalloffBias;
+                this.NoiseUvScale = NoiseUvScale;
+                this.MaterialUvScale = MaterialUvScale;
+                this.ProjectionVector = ProjectionVector;
+                this.NormalDampener = NormalDampener;
+                this.SinglePassColor = SinglePassColor;
+                this.IsSinglePass = IsSinglePass;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +230,20 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? DNAMs;
+            public TItem FalloffScale;
+            public TItem FalloffBias;
+            public TItem NoiseUvScale;
+            public TItem MaterialUvScale;
+            public TItem ProjectionVector;
+            public TItem NormalDampener;
+            public TItem SinglePassColor;
+            public TItem IsSinglePass;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +257,33 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.DNAMs, rhs.DNAMs)) return false;
+                if (!object.Equals(this.FalloffScale, rhs.FalloffScale)) return false;
+                if (!object.Equals(this.FalloffBias, rhs.FalloffBias)) return false;
+                if (!object.Equals(this.NoiseUvScale, rhs.NoiseUvScale)) return false;
+                if (!object.Equals(this.MaterialUvScale, rhs.MaterialUvScale)) return false;
+                if (!object.Equals(this.ProjectionVector, rhs.ProjectionVector)) return false;
+                if (!object.Equals(this.NormalDampener, rhs.NormalDampener)) return false;
+                if (!object.Equals(this.SinglePassColor, rhs.SinglePassColor)) return false;
+                if (!object.Equals(this.IsSinglePass, rhs.IsSinglePass)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.DNAMs);
+                hash.Add(this.FalloffScale);
+                hash.Add(this.FalloffBias);
+                hash.Add(this.NoiseUvScale);
+                hash.Add(this.MaterialUvScale);
+                hash.Add(this.ProjectionVector);
+                hash.Add(this.NormalDampener);
+                hash.Add(this.SinglePassColor);
+                hash.Add(this.IsSinglePass);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +294,31 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.DNAMs != null)
+                {
+                    if (!eval(this.DNAMs.Overall)) return false;
+                    if (this.DNAMs.Specific != null)
+                    {
+                        foreach (var item in this.DNAMs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.FalloffScale)) return false;
+                if (!eval(this.FalloffBias)) return false;
+                if (!eval(this.NoiseUvScale)) return false;
+                if (!eval(this.MaterialUvScale)) return false;
+                if (!eval(this.ProjectionVector)) return false;
+                if (!eval(this.NormalDampener)) return false;
+                if (!eval(this.SinglePassColor)) return false;
+                if (!eval(this.IsSinglePass)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +327,31 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.DNAMs != null)
+                {
+                    if (eval(this.DNAMs.Overall)) return true;
+                    if (this.DNAMs.Specific != null)
+                    {
+                        foreach (var item in this.DNAMs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.FalloffScale)) return true;
+                if (eval(this.FalloffBias)) return true;
+                if (eval(this.NoiseUvScale)) return true;
+                if (eval(this.MaterialUvScale)) return true;
+                if (eval(this.ProjectionVector)) return true;
+                if (eval(this.NormalDampener)) return true;
+                if (eval(this.SinglePassColor)) return true;
+                if (eval(this.IsSinglePass)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +367,30 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (DNAMs != null)
+                {
+                    obj.DNAMs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DNAMs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (DNAMs.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.DNAMs.Specific = l;
+                        foreach (var item in DNAMs.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.FalloffScale = eval(this.FalloffScale);
+                obj.FalloffBias = eval(this.FalloffBias);
+                obj.NoiseUvScale = eval(this.NoiseUvScale);
+                obj.MaterialUvScale = eval(this.MaterialUvScale);
+                obj.ProjectionVector = eval(this.ProjectionVector);
+                obj.NormalDampener = eval(this.NormalDampener);
+                obj.SinglePassColor = eval(this.SinglePassColor);
+                obj.IsSinglePass = eval(this.IsSinglePass);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -172,6 +409,67 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(MaterialObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if ((printMask?.DNAMs?.Overall ?? true)
+                        && DNAMs is {} DNAMsItem)
+                    {
+                        sb.AppendLine("DNAMs =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DNAMsItem.Overall);
+                            if (DNAMsItem.Specific != null)
+                            {
+                                foreach (var subItem in DNAMsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.FalloffScale ?? true)
+                    {
+                        sb.AppendItem(FalloffScale, "FalloffScale");
+                    }
+                    if (printMask?.FalloffBias ?? true)
+                    {
+                        sb.AppendItem(FalloffBias, "FalloffBias");
+                    }
+                    if (printMask?.NoiseUvScale ?? true)
+                    {
+                        sb.AppendItem(NoiseUvScale, "NoiseUvScale");
+                    }
+                    if (printMask?.MaterialUvScale ?? true)
+                    {
+                        sb.AppendItem(MaterialUvScale, "MaterialUvScale");
+                    }
+                    if (printMask?.ProjectionVector ?? true)
+                    {
+                        sb.AppendItem(ProjectionVector, "ProjectionVector");
+                    }
+                    if (printMask?.NormalDampener ?? true)
+                    {
+                        sb.AppendItem(NormalDampener, "NormalDampener");
+                    }
+                    if (printMask?.SinglePassColor ?? true)
+                    {
+                        sb.AppendItem(SinglePassColor, "SinglePassColor");
+                    }
+                    if (printMask?.IsSinglePass ?? true)
+                    {
+                        sb.AppendItem(IsSinglePass, "IsSinglePass");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +480,48 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? DNAMs;
+            public Exception? FalloffScale;
+            public Exception? FalloffBias;
+            public Exception? NoiseUvScale;
+            public Exception? MaterialUvScale;
+            public Exception? ProjectionVector;
+            public Exception? NormalDampener;
+            public Exception? SinglePassColor;
+            public Exception? IsSinglePass;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MaterialObject_FieldIndex enu = (MaterialObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialObject_FieldIndex.Model:
+                        return Model;
+                    case MaterialObject_FieldIndex.DNAMs:
+                        return DNAMs;
+                    case MaterialObject_FieldIndex.FalloffScale:
+                        return FalloffScale;
+                    case MaterialObject_FieldIndex.FalloffBias:
+                        return FalloffBias;
+                    case MaterialObject_FieldIndex.NoiseUvScale:
+                        return NoiseUvScale;
+                    case MaterialObject_FieldIndex.MaterialUvScale:
+                        return MaterialUvScale;
+                    case MaterialObject_FieldIndex.ProjectionVector:
+                        return ProjectionVector;
+                    case MaterialObject_FieldIndex.NormalDampener:
+                        return NormalDampener;
+                    case MaterialObject_FieldIndex.SinglePassColor:
+                        return SinglePassColor;
+                    case MaterialObject_FieldIndex.IsSinglePass:
+                        return IsSinglePass;
+                    case MaterialObject_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +532,39 @@ namespace Mutagen.Bethesda.Fallout4
                 MaterialObject_FieldIndex enu = (MaterialObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialObject_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case MaterialObject_FieldIndex.DNAMs:
+                        this.DNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case MaterialObject_FieldIndex.FalloffScale:
+                        this.FalloffScale = ex;
+                        break;
+                    case MaterialObject_FieldIndex.FalloffBias:
+                        this.FalloffBias = ex;
+                        break;
+                    case MaterialObject_FieldIndex.NoiseUvScale:
+                        this.NoiseUvScale = ex;
+                        break;
+                    case MaterialObject_FieldIndex.MaterialUvScale:
+                        this.MaterialUvScale = ex;
+                        break;
+                    case MaterialObject_FieldIndex.ProjectionVector:
+                        this.ProjectionVector = ex;
+                        break;
+                    case MaterialObject_FieldIndex.NormalDampener:
+                        this.NormalDampener = ex;
+                        break;
+                    case MaterialObject_FieldIndex.SinglePassColor:
+                        this.SinglePassColor = ex;
+                        break;
+                    case MaterialObject_FieldIndex.IsSinglePass:
+                        this.IsSinglePass = ex;
+                        break;
+                    case MaterialObject_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +576,39 @@ namespace Mutagen.Bethesda.Fallout4
                 MaterialObject_FieldIndex enu = (MaterialObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialObject_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.DNAMs:
+                        this.DNAMs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case MaterialObject_FieldIndex.FalloffScale:
+                        this.FalloffScale = (Exception?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.FalloffBias:
+                        this.FalloffBias = (Exception?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.NoiseUvScale:
+                        this.NoiseUvScale = (Exception?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.MaterialUvScale:
+                        this.MaterialUvScale = (Exception?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.ProjectionVector:
+                        this.ProjectionVector = (Exception?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.NormalDampener:
+                        this.NormalDampener = (Exception?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.SinglePassColor:
+                        this.SinglePassColor = (Exception?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.IsSinglePass:
+                        this.IsSinglePass = (Exception?)obj;
+                        break;
+                    case MaterialObject_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +618,17 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Model != null) return true;
+                if (DNAMs != null) return true;
+                if (FalloffScale != null) return true;
+                if (FalloffBias != null) return true;
+                if (NoiseUvScale != null) return true;
+                if (MaterialUvScale != null) return true;
+                if (ProjectionVector != null) return true;
+                if (NormalDampener != null) return true;
+                if (SinglePassColor != null) return true;
+                if (IsSinglePass != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +655,54 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                Model?.Print(sb);
+                if (DNAMs is {} DNAMsItem)
+                {
+                    sb.AppendLine("DNAMs =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DNAMsItem.Overall);
+                        if (DNAMsItem.Specific != null)
+                        {
+                            foreach (var subItem in DNAMsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(FalloffScale, "FalloffScale");
+                }
+                {
+                    sb.AppendItem(FalloffBias, "FalloffBias");
+                }
+                {
+                    sb.AppendItem(NoiseUvScale, "NoiseUvScale");
+                }
+                {
+                    sb.AppendItem(MaterialUvScale, "MaterialUvScale");
+                }
+                {
+                    sb.AppendItem(ProjectionVector, "ProjectionVector");
+                }
+                {
+                    sb.AppendItem(NormalDampener, "NormalDampener");
+                }
+                {
+                    sb.AppendItem(SinglePassColor, "SinglePassColor");
+                }
+                {
+                    sb.AppendItem(IsSinglePass, "IsSinglePass");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +711,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.DNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DNAMs?.Overall, rhs.DNAMs?.Overall), ExceptionExt.Combine(this.DNAMs?.Specific, rhs.DNAMs?.Specific));
+                ret.FalloffScale = this.FalloffScale.Combine(rhs.FalloffScale);
+                ret.FalloffBias = this.FalloffBias.Combine(rhs.FalloffBias);
+                ret.NoiseUvScale = this.NoiseUvScale.Combine(rhs.NoiseUvScale);
+                ret.MaterialUvScale = this.MaterialUvScale.Combine(rhs.MaterialUvScale);
+                ret.ProjectionVector = this.ProjectionVector.Combine(rhs.ProjectionVector);
+                ret.NormalDampener = this.NormalDampener.Combine(rhs.NormalDampener);
+                ret.SinglePassColor = this.SinglePassColor.Combine(rhs.SinglePassColor);
+                ret.IsSinglePass = this.IsSinglePass.Combine(rhs.IsSinglePass);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +743,55 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public Model.TranslationMask? Model;
+            public bool DNAMs;
+            public bool FalloffScale;
+            public bool FalloffBias;
+            public bool NoiseUvScale;
+            public bool MaterialUvScale;
+            public bool ProjectionVector;
+            public bool NormalDampener;
+            public bool SinglePassColor;
+            public bool IsSinglePass;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.DNAMs = defaultOn;
+                this.FalloffScale = defaultOn;
+                this.FalloffBias = defaultOn;
+                this.NoiseUvScale = defaultOn;
+                this.MaterialUvScale = defaultOn;
+                this.ProjectionVector = defaultOn;
+                this.NormalDampener = defaultOn;
+                this.SinglePassColor = defaultOn;
+                this.IsSinglePass = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((DNAMs, null));
+                ret.Add((FalloffScale, null));
+                ret.Add((FalloffBias, null));
+                ret.Add((NoiseUvScale, null));
+                ret.Add((MaterialUvScale, null));
+                ret.Add((ProjectionVector, null));
+                ret.Add((NormalDampener, null));
+                ret.Add((SinglePassColor, null));
+                ret.Add((IsSinglePass, null));
+                ret.Add((DATADataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +803,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MaterialObject_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialObjectCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public MaterialObject(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -335,6 +847,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IMaterialObject);
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1,
+            Break1 = 2
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -415,9 +933,25 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IMaterialObject :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMaterialObjectInternal>,
-        IMaterialObjectGetter
+        IMaterialObjectGetter,
+        IModeled
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new SliceList<byte> DNAMs { get; }
+        new Single FalloffScale { get; set; }
+        new Single FalloffBias { get; set; }
+        new Single NoiseUvScale { get; set; }
+        new Single MaterialUvScale { get; set; }
+        new P3Float ProjectionVector { get; set; }
+        new Single NormalDampener { get; set; }
+        new Color SinglePassColor { get; set; }
+        new Boolean IsSinglePass { get; set; }
+        new MaterialObject.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IMaterialObjectInternal :
@@ -427,14 +961,32 @@ namespace Mutagen.Bethesda.Fallout4
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.MISC)]
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.MATO)]
     public partial interface IMaterialObjectGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IMaterialObjectGetter>,
-        IMapsToGetter<IMaterialObjectGetter>
+        IMapsToGetter<IMaterialObjectGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => MaterialObject_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; }
+        Single FalloffScale { get; }
+        Single FalloffBias { get; }
+        Single NoiseUvScale { get; }
+        Single MaterialUvScale { get; }
+        P3Float ProjectionVector { get; }
+        Single NormalDampener { get; }
+        Color SinglePassColor { get; }
+        Boolean IsSinglePass { get; }
+        MaterialObject.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -599,6 +1151,17 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Model = 6,
+        DNAMs = 7,
+        FalloffScale = 8,
+        FalloffBias = 9,
+        NoiseUvScale = 10,
+        MaterialUvScale = 11,
+        ProjectionVector = 12,
+        NormalDampener = 13,
+        SinglePassColor = 14,
+        IsSinglePass = 15,
+        DATADataTypeState = 16,
     }
     #endregion
 
@@ -616,9 +1179,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "7a69bcb8-1e05-49c3-a353-9b51c7eaed99";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(MaterialObject.Mask<>);
 
@@ -644,12 +1207,17 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.MISC;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MATO;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.MISC);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.MATO);
+            var all = RecordCollection.Factory(
+                RecordTypes.MATO,
+                RecordTypes.MODL,
+                RecordTypes.DNAM,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MaterialObjectBinaryWriteTranslation);
         #region Interface
@@ -693,6 +1261,17 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMaterialObjectInternal item)
         {
             ClearPartial();
+            item.Model = null;
+            item.DNAMs.Clear();
+            item.FalloffScale = default;
+            item.FalloffBias = default;
+            item.NoiseUvScale = default;
+            item.MaterialUvScale = default;
+            item.ProjectionVector = default;
+            item.NormalDampener = default;
+            item.SinglePassColor = default;
+            item.IsSinglePass = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -710,6 +1289,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IMaterialObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
         }
         
         #endregion
@@ -778,6 +1358,24 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DNAMs = item.DNAMs.CollectionEqualsHelper(
+                rhs.DNAMs,
+                (l, r) => MemoryExtensions.SequenceEqual(l.Span, r.Span),
+                include);
+            ret.FalloffScale = item.FalloffScale.EqualsWithin(rhs.FalloffScale);
+            ret.FalloffBias = item.FalloffBias.EqualsWithin(rhs.FalloffBias);
+            ret.NoiseUvScale = item.NoiseUvScale.EqualsWithin(rhs.NoiseUvScale);
+            ret.MaterialUvScale = item.MaterialUvScale.EqualsWithin(rhs.MaterialUvScale);
+            ret.ProjectionVector = item.ProjectionVector.Equals(rhs.ProjectionVector);
+            ret.NormalDampener = item.NormalDampener.EqualsWithin(rhs.NormalDampener);
+            ret.SinglePassColor = item.SinglePassColor.ColorOnlyEquals(rhs.SinglePassColor);
+            ret.IsSinglePass = item.IsSinglePass == rhs.IsSinglePass;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1425,61 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.DNAMs?.Overall ?? true)
+            {
+                sb.AppendLine("DNAMs =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.DNAMs)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
+                        }
+                    }
+                }
+            }
+            if (printMask?.FalloffScale ?? true)
+            {
+                sb.AppendItem(item.FalloffScale, "FalloffScale");
+            }
+            if (printMask?.FalloffBias ?? true)
+            {
+                sb.AppendItem(item.FalloffBias, "FalloffBias");
+            }
+            if (printMask?.NoiseUvScale ?? true)
+            {
+                sb.AppendItem(item.NoiseUvScale, "NoiseUvScale");
+            }
+            if (printMask?.MaterialUvScale ?? true)
+            {
+                sb.AppendItem(item.MaterialUvScale, "MaterialUvScale");
+            }
+            if (printMask?.ProjectionVector ?? true)
+            {
+                sb.AppendItem(item.ProjectionVector, "ProjectionVector");
+            }
+            if (printMask?.NormalDampener ?? true)
+            {
+                sb.AppendItem(item.NormalDampener, "NormalDampener");
+            }
+            if (printMask?.SinglePassColor ?? true)
+            {
+                sb.AppendItem(item.SinglePassColor, "SinglePassColor");
+            }
+            if (printMask?.IsSinglePass ?? true)
+            {
+                sb.AppendItem(item.IsSinglePass, "IsSinglePass");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public static MaterialObject_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1528,54 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)MaterialObject_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.DNAMs) ?? true))
+            {
+                if (!lhs.DNAMs.SequenceEqualNullable(rhs.DNAMs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffScale) ?? true))
+            {
+                if (!lhs.FalloffScale.EqualsWithin(rhs.FalloffScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffBias) ?? true))
+            {
+                if (!lhs.FalloffBias.EqualsWithin(rhs.FalloffBias)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.NoiseUvScale) ?? true))
+            {
+                if (!lhs.NoiseUvScale.EqualsWithin(rhs.NoiseUvScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.MaterialUvScale) ?? true))
+            {
+                if (!lhs.MaterialUvScale.EqualsWithin(rhs.MaterialUvScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.ProjectionVector) ?? true))
+            {
+                if (!lhs.ProjectionVector.Equals(rhs.ProjectionVector)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.NormalDampener) ?? true))
+            {
+                if (!lhs.NormalDampener.EqualsWithin(rhs.NormalDampener)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.SinglePassColor) ?? true))
+            {
+                if (!lhs.SinglePassColor.ColorOnlyEquals(rhs.SinglePassColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.IsSinglePass) ?? true))
+            {
+                if (lhs.IsSinglePass != rhs.IsSinglePass) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -903,6 +1604,20 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IMaterialObjectGetter item)
         {
             var hash = new HashCode();
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.DNAMs);
+            hash.Add(item.FalloffScale);
+            hash.Add(item.FalloffBias);
+            hash.Add(item.NoiseUvScale);
+            hash.Add(item.MaterialUvScale);
+            hash.Add(item.ProjectionVector);
+            hash.Add(item.NormalDampener);
+            hash.Add(item.SinglePassColor);
+            hash.Add(item.IsSinglePass);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +1646,13 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1006,6 +1728,87 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)MaterialObject_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MaterialObject_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.DNAMs) ?? true))
+            {
+                errorMask?.PushIndex((int)MaterialObject_FieldIndex.DNAMs);
+                try
+                {
+                    item.DNAMs.SetTo(
+                        rhs.DNAMs
+                            .Select(b => new MemorySlice<byte>(b.ToArray())));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffScale) ?? true))
+            {
+                item.FalloffScale = rhs.FalloffScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffBias) ?? true))
+            {
+                item.FalloffBias = rhs.FalloffBias;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.NoiseUvScale) ?? true))
+            {
+                item.NoiseUvScale = rhs.NoiseUvScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.MaterialUvScale) ?? true))
+            {
+                item.MaterialUvScale = rhs.MaterialUvScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.ProjectionVector) ?? true))
+            {
+                item.ProjectionVector = rhs.ProjectionVector;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.NormalDampener) ?? true))
+            {
+                item.NormalDampener = rhs.NormalDampener;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.SinglePassColor) ?? true))
+            {
+                item.SinglePassColor = rhs.SinglePassColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.IsSinglePass) ?? true))
+            {
+                item.IsSinglePass = rhs.IsSinglePass;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1957,70 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static MaterialObjectBinaryWriteTranslation Instance = new MaterialObjectBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IMaterialObjectGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IMaterialObjectGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ReadOnlyMemorySlice<Byte>>.Instance.WritePerItem(
+                writer: writer,
+                items: item.DNAMs,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FalloffScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FalloffBias);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseUvScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MaterialUvScale);
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ProjectionVector);
+                if (!item.DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break0))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.NormalDampener);
+                    if (!item.DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1))
+                    {
+                        ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.SinglePassColor,
+                            binaryType: ColorBinaryType.NoAlphaFloat);
+                        writer.Write(item.IsSinglePass, length: 4);
+                    }
+                }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IMaterialObjectGetter item,
@@ -1161,17 +2028,19 @@ namespace Mutagen.Bethesda.Fallout4
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MISC)))
+                record: translationParams.ConvertToCustom(RecordTypes.MATO)))
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1219,7 +2088,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static MaterialObjectBinaryCreateTranslation Instance = new MaterialObjectBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.MISC;
+        public override RecordType RecordType => RecordTypes.MATO;
         public static void FillBinaryStructs(
             IMaterialObjectInternal item,
             MutagenFrame frame)
@@ -1227,6 +2096,71 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IMaterialObjectInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)MaterialObject_FieldIndex.Model;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    item.DNAMs.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                            transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
+                    return (int)MaterialObject_FieldIndex.DNAMs;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.FalloffScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FalloffBias = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.NoiseUvScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.MaterialUvScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ProjectionVector = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= MaterialObject.DATADataType.Break0;
+                        return (int)MaterialObject_FieldIndex.ProjectionVector;
+                    }
+                    item.NormalDampener = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= MaterialObject.DATADataType.Break1;
+                        return (int)MaterialObject_FieldIndex.NormalDampener;
+                    }
+                    item.SinglePassColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    item.IsSinglePass = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        byteLength: 4);
+                    return (int)MaterialObject_FieldIndex.IsSinglePass;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
         }
 
     }
@@ -1261,6 +2195,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +2210,50 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IMaterialObject);
 
 
+        public IModelGetter? Model { get; private set; }
+        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; private set; } = Array.Empty<ReadOnlyMemorySlice<Byte>>();
+        private RangeInt32? _DATALocation;
+        public MaterialObject.DATADataType DATADataTypeState { get; private set; }
+        #region FalloffScale
+        private int _FalloffScaleLocation => _DATALocation!.Value.Min;
+        private bool _FalloffScale_IsSet => _DATALocation.HasValue;
+        public Single FalloffScale => _FalloffScale_IsSet ? _data.Slice(_FalloffScaleLocation, 4).Float() : default;
+        #endregion
+        #region FalloffBias
+        private int _FalloffBiasLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _FalloffBias_IsSet => _DATALocation.HasValue;
+        public Single FalloffBias => _FalloffBias_IsSet ? _data.Slice(_FalloffBiasLocation, 4).Float() : default;
+        #endregion
+        #region NoiseUvScale
+        private int _NoiseUvScaleLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _NoiseUvScale_IsSet => _DATALocation.HasValue;
+        public Single NoiseUvScale => _NoiseUvScale_IsSet ? _data.Slice(_NoiseUvScaleLocation, 4).Float() : default;
+        #endregion
+        #region MaterialUvScale
+        private int _MaterialUvScaleLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _MaterialUvScale_IsSet => _DATALocation.HasValue;
+        public Single MaterialUvScale => _MaterialUvScale_IsSet ? _data.Slice(_MaterialUvScaleLocation, 4).Float() : default;
+        #endregion
+        #region ProjectionVector
+        private int _ProjectionVectorLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _ProjectionVector_IsSet => _DATALocation.HasValue;
+        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_ProjectionVectorLocation, 12)) : default;
+        #endregion
+        #region NormalDampener
+        private int _NormalDampenerLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _NormalDampener_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break0);
+        public Single NormalDampener => _NormalDampener_IsSet ? _data.Slice(_NormalDampenerLocation, 4).Float() : default;
+        #endregion
+        #region SinglePassColor
+        private int _SinglePassColorLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _SinglePassColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
+        public Color SinglePassColor => _SinglePassColor_IsSet ? _data.Slice(_SinglePassColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        #endregion
+        #region IsSinglePass
+        private int _IsSinglePassLocation => _DATALocation!.Value.Min + 0x2C;
+        private bool _IsSinglePass_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
+        public Boolean IsSinglePass => _IsSinglePass_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_IsSinglePassLocation, 4)) >= 1 : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +2308,64 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)MaterialObject_FieldIndex.Model;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    this.DNAMs = BinaryOverlayList.FactoryByArray<ReadOnlyMemorySlice<Byte>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => p.MetaData.Constants.Subrecord(s).Content,
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: false,
+                            parseParams: parseParams));
+                    return (int)MaterialObject_FieldIndex.DNAMs;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x1C)
+                    {
+                        this.DATADataTypeState |= MaterialObject.DATADataType.Break0;
+                    }
+                    if (subLen <= 0x20)
+                    {
+                        this.DATADataTypeState |= MaterialObject.DATADataType.Break1;
+                    }
+                    return (int)MaterialObject_FieldIndex.IsSinglePass;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

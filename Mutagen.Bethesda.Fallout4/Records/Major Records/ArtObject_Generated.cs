@@ -75,6 +75,37 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
+        #region PreviewTransform
+        private readonly IFormLinkNullable<ITransformGetter> _PreviewTransform = new FormLinkNullable<ITransformGetter>();
+        public IFormLinkNullable<ITransformGetter> PreviewTransform
+        {
+            get => _PreviewTransform;
+            set => _PreviewTransform.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITransformGetter> IArtObjectGetter.PreviewTransform => this.PreviewTransform;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IArtObjectGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
@@ -124,6 +155,8 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.PreviewTransform = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Type = initialValue;
             }
@@ -136,6 +169,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem FormVersion,
                 TItem Version2,
                 TItem ObjectBounds,
+                TItem PreviewTransform,
+                TItem Keywords,
                 TItem Model,
                 TItem Type)
             : base(
@@ -147,6 +182,8 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.PreviewTransform = PreviewTransform;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Type = Type;
             }
@@ -161,6 +198,8 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem PreviewTransform;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Type;
             #endregion
@@ -177,6 +216,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.PreviewTransform, rhs.PreviewTransform)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 return true;
@@ -185,6 +226,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
+                hash.Add(this.PreviewTransform);
+                hash.Add(this.Keywords);
                 hash.Add(this.Model);
                 hash.Add(this.Type);
                 hash.Add(base.GetHashCode());
@@ -201,6 +244,18 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PreviewTransform)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
                 }
                 if (Model != null)
                 {
@@ -220,6 +275,18 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PreviewTransform)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
                 }
                 if (Model != null)
                 {
@@ -243,6 +310,21 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.PreviewTransform = eval(this.PreviewTransform);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Type = eval(this.Type);
             }
@@ -267,6 +349,31 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         ObjectBounds?.Print(sb);
                     }
+                    if (printMask?.PreviewTransform ?? true)
+                    {
+                        sb.AppendItem(PreviewTransform, "PreviewTransform");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.Model?.Overall ?? true)
                     {
                         Model?.Print(sb);
@@ -287,6 +394,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? PreviewTransform;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? Type;
             #endregion
@@ -299,6 +408,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case ArtObject_FieldIndex.ObjectBounds:
                         return ObjectBounds;
+                    case ArtObject_FieldIndex.PreviewTransform:
+                        return PreviewTransform;
+                    case ArtObject_FieldIndex.Keywords:
+                        return Keywords;
                     case ArtObject_FieldIndex.Model:
                         return Model;
                     case ArtObject_FieldIndex.Type:
@@ -315,6 +428,12 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case ArtObject_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case ArtObject_FieldIndex.PreviewTransform:
+                        this.PreviewTransform = ex;
+                        break;
+                    case ArtObject_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case ArtObject_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -336,6 +455,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case ArtObject_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
+                    case ArtObject_FieldIndex.PreviewTransform:
+                        this.PreviewTransform = (Exception?)obj;
+                        break;
+                    case ArtObject_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     case ArtObject_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
@@ -352,6 +477,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
+                if (PreviewTransform != null) return true;
+                if (Keywords != null) return true;
                 if (Model != null) return true;
                 if (Type != null) return true;
                 return false;
@@ -381,6 +508,29 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.PrintFillInternal(sb);
                 ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(PreviewTransform, "PreviewTransform");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 Model?.Print(sb);
                 {
                     sb.AppendItem(Type, "Type");
@@ -394,6 +544,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Type = this.Type.Combine(rhs.Type);
                 return ret;
@@ -419,6 +571,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool PreviewTransform;
+            public bool Keywords;
             public Model.TranslationMask? Model;
             public bool Type;
             #endregion
@@ -429,6 +583,8 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.PreviewTransform = defaultOn;
+                this.Keywords = defaultOn;
                 this.Type = defaultOn;
             }
 
@@ -438,6 +594,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((PreviewTransform, null));
+                ret.Add((Keywords, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Type, null));
             }
@@ -579,6 +737,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IArtObjectInternal>,
         IModeled,
         IObjectBounded
@@ -587,6 +746,11 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
+        new IFormLinkNullable<ITransformGetter> PreviewTransform { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -607,6 +771,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IArtObjectGetter>,
         IMapsToGetter<IArtObjectGetter>,
         IModeledGetter,
@@ -618,6 +783,13 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        IFormLinkNullableGetter<ITransformGetter> PreviewTransform { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
         #region Model
         /// <summary>
@@ -791,8 +963,10 @@ namespace Mutagen.Bethesda.Fallout4
         FormVersion = 4,
         Version2 = 5,
         ObjectBounds = 6,
-        Model = 7,
-        Type = 8,
+        PreviewTransform = 7,
+        Keywords = 8,
+        Model = 9,
+        Type = 10,
     }
     #endregion
 
@@ -810,9 +984,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "fb3eec42-b062-441b-ab25-da703ad31526";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(ArtObject.Mask<>);
 
@@ -846,6 +1020,9 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.ARTO,
                 RecordTypes.OBND,
+                RecordTypes.PTRN,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
                 RecordTypes.MODL,
                 RecordTypes.DNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
@@ -893,6 +1070,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.ObjectBounds.Clear();
+            item.PreviewTransform.Clear();
+            item.Keywords = null;
             item.Model = null;
             item.Type = default;
             base.Clear(item);
@@ -912,6 +1091,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IArtObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.PreviewTransform.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
         }
         
@@ -982,6 +1163,11 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.PreviewTransform = item.PreviewTransform.Equals(rhs.PreviewTransform);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1040,6 +1226,25 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if (printMask?.PreviewTransform ?? true)
+            {
+                sb.AppendItem(item.PreviewTransform.FormKeyNullable, "PreviewTransform");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
@@ -1107,6 +1312,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.PreviewTransform) ?? true))
+            {
+                if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
@@ -1148,6 +1361,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
+            hash.Add(item.PreviewTransform);
+            hash.Add(item.Keywords);
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
@@ -1184,6 +1399,17 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
+            {
+                yield return PreviewTransformInfo;
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             if (obj.Model is {} ModelItems)
             {
@@ -1276,6 +1502,37 @@ namespace Mutagen.Bethesda.Fallout4
                         item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)ArtObject_FieldIndex.ObjectBounds),
                             errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.PreviewTransform) ?? true))
+            {
+                item.PreviewTransform.SetTo(rhs.PreviewTransform.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)ArtObject_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
                     }
                 }
                 catch (Exception ex)
@@ -1480,6 +1737,22 @@ namespace Mutagen.Bethesda.Fallout4
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreviewTransform,
+                header: translationParams.ConvertToCustom(RecordTypes.PTRN));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -1588,6 +1861,25 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ObjectBounds = Mutagen.Bethesda.Fallout4.ObjectBounds.CreateFromBinary(frame: frame);
                     return (int)ArtObject_FieldIndex.ObjectBounds;
                 }
+                case RecordTypeInts.PTRN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ArtObject_FieldIndex.PreviewTransform;
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)ArtObject_FieldIndex.Keywords;
+                }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
@@ -1666,6 +1958,14 @@ namespace Mutagen.Bethesda.Fallout4
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
+        #region PreviewTransform
+        private int? _PreviewTransformLocation;
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => _PreviewTransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviewTransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        #endregion
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         public IModelGetter? Model { get; private set; }
         #region Type
         private int? _TypeLocation;
@@ -1741,6 +2041,24 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ArtObject_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.PTRN:
+                {
+                    _PreviewTransformLocation = (stream.Position - offset);
+                    return (int)ArtObject_FieldIndex.PreviewTransform;
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)ArtObject_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MODL:
                 {

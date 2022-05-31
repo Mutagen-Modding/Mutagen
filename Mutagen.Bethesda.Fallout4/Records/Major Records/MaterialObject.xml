@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MaterialObject" recordType="MISC" objType="Record" baseClass="Fallout4MajorRecord" GUID="7a69bcb8-1e05-49c3-a353-9b51c7eaed99" ID="329">
+  <Object name="MaterialObject" recordType="MATO" objType="Record" baseClass="Fallout4MajorRecord" GUID="7a69bcb8-1e05-49c3-a353-9b51c7eaed99" ID="329">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <List name="DNAMs" >
+        <ByteArray recordType="DNAM" />
+      </List>
+      <Data>
+        <Fields>
+          <Float name="FalloffScale" />
+          <Float name="FalloffBias" />
+          <Float name="NoiseUvScale" />
+          <Float name="MaterialUvScale" />
+          <P3Float name="ProjectionVector" />
+          <Break />
+          <Float name="NormalDampener" />
+          <Break />
+          <Color name="SinglePassColor" binaryType="NoAlphaFloat" />
+          <Bool name="IsSinglePass" byteLength="4" />
+        </Fields>
+      </Data>
+    </Fields>
   </Object>
 </Loqui>

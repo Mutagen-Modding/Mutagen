@@ -105,6 +105,8 @@
       <Group name="Relationships" refName="Relationship" />
       <Group name="AssociationTypes" refName="AssociationType" />
       <Group name="Outfits" refName="Outfit" />
+      <Group name="ArtObjects" refName="ArtObject" />
+      <Group name="MaterialObjects" refName="MaterialObject" />
     </Fields>
   </Object>
 </Loqui>

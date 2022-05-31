@@ -26,6 +26,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - Ammunition
 - Armor
+- ArtObject
 - Book
 - Container
 - Door
@@ -80,6 +81,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Key
 - LeveledNpc
 - Light
+- MaterialObject
 - MiscItem
 - MovableStatic
 - Projectile
@@ -312,6 +314,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHasIcons
 - IModeled
 ### ArtObject
+- IKeyworded
 - IModeled
 - IObjectBounded
 ### BendableSpline
@@ -455,6 +458,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IKeyworded
 - INamed
 - IScripted
+### MaterialObject
+- IModeled
 ### MaterialType
 - INamed
 ### Message

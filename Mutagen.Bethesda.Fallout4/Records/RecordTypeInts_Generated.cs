@@ -351,6 +351,7 @@ public partial class RecordTypeInts
     public const int LVSP = 0x5053564C;
     public const int MASE = 0x4553414D;
     public const int MAST = 0x5453414D;
+    public const int MATO = 0x4F54414D;
     public const int MATT = 0x5454414D;
     public const int MCHT = 0x5448434D;
     public const int MDOB = 0x424F444D;

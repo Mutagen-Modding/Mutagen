@@ -393,6 +393,13 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.MO5S,
             RecordTypes.MO5F
         );
+        ret.AddAlignments(
+            RecordTypes.ARTO,
+            RecordTypes.MODL,
+            RecordTypes.MODC,
+            RecordTypes.MODT,
+            RecordTypes.MODS
+        );
         return ret;
     }
 

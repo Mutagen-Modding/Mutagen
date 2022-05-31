@@ -353,6 +353,7 @@ public partial class RecordTypes
     public static readonly RecordType LVSP = new(0x5053564C);
     public static readonly RecordType MASE = new(0x4553414D);
     public static readonly RecordType MAST = new(0x5453414D);
+    public static readonly RecordType MATO = new(0x4F54414D);
     public static readonly RecordType MATT = new(0x5454414D);
     public static readonly RecordType MCHT = new(0x5448434D);
     public static readonly RecordType MDOB = new(0x424F444D);
