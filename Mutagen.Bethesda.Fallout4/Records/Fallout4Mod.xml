@@ -107,6 +107,7 @@
       <Group name="Outfits" refName="Outfit" />
       <Group name="ArtObjects" refName="ArtObject" />
       <Group name="MaterialObjects" refName="MaterialObject" />
+      <Group name="MovementTypes" refName="MovementType" />
     </Fields>
   </Object>
 </Loqui>

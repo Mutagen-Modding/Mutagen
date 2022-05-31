@@ -131,6 +131,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MorphGroup
 - MorphPreset
 - MovableStatic
+- MovementType
 - Npc
 - ObjectEffect
 - ObjectTemplate
@@ -481,6 +482,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### MovementType
+- INamed
 ### Npc
 - IKeyworded
 - INamed

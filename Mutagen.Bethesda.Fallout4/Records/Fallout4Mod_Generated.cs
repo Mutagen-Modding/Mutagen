@@ -157,6 +157,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Outfits_Object = new Fallout4Group<Outfit>(this);
             _ArtObjects_Object = new Fallout4Group<ArtObject>(this);
             _MaterialObjects_Object = new Fallout4Group<MaterialObject>(this);
+            _MovementTypes_Object = new Fallout4Group<MovementType>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -869,6 +870,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IMaterialObjectGetter> IFallout4ModGetter.MaterialObjects => _MaterialObjects_Object;
         #endregion
+        #region MovementTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<MovementType> _MovementTypes_Object;
+        public Fallout4Group<MovementType> MovementTypes => _MovementTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IMovementTypeGetter> IFallout4ModGetter.MovementTypes => _MovementTypes_Object;
+        #endregion
 
         #region To String
 
@@ -1009,6 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Outfits = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.ArtObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.MaterialObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.MovementTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1112,7 +1121,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem AssociationTypes,
                 TItem Outfits,
                 TItem ArtObjects,
-                TItem MaterialObjects)
+                TItem MaterialObjects,
+                TItem MovementTypes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1215,6 +1225,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Outfits = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Outfits, new Fallout4Group.Mask<TItem>(Outfits));
                 this.ArtObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ArtObjects, new Fallout4Group.Mask<TItem>(ArtObjects));
                 this.MaterialObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MaterialObjects, new Fallout4Group.Mask<TItem>(MaterialObjects));
+                this.MovementTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MovementTypes, new Fallout4Group.Mask<TItem>(MovementTypes));
             }
 
             #pragma warning disable CS8618
@@ -1327,6 +1338,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Outfits { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ArtObjects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MaterialObjects { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MovementTypes { get; set; }
             #endregion
 
             #region Equals
@@ -1440,6 +1452,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Outfits, rhs.Outfits)) return false;
                 if (!object.Equals(this.ArtObjects, rhs.ArtObjects)) return false;
                 if (!object.Equals(this.MaterialObjects, rhs.MaterialObjects)) return false;
+                if (!object.Equals(this.MovementTypes, rhs.MovementTypes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1546,6 +1559,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Outfits);
                 hash.Add(this.ArtObjects);
                 hash.Add(this.MaterialObjects);
+                hash.Add(this.MovementTypes);
                 return hash.ToHashCode();
             }
 
@@ -2059,6 +2073,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.MaterialObjects.Overall)) return false;
                     if (this.MaterialObjects.Specific != null && !this.MaterialObjects.Specific.All(eval)) return false;
                 }
+                if (MovementTypes != null)
+                {
+                    if (!eval(this.MovementTypes.Overall)) return false;
+                    if (this.MovementTypes.Specific != null && !this.MovementTypes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2571,6 +2590,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.MaterialObjects.Overall)) return true;
                     if (this.MaterialObjects.Specific != null && this.MaterialObjects.Specific.Any(eval)) return true;
                 }
+                if (MovementTypes != null)
+                {
+                    if (eval(this.MovementTypes.Overall)) return true;
+                    if (this.MovementTypes.Specific != null && this.MovementTypes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2686,6 +2710,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Outfits = this.Outfits == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
                 obj.ArtObjects = this.ArtObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ArtObjects.Overall), this.ArtObjects.Specific?.Translate(eval));
                 obj.MaterialObjects = this.MaterialObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MaterialObjects.Overall), this.MaterialObjects.Specific?.Translate(eval));
+                obj.MovementTypes = this.MovementTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MovementTypes.Overall), this.MovementTypes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3108,6 +3133,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         MaterialObjects?.Print(sb);
                     }
+                    if (printMask?.MovementTypes?.Overall ?? true)
+                    {
+                        MovementTypes?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3233,6 +3262,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Outfit.ErrorMask>?>? Outfits;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ArtObject.ErrorMask>?>? ArtObjects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialObject.ErrorMask>?>? MaterialObjects;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<MovementType.ErrorMask>?>? MovementTypes;
             #endregion
 
             #region IErrorMask
@@ -3443,6 +3473,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return ArtObjects;
                     case Fallout4Mod_FieldIndex.MaterialObjects:
                         return MaterialObjects;
+                    case Fallout4Mod_FieldIndex.MovementTypes:
+                        return MovementTypes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3755,6 +3787,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.MaterialObjects:
                         this.MaterialObjects = new MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialObject.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.MovementTypes:
+                        this.MovementTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<MovementType.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4069,6 +4104,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.MaterialObjects:
                         this.MaterialObjects = (MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialObject.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.MovementTypes:
+                        this.MovementTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<MovementType.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4178,6 +4216,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Outfits != null) return true;
                 if (ArtObjects != null) return true;
                 if (MaterialObjects != null) return true;
+                if (MovementTypes != null) return true;
                 return false;
             }
             #endregion
@@ -4304,6 +4343,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Outfits?.Print(sb);
                 ArtObjects?.Print(sb);
                 MaterialObjects?.Print(sb);
+                MovementTypes?.Print(sb);
             }
             #endregion
 
@@ -4413,6 +4453,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Outfits = this.Outfits.Combine(rhs.Outfits, (l, r) => l.Combine(r));
                 ret.ArtObjects = this.ArtObjects.Combine(rhs.ArtObjects, (l, r) => l.Combine(r));
                 ret.MaterialObjects = this.MaterialObjects.Combine(rhs.MaterialObjects, (l, r) => l.Combine(r));
+                ret.MovementTypes = this.MovementTypes.Combine(rhs.MovementTypes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4537,6 +4578,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Outfit.TranslationMask>? Outfits;
             public Fallout4Group.TranslationMask<ArtObject.TranslationMask>? ArtObjects;
             public Fallout4Group.TranslationMask<MaterialObject.TranslationMask>? MaterialObjects;
+            public Fallout4Group.TranslationMask<MovementType.TranslationMask>? MovementTypes;
             #endregion
 
             #region Ctors
@@ -4662,6 +4704,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Outfits != null ? Outfits.OnOverall : DefaultOn, Outfits?.GetCrystal()));
                 ret.Add((ArtObjects != null ? ArtObjects.OnOverall : DefaultOn, ArtObjects?.GetCrystal()));
                 ret.Add((MaterialObjects != null ? MaterialObjects.OnOverall : DefaultOn, MaterialObjects?.GetCrystal()));
+                ret.Add((MovementTypes != null ? MovementTypes.OnOverall : DefaultOn, MovementTypes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4802,6 +4845,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Outfits_Object = new Fallout4Group<Outfit>(this);
             _ArtObjects_Object = new Fallout4Group<ArtObject>(this);
             _MaterialObjects_Object = new Fallout4Group<MaterialObject>(this);
+            _MovementTypes_Object = new Fallout4Group<MovementType>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5211,6 +5255,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.MaterialObjects.RecordCache.Set(rhsMod.MaterialObjects.RecordCache.Items);
             }
+            if (mask?.MovementTypes ?? true)
+            {
+                this.MovementTypes.RecordCache.Set(rhsMod.MovementTypes.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5321,6 +5369,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
             count += ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += MaterialObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5672,6 +5721,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Outfit> Outfits { get; }
         new Fallout4Group<ArtObject> ArtObjects { get; }
         new Fallout4Group<MaterialObject> MaterialObjects { get; }
+        new Fallout4Group<MovementType> MovementTypes { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -5791,6 +5841,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IOutfitGetter> Outfits { get; }
         IFallout4GroupGetter<IArtObjectGetter> ArtObjects { get; }
         IFallout4GroupGetter<IMaterialObjectGetter> MaterialObjects { get; }
+        IFallout4GroupGetter<IMovementTypeGetter> MovementTypes { get; }
 
     }
 
@@ -6462,6 +6513,7 @@ namespace Mutagen.Bethesda.Fallout4
         Outfits = 98,
         ArtObjects = 99,
         MaterialObjects = 100,
+        MovementTypes = 101,
     }
     #endregion
 
@@ -6479,9 +6531,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 101;
+        public const ushort AdditionalFieldCount = 102;
 
-        public const ushort FieldCount = 101;
+        public const ushort FieldCount = 102;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -6649,6 +6701,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Outfits.Clear();
             item.ArtObjects.Clear();
             item.MaterialObjects.Clear();
+            item.MovementTypes.Clear();
         }
         
         #region Mutagen
@@ -6876,6 +6929,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Outfits.Remove(keys);
             obj.ArtObjects.Remove(keys);
             obj.MaterialObjects.Remove(keys);
+            obj.MovementTypes.Remove(keys);
         }
         
         public void Remove(
@@ -7731,6 +7785,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "MovementType":
+                case "IMovementTypeGetter":
+                case "IMovementType":
+                case "IMovementTypeInternal":
+                    obj.MovementTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -8321,6 +8383,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Outfits = MaskItemExt.Factory(item.Outfits.GetEqualsMask(rhs.Outfits, include), include);
             ret.ArtObjects = MaskItemExt.Factory(item.ArtObjects.GetEqualsMask(rhs.ArtObjects, include), include);
             ret.MaterialObjects = MaskItemExt.Factory(item.MaterialObjects.GetEqualsMask(rhs.MaterialObjects, include), include);
+            ret.MovementTypes = MaskItemExt.Factory(item.MovementTypes.GetEqualsMask(rhs.MovementTypes, include), include);
         }
         
         public string Print(
@@ -8768,6 +8831,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.MaterialObjects?.Overall ?? true)
             {
                 item.MaterialObjects?.Print(sb, "MaterialObjects");
+            }
+            if (printMask?.MovementTypes?.Overall ?? true)
+            {
+                item.MovementTypes?.Print(sb, "MovementTypes");
             }
         }
         
@@ -9586,6 +9653,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMaterialObjectsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MovementTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MovementTypes, rhs.MovementTypes, out var lhsMovementTypes, out var rhsMovementTypes, out var isMovementTypesEqual))
+                {
+                    if (!object.Equals(lhsMovementTypes, rhsMovementTypes)) return false;
+                }
+                else if (!isMovementTypesEqual) return false;
+            }
             return true;
         }
         
@@ -9693,6 +9768,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Outfits);
             hash.Add(item.ArtObjects);
             hash.Add(item.MaterialObjects);
+            hash.Add(item.MovementTypes);
             return hash.ToHashCode();
         }
         
@@ -10210,6 +10286,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IMaterialObject":
                 case "IMaterialObjectInternal":
                     return obj.MaterialObjects;
+                case "MovementType":
+                case "IMovementTypeGetter":
+                case "IMovementType":
+                case "IMovementTypeInternal":
+                    return obj.MovementTypes;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -10234,7 +10315,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[100];
+            Stream[] outputStreams = new Stream[101];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10336,6 +10417,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.Outfits, 97, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ArtObjects, 98, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MaterialObjects, 99, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MovementTypes, 100, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11137,6 +11219,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.MaterialObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MovementTypes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12062,6 +12148,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IMaterialObject":
                 case "IMaterialObjectInternal":
                     foreach (var item in obj.MaterialObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MovementType":
+                case "IMovementTypeGetter":
+                case "IMovementType":
+                case "IMovementTypeInternal":
+                    foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13125,6 +13220,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.MaterialObjects,
                 groupGetter: (m) => m.MaterialObjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MovementType, IMovementTypeGetter>(
+                srcGroup: obj.MovementTypes,
+                type: typeof(IMovementTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MovementTypes,
+                groupGetter: (m) => m.MovementTypes))
             {
                 yield return item;
             }
@@ -14541,6 +14645,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.MaterialObjects,
                         groupGetter: (m) => m.MaterialObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MovementType":
+                case "IMovementTypeGetter":
+                case "IMovementType":
+                case "IMovementTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MovementType, IMovementTypeGetter>(
+                        srcGroup: obj.MovementTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MovementTypes,
+                        groupGetter: (m) => m.MovementTypes))
                     {
                         yield return item;
                     }
@@ -16859,6 +16977,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MovementTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.MovementTypes);
+                try
+                {
+                    item.MovementTypes.DeepCopyIn(
+                        rhs: rhs.MovementTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.MovementTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -17049,6 +17187,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Outfits;
         public bool ArtObjects;
         public bool MaterialObjects;
+        public bool MovementTypes;
         public GroupMask()
         {
         }
@@ -17154,6 +17293,7 @@ namespace Mutagen.Bethesda.Fallout4
             Outfits = defaultValue;
             ArtObjects = defaultValue;
             MaterialObjects = defaultValue;
+            MovementTypes = defaultValue;
         }
     }
 
@@ -18281,6 +18421,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MaterialObjectsItem).BinaryWriteTranslator).Write<IMaterialObjectGetter>(
                         item: MaterialObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MovementTypes ?? true)
+            {
+                var MovementTypesItem = item.MovementTypes;
+                if (MovementTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MovementTypesItem).BinaryWriteTranslator).Write<IMovementTypeGetter>(
+                        item: MovementTypesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19751,6 +19902,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.MaterialObjects;
                 }
+                case RecordTypeInts.MOVT:
+                {
+                    if (importMask?.MovementTypes ?? true)
+                    {
+                        item.MovementTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.MovementTypes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -20413,6 +20578,11 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _MaterialObjectsLocations;
         private IFallout4GroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocations != null ? Fallout4GroupBinaryOverlay<IMaterialObjectGetter>.Fallout4GroupFactory(_data, _MaterialObjectsLocations, _package) : default;
         public IFallout4GroupGetter<IMaterialObjectGetter> MaterialObjects => _MaterialObjects ?? new Fallout4Group<MaterialObject>(this);
+        #endregion
+        #region MovementTypes
+        private List<RangeInt64>? _MovementTypesLocations;
+        private IFallout4GroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? Fallout4GroupBinaryOverlay<IMovementTypeGetter>.Fallout4GroupFactory(_data, _MovementTypesLocations, _package) : default;
+        public IFallout4GroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new Fallout4Group<MovementType>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -21100,6 +21270,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _MaterialObjectsLocations ??= new();
                     _MaterialObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.MaterialObjects;
+                }
+                case RecordTypeInts.MOVT:
+                {
+                    _MovementTypesLocations ??= new();
+                    _MovementTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.MovementTypes;
                 }
                 default:
                     return default(int?);
