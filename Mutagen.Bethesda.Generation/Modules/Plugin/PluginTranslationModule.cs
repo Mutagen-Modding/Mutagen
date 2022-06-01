@@ -825,7 +825,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         foreach (var gen in fieldData.GenerationTypes)
                         {
                             LoquiType loqui = gen.Value as LoquiType;
-                            if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+                            if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom 
+                                && (loqui?.TargetObjectGeneration?.Abstract ?? false)) continue;
 
                             List<(int, int, TypeGeneration Field, TypeGeneration? LastIntegratedField)> doubles = null;
                             if (gen.Key.Count() == 1)
@@ -1461,7 +1462,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         foreach (var gen in fieldData.GenerationTypes)
                         {
                             LoquiType loqui = gen.Value as LoquiType;
-                            if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+                            if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom 
+                                && (loqui?.TargetObjectGeneration?.Abstract ?? false)) continue;
 
                             List<(int, int, TypeGeneration Field, TypeGeneration? LastIntegratedField)> doubles = null;
                             if (gen.Key.Count() == 1)

@@ -304,6 +304,9 @@ public partial class RecordTypes
     public static readonly RecordType IRON = new(0x4E4F5249);
     public static readonly RecordType ISIZ = new(0x5A495349);
     public static readonly RecordType ITID = new(0x44495449);
+    public static readonly RecordType ITMC = new(0x434D5449);
+    public static readonly RecordType ITME = new(0x454D5449);
+    public static readonly RecordType ITMS = new(0x534D5449);
     public static readonly RecordType ITXT = new(0x54585449);
     public static readonly RecordType JAIL = new(0x4C49414A);
     public static readonly RecordType JIAD = new(0x4441494A);
@@ -570,6 +573,7 @@ public partial class RecordTypes
     public static readonly RecordType SMEN = new(0x4E454D53);
     public static readonly RecordType SMQN = new(0x4E514D53);
     public static readonly RecordType SNAM = new(0x4D414E53);
+    public static readonly RecordType SNCT = new(0x54434E53);
     public static readonly RecordType SNDD = new(0x44444E53);
     public static readonly RecordType SNDR = new(0x52444E53);
     public static readonly RecordType SNMV = new(0x564D4E53);

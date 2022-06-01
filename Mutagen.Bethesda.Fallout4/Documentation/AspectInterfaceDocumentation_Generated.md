@@ -171,6 +171,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptStructProperty
 - ScriptVariableListProperty
 - ScriptVariableProperty
+- SoundCategory
 - Spell
 - Static
 - StaticCollection
@@ -619,6 +620,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ScriptVariableListProperty
 - INamed
 ### ScriptVariableProperty
+- INamed
+### SoundCategory
 - INamed
 ### SoundMarker
 - IObjectBounded

@@ -302,6 +302,9 @@ public partial class RecordTypeInts
     public const int IRON = 0x4E4F5249;
     public const int ISIZ = 0x5A495349;
     public const int ITID = 0x44495449;
+    public const int ITMC = 0x434D5449;
+    public const int ITME = 0x454D5449;
+    public const int ITMS = 0x534D5449;
     public const int ITXT = 0x54585449;
     public const int JAIL = 0x4C49414A;
     public const int JIAD = 0x4441494A;
@@ -568,6 +571,7 @@ public partial class RecordTypeInts
     public const int SMEN = 0x4E454D53;
     public const int SMQN = 0x4E514D53;
     public const int SNAM = 0x4D414E53;
+    public const int SNCT = 0x54434E53;
     public const int SNDD = 0x44444E53;
     public const int SNDR = 0x52444E53;
     public const int SNMV = 0x564D4E53;

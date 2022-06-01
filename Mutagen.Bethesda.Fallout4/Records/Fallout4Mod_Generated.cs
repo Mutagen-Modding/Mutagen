@@ -158,6 +158,8 @@ namespace Mutagen.Bethesda.Fallout4
             _ArtObjects_Object = new Fallout4Group<ArtObject>(this);
             _MaterialObjects_Object = new Fallout4Group<MaterialObject>(this);
             _MovementTypes_Object = new Fallout4Group<MovementType>(this);
+            _SoundDescriptors_Object = new Fallout4Group<SoundDescriptor>(this);
+            _SoundCategories_Object = new Fallout4Group<SoundCategory>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -877,6 +879,20 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IMovementTypeGetter> IFallout4ModGetter.MovementTypes => _MovementTypes_Object;
         #endregion
+        #region SoundDescriptors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<SoundDescriptor> _SoundDescriptors_Object;
+        public Fallout4Group<SoundDescriptor> SoundDescriptors => _SoundDescriptors_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ISoundDescriptorGetter> IFallout4ModGetter.SoundDescriptors => _SoundDescriptors_Object;
+        #endregion
+        #region SoundCategories
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<SoundCategory> _SoundCategories_Object;
+        public Fallout4Group<SoundCategory> SoundCategories => _SoundCategories_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ISoundCategoryGetter> IFallout4ModGetter.SoundCategories => _SoundCategories_Object;
+        #endregion
 
         #region To String
 
@@ -1018,6 +1034,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ArtObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.MaterialObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.MovementTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.SoundDescriptors = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.SoundCategories = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1122,7 +1140,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Outfits,
                 TItem ArtObjects,
                 TItem MaterialObjects,
-                TItem MovementTypes)
+                TItem MovementTypes,
+                TItem SoundDescriptors,
+                TItem SoundCategories)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1226,6 +1246,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ArtObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ArtObjects, new Fallout4Group.Mask<TItem>(ArtObjects));
                 this.MaterialObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MaterialObjects, new Fallout4Group.Mask<TItem>(MaterialObjects));
                 this.MovementTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MovementTypes, new Fallout4Group.Mask<TItem>(MovementTypes));
+                this.SoundDescriptors = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundDescriptors, new Fallout4Group.Mask<TItem>(SoundDescriptors));
+                this.SoundCategories = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundCategories, new Fallout4Group.Mask<TItem>(SoundCategories));
             }
 
             #pragma warning disable CS8618
@@ -1339,6 +1361,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ArtObjects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MaterialObjects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MovementTypes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundDescriptors { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundCategories { get; set; }
             #endregion
 
             #region Equals
@@ -1453,6 +1477,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ArtObjects, rhs.ArtObjects)) return false;
                 if (!object.Equals(this.MaterialObjects, rhs.MaterialObjects)) return false;
                 if (!object.Equals(this.MovementTypes, rhs.MovementTypes)) return false;
+                if (!object.Equals(this.SoundDescriptors, rhs.SoundDescriptors)) return false;
+                if (!object.Equals(this.SoundCategories, rhs.SoundCategories)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1560,6 +1586,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ArtObjects);
                 hash.Add(this.MaterialObjects);
                 hash.Add(this.MovementTypes);
+                hash.Add(this.SoundDescriptors);
+                hash.Add(this.SoundCategories);
                 return hash.ToHashCode();
             }
 
@@ -2078,6 +2106,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.MovementTypes.Overall)) return false;
                     if (this.MovementTypes.Specific != null && !this.MovementTypes.Specific.All(eval)) return false;
                 }
+                if (SoundDescriptors != null)
+                {
+                    if (!eval(this.SoundDescriptors.Overall)) return false;
+                    if (this.SoundDescriptors.Specific != null && !this.SoundDescriptors.Specific.All(eval)) return false;
+                }
+                if (SoundCategories != null)
+                {
+                    if (!eval(this.SoundCategories.Overall)) return false;
+                    if (this.SoundCategories.Specific != null && !this.SoundCategories.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2595,6 +2633,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.MovementTypes.Overall)) return true;
                     if (this.MovementTypes.Specific != null && this.MovementTypes.Specific.Any(eval)) return true;
                 }
+                if (SoundDescriptors != null)
+                {
+                    if (eval(this.SoundDescriptors.Overall)) return true;
+                    if (this.SoundDescriptors.Specific != null && this.SoundDescriptors.Specific.Any(eval)) return true;
+                }
+                if (SoundCategories != null)
+                {
+                    if (eval(this.SoundCategories.Overall)) return true;
+                    if (this.SoundCategories.Specific != null && this.SoundCategories.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2711,6 +2759,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ArtObjects = this.ArtObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ArtObjects.Overall), this.ArtObjects.Specific?.Translate(eval));
                 obj.MaterialObjects = this.MaterialObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MaterialObjects.Overall), this.MaterialObjects.Specific?.Translate(eval));
                 obj.MovementTypes = this.MovementTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MovementTypes.Overall), this.MovementTypes.Specific?.Translate(eval));
+                obj.SoundDescriptors = this.SoundDescriptors == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundDescriptors.Overall), this.SoundDescriptors.Specific?.Translate(eval));
+                obj.SoundCategories = this.SoundCategories == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundCategories.Overall), this.SoundCategories.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3137,6 +3187,14 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         MovementTypes?.Print(sb);
                     }
+                    if (printMask?.SoundDescriptors?.Overall ?? true)
+                    {
+                        SoundDescriptors?.Print(sb);
+                    }
+                    if (printMask?.SoundCategories?.Overall ?? true)
+                    {
+                        SoundCategories?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3263,6 +3321,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ArtObject.ErrorMask>?>? ArtObjects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialObject.ErrorMask>?>? MaterialObjects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MovementType.ErrorMask>?>? MovementTypes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundDescriptor.ErrorMask>?>? SoundDescriptors;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundCategory.ErrorMask>?>? SoundCategories;
             #endregion
 
             #region IErrorMask
@@ -3475,6 +3535,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return MaterialObjects;
                     case Fallout4Mod_FieldIndex.MovementTypes:
                         return MovementTypes;
+                    case Fallout4Mod_FieldIndex.SoundDescriptors:
+                        return SoundDescriptors;
+                    case Fallout4Mod_FieldIndex.SoundCategories:
+                        return SoundCategories;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3790,6 +3854,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.MovementTypes:
                         this.MovementTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<MovementType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.SoundDescriptors:
+                        this.SoundDescriptors = new MaskItem<Exception?, Fallout4Group.ErrorMask<SoundDescriptor.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.SoundCategories:
+                        this.SoundCategories = new MaskItem<Exception?, Fallout4Group.ErrorMask<SoundCategory.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4107,6 +4177,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.MovementTypes:
                         this.MovementTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<MovementType.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.SoundDescriptors:
+                        this.SoundDescriptors = (MaskItem<Exception?, Fallout4Group.ErrorMask<SoundDescriptor.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.SoundCategories:
+                        this.SoundCategories = (MaskItem<Exception?, Fallout4Group.ErrorMask<SoundCategory.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4217,6 +4293,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ArtObjects != null) return true;
                 if (MaterialObjects != null) return true;
                 if (MovementTypes != null) return true;
+                if (SoundDescriptors != null) return true;
+                if (SoundCategories != null) return true;
                 return false;
             }
             #endregion
@@ -4344,6 +4422,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ArtObjects?.Print(sb);
                 MaterialObjects?.Print(sb);
                 MovementTypes?.Print(sb);
+                SoundDescriptors?.Print(sb);
+                SoundCategories?.Print(sb);
             }
             #endregion
 
@@ -4454,6 +4534,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ArtObjects = this.ArtObjects.Combine(rhs.ArtObjects, (l, r) => l.Combine(r));
                 ret.MaterialObjects = this.MaterialObjects.Combine(rhs.MaterialObjects, (l, r) => l.Combine(r));
                 ret.MovementTypes = this.MovementTypes.Combine(rhs.MovementTypes, (l, r) => l.Combine(r));
+                ret.SoundDescriptors = this.SoundDescriptors.Combine(rhs.SoundDescriptors, (l, r) => l.Combine(r));
+                ret.SoundCategories = this.SoundCategories.Combine(rhs.SoundCategories, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4579,6 +4661,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<ArtObject.TranslationMask>? ArtObjects;
             public Fallout4Group.TranslationMask<MaterialObject.TranslationMask>? MaterialObjects;
             public Fallout4Group.TranslationMask<MovementType.TranslationMask>? MovementTypes;
+            public Fallout4Group.TranslationMask<SoundDescriptor.TranslationMask>? SoundDescriptors;
+            public Fallout4Group.TranslationMask<SoundCategory.TranslationMask>? SoundCategories;
             #endregion
 
             #region Ctors
@@ -4705,6 +4789,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ArtObjects != null ? ArtObjects.OnOverall : DefaultOn, ArtObjects?.GetCrystal()));
                 ret.Add((MaterialObjects != null ? MaterialObjects.OnOverall : DefaultOn, MaterialObjects?.GetCrystal()));
                 ret.Add((MovementTypes != null ? MovementTypes.OnOverall : DefaultOn, MovementTypes?.GetCrystal()));
+                ret.Add((SoundDescriptors != null ? SoundDescriptors.OnOverall : DefaultOn, SoundDescriptors?.GetCrystal()));
+                ret.Add((SoundCategories != null ? SoundCategories.OnOverall : DefaultOn, SoundCategories?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4846,6 +4932,8 @@ namespace Mutagen.Bethesda.Fallout4
             _ArtObjects_Object = new Fallout4Group<ArtObject>(this);
             _MaterialObjects_Object = new Fallout4Group<MaterialObject>(this);
             _MovementTypes_Object = new Fallout4Group<MovementType>(this);
+            _SoundDescriptors_Object = new Fallout4Group<SoundDescriptor>(this);
+            _SoundCategories_Object = new Fallout4Group<SoundCategory>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5259,6 +5347,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.MovementTypes.RecordCache.Set(rhsMod.MovementTypes.RecordCache.Items);
             }
+            if (mask?.SoundDescriptors ?? true)
+            {
+                this.SoundDescriptors.RecordCache.Set(rhsMod.SoundDescriptors.RecordCache.Items);
+            }
+            if (mask?.SoundCategories ?? true)
+            {
+                this.SoundCategories.RecordCache.Set(rhsMod.SoundCategories.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5370,6 +5466,8 @@ namespace Mutagen.Bethesda.Fallout4
             count += ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += MaterialObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundDescriptors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundCategories.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5722,6 +5820,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<ArtObject> ArtObjects { get; }
         new Fallout4Group<MaterialObject> MaterialObjects { get; }
         new Fallout4Group<MovementType> MovementTypes { get; }
+        new Fallout4Group<SoundDescriptor> SoundDescriptors { get; }
+        new Fallout4Group<SoundCategory> SoundCategories { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -5842,6 +5942,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IArtObjectGetter> ArtObjects { get; }
         IFallout4GroupGetter<IMaterialObjectGetter> MaterialObjects { get; }
         IFallout4GroupGetter<IMovementTypeGetter> MovementTypes { get; }
+        IFallout4GroupGetter<ISoundDescriptorGetter> SoundDescriptors { get; }
+        IFallout4GroupGetter<ISoundCategoryGetter> SoundCategories { get; }
 
     }
 
@@ -6514,6 +6616,8 @@ namespace Mutagen.Bethesda.Fallout4
         ArtObjects = 99,
         MaterialObjects = 100,
         MovementTypes = 101,
+        SoundDescriptors = 102,
+        SoundCategories = 103,
     }
     #endregion
 
@@ -6531,9 +6635,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 102;
+        public const ushort AdditionalFieldCount = 104;
 
-        public const ushort FieldCount = 102;
+        public const ushort FieldCount = 104;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -6702,6 +6806,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.ArtObjects.Clear();
             item.MaterialObjects.Clear();
             item.MovementTypes.Clear();
+            item.SoundDescriptors.Clear();
+            item.SoundCategories.Clear();
         }
         
         #region Mutagen
@@ -6795,6 +6901,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Outfits.RemapLinks(mapping);
             obj.ArtObjects.RemapLinks(mapping);
             obj.MaterialObjects.RemapLinks(mapping);
+            obj.SoundDescriptors.RemapLinks(mapping);
+            obj.SoundCategories.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -6930,6 +7038,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.ArtObjects.Remove(keys);
             obj.MaterialObjects.Remove(keys);
             obj.MovementTypes.Remove(keys);
+            obj.SoundDescriptors.Remove(keys);
+            obj.SoundCategories.Remove(keys);
         }
         
         public void Remove(
@@ -7793,6 +7903,22 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "SoundDescriptor":
+                case "ISoundDescriptorGetter":
+                case "ISoundDescriptor":
+                case "ISoundDescriptorInternal":
+                    obj.SoundDescriptors.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "SoundCategory":
+                case "ISoundCategoryGetter":
+                case "ISoundCategory":
+                case "ISoundCategoryInternal":
+                    obj.SoundCategories.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -8219,6 +8345,7 @@ namespace Mutagen.Bethesda.Fallout4
                     break;
                 case "ISound":
                 case "ISoundGetter":
+                    Remove(obj, keys, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IStaticObject":
@@ -8384,6 +8511,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ArtObjects = MaskItemExt.Factory(item.ArtObjects.GetEqualsMask(rhs.ArtObjects, include), include);
             ret.MaterialObjects = MaskItemExt.Factory(item.MaterialObjects.GetEqualsMask(rhs.MaterialObjects, include), include);
             ret.MovementTypes = MaskItemExt.Factory(item.MovementTypes.GetEqualsMask(rhs.MovementTypes, include), include);
+            ret.SoundDescriptors = MaskItemExt.Factory(item.SoundDescriptors.GetEqualsMask(rhs.SoundDescriptors, include), include);
+            ret.SoundCategories = MaskItemExt.Factory(item.SoundCategories.GetEqualsMask(rhs.SoundCategories, include), include);
         }
         
         public string Print(
@@ -8835,6 +8964,14 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.MovementTypes?.Overall ?? true)
             {
                 item.MovementTypes?.Print(sb, "MovementTypes");
+            }
+            if (printMask?.SoundDescriptors?.Overall ?? true)
+            {
+                item.SoundDescriptors?.Print(sb, "SoundDescriptors");
+            }
+            if (printMask?.SoundCategories?.Overall ?? true)
+            {
+                item.SoundCategories?.Print(sb, "SoundCategories");
             }
         }
         
@@ -9661,6 +9798,22 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMovementTypesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundDescriptors) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SoundDescriptors, rhs.SoundDescriptors, out var lhsSoundDescriptors, out var rhsSoundDescriptors, out var isSoundDescriptorsEqual))
+                {
+                    if (!object.Equals(lhsSoundDescriptors, rhsSoundDescriptors)) return false;
+                }
+                else if (!isSoundDescriptorsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundCategories) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SoundCategories, rhs.SoundCategories, out var lhsSoundCategories, out var rhsSoundCategories, out var isSoundCategoriesEqual))
+                {
+                    if (!object.Equals(lhsSoundCategories, rhsSoundCategories)) return false;
+                }
+                else if (!isSoundCategoriesEqual) return false;
+            }
             return true;
         }
         
@@ -9769,6 +9922,8 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.ArtObjects);
             hash.Add(item.MaterialObjects);
             hash.Add(item.MovementTypes);
+            hash.Add(item.SoundDescriptors);
+            hash.Add(item.SoundCategories);
             return hash.ToHashCode();
         }
         
@@ -10291,6 +10446,16 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IMovementType":
                 case "IMovementTypeInternal":
                     return obj.MovementTypes;
+                case "SoundDescriptor":
+                case "ISoundDescriptorGetter":
+                case "ISoundDescriptor":
+                case "ISoundDescriptorInternal":
+                    return obj.SoundDescriptors;
+                case "SoundCategory":
+                case "ISoundCategoryGetter":
+                case "ISoundCategory":
+                case "ISoundCategoryInternal":
+                    return obj.SoundCategories;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -10315,7 +10480,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[101];
+            Stream[] outputStreams = new Stream[103];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10418,6 +10583,8 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.ArtObjects, 98, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MaterialObjects, 99, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MovementTypes, 100, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, 101, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoundCategories, 102, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10814,6 +10981,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.MaterialObjects.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundDescriptors.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundCategories.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -11223,6 +11398,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.MovementTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundCategories.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12157,6 +12340,24 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IMovementType":
                 case "IMovementTypeInternal":
                     foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundDescriptor":
+                case "ISoundDescriptorGetter":
+                case "ISoundDescriptor":
+                case "ISoundDescriptorInternal":
+                    foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundCategory":
+                case "ISoundCategoryGetter":
+                case "ISoundCategory":
+                case "ISoundCategoryInternal":
+                    foreach (var item in obj.SoundCategories.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13229,6 +13430,24 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.MovementTypes,
                 groupGetter: (m) => m.MovementTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, SoundDescriptor, ISoundDescriptorGetter>(
+                srcGroup: obj.SoundDescriptors,
+                type: typeof(ISoundDescriptorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundDescriptors,
+                groupGetter: (m) => m.SoundDescriptors))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, SoundCategory, ISoundCategoryGetter>(
+                srcGroup: obj.SoundCategories,
+                type: typeof(ISoundCategoryGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundCategories,
+                groupGetter: (m) => m.SoundCategories))
             {
                 yield return item;
             }
@@ -14659,6 +14878,34 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.MovementTypes,
                         groupGetter: (m) => m.MovementTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundDescriptor":
+                case "ISoundDescriptorGetter":
+                case "ISoundDescriptor":
+                case "ISoundDescriptorInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, SoundDescriptor, ISoundDescriptorGetter>(
+                        srcGroup: obj.SoundDescriptors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundDescriptors,
+                        groupGetter: (m) => m.SoundDescriptors))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundCategory":
+                case "ISoundCategoryGetter":
+                case "ISoundCategory":
+                case "ISoundCategoryInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, SoundCategory, ISoundCategoryGetter>(
+                        srcGroup: obj.SoundCategories,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundCategories,
+                        groupGetter: (m) => m.SoundCategories))
                     {
                         yield return item;
                     }
@@ -16997,6 +17244,46 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundDescriptors) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.SoundDescriptors);
+                try
+                {
+                    item.SoundDescriptors.DeepCopyIn(
+                        rhs: rhs.SoundDescriptors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.SoundDescriptors));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundCategories) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.SoundCategories);
+                try
+                {
+                    item.SoundCategories.DeepCopyIn(
+                        rhs: rhs.SoundCategories,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.SoundCategories));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -17188,6 +17475,8 @@ namespace Mutagen.Bethesda.Fallout4
         public bool ArtObjects;
         public bool MaterialObjects;
         public bool MovementTypes;
+        public bool SoundDescriptors;
+        public bool SoundCategories;
         public GroupMask()
         {
         }
@@ -17294,6 +17583,8 @@ namespace Mutagen.Bethesda.Fallout4
             ArtObjects = defaultValue;
             MaterialObjects = defaultValue;
             MovementTypes = defaultValue;
+            SoundDescriptors = defaultValue;
+            SoundCategories = defaultValue;
         }
     }
 
@@ -18432,6 +18723,28 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MovementTypesItem).BinaryWriteTranslator).Write<IMovementTypeGetter>(
                         item: MovementTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SoundDescriptors ?? true)
+            {
+                var SoundDescriptorsItem = item.SoundDescriptors;
+                if (SoundDescriptorsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)SoundDescriptorsItem).BinaryWriteTranslator).Write<ISoundDescriptorGetter>(
+                        item: SoundDescriptorsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SoundCategories ?? true)
+            {
+                var SoundCategoriesItem = item.SoundCategories;
+                if (SoundCategoriesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)SoundCategoriesItem).BinaryWriteTranslator).Write<ISoundCategoryGetter>(
+                        item: SoundCategoriesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19916,6 +20229,34 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.MovementTypes;
                 }
+                case RecordTypeInts.SNDR:
+                {
+                    if (importMask?.SoundDescriptors ?? true)
+                    {
+                        item.SoundDescriptors.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.SoundDescriptors;
+                }
+                case RecordTypeInts.SNCT:
+                {
+                    if (importMask?.SoundCategories ?? true)
+                    {
+                        item.SoundCategories.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.SoundCategories;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -20583,6 +20924,16 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _MovementTypesLocations;
         private IFallout4GroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? Fallout4GroupBinaryOverlay<IMovementTypeGetter>.Fallout4GroupFactory(_data, _MovementTypesLocations, _package) : default;
         public IFallout4GroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new Fallout4Group<MovementType>(this);
+        #endregion
+        #region SoundDescriptors
+        private List<RangeInt64>? _SoundDescriptorsLocations;
+        private IFallout4GroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocations != null ? Fallout4GroupBinaryOverlay<ISoundDescriptorGetter>.Fallout4GroupFactory(_data, _SoundDescriptorsLocations, _package) : default;
+        public IFallout4GroupGetter<ISoundDescriptorGetter> SoundDescriptors => _SoundDescriptors ?? new Fallout4Group<SoundDescriptor>(this);
+        #endregion
+        #region SoundCategories
+        private List<RangeInt64>? _SoundCategoriesLocations;
+        private IFallout4GroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocations != null ? Fallout4GroupBinaryOverlay<ISoundCategoryGetter>.Fallout4GroupFactory(_data, _SoundCategoriesLocations, _package) : default;
+        public IFallout4GroupGetter<ISoundCategoryGetter> SoundCategories => _SoundCategories ?? new Fallout4Group<SoundCategory>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -21276,6 +21627,18 @@ namespace Mutagen.Bethesda.Fallout4
                     _MovementTypesLocations ??= new();
                     _MovementTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.MovementTypes;
+                }
+                case RecordTypeInts.SNDR:
+                {
+                    _SoundDescriptorsLocations ??= new();
+                    _SoundDescriptorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.SoundDescriptors;
+                }
+                case RecordTypeInts.SNCT:
+                {
+                    _SoundCategoriesLocations ??= new();
+                    _SoundCategoriesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.SoundCategories;
                 }
                 default:
                     return default(int?);

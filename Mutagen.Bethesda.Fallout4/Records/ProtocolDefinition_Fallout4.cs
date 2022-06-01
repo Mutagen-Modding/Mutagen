@@ -506,7 +506,14 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             DialogView_Registration.Instance,
             AssociationType_Registration.Instance,
             Relationship_Registration.Instance,
-            AnimationChangeThresholds_Registration.Instance
+            AnimationChangeThresholds_Registration.Instance,
+            SoundCategory_Registration.Instance,
+            SoundLoopAndRumble_Registration.Instance,
+            SoundRateOfFire_Registration.Instance,
+            SoundDescriptorStandardData_Registration.Instance,
+            ASoundDescriptor_Registration.Instance,
+            SoundDescriptorAutoweaponData_Registration.Instance,
+            SoundDescriptorCompoundData_Registration.Instance
         );
     }
 }

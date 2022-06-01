@@ -3129,13 +3129,37 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         /// <summary>
+        /// Scope a load order query to SoundCategory
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on SoundCategory</returns>
+        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundCategory, ISoundCategoryGetter> SoundCategory(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundCategory, ISoundCategoryGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<ISoundCategoryGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, ISoundCategory, ISoundCategoryGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to SoundCategory
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on SoundCategory</returns>
+        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundCategory, ISoundCategoryGetter> SoundCategory(this IEnumerable<IFallout4ModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundCategory, ISoundCategoryGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<ISoundCategoryGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, ISoundCategory, ISoundCategoryGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to SoundDescriptor
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SoundDescriptor</returns>
-        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter> SoundDescriptor(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter> SoundDescriptor(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoundDescriptorGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3145,9 +3169,9 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SoundDescriptor</returns>
-        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter> SoundDescriptor(this IEnumerable<IFallout4ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter> SoundDescriptor(this IEnumerable<IFallout4ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISoundDescriptorGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, ISoundDescriptor, ISoundDescriptorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

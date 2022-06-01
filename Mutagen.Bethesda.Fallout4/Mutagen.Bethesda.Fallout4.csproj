@@ -665,6 +665,12 @@
     <Compile Include="Records\Major Records\ShaderParticleGeometry.cs">
       <DependentUpon>ShaderParticleGeometry.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SoundCategory.cs">
+      <DependentUpon>SoundCategory.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundDescriptor.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Static.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
@@ -815,9 +821,6 @@
     </Compile>
     <Compile Include="Records\Major Records\MiscItem_Generated.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SoundDescriptor_Generated.cs">
-      <DependentUpon>SoundDescriptor.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TextureSet_Generated.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -2275,6 +2278,30 @@
     </Compile>
     <Compile Include="Records\Major Records\AnimationChangeThresholds_Generated.cs">
       <DependentUpon>MovementType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundCategory_Generated.cs">
+      <DependentUpon>SoundCategory.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundDescriptor_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ASoundDescriptor_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundDescriptorAutoweaponData_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundLoopAndRumble_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundRateOfFire_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundDescriptorStandardData_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundDescriptorCompoundData_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
