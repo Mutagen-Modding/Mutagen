@@ -8,6 +8,7 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -18,13 +19,12 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
-using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
-using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -33,7 +33,7 @@ using System.Reactive.Linq;
 #endregion
 
 #nullable enable
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class SoundOutputData :
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
     internal enum SoundOutputData_FieldIndex
@@ -678,14 +678,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static readonly SoundOutputData_Registration Instance = new SoundOutputData_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 478,
+            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
+            msgID: 644,
             version: 0);
 
-        public const string GUID = "3d608b50-4229-4d79-b5d6-397df5f04420";
+        public const string GUID = "135bf4c0-9353-4c8d-a950-bf9b276d3950";
 
         public const ushort AdditionalFieldCount = 3;
 
@@ -705,11 +705,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.SoundOutputData";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.SoundOutputData";
 
         public const string Name = "SoundOutputData";
 
-        public const string Namespace = "Mutagen.Bethesda.Skyrim";
+        public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
         public const byte GenericCount = 0;
 
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundOutputData
     {
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundOutputDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
 }
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
     public static class SoundOutputDataBinaryTranslationMixIn
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     internal partial class SoundOutputDataBinaryOverlay :
         PluginBinaryOverlay,

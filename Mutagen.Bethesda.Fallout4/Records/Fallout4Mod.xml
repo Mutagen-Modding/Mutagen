@@ -110,6 +110,8 @@
       <Group name="MovementTypes" refName="MovementType" />
       <Group name="SoundDescriptors" refName="SoundDescriptor" />
       <Group name="SoundCategories" refName="SoundCategory" />
+      <Group name="SoundOutputModels" refName="SoundOutputModel" />
+      <Group name="CollisionLayers" refName="CollisionLayer" />
     </Fields>
   </Object>
 </Loqui>

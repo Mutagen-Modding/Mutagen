@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +54,59 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundOutputData? _Data;
+        public SoundOutputData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundOutputDataGetter? ISoundOutputModelGetter.Data => this.Data;
+        #endregion
+        #region Type
+        public SoundOutputModel.TypeEnum? Type { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        SoundOutputModel.TypeEnum? ISoundOutputModelGetter.Type => this.Type;
+        #endregion
+        #region StaticAttenuation
+        public Single? StaticAttenuation { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ISoundOutputModelGetter.StaticAttenuation => this.StaticAttenuation;
+        #endregion
+        #region OutputChannels
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundOutputChannels? _OutputChannels;
+        public SoundOutputChannels? OutputChannels
+        {
+            get => _OutputChannels;
+            set => _OutputChannels = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundOutputChannelsGetter? ISoundOutputModelGetter.OutputChannels => this.OutputChannels;
+        #endregion
+        #region DynamicAttentuation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private DynamicAttentuationValues? _DynamicAttentuation;
+        public DynamicAttentuationValues? DynamicAttentuation
+        {
+            get => _DynamicAttentuation;
+            set => _DynamicAttentuation = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDynamicAttentuationValuesGetter? ISoundOutputModelGetter.DynamicAttentuation => this.DynamicAttentuation;
+        #endregion
+        #region EffectChain
+        private readonly IFormLinkNullable<IAudioEffectChainGetter> _EffectChain = new FormLinkNullable<IAudioEffectChainGetter>();
+        public IFormLinkNullable<IAudioEffectChainGetter> EffectChain
+        {
+            get => _EffectChain;
+            set => _EffectChain.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAudioEffectChainGetter> ISoundOutputModelGetter.EffectChain => this.EffectChain;
+        #endregion
 
         #region To String
 
@@ -78,6 +132,12 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Data = new MaskItem<TItem, SoundOutputData.Mask<TItem>?>(initialValue, new SoundOutputData.Mask<TItem>(initialValue));
+                this.Type = initialValue;
+                this.StaticAttenuation = initialValue;
+                this.OutputChannels = new MaskItem<TItem, SoundOutputChannels.Mask<TItem>?>(initialValue, new SoundOutputChannels.Mask<TItem>(initialValue));
+                this.DynamicAttentuation = new MaskItem<TItem, DynamicAttentuationValues.Mask<TItem>?>(initialValue, new DynamicAttentuationValues.Mask<TItem>(initialValue));
+                this.EffectChain = initialValue;
             }
 
             public Mask(
@@ -86,7 +146,13 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Data,
+                TItem Type,
+                TItem StaticAttenuation,
+                TItem OutputChannels,
+                TItem DynamicAttentuation,
+                TItem EffectChain)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +161,12 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Data = new MaskItem<TItem, SoundOutputData.Mask<TItem>?>(Data, new SoundOutputData.Mask<TItem>(Data));
+                this.Type = Type;
+                this.StaticAttenuation = StaticAttenuation;
+                this.OutputChannels = new MaskItem<TItem, SoundOutputChannels.Mask<TItem>?>(OutputChannels, new SoundOutputChannels.Mask<TItem>(OutputChannels));
+                this.DynamicAttentuation = new MaskItem<TItem, DynamicAttentuationValues.Mask<TItem>?>(DynamicAttentuation, new DynamicAttentuationValues.Mask<TItem>(DynamicAttentuation));
+                this.EffectChain = EffectChain;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +175,15 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, SoundOutputData.Mask<TItem>?>? Data { get; set; }
+            public TItem Type;
+            public TItem StaticAttenuation;
+            public MaskItem<TItem, SoundOutputChannels.Mask<TItem>?>? OutputChannels { get; set; }
+            public MaskItem<TItem, DynamicAttentuationValues.Mask<TItem>?>? DynamicAttentuation { get; set; }
+            public TItem EffectChain;
             #endregion
 
             #region Equals
@@ -116,11 +197,23 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.StaticAttenuation, rhs.StaticAttenuation)) return false;
+                if (!object.Equals(this.OutputChannels, rhs.OutputChannels)) return false;
+                if (!object.Equals(this.DynamicAttentuation, rhs.DynamicAttentuation)) return false;
+                if (!object.Equals(this.EffectChain, rhs.EffectChain)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Data);
+                hash.Add(this.Type);
+                hash.Add(this.StaticAttenuation);
+                hash.Add(this.OutputChannels);
+                hash.Add(this.DynamicAttentuation);
+                hash.Add(this.EffectChain);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +224,24 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Type)) return false;
+                if (!eval(this.StaticAttenuation)) return false;
+                if (OutputChannels != null)
+                {
+                    if (!eval(this.OutputChannels.Overall)) return false;
+                    if (this.OutputChannels.Specific != null && !this.OutputChannels.Specific.All(eval)) return false;
+                }
+                if (DynamicAttentuation != null)
+                {
+                    if (!eval(this.DynamicAttentuation.Overall)) return false;
+                    if (this.DynamicAttentuation.Specific != null && !this.DynamicAttentuation.Specific.All(eval)) return false;
+                }
+                if (!eval(this.EffectChain)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +250,24 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Type)) return true;
+                if (eval(this.StaticAttenuation)) return true;
+                if (OutputChannels != null)
+                {
+                    if (eval(this.OutputChannels.Overall)) return true;
+                    if (this.OutputChannels.Specific != null && this.OutputChannels.Specific.Any(eval)) return true;
+                }
+                if (DynamicAttentuation != null)
+                {
+                    if (eval(this.DynamicAttentuation.Overall)) return true;
+                    if (this.DynamicAttentuation.Specific != null && this.DynamicAttentuation.Specific.Any(eval)) return true;
+                }
+                if (eval(this.EffectChain)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +283,12 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Data = this.Data == null ? null : new MaskItem<R, SoundOutputData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Type = eval(this.Type);
+                obj.StaticAttenuation = eval(this.StaticAttenuation);
+                obj.OutputChannels = this.OutputChannels == null ? null : new MaskItem<R, SoundOutputChannels.Mask<R>?>(eval(this.OutputChannels.Overall), this.OutputChannels.Specific?.Translate(eval));
+                obj.DynamicAttentuation = this.DynamicAttentuation == null ? null : new MaskItem<R, DynamicAttentuationValues.Mask<R>?>(eval(this.DynamicAttentuation.Overall), this.DynamicAttentuation.Specific?.Translate(eval));
+                obj.EffectChain = eval(this.EffectChain);
             }
             #endregion
 
@@ -172,6 +307,30 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(SoundOutputModel.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.StaticAttenuation ?? true)
+                    {
+                        sb.AppendItem(StaticAttenuation, "StaticAttenuation");
+                    }
+                    if (printMask?.OutputChannels?.Overall ?? true)
+                    {
+                        OutputChannels?.Print(sb);
+                    }
+                    if (printMask?.DynamicAttentuation?.Overall ?? true)
+                    {
+                        DynamicAttentuation?.Print(sb);
+                    }
+                    if (printMask?.EffectChain ?? true)
+                    {
+                        sb.AppendItem(EffectChain, "EffectChain");
+                    }
                 }
             }
             #endregion
@@ -182,12 +341,33 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, SoundOutputData.ErrorMask?>? Data;
+            public Exception? Type;
+            public Exception? StaticAttenuation;
+            public MaskItem<Exception?, SoundOutputChannels.ErrorMask?>? OutputChannels;
+            public MaskItem<Exception?, DynamicAttentuationValues.ErrorMask?>? DynamicAttentuation;
+            public Exception? EffectChain;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundOutputModel_FieldIndex.Data:
+                        return Data;
+                    case SoundOutputModel_FieldIndex.Type:
+                        return Type;
+                    case SoundOutputModel_FieldIndex.StaticAttenuation:
+                        return StaticAttenuation;
+                    case SoundOutputModel_FieldIndex.OutputChannels:
+                        return OutputChannels;
+                    case SoundOutputModel_FieldIndex.DynamicAttentuation:
+                        return DynamicAttentuation;
+                    case SoundOutputModel_FieldIndex.EffectChain:
+                        return EffectChain;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +378,24 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundOutputModel_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, SoundOutputData.ErrorMask?>(ex, null);
+                        break;
+                    case SoundOutputModel_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case SoundOutputModel_FieldIndex.StaticAttenuation:
+                        this.StaticAttenuation = ex;
+                        break;
+                    case SoundOutputModel_FieldIndex.OutputChannels:
+                        this.OutputChannels = new MaskItem<Exception?, SoundOutputChannels.ErrorMask?>(ex, null);
+                        break;
+                    case SoundOutputModel_FieldIndex.DynamicAttentuation:
+                        this.DynamicAttentuation = new MaskItem<Exception?, DynamicAttentuationValues.ErrorMask?>(ex, null);
+                        break;
+                    case SoundOutputModel_FieldIndex.EffectChain:
+                        this.EffectChain = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +407,24 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundOutputModel_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, SoundOutputData.ErrorMask?>?)obj;
+                        break;
+                    case SoundOutputModel_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case SoundOutputModel_FieldIndex.StaticAttenuation:
+                        this.StaticAttenuation = (Exception?)obj;
+                        break;
+                    case SoundOutputModel_FieldIndex.OutputChannels:
+                        this.OutputChannels = (MaskItem<Exception?, SoundOutputChannels.ErrorMask?>?)obj;
+                        break;
+                    case SoundOutputModel_FieldIndex.DynamicAttentuation:
+                        this.DynamicAttentuation = (MaskItem<Exception?, DynamicAttentuationValues.ErrorMask?>?)obj;
+                        break;
+                    case SoundOutputModel_FieldIndex.EffectChain:
+                        this.EffectChain = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +434,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Data != null) return true;
+                if (Type != null) return true;
+                if (StaticAttenuation != null) return true;
+                if (OutputChannels != null) return true;
+                if (DynamicAttentuation != null) return true;
+                if (EffectChain != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +466,18 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                Data?.Print(sb);
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(StaticAttenuation, "StaticAttenuation");
+                }
+                OutputChannels?.Print(sb);
+                DynamicAttentuation?.Print(sb);
+                {
+                    sb.AppendItem(EffectChain, "EffectChain");
+                }
             }
             #endregion
 
@@ -252,6 +486,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.StaticAttenuation = this.StaticAttenuation.Combine(rhs.StaticAttenuation);
+                ret.OutputChannels = this.OutputChannels.Combine(rhs.OutputChannels, (l, r) => l.Combine(r));
+                ret.DynamicAttentuation = this.DynamicAttentuation.Combine(rhs.DynamicAttentuation, (l, r) => l.Combine(r));
+                ret.EffectChain = this.EffectChain.Combine(rhs.EffectChain);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +513,38 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public SoundOutputData.TranslationMask? Data;
+            public bool Type;
+            public bool StaticAttenuation;
+            public SoundOutputChannels.TranslationMask? OutputChannels;
+            public DynamicAttentuationValues.TranslationMask? DynamicAttentuation;
+            public bool EffectChain;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Type = defaultOn;
+                this.StaticAttenuation = defaultOn;
+                this.EffectChain = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((Type, null));
+                ret.Add((StaticAttenuation, null));
+                ret.Add((OutputChannels != null ? OutputChannels.OnOverall : DefaultOn, OutputChannels?.GetCrystal()));
+                ret.Add((DynamicAttentuation != null ? DynamicAttentuation.OnOverall : DefaultOn, DynamicAttentuation?.GetCrystal()));
+                ret.Add((EffectChain, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +556,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundOutputModel_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundOutputModelCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundOutputModelSetterCommon.Instance.RemapLinks(this, mapping);
         public SoundOutputModel(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -415,9 +680,16 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ISoundOutputModel :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISoundOutputModelInternal>,
         ISoundOutputModelGetter
     {
+        new SoundOutputData? Data { get; set; }
+        new SoundOutputModel.TypeEnum? Type { get; set; }
+        new Single? StaticAttenuation { get; set; }
+        new SoundOutputChannels? OutputChannels { get; set; }
+        new DynamicAttentuationValues? DynamicAttentuation { get; set; }
+        new IFormLinkNullable<IAudioEffectChainGetter> EffectChain { get; set; }
     }
 
     public partial interface ISoundOutputModelInternal :
@@ -431,10 +703,17 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ISoundOutputModelGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISoundOutputModelGetter>,
         IMapsToGetter<ISoundOutputModelGetter>
     {
         static new ILoquiRegistration StaticRegistration => SoundOutputModel_Registration.Instance;
+        ISoundOutputDataGetter? Data { get; }
+        SoundOutputModel.TypeEnum? Type { get; }
+        Single? StaticAttenuation { get; }
+        ISoundOutputChannelsGetter? OutputChannels { get; }
+        IDynamicAttentuationValuesGetter? DynamicAttentuation { get; }
+        IFormLinkNullableGetter<IAudioEffectChainGetter> EffectChain { get; }
 
     }
 
@@ -599,6 +878,12 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Data = 6,
+        Type = 7,
+        StaticAttenuation = 8,
+        OutputChannels = 9,
+        DynamicAttentuation = 10,
+        EffectChain = 11,
     }
     #endregion
 
@@ -616,9 +901,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "c4291e81-0689-4557-ab6c-d26328f2419a";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(SoundOutputModel.Mask<>);
 
@@ -648,8 +933,16 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SOPM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SOPM);
+            var all = RecordCollection.Factory(
+                RecordTypes.SOPM,
+                RecordTypes.NAM1,
+                RecordTypes.MNAM,
+                RecordTypes.VNAM,
+                RecordTypes.ONAM,
+                RecordTypes.ATTN,
+                RecordTypes.ENAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundOutputModelBinaryWriteTranslation);
         #region Interface
@@ -693,6 +986,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISoundOutputModelInternal item)
         {
             ClearPartial();
+            item.Data = null;
+            item.Type = default;
+            item.StaticAttenuation = default;
+            item.OutputChannels = null;
+            item.DynamicAttentuation = null;
+            item.EffectChain.Clear();
             base.Clear(item);
         }
         
@@ -710,6 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(ISoundOutputModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.EffectChain.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +1078,24 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Type = item.Type == rhs.Type;
+            ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
+            ret.OutputChannels = EqualsMaskHelper.EqualsHelper(
+                item.OutputChannels,
+                rhs.OutputChannels,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DynamicAttentuation = EqualsMaskHelper.EqualsHelper(
+                item.DynamicAttentuation,
+                rhs.DynamicAttentuation,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.EffectChain = item.EffectChain.Equals(rhs.EffectChain);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1145,35 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data is {} DataItem)
+            {
+                DataItem?.Print(sb, "Data");
+            }
+            if ((printMask?.Type ?? true)
+                && item.Type is {} TypeItem)
+            {
+                sb.AppendItem(TypeItem, "Type");
+            }
+            if ((printMask?.StaticAttenuation ?? true)
+                && item.StaticAttenuation is {} StaticAttenuationItem)
+            {
+                sb.AppendItem(StaticAttenuationItem, "StaticAttenuation");
+            }
+            if ((printMask?.OutputChannels?.Overall ?? true)
+                && item.OutputChannels is {} OutputChannelsItem)
+            {
+                OutputChannelsItem?.Print(sb, "OutputChannels");
+            }
+            if ((printMask?.DynamicAttentuation?.Overall ?? true)
+                && item.DynamicAttentuation is {} DynamicAttentuationItem)
+            {
+                DynamicAttentuationItem?.Print(sb, "DynamicAttentuation");
+            }
+            if (printMask?.EffectChain ?? true)
+            {
+                sb.AppendItem(item.EffectChain.FormKeyNullable, "EffectChain");
+            }
         }
         
         public static SoundOutputModel_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1222,42 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((SoundOutputDataCommon)((ISoundOutputDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.StaticAttenuation) ?? true))
+            {
+                if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.OutputChannels) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.OutputChannels, rhs.OutputChannels, out var lhsOutputChannels, out var rhsOutputChannels, out var isOutputChannelsEqual))
+                {
+                    if (!((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)lhsOutputChannels).CommonInstance()!).Equals(lhsOutputChannels, rhsOutputChannels, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.OutputChannels))) return false;
+                }
+                else if (!isOutputChannelsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.DynamicAttentuation) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DynamicAttentuation, rhs.DynamicAttentuation, out var lhsDynamicAttentuation, out var rhsDynamicAttentuation, out var isDynamicAttentuationEqual))
+                {
+                    if (!((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)lhsDynamicAttentuation).CommonInstance()!).Equals(lhsDynamicAttentuation, rhsDynamicAttentuation, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.DynamicAttentuation))) return false;
+                }
+                else if (!isDynamicAttentuationEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.EffectChain) ?? true))
+            {
+                if (!lhs.EffectChain.Equals(rhs.EffectChain)) return false;
+            }
             return true;
         }
         
@@ -903,6 +1286,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ISoundOutputModelGetter item)
         {
             var hash = new HashCode();
+            if (item.Data is {} Dataitem)
+            {
+                hash.Add(Dataitem);
+            }
+            if (item.Type is {} Typeitem)
+            {
+                hash.Add(Typeitem);
+            }
+            if (item.StaticAttenuation is {} StaticAttenuationitem)
+            {
+                hash.Add(StaticAttenuationitem);
+            }
+            if (item.OutputChannels is {} OutputChannelsitem)
+            {
+                hash.Add(OutputChannelsitem);
+            }
+            if (item.DynamicAttentuation is {} DynamicAttentuationitem)
+            {
+                hash.Add(DynamicAttentuationitem);
+            }
+            hash.Add(item.EffectChain);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +1335,10 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.EffectChain, out var EffectChainInfo))
+            {
+                yield return EffectChainInfo;
             }
             yield break;
         }
@@ -1006,6 +1414,96 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundOutputModel_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data is {} rhsData)
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoundOutputModel_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.StaticAttenuation) ?? true))
+            {
+                item.StaticAttenuation = rhs.StaticAttenuation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.OutputChannels) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundOutputModel_FieldIndex.OutputChannels);
+                try
+                {
+                    if(rhs.OutputChannels is {} rhsOutputChannels)
+                    {
+                        item.OutputChannels = rhsOutputChannels.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoundOutputModel_FieldIndex.OutputChannels));
+                    }
+                    else
+                    {
+                        item.OutputChannels = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.DynamicAttentuation) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundOutputModel_FieldIndex.DynamicAttentuation);
+                try
+                {
+                    if(rhs.DynamicAttentuation is {} rhsDynamicAttentuation)
+                    {
+                        item.DynamicAttentuation = rhsDynamicAttentuation.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoundOutputModel_FieldIndex.DynamicAttentuation));
+                    }
+                    else
+                    {
+                        item.DynamicAttentuation = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.EffectChain) ?? true))
+            {
+                item.EffectChain.SetTo(rhs.EffectChain.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1652,53 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static SoundOutputModelBinaryWriteTranslation Instance = new SoundOutputModelBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            ISoundOutputModelGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.Data is {} DataItem)
+            {
+                ((SoundOutputDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            EnumBinaryTranslation<SoundOutputModel.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.StaticAttenuation,
+                integerType: FloatIntegerType.UShort,
+                multiplier: 0.01,
+                header: translationParams.ConvertToCustom(RecordTypes.VNAM));
+            if (item.OutputChannels is {} OutputChannelsItem)
+            {
+                ((SoundOutputChannelsBinaryWriteTranslation)((IBinaryItem)OutputChannelsItem).BinaryWriteTranslator).Write(
+                    item: OutputChannelsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.DynamicAttentuation is {} DynamicAttentuationItem)
+            {
+                ((DynamicAttentuationValuesBinaryWriteTranslation)((IBinaryItem)DynamicAttentuationItem).BinaryWriteTranslator).Write(
+                    item: DynamicAttentuationItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EffectChain,
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             ISoundOutputModelGetter item,
@@ -1168,10 +1713,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1776,67 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            ISoundOutputModelInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.NAM1:
+                {
+                    item.Data = Mutagen.Bethesda.Fallout4.SoundOutputData.CreateFromBinary(frame: frame);
+                    return (int)SoundOutputModel_FieldIndex.Data;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Type = EnumBinaryTranslation<SoundOutputModel.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)SoundOutputModel_FieldIndex.Type;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UShort,
+                        multiplier: 0.01);
+                    return (int)SoundOutputModel_FieldIndex.StaticAttenuation;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    item.OutputChannels = Mutagen.Bethesda.Fallout4.SoundOutputChannels.CreateFromBinary(frame: frame);
+                    return (int)SoundOutputModel_FieldIndex.OutputChannels;
+                }
+                case RecordTypeInts.ATTN:
+                {
+                    item.DynamicAttentuation = Mutagen.Bethesda.Fallout4.DynamicAttentuationValues.CreateFromBinary(frame: frame);
+                    return (int)SoundOutputModel_FieldIndex.DynamicAttentuation;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EffectChain.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SoundOutputModel_FieldIndex.EffectChain;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1261,6 +1869,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundOutputModelCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundOutputModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +1884,30 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(ISoundOutputModel);
 
 
+        #region Data
+        private RangeInt32? _DataLocation;
+        public ISoundOutputDataGetter? Data => _DataLocation.HasValue ? SoundOutputDataBinaryOverlay.SoundOutputDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region Type
+        private int? _TypeLocation;
+        public SoundOutputModel.TypeEnum? Type => _TypeLocation.HasValue ? (SoundOutputModel.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundOutputModel.TypeEnum?);
+        #endregion
+        #region StaticAttenuation
+        private int? _StaticAttenuationLocation;
+        public Single? StaticAttenuation => _StaticAttenuationLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticAttenuationLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 0.01) : default(Single?);
+        #endregion
+        #region OutputChannels
+        private RangeInt32? _OutputChannelsLocation;
+        public ISoundOutputChannelsGetter? OutputChannels => _OutputChannelsLocation.HasValue ? SoundOutputChannelsBinaryOverlay.SoundOutputChannelsFactory(new OverlayStream(_data.Slice(_OutputChannelsLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region DynamicAttentuation
+        private RangeInt32? _DynamicAttentuationLocation;
+        public IDynamicAttentuationValuesGetter? DynamicAttentuation => _DynamicAttentuationLocation.HasValue ? DynamicAttentuationValuesBinaryOverlay.DynamicAttentuationValuesFactory(new OverlayStream(_data.Slice(_DynamicAttentuationLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region EffectChain
+        private int? _EffectChainLocation;
+        public IFormLinkNullableGetter<IAudioEffectChainGetter> EffectChain => _EffectChainLocation.HasValue ? new FormLinkNullable<IAudioEffectChainGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EffectChainLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAudioEffectChainGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +1962,58 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.NAM1:
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)SoundOutputModel_FieldIndex.Data;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _TypeLocation = (stream.Position - offset);
+                    return (int)SoundOutputModel_FieldIndex.Type;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    _StaticAttenuationLocation = (stream.Position - offset);
+                    return (int)SoundOutputModel_FieldIndex.StaticAttenuation;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _OutputChannelsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)SoundOutputModel_FieldIndex.OutputChannels;
+                }
+                case RecordTypeInts.ATTN:
+                {
+                    _DynamicAttentuationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)SoundOutputModel_FieldIndex.DynamicAttentuation;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _EffectChainLocation = (stream.Position - offset);
+                    return (int)SoundOutputModel_FieldIndex.EffectChain;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

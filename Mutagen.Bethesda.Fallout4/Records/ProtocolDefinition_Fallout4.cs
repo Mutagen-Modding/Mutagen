@@ -513,7 +513,12 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             SoundDescriptorStandardData_Registration.Instance,
             ASoundDescriptor_Registration.Instance,
             SoundDescriptorAutoweaponData_Registration.Instance,
-            SoundDescriptorCompoundData_Registration.Instance
+            SoundDescriptorCompoundData_Registration.Instance,
+            AudioEffectChain_Registration.Instance,
+            SoundOutputData_Registration.Instance,
+            SoundOutputChannels_Registration.Instance,
+            SoundOutputChannel_Registration.Instance,
+            DynamicAttentuationValues_Registration.Instance
         );
     }
 }

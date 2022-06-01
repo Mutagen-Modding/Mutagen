@@ -671,6 +671,9 @@
     <Compile Include="Records\Major Records\SoundDescriptor.cs">
       <DependentUpon>SoundDescriptor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SoundOutputModel.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Static.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
@@ -2302,6 +2305,21 @@
     </Compile>
     <Compile Include="Records\Major Records\SoundDescriptorCompoundData_Generated.cs">
       <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AudioEffectChain_Generated.cs">
+      <DependentUpon>AudioEffectChain.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundOutputData_Generated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundOutputChannels_Generated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundOutputChannel_Generated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DynamicAttentuationValues_Generated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

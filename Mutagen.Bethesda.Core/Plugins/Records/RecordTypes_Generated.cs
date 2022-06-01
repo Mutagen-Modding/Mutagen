@@ -9,6 +9,7 @@ public partial class RecordTypes
     public static readonly RecordType ACRE = new(0x45524341);
     public static readonly RecordType ACTI = new(0x49544341);
     public static readonly RecordType ADDN = new(0x4E444441);
+    public static readonly RecordType AECH = new(0x48434541);
     public static readonly RecordType ALCH = new(0x48434C41);
     public static readonly RecordType AMDL = new(0x4C444D41);
     public static readonly RecordType AMMO = new(0x4F4D4D41);

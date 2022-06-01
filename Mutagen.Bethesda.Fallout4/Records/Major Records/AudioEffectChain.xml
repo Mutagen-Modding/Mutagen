@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AudioEffectChain" recordType="AECH" objType="Record" baseClass="Fallout4MajorRecord" GUID="b63b922c-506b-494f-b73d-737e67fc553e" ID="643">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

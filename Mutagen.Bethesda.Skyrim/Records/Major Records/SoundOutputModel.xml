@@ -15,7 +15,7 @@
     <Fields>
       <Enum name="Flags" enumName="SoundOutputModel.Flag" byteLength="1" />
       <UInt16 name="Unknown" />
-      <UInt8 name="ReverbSendPercent" />
+      <Percent name="ReverbSendPercent" integerType="Byte" />
     </Fields>
   </Object>
   <Object name="SoundOutputChannels" objType="Subrecord" recordType="ONAM" GUID="a14115ea-3ea6-40f2-be75-453329caf57a" ID="475">

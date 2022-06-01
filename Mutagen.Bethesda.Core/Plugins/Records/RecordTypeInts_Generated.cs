@@ -7,6 +7,7 @@ public partial class RecordTypeInts
     public const int ACRE = 0x45524341;
     public const int ACTI = 0x49544341;
     public const int ADDN = 0x4E444441;
+    public const int AECH = 0x48434541;
     public const int ALCH = 0x48434C41;
     public const int AMDL = 0x4C444D41;
     public const int AMMO = 0x4F4D4D41;

@@ -25,6 +25,7 @@ public partial class RecordTypes
     public static readonly RecordType ADCR = new(0x52434441);
     public static readonly RecordType ADDN = new(0x4E444441);
     public static readonly RecordType ADIA = new(0x41494441);
+    public static readonly RecordType AECH = new(0x48434541);
     public static readonly RecordType AFAV = new(0x56414641);
     public static readonly RecordType AHCF = new(0x46434841);
     public static readonly RecordType AHCM = new(0x4D434841);
@@ -82,6 +83,7 @@ public partial class RecordTypes
     public static readonly RecordType ATKS = new(0x534B5441);
     public static readonly RecordType ATKT = new(0x544B5441);
     public static readonly RecordType ATKW = new(0x574B5441);
+    public static readonly RecordType ATTN = new(0x4E545441);
     public static readonly RecordType ATTX = new(0x58545441);
     public static readonly RecordType ATXT = new(0x54585441);
     public static readonly RecordType AVFL = new(0x4C465641);

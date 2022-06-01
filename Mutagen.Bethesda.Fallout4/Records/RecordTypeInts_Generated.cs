@@ -23,6 +23,7 @@ public partial class RecordTypeInts
     public const int ADCR = 0x52434441;
     public const int ADDN = 0x4E444441;
     public const int ADIA = 0x41494441;
+    public const int AECH = 0x48434541;
     public const int AFAV = 0x56414641;
     public const int AHCF = 0x46434841;
     public const int AHCM = 0x4D434841;
@@ -80,6 +81,7 @@ public partial class RecordTypeInts
     public const int ATKS = 0x534B5441;
     public const int ATKT = 0x544B5441;
     public const int ATKW = 0x574B5441;
+    public const int ATTN = 0x4E545441;
     public const int ATTX = 0x58545441;
     public const int ATXT = 0x54585441;
     public const int AVFL = 0x4C465641;

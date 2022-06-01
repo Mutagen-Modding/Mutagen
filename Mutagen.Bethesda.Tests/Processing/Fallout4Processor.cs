@@ -1137,6 +1137,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "PERK", "DESC" },
                     new RecordType[] { "AVIF", "DESC" },
                     new RecordType[] { "MESG", "DESC" },
+                    new RecordType[] { "COLL", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

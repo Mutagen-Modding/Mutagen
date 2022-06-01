@@ -160,6 +160,8 @@ namespace Mutagen.Bethesda.Fallout4
             _MovementTypes_Object = new Fallout4Group<MovementType>(this);
             _SoundDescriptors_Object = new Fallout4Group<SoundDescriptor>(this);
             _SoundCategories_Object = new Fallout4Group<SoundCategory>(this);
+            _SoundOutputModels_Object = new Fallout4Group<SoundOutputModel>(this);
+            _CollisionLayers_Object = new Fallout4Group<CollisionLayer>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -893,6 +895,20 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ISoundCategoryGetter> IFallout4ModGetter.SoundCategories => _SoundCategories_Object;
         #endregion
+        #region SoundOutputModels
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<SoundOutputModel> _SoundOutputModels_Object;
+        public Fallout4Group<SoundOutputModel> SoundOutputModels => _SoundOutputModels_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ISoundOutputModelGetter> IFallout4ModGetter.SoundOutputModels => _SoundOutputModels_Object;
+        #endregion
+        #region CollisionLayers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<CollisionLayer> _CollisionLayers_Object;
+        public Fallout4Group<CollisionLayer> CollisionLayers => _CollisionLayers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ICollisionLayerGetter> IFallout4ModGetter.CollisionLayers => _CollisionLayers_Object;
+        #endregion
 
         #region To String
 
@@ -1036,6 +1052,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MovementTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.SoundDescriptors = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.SoundCategories = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.SoundOutputModels = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.CollisionLayers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1142,7 +1160,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem MaterialObjects,
                 TItem MovementTypes,
                 TItem SoundDescriptors,
-                TItem SoundCategories)
+                TItem SoundCategories,
+                TItem SoundOutputModels,
+                TItem CollisionLayers)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1248,6 +1268,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MovementTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MovementTypes, new Fallout4Group.Mask<TItem>(MovementTypes));
                 this.SoundDescriptors = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundDescriptors, new Fallout4Group.Mask<TItem>(SoundDescriptors));
                 this.SoundCategories = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundCategories, new Fallout4Group.Mask<TItem>(SoundCategories));
+                this.SoundOutputModels = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundOutputModels, new Fallout4Group.Mask<TItem>(SoundOutputModels));
+                this.CollisionLayers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CollisionLayers, new Fallout4Group.Mask<TItem>(CollisionLayers));
             }
 
             #pragma warning disable CS8618
@@ -1363,6 +1385,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MovementTypes { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundDescriptors { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundCategories { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundOutputModels { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CollisionLayers { get; set; }
             #endregion
 
             #region Equals
@@ -1479,6 +1503,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.MovementTypes, rhs.MovementTypes)) return false;
                 if (!object.Equals(this.SoundDescriptors, rhs.SoundDescriptors)) return false;
                 if (!object.Equals(this.SoundCategories, rhs.SoundCategories)) return false;
+                if (!object.Equals(this.SoundOutputModels, rhs.SoundOutputModels)) return false;
+                if (!object.Equals(this.CollisionLayers, rhs.CollisionLayers)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1588,6 +1614,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.MovementTypes);
                 hash.Add(this.SoundDescriptors);
                 hash.Add(this.SoundCategories);
+                hash.Add(this.SoundOutputModels);
+                hash.Add(this.CollisionLayers);
                 return hash.ToHashCode();
             }
 
@@ -2116,6 +2144,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.SoundCategories.Overall)) return false;
                     if (this.SoundCategories.Specific != null && !this.SoundCategories.Specific.All(eval)) return false;
                 }
+                if (SoundOutputModels != null)
+                {
+                    if (!eval(this.SoundOutputModels.Overall)) return false;
+                    if (this.SoundOutputModels.Specific != null && !this.SoundOutputModels.Specific.All(eval)) return false;
+                }
+                if (CollisionLayers != null)
+                {
+                    if (!eval(this.CollisionLayers.Overall)) return false;
+                    if (this.CollisionLayers.Specific != null && !this.CollisionLayers.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2643,6 +2681,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.SoundCategories.Overall)) return true;
                     if (this.SoundCategories.Specific != null && this.SoundCategories.Specific.Any(eval)) return true;
                 }
+                if (SoundOutputModels != null)
+                {
+                    if (eval(this.SoundOutputModels.Overall)) return true;
+                    if (this.SoundOutputModels.Specific != null && this.SoundOutputModels.Specific.Any(eval)) return true;
+                }
+                if (CollisionLayers != null)
+                {
+                    if (eval(this.CollisionLayers.Overall)) return true;
+                    if (this.CollisionLayers.Specific != null && this.CollisionLayers.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2761,6 +2809,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MovementTypes = this.MovementTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MovementTypes.Overall), this.MovementTypes.Specific?.Translate(eval));
                 obj.SoundDescriptors = this.SoundDescriptors == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundDescriptors.Overall), this.SoundDescriptors.Specific?.Translate(eval));
                 obj.SoundCategories = this.SoundCategories == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundCategories.Overall), this.SoundCategories.Specific?.Translate(eval));
+                obj.SoundOutputModels = this.SoundOutputModels == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundOutputModels.Overall), this.SoundOutputModels.Specific?.Translate(eval));
+                obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3195,6 +3245,14 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         SoundCategories?.Print(sb);
                     }
+                    if (printMask?.SoundOutputModels?.Overall ?? true)
+                    {
+                        SoundOutputModels?.Print(sb);
+                    }
+                    if (printMask?.CollisionLayers?.Overall ?? true)
+                    {
+                        CollisionLayers?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3323,6 +3381,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MovementType.ErrorMask>?>? MovementTypes;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundDescriptor.ErrorMask>?>? SoundDescriptors;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundCategory.ErrorMask>?>? SoundCategories;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundOutputModel.ErrorMask>?>? SoundOutputModels;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
             #endregion
 
             #region IErrorMask
@@ -3539,6 +3599,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return SoundDescriptors;
                     case Fallout4Mod_FieldIndex.SoundCategories:
                         return SoundCategories;
+                    case Fallout4Mod_FieldIndex.SoundOutputModels:
+                        return SoundOutputModels;
+                    case Fallout4Mod_FieldIndex.CollisionLayers:
+                        return CollisionLayers;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3860,6 +3924,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.SoundCategories:
                         this.SoundCategories = new MaskItem<Exception?, Fallout4Group.ErrorMask<SoundCategory.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.SoundOutputModels:
+                        this.SoundOutputModels = new MaskItem<Exception?, Fallout4Group.ErrorMask<SoundOutputModel.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.CollisionLayers:
+                        this.CollisionLayers = new MaskItem<Exception?, Fallout4Group.ErrorMask<CollisionLayer.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4183,6 +4253,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.SoundCategories:
                         this.SoundCategories = (MaskItem<Exception?, Fallout4Group.ErrorMask<SoundCategory.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.SoundOutputModels:
+                        this.SoundOutputModels = (MaskItem<Exception?, Fallout4Group.ErrorMask<SoundOutputModel.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.CollisionLayers:
+                        this.CollisionLayers = (MaskItem<Exception?, Fallout4Group.ErrorMask<CollisionLayer.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4295,6 +4371,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (MovementTypes != null) return true;
                 if (SoundDescriptors != null) return true;
                 if (SoundCategories != null) return true;
+                if (SoundOutputModels != null) return true;
+                if (CollisionLayers != null) return true;
                 return false;
             }
             #endregion
@@ -4424,6 +4502,8 @@ namespace Mutagen.Bethesda.Fallout4
                 MovementTypes?.Print(sb);
                 SoundDescriptors?.Print(sb);
                 SoundCategories?.Print(sb);
+                SoundOutputModels?.Print(sb);
+                CollisionLayers?.Print(sb);
             }
             #endregion
 
@@ -4536,6 +4616,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MovementTypes = this.MovementTypes.Combine(rhs.MovementTypes, (l, r) => l.Combine(r));
                 ret.SoundDescriptors = this.SoundDescriptors.Combine(rhs.SoundDescriptors, (l, r) => l.Combine(r));
                 ret.SoundCategories = this.SoundCategories.Combine(rhs.SoundCategories, (l, r) => l.Combine(r));
+                ret.SoundOutputModels = this.SoundOutputModels.Combine(rhs.SoundOutputModels, (l, r) => l.Combine(r));
+                ret.CollisionLayers = this.CollisionLayers.Combine(rhs.CollisionLayers, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4663,6 +4745,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<MovementType.TranslationMask>? MovementTypes;
             public Fallout4Group.TranslationMask<SoundDescriptor.TranslationMask>? SoundDescriptors;
             public Fallout4Group.TranslationMask<SoundCategory.TranslationMask>? SoundCategories;
+            public Fallout4Group.TranslationMask<SoundOutputModel.TranslationMask>? SoundOutputModels;
+            public Fallout4Group.TranslationMask<CollisionLayer.TranslationMask>? CollisionLayers;
             #endregion
 
             #region Ctors
@@ -4791,6 +4875,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((MovementTypes != null ? MovementTypes.OnOverall : DefaultOn, MovementTypes?.GetCrystal()));
                 ret.Add((SoundDescriptors != null ? SoundDescriptors.OnOverall : DefaultOn, SoundDescriptors?.GetCrystal()));
                 ret.Add((SoundCategories != null ? SoundCategories.OnOverall : DefaultOn, SoundCategories?.GetCrystal()));
+                ret.Add((SoundOutputModels != null ? SoundOutputModels.OnOverall : DefaultOn, SoundOutputModels?.GetCrystal()));
+                ret.Add((CollisionLayers != null ? CollisionLayers.OnOverall : DefaultOn, CollisionLayers?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4934,6 +5020,8 @@ namespace Mutagen.Bethesda.Fallout4
             _MovementTypes_Object = new Fallout4Group<MovementType>(this);
             _SoundDescriptors_Object = new Fallout4Group<SoundDescriptor>(this);
             _SoundCategories_Object = new Fallout4Group<SoundCategory>(this);
+            _SoundOutputModels_Object = new Fallout4Group<SoundOutputModel>(this);
+            _CollisionLayers_Object = new Fallout4Group<CollisionLayer>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5355,6 +5443,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.SoundCategories.RecordCache.Set(rhsMod.SoundCategories.RecordCache.Items);
             }
+            if (mask?.SoundOutputModels ?? true)
+            {
+                this.SoundOutputModels.RecordCache.Set(rhsMod.SoundOutputModels.RecordCache.Items);
+            }
+            if (mask?.CollisionLayers ?? true)
+            {
+                this.CollisionLayers.RecordCache.Set(rhsMod.CollisionLayers.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5468,6 +5564,8 @@ namespace Mutagen.Bethesda.Fallout4
             count += MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += SoundDescriptors.RecordCache.Count > 0 ? 1 : default(uint);
             count += SoundCategories.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundOutputModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5822,6 +5920,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<MovementType> MovementTypes { get; }
         new Fallout4Group<SoundDescriptor> SoundDescriptors { get; }
         new Fallout4Group<SoundCategory> SoundCategories { get; }
+        new Fallout4Group<SoundOutputModel> SoundOutputModels { get; }
+        new Fallout4Group<CollisionLayer> CollisionLayers { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -5944,6 +6044,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IMovementTypeGetter> MovementTypes { get; }
         IFallout4GroupGetter<ISoundDescriptorGetter> SoundDescriptors { get; }
         IFallout4GroupGetter<ISoundCategoryGetter> SoundCategories { get; }
+        IFallout4GroupGetter<ISoundOutputModelGetter> SoundOutputModels { get; }
+        IFallout4GroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
 
     }
 
@@ -6618,6 +6720,8 @@ namespace Mutagen.Bethesda.Fallout4
         MovementTypes = 101,
         SoundDescriptors = 102,
         SoundCategories = 103,
+        SoundOutputModels = 104,
+        CollisionLayers = 105,
     }
     #endregion
 
@@ -6635,9 +6739,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 104;
+        public const ushort AdditionalFieldCount = 106;
 
-        public const ushort FieldCount = 104;
+        public const ushort FieldCount = 106;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -6808,6 +6912,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.MovementTypes.Clear();
             item.SoundDescriptors.Clear();
             item.SoundCategories.Clear();
+            item.SoundOutputModels.Clear();
+            item.CollisionLayers.Clear();
         }
         
         #region Mutagen
@@ -6903,6 +7009,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MaterialObjects.RemapLinks(mapping);
             obj.SoundDescriptors.RemapLinks(mapping);
             obj.SoundCategories.RemapLinks(mapping);
+            obj.SoundOutputModels.RemapLinks(mapping);
+            obj.CollisionLayers.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -7040,6 +7148,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MovementTypes.Remove(keys);
             obj.SoundDescriptors.Remove(keys);
             obj.SoundCategories.Remove(keys);
+            obj.SoundOutputModels.Remove(keys);
+            obj.CollisionLayers.Remove(keys);
         }
         
         public void Remove(
@@ -7919,6 +8029,22 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "SoundOutputModel":
+                case "ISoundOutputModelGetter":
+                case "ISoundOutputModel":
+                case "ISoundOutputModelInternal":
+                    obj.SoundOutputModels.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    obj.CollisionLayers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -8513,6 +8639,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.MovementTypes = MaskItemExt.Factory(item.MovementTypes.GetEqualsMask(rhs.MovementTypes, include), include);
             ret.SoundDescriptors = MaskItemExt.Factory(item.SoundDescriptors.GetEqualsMask(rhs.SoundDescriptors, include), include);
             ret.SoundCategories = MaskItemExt.Factory(item.SoundCategories.GetEqualsMask(rhs.SoundCategories, include), include);
+            ret.SoundOutputModels = MaskItemExt.Factory(item.SoundOutputModels.GetEqualsMask(rhs.SoundOutputModels, include), include);
+            ret.CollisionLayers = MaskItemExt.Factory(item.CollisionLayers.GetEqualsMask(rhs.CollisionLayers, include), include);
         }
         
         public string Print(
@@ -8972,6 +9100,14 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.SoundCategories?.Overall ?? true)
             {
                 item.SoundCategories?.Print(sb, "SoundCategories");
+            }
+            if (printMask?.SoundOutputModels?.Overall ?? true)
+            {
+                item.SoundOutputModels?.Print(sb, "SoundOutputModels");
+            }
+            if (printMask?.CollisionLayers?.Overall ?? true)
+            {
+                item.CollisionLayers?.Print(sb, "CollisionLayers");
             }
         }
         
@@ -9814,6 +9950,22 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSoundCategoriesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundOutputModels) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SoundOutputModels, rhs.SoundOutputModels, out var lhsSoundOutputModels, out var rhsSoundOutputModels, out var isSoundOutputModelsEqual))
+                {
+                    if (!object.Equals(lhsSoundOutputModels, rhsSoundOutputModels)) return false;
+                }
+                else if (!isSoundOutputModelsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CollisionLayers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CollisionLayers, rhs.CollisionLayers, out var lhsCollisionLayers, out var rhsCollisionLayers, out var isCollisionLayersEqual))
+                {
+                    if (!object.Equals(lhsCollisionLayers, rhsCollisionLayers)) return false;
+                }
+                else if (!isCollisionLayersEqual) return false;
+            }
             return true;
         }
         
@@ -9924,6 +10076,8 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.MovementTypes);
             hash.Add(item.SoundDescriptors);
             hash.Add(item.SoundCategories);
+            hash.Add(item.SoundOutputModels);
+            hash.Add(item.CollisionLayers);
             return hash.ToHashCode();
         }
         
@@ -10456,6 +10610,16 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ISoundCategory":
                 case "ISoundCategoryInternal":
                     return obj.SoundCategories;
+                case "SoundOutputModel":
+                case "ISoundOutputModelGetter":
+                case "ISoundOutputModel":
+                case "ISoundOutputModelInternal":
+                    return obj.SoundOutputModels;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    return obj.CollisionLayers;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -10480,7 +10644,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[103];
+            Stream[] outputStreams = new Stream[105];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10585,6 +10749,8 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.MovementTypes, 100, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, 101, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SoundCategories, 102, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, 103, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, 104, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10989,6 +11155,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.SoundCategories.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundOutputModels.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CollisionLayers.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -11406,6 +11580,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.SoundCategories.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CollisionLayers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12358,6 +12540,24 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ISoundCategory":
                 case "ISoundCategoryInternal":
                     foreach (var item in obj.SoundCategories.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundOutputModel":
+                case "ISoundOutputModelGetter":
+                case "ISoundOutputModel":
+                case "ISoundOutputModelInternal":
+                    foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13448,6 +13648,24 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.SoundCategories,
                 groupGetter: (m) => m.SoundCategories))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, SoundOutputModel, ISoundOutputModelGetter>(
+                srcGroup: obj.SoundOutputModels,
+                type: typeof(ISoundOutputModelGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundOutputModels,
+                groupGetter: (m) => m.SoundOutputModels))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, CollisionLayer, ICollisionLayerGetter>(
+                srcGroup: obj.CollisionLayers,
+                type: typeof(ICollisionLayerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CollisionLayers,
+                groupGetter: (m) => m.CollisionLayers))
             {
                 yield return item;
             }
@@ -14906,6 +15124,34 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.SoundCategories,
                         groupGetter: (m) => m.SoundCategories))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundOutputModel":
+                case "ISoundOutputModelGetter":
+                case "ISoundOutputModel":
+                case "ISoundOutputModelInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, SoundOutputModel, ISoundOutputModelGetter>(
+                        srcGroup: obj.SoundOutputModels,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundOutputModels,
+                        groupGetter: (m) => m.SoundOutputModels))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, CollisionLayer, ICollisionLayerGetter>(
+                        srcGroup: obj.CollisionLayers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CollisionLayers,
+                        groupGetter: (m) => m.CollisionLayers))
                     {
                         yield return item;
                     }
@@ -17284,6 +17530,46 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundOutputModels) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.SoundOutputModels);
+                try
+                {
+                    item.SoundOutputModels.DeepCopyIn(
+                        rhs: rhs.SoundOutputModels,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.SoundOutputModels));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CollisionLayers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.CollisionLayers);
+                try
+                {
+                    item.CollisionLayers.DeepCopyIn(
+                        rhs: rhs.CollisionLayers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.CollisionLayers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -17477,6 +17763,8 @@ namespace Mutagen.Bethesda.Fallout4
         public bool MovementTypes;
         public bool SoundDescriptors;
         public bool SoundCategories;
+        public bool SoundOutputModels;
+        public bool CollisionLayers;
         public GroupMask()
         {
         }
@@ -17585,6 +17873,8 @@ namespace Mutagen.Bethesda.Fallout4
             MovementTypes = defaultValue;
             SoundDescriptors = defaultValue;
             SoundCategories = defaultValue;
+            SoundOutputModels = defaultValue;
+            CollisionLayers = defaultValue;
         }
     }
 
@@ -18745,6 +19035,28 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)SoundCategoriesItem).BinaryWriteTranslator).Write<ISoundCategoryGetter>(
                         item: SoundCategoriesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SoundOutputModels ?? true)
+            {
+                var SoundOutputModelsItem = item.SoundOutputModels;
+                if (SoundOutputModelsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)SoundOutputModelsItem).BinaryWriteTranslator).Write<ISoundOutputModelGetter>(
+                        item: SoundOutputModelsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CollisionLayers ?? true)
+            {
+                var CollisionLayersItem = item.CollisionLayers;
+                if (CollisionLayersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)CollisionLayersItem).BinaryWriteTranslator).Write<ICollisionLayerGetter>(
+                        item: CollisionLayersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -20257,6 +20569,34 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.SoundCategories;
                 }
+                case RecordTypeInts.SOPM:
+                {
+                    if (importMask?.SoundOutputModels ?? true)
+                    {
+                        item.SoundOutputModels.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.SoundOutputModels;
+                }
+                case RecordTypeInts.COLL:
+                {
+                    if (importMask?.CollisionLayers ?? true)
+                    {
+                        item.CollisionLayers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.CollisionLayers;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -20934,6 +21274,16 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _SoundCategoriesLocations;
         private IFallout4GroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocations != null ? Fallout4GroupBinaryOverlay<ISoundCategoryGetter>.Fallout4GroupFactory(_data, _SoundCategoriesLocations, _package) : default;
         public IFallout4GroupGetter<ISoundCategoryGetter> SoundCategories => _SoundCategories ?? new Fallout4Group<SoundCategory>(this);
+        #endregion
+        #region SoundOutputModels
+        private List<RangeInt64>? _SoundOutputModelsLocations;
+        private IFallout4GroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocations != null ? Fallout4GroupBinaryOverlay<ISoundOutputModelGetter>.Fallout4GroupFactory(_data, _SoundOutputModelsLocations, _package) : default;
+        public IFallout4GroupGetter<ISoundOutputModelGetter> SoundOutputModels => _SoundOutputModels ?? new Fallout4Group<SoundOutputModel>(this);
+        #endregion
+        #region CollisionLayers
+        private List<RangeInt64>? _CollisionLayersLocations;
+        private IFallout4GroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? Fallout4GroupBinaryOverlay<ICollisionLayerGetter>.Fallout4GroupFactory(_data, _CollisionLayersLocations, _package) : default;
+        public IFallout4GroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new Fallout4Group<CollisionLayer>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -21639,6 +21989,18 @@ namespace Mutagen.Bethesda.Fallout4
                     _SoundCategoriesLocations ??= new();
                     _SoundCategoriesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.SoundCategories;
+                }
+                case RecordTypeInts.SOPM:
+                {
+                    _SoundOutputModelsLocations ??= new();
+                    _SoundOutputModelsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.SoundOutputModels;
+                }
+                case RecordTypeInts.COLL:
+                {
+                    _CollisionLayersLocations ??= new();
+                    _CollisionLayersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.CollisionLayers;
                 }
                 default:
                     return default(int?);
