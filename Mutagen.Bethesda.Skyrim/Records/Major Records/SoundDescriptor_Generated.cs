@@ -54,16 +54,10 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region CNAM
+        #region Type
+        public SoundDescriptor.DescriptorType? Type { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CNAM;
-        public MemorySlice<Byte>? CNAM
-        {
-            get => this._CNAM;
-            set => this._CNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ISoundDescriptorGetter.CNAM => this.CNAM;
+        SoundDescriptor.DescriptorType? ISoundDescriptorGetter.Type => this.Type;
         #endregion
         #region Category
         private readonly IFormLinkNullable<ISoundCategoryGetter> _Category = new FormLinkNullable<ISoundCategoryGetter>();
@@ -140,10 +134,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundLoopAndRumbleGetter? ISoundDescriptorGetter.LoopAndRumble => this.LoopAndRumble;
         #endregion
         #region PercentFrequencyShift
-        public SByte PercentFrequencyShift { get; set; } = default;
+        public Percent PercentFrequencyShift { get; set; } = default;
         #endregion
         #region PercentFrequencyVariance
-        public SByte PercentFrequencyVariance { get; set; } = default;
+        public Percent PercentFrequencyVariance { get; set; } = default;
         #endregion
         #region Priority
         public SByte Priority { get; set; } = default;
@@ -182,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.CNAM = initialValue;
+                this.Type = initialValue;
                 this.Category = initialValue;
                 this.AlternateSoundFor = initialValue;
                 this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -205,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem CNAM,
+                TItem Type,
                 TItem Category,
                 TItem AlternateSoundFor,
                 TItem SoundFiles,
@@ -227,7 +221,7 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.CNAM = CNAM;
+                this.Type = Type;
                 this.Category = Category;
                 this.AlternateSoundFor = AlternateSoundFor;
                 this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SoundFiles, Enumerable.Empty<(int Index, TItem Value)>());
@@ -252,7 +246,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem CNAM;
+            public TItem Type;
             public TItem Category;
             public TItem AlternateSoundFor;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SoundFiles;
@@ -279,7 +273,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.Category, rhs.Category)) return false;
                 if (!object.Equals(this.AlternateSoundFor, rhs.AlternateSoundFor)) return false;
                 if (!object.Equals(this.SoundFiles, rhs.SoundFiles)) return false;
@@ -298,7 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.CNAM);
+                hash.Add(this.Type);
                 hash.Add(this.Category);
                 hash.Add(this.AlternateSoundFor);
                 hash.Add(this.SoundFiles);
@@ -322,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.CNAM)) return false;
+                if (!eval(this.Type)) return false;
                 if (!eval(this.Category)) return false;
                 if (!eval(this.AlternateSoundFor)) return false;
                 if (this.SoundFiles != null)
@@ -369,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.CNAM)) return true;
+                if (eval(this.Type)) return true;
                 if (eval(this.Category)) return true;
                 if (eval(this.AlternateSoundFor)) return true;
                 if (this.SoundFiles != null)
@@ -423,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.CNAM = eval(this.CNAM);
+                obj.Type = eval(this.Type);
                 obj.Category = eval(this.Category);
                 obj.AlternateSoundFor = eval(this.AlternateSoundFor);
                 if (SoundFiles != null)
@@ -482,9 +476,9 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(SoundDescriptor.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.CNAM ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        sb.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Category ?? true)
                     {
@@ -581,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? CNAM;
+            public Exception? Type;
             public Exception? Category;
             public Exception? AlternateSoundFor;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SoundFiles;
@@ -603,8 +597,8 @@ namespace Mutagen.Bethesda.Skyrim
                 SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
                 switch (enu)
                 {
-                    case SoundDescriptor_FieldIndex.CNAM:
-                        return CNAM;
+                    case SoundDescriptor_FieldIndex.Type:
+                        return Type;
                     case SoundDescriptor_FieldIndex.Category:
                         return Category;
                     case SoundDescriptor_FieldIndex.AlternateSoundFor:
@@ -641,8 +635,8 @@ namespace Mutagen.Bethesda.Skyrim
                 SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
                 switch (enu)
                 {
-                    case SoundDescriptor_FieldIndex.CNAM:
-                        this.CNAM = ex;
+                    case SoundDescriptor_FieldIndex.Type:
+                        this.Type = ex;
                         break;
                     case SoundDescriptor_FieldIndex.Category:
                         this.Category = ex;
@@ -694,8 +688,8 @@ namespace Mutagen.Bethesda.Skyrim
                 SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
                 switch (enu)
                 {
-                    case SoundDescriptor_FieldIndex.CNAM:
-                        this.CNAM = (Exception?)obj;
+                    case SoundDescriptor_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
                     case SoundDescriptor_FieldIndex.Category:
                         this.Category = (Exception?)obj;
@@ -745,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (CNAM != null) return true;
+                if (Type != null) return true;
                 if (Category != null) return true;
                 if (AlternateSoundFor != null) return true;
                 if (SoundFiles != null) return true;
@@ -786,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(CNAM, "CNAM");
+                    sb.AppendItem(Type, "Type");
                 }
                 {
                     sb.AppendItem(Category, "Category");
@@ -865,7 +859,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
+                ret.Type = this.Type.Combine(rhs.Type);
                 ret.Category = this.Category.Combine(rhs.Category);
                 ret.AlternateSoundFor = this.AlternateSoundFor.Combine(rhs.AlternateSoundFor);
                 ret.SoundFiles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SoundFiles?.Overall, rhs.SoundFiles?.Overall), ExceptionExt.Combine(this.SoundFiles?.Specific, rhs.SoundFiles?.Specific));
@@ -901,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool CNAM;
+            public bool Type;
             public bool Category;
             public bool AlternateSoundFor;
             public bool SoundFiles;
@@ -923,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.CNAM = defaultOn;
+                this.Type = defaultOn;
                 this.Category = defaultOn;
                 this.AlternateSoundFor = defaultOn;
                 this.SoundFiles = defaultOn;
@@ -942,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((CNAM, null));
+                ret.Add((Type, null));
                 ret.Add((Category, null));
                 ret.Add((AlternateSoundFor, null));
                 ret.Add((SoundFiles, null));
@@ -1108,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISound,
         ISoundDescriptorGetter
     {
-        new MemorySlice<Byte>? CNAM { get; set; }
+        new SoundDescriptor.DescriptorType? Type { get; set; }
         new IFormLinkNullable<ISoundCategoryGetter> Category { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
         new ExtendedList<String> SoundFiles { get; }
@@ -1116,8 +1110,8 @@ namespace Mutagen.Bethesda.Skyrim
         new String? String { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new SoundLoopAndRumble? LoopAndRumble { get; set; }
-        new SByte PercentFrequencyShift { get; set; }
-        new SByte PercentFrequencyVariance { get; set; }
+        new Percent PercentFrequencyShift { get; set; }
+        new Percent PercentFrequencyVariance { get; set; }
         new SByte Priority { get; set; }
         new SByte Variance { get; set; }
         new Single StaticAttenuation { get; set; }
@@ -1141,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundGetter
     {
         static new ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? CNAM { get; }
+        SoundDescriptor.DescriptorType? Type { get; }
         IFormLinkNullableGetter<ISoundCategoryGetter> Category { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor { get; }
         IReadOnlyList<String> SoundFiles { get; }
@@ -1149,8 +1143,8 @@ namespace Mutagen.Bethesda.Skyrim
         String? String { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ISoundLoopAndRumbleGetter? LoopAndRumble { get; }
-        SByte PercentFrequencyShift { get; }
-        SByte PercentFrequencyVariance { get; }
+        Percent PercentFrequencyShift { get; }
+        Percent PercentFrequencyVariance { get; }
         SByte Priority { get; }
         SByte Variance { get; }
         Single StaticAttenuation { get; }
@@ -1319,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        CNAM = 6,
+        Type = 6,
         Category = 7,
         AlternateSoundFor = 8,
         SoundFiles = 9,
@@ -1440,7 +1434,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISoundDescriptorInternal item)
         {
             ClearPartial();
-            item.CNAM = default;
+            item.Type = default;
             item.Category.Clear();
             item.AlternateSoundFor.Clear();
             item.SoundFiles.Clear();
@@ -1543,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
+            ret.Type = item.Type == rhs.Type;
             ret.Category = item.Category.Equals(rhs.Category);
             ret.AlternateSoundFor = item.AlternateSoundFor.Equals(rhs.AlternateSoundFor);
             ret.SoundFiles = item.SoundFiles.CollectionEqualsHelper(
@@ -1561,8 +1555,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.LoopAndRumble,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PercentFrequencyShift = item.PercentFrequencyShift == rhs.PercentFrequencyShift;
-            ret.PercentFrequencyVariance = item.PercentFrequencyVariance == rhs.PercentFrequencyVariance;
+            ret.PercentFrequencyShift = item.PercentFrequencyShift.Equals(rhs.PercentFrequencyShift);
+            ret.PercentFrequencyVariance = item.PercentFrequencyVariance.Equals(rhs.PercentFrequencyVariance);
             ret.Priority = item.Priority == rhs.Priority;
             ret.Variance = item.Variance == rhs.Variance;
             ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
@@ -1616,10 +1610,10 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.CNAM ?? true)
-                && item.CNAM is {} CNAMItem)
+            if ((printMask?.Type ?? true)
+                && item.Type is {} TypeItem)
             {
-                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendItem(TypeItem, "Type");
             }
             if (printMask?.Category ?? true)
             {
@@ -1743,9 +1737,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.CNAM) ?? true))
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Type) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
+                if (lhs.Type != rhs.Type) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
             {
@@ -1781,11 +1775,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyShift) ?? true))
             {
-                if (lhs.PercentFrequencyShift != rhs.PercentFrequencyShift) return false;
+                if (!lhs.PercentFrequencyShift.Equals(rhs.PercentFrequencyShift)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyVariance) ?? true))
             {
-                if (lhs.PercentFrequencyVariance != rhs.PercentFrequencyVariance) return false;
+                if (!lhs.PercentFrequencyVariance.Equals(rhs.PercentFrequencyVariance)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Priority) ?? true))
             {
@@ -1831,9 +1825,9 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(ISoundDescriptorGetter item)
         {
             var hash = new HashCode();
-            if (item.CNAM is {} CNAMItem)
+            if (item.Type is {} Typeitem)
             {
-                hash.Add(CNAMItem);
+                hash.Add(Typeitem);
             }
             hash.Add(item.Category);
             hash.Add(item.AlternateSoundFor);
@@ -1974,16 +1968,9 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.CNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Type) ?? true))
             {
-                if(rhs.CNAM is {} CNAMrhs)
-                {
-                    item.CNAM = CNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.CNAM = default;
-                }
+                item.Type = rhs.Type;
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
             {
@@ -2258,9 +2245,10 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CNAM,
+            EnumBinaryTranslation<SoundDescriptor.DescriptorType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2304,8 +2292,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.BNAM)))
             {
-                writer.Write(item.PercentFrequencyShift);
-                writer.Write(item.PercentFrequencyVariance);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.PercentFrequencyShift,
+                    integerType: FloatIntegerType.Byte);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.PercentFrequencyVariance,
+                    integerType: FloatIntegerType.Byte);
                 writer.Write(item.Priority);
                 writer.Write(item.Variance);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2408,8 +2402,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)SoundDescriptor_FieldIndex.CNAM;
+                    item.Type = EnumBinaryTranslation<SoundDescriptor.DescriptorType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)SoundDescriptor_FieldIndex.Type;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -2465,8 +2461,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.PercentFrequencyShift = dataFrame.ReadInt8();
-                    item.PercentFrequencyVariance = dataFrame.ReadInt8();
+                    item.PercentFrequencyShift = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    item.PercentFrequencyVariance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
                     item.Priority = dataFrame.ReadInt8();
                     item.Variance = dataFrame.ReadInt8();
                     item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -2533,9 +2533,9 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(ISoundDescriptor);
 
 
-        #region CNAM
-        private int? _CNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Type
+        private int? _TypeLocation;
+        public SoundDescriptor.DescriptorType? Type => _TypeLocation.HasValue ? (SoundDescriptor.DescriptorType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundDescriptor.DescriptorType?);
         #endregion
         #region Category
         private int? _CategoryLocation;
@@ -2564,12 +2564,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region PercentFrequencyShift
         private int _PercentFrequencyShiftLocation => _BNAMLocation!.Value.Min;
         private bool _PercentFrequencyShift_IsSet => _BNAMLocation.HasValue;
-        public SByte PercentFrequencyShift => _PercentFrequencyShift_IsSet ? (sbyte)_data.Slice(_PercentFrequencyShiftLocation, 1)[0] : default;
+        public Percent PercentFrequencyShift => _PercentFrequencyShift_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_PercentFrequencyShiftLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region PercentFrequencyVariance
         private int _PercentFrequencyVarianceLocation => _BNAMLocation!.Value.Min + 0x1;
         private bool _PercentFrequencyVariance_IsSet => _BNAMLocation.HasValue;
-        public SByte PercentFrequencyVariance => _PercentFrequencyVariance_IsSet ? (sbyte)_data.Slice(_PercentFrequencyVarianceLocation, 1)[0] : default;
+        public Percent PercentFrequencyVariance => _PercentFrequencyVariance_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_PercentFrequencyVarianceLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Priority
         private int _PriorityLocation => _BNAMLocation!.Value.Min + 0x2;
@@ -2654,8 +2654,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset);
-                    return (int)SoundDescriptor_FieldIndex.CNAM;
+                    _TypeLocation = (stream.Position - offset);
+                    return (int)SoundDescriptor_FieldIndex.Type;
                 }
                 case RecordTypeInts.GNAM:
                 {

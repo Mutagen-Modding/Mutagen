@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SoundDescriptor" objType="Record" recordType="SNDR" baseClass="SkyrimMajorRecord" GUID="8ef28a33-b4e1-488e-bd9a-9231e58a3aad" ID="82">
     <Fields>
-      <ByteArray name="CNAM" recordType="CNAM" />
+      <Enum name="Type" enumName="SoundDescriptor.DescriptorType" recordType="CNAM" byteLength="4" />
       <FormLink name="Category" refName="SoundCategory" recordType="GNAM" />
       <FormLink name="AlternateSoundFor" recordType="SNAM" refName="SoundDescriptor" />
       <List name="SoundFiles">
@@ -14,8 +14,8 @@
       <RefDirect name="LoopAndRumble" refName="SoundLoopAndRumble" />
       <Data recordType="BNAM">
         <Fields>
-          <Int8 name="PercentFrequencyShift" />
-          <Int8 name="PercentFrequencyVariance" />
+          <Percent name="PercentFrequencyShift" integerType="Byte" />
+          <Percent name="PercentFrequencyVariance" integerType="Byte" />
           <Int8 name="Priority" />
           <Int8 name="Variance" />
           <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
