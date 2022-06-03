@@ -188,6 +188,7 @@
     <Compile Include="Plugins\Binary\Processing\ModTrimmer.cs" />
     <Compile Include="Plugins\Binary\Streams\Decompression.cs" />
     <Compile Include="Plugins\Binary\Streams\EncodingBundle.cs" />
+    <Compile Include="Plugins\Binary\Streams\StreamOperationsMixIn.cs" />
     <Compile Include="Plugins\Binary\Translations\Array2dBinaryTranslation.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -560,7 +561,7 @@
     <Compile Include="Plugins\Binary\Headers\HeaderExt.cs" />
     <Compile Include="Plugins\Binary\Headers\MajorRecordHeader.cs" />
     <Compile Include="Plugins\Binary\Headers\ModHeader.cs" />
-    <Compile Include="Plugins\Binary\Headers\StreamHeaderMixIn.cs" />
+    <Compile Include="Plugins\Binary\Streams\StreamHeaderMixIn.cs" />
     <Compile Include="Plugins\Binary\Headers\SubrecordHeader.cs" />
     <Compile Include="Plugins\Binary\Headers\VariableHeader.cs" />
     <Compile Include="Plugins\Binary\Streams\WritingBundle.cs" />

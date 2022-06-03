@@ -31,6 +31,7 @@
       <String name="CasingModel" recordType="NAM1" />
       <ByteArray name="ModelInfo" recordType="NAM2" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>

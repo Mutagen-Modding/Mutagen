@@ -137,6 +137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Book_Registration.Instance,
                 Cell_Registration.Instance,
                 Class_Registration.Instance,
+                ColorRecord_Registration.Instance,
                 Component_Registration.Instance,
                 Container_Registration.Instance,
                 DialogTopic_Registration.Instance,
@@ -178,6 +179,7 @@ namespace Mutagen.Bethesda.Fallout4
                 QuestLocationAlias_Registration.Instance,
                 QuestReferenceAlias_Registration.Instance,
                 Race_Registration.Instance,
+                ReferenceGroup_Registration.Instance,
                 RegionMap_Registration.Instance,
                 SceneAction_Registration.Instance,
                 ScenePhase_Registration.Instance,
@@ -210,6 +212,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Cell_Registration.Instance,
                 Class_Registration.Instance,
                 CollisionLayer_Registration.Instance,
+                ColorRecord_Registration.Instance,
                 Component_Registration.Instance,
                 Container_Registration.Instance,
                 DialogTopic_Registration.Instance,
@@ -255,6 +258,7 @@ namespace Mutagen.Bethesda.Fallout4
                 QuestLocationAlias_Registration.Instance,
                 QuestReferenceAlias_Registration.Instance,
                 Race_Registration.Instance,
+                ReferenceGroup_Registration.Instance,
                 RegionMap_Registration.Instance,
                 SceneAction_Registration.Instance,
                 ScenePhase_Registration.Instance,
@@ -299,6 +303,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Book_Registration.Instance,
                 Cell_Registration.Instance,
                 Class_Registration.Instance,
+                ColorRecord_Registration.Instance,
                 Component_Registration.Instance,
                 Container_Registration.Instance,
                 DialogTopic_Registration.Instance,
@@ -353,6 +358,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Book_Registration.Instance,
                 Cell_Registration.Instance,
                 Class_Registration.Instance,
+                ColorRecord_Registration.Instance,
                 Component_Registration.Instance,
                 Container_Registration.Instance,
                 DialogTopic_Registration.Instance,
@@ -444,6 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 BendableSpline_Registration.Instance,
                 Holotape_Registration.Instance,
+                PackIn_Registration.Instance,
             });
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

@@ -238,6 +238,7 @@ public partial class RecordTypeInts
     public const int FTYP = 0x50595446;
     public const int FULL = 0x4C4C5546;
     public const int FURN = 0x4E525546;
+    public const int FVPA = 0x41505646;
     public const int GDRY = 0x59524447;
     public const int GIAD = 0x44414947;
     public const int GLOB = 0x424F4C47;
@@ -490,6 +491,7 @@ public partial class RecordTypeInts
     public const int PKCU = 0x55434B50;
     public const int PKDT = 0x54444B50;
     public const int PKID = 0x44494B50;
+    public const int PKIN = 0x4E494B50;
     public const int PLCN = 0x4E434C50;
     public const int PLDT = 0x54444C50;
     public const int PLVD = 0x44564C50;

@@ -146,6 +146,23 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             ActorValueInformation_Registration.Instance,
         });
         dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)] with { Setter = false };
+        dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            Component_Registration.Instance,
+            ConstructibleObject_Registration.Instance,
+            Holotape_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            Key_Registration.Instance,
+            LeveledItem_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
         dict[typeof(IHarvestTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Ammunition_Registration.Instance,
@@ -163,18 +180,6 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)] with { Setter = false };
-        dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Armor_Registration.Instance,
-            Book_Registration.Instance,
-            Ingestible_Registration.Instance,
-            Ingredient_Registration.Instance,
-            Key_Registration.Instance,
-            LeveledItem_Registration.Instance,
-            Light_Registration.Instance,
-            MiscItem_Registration.Instance,
-        });
-        dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
         dict[typeof(IOutfitTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Armor_Registration.Instance,

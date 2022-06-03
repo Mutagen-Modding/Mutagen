@@ -13,12 +13,12 @@
           <Float name="DecayHfRatio" integerType="Byte" divisor="100" />
           <UInt8 name="ReflectDelayMS" />
           <UInt8 name="ReverbDelayMS" />
-          <UInt8 name="DiffusionPercent" />
-          <UInt8 name="DensityPercent" />
+          <Percent name="DiffusionPercent" integerType="Byte" />
+          <Percent name="DensityPercent" integerType="Byte" />
           <UInt8 name="Unknown" />
         </Fields>
       </Data>
-      <UInt32 name="ReverbClass" recordType="ANAM" />
+      <Enum name="ReverbClass" enumName="ReverbParameters.Class" recordType="ANAM" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

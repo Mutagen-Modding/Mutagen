@@ -162,6 +162,13 @@ namespace Mutagen.Bethesda.Fallout4
             _SoundCategories_Object = new Fallout4Group<SoundCategory>(this);
             _SoundOutputModels_Object = new Fallout4Group<SoundOutputModel>(this);
             _CollisionLayers_Object = new Fallout4Group<CollisionLayer>(this);
+            _Colors_Object = new Fallout4Group<ColorRecord>(this);
+            _ReverbParameters_Object = new Fallout4Group<ReverbParameters>(this);
+            _PackIns_Object = new Fallout4Group<PackIn>(this);
+            _ReferenceGroups_Object = new Fallout4Group<ReferenceGroup>(this);
+            _AimModels_Object = new Fallout4Group<AimModel>(this);
+            _Layers_Object = new Fallout4Group<Layer>(this);
+            _ConstructibleObjects_Object = new Fallout4Group<ConstructibleObject>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -909,6 +916,55 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ICollisionLayerGetter> IFallout4ModGetter.CollisionLayers => _CollisionLayers_Object;
         #endregion
+        #region Colors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ColorRecord> _Colors_Object;
+        public Fallout4Group<ColorRecord> Colors => _Colors_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IColorRecordGetter> IFallout4ModGetter.Colors => _Colors_Object;
+        #endregion
+        #region ReverbParameters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ReverbParameters> _ReverbParameters_Object;
+        public Fallout4Group<ReverbParameters> ReverbParameters => _ReverbParameters_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IReverbParametersGetter> IFallout4ModGetter.ReverbParameters => _ReverbParameters_Object;
+        #endregion
+        #region PackIns
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<PackIn> _PackIns_Object;
+        public Fallout4Group<PackIn> PackIns => _PackIns_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IPackInGetter> IFallout4ModGetter.PackIns => _PackIns_Object;
+        #endregion
+        #region ReferenceGroups
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ReferenceGroup> _ReferenceGroups_Object;
+        public Fallout4Group<ReferenceGroup> ReferenceGroups => _ReferenceGroups_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IReferenceGroupGetter> IFallout4ModGetter.ReferenceGroups => _ReferenceGroups_Object;
+        #endregion
+        #region AimModels
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<AimModel> _AimModels_Object;
+        public Fallout4Group<AimModel> AimModels => _AimModels_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAimModelGetter> IFallout4ModGetter.AimModels => _AimModels_Object;
+        #endregion
+        #region Layers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Layer> _Layers_Object;
+        public Fallout4Group<Layer> Layers => _Layers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ILayerGetter> IFallout4ModGetter.Layers => _Layers_Object;
+        #endregion
+        #region ConstructibleObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ConstructibleObject> _ConstructibleObjects_Object;
+        public Fallout4Group<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IConstructibleObjectGetter> IFallout4ModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
+        #endregion
 
         #region To String
 
@@ -1054,6 +1110,13 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SoundCategories = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.SoundOutputModels = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.CollisionLayers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Colors = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ReverbParameters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.PackIns = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ReferenceGroups = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.AimModels = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Layers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ConstructibleObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1162,7 +1225,14 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem SoundDescriptors,
                 TItem SoundCategories,
                 TItem SoundOutputModels,
-                TItem CollisionLayers)
+                TItem CollisionLayers,
+                TItem Colors,
+                TItem ReverbParameters,
+                TItem PackIns,
+                TItem ReferenceGroups,
+                TItem AimModels,
+                TItem Layers,
+                TItem ConstructibleObjects)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1270,6 +1340,13 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SoundCategories = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundCategories, new Fallout4Group.Mask<TItem>(SoundCategories));
                 this.SoundOutputModels = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundOutputModels, new Fallout4Group.Mask<TItem>(SoundOutputModels));
                 this.CollisionLayers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CollisionLayers, new Fallout4Group.Mask<TItem>(CollisionLayers));
+                this.Colors = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Colors, new Fallout4Group.Mask<TItem>(Colors));
+                this.ReverbParameters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ReverbParameters, new Fallout4Group.Mask<TItem>(ReverbParameters));
+                this.PackIns = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(PackIns, new Fallout4Group.Mask<TItem>(PackIns));
+                this.ReferenceGroups = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ReferenceGroups, new Fallout4Group.Mask<TItem>(ReferenceGroups));
+                this.AimModels = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AimModels, new Fallout4Group.Mask<TItem>(AimModels));
+                this.Layers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Layers, new Fallout4Group.Mask<TItem>(Layers));
+                this.ConstructibleObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ConstructibleObjects, new Fallout4Group.Mask<TItem>(ConstructibleObjects));
             }
 
             #pragma warning disable CS8618
@@ -1387,6 +1464,13 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundCategories { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundOutputModels { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CollisionLayers { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Colors { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ReverbParameters { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? PackIns { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ReferenceGroups { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AimModels { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Layers { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ConstructibleObjects { get; set; }
             #endregion
 
             #region Equals
@@ -1505,6 +1589,13 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.SoundCategories, rhs.SoundCategories)) return false;
                 if (!object.Equals(this.SoundOutputModels, rhs.SoundOutputModels)) return false;
                 if (!object.Equals(this.CollisionLayers, rhs.CollisionLayers)) return false;
+                if (!object.Equals(this.Colors, rhs.Colors)) return false;
+                if (!object.Equals(this.ReverbParameters, rhs.ReverbParameters)) return false;
+                if (!object.Equals(this.PackIns, rhs.PackIns)) return false;
+                if (!object.Equals(this.ReferenceGroups, rhs.ReferenceGroups)) return false;
+                if (!object.Equals(this.AimModels, rhs.AimModels)) return false;
+                if (!object.Equals(this.Layers, rhs.Layers)) return false;
+                if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1616,6 +1707,13 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.SoundCategories);
                 hash.Add(this.SoundOutputModels);
                 hash.Add(this.CollisionLayers);
+                hash.Add(this.Colors);
+                hash.Add(this.ReverbParameters);
+                hash.Add(this.PackIns);
+                hash.Add(this.ReferenceGroups);
+                hash.Add(this.AimModels);
+                hash.Add(this.Layers);
+                hash.Add(this.ConstructibleObjects);
                 return hash.ToHashCode();
             }
 
@@ -2154,6 +2252,41 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.CollisionLayers.Overall)) return false;
                     if (this.CollisionLayers.Specific != null && !this.CollisionLayers.Specific.All(eval)) return false;
                 }
+                if (Colors != null)
+                {
+                    if (!eval(this.Colors.Overall)) return false;
+                    if (this.Colors.Specific != null && !this.Colors.Specific.All(eval)) return false;
+                }
+                if (ReverbParameters != null)
+                {
+                    if (!eval(this.ReverbParameters.Overall)) return false;
+                    if (this.ReverbParameters.Specific != null && !this.ReverbParameters.Specific.All(eval)) return false;
+                }
+                if (PackIns != null)
+                {
+                    if (!eval(this.PackIns.Overall)) return false;
+                    if (this.PackIns.Specific != null && !this.PackIns.Specific.All(eval)) return false;
+                }
+                if (ReferenceGroups != null)
+                {
+                    if (!eval(this.ReferenceGroups.Overall)) return false;
+                    if (this.ReferenceGroups.Specific != null && !this.ReferenceGroups.Specific.All(eval)) return false;
+                }
+                if (AimModels != null)
+                {
+                    if (!eval(this.AimModels.Overall)) return false;
+                    if (this.AimModels.Specific != null && !this.AimModels.Specific.All(eval)) return false;
+                }
+                if (Layers != null)
+                {
+                    if (!eval(this.Layers.Overall)) return false;
+                    if (this.Layers.Specific != null && !this.Layers.Specific.All(eval)) return false;
+                }
+                if (ConstructibleObjects != null)
+                {
+                    if (!eval(this.ConstructibleObjects.Overall)) return false;
+                    if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2691,6 +2824,41 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.CollisionLayers.Overall)) return true;
                     if (this.CollisionLayers.Specific != null && this.CollisionLayers.Specific.Any(eval)) return true;
                 }
+                if (Colors != null)
+                {
+                    if (eval(this.Colors.Overall)) return true;
+                    if (this.Colors.Specific != null && this.Colors.Specific.Any(eval)) return true;
+                }
+                if (ReverbParameters != null)
+                {
+                    if (eval(this.ReverbParameters.Overall)) return true;
+                    if (this.ReverbParameters.Specific != null && this.ReverbParameters.Specific.Any(eval)) return true;
+                }
+                if (PackIns != null)
+                {
+                    if (eval(this.PackIns.Overall)) return true;
+                    if (this.PackIns.Specific != null && this.PackIns.Specific.Any(eval)) return true;
+                }
+                if (ReferenceGroups != null)
+                {
+                    if (eval(this.ReferenceGroups.Overall)) return true;
+                    if (this.ReferenceGroups.Specific != null && this.ReferenceGroups.Specific.Any(eval)) return true;
+                }
+                if (AimModels != null)
+                {
+                    if (eval(this.AimModels.Overall)) return true;
+                    if (this.AimModels.Specific != null && this.AimModels.Specific.Any(eval)) return true;
+                }
+                if (Layers != null)
+                {
+                    if (eval(this.Layers.Overall)) return true;
+                    if (this.Layers.Specific != null && this.Layers.Specific.Any(eval)) return true;
+                }
+                if (ConstructibleObjects != null)
+                {
+                    if (eval(this.ConstructibleObjects.Overall)) return true;
+                    if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2811,6 +2979,13 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.SoundCategories = this.SoundCategories == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundCategories.Overall), this.SoundCategories.Specific?.Translate(eval));
                 obj.SoundOutputModels = this.SoundOutputModels == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundOutputModels.Overall), this.SoundOutputModels.Specific?.Translate(eval));
                 obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
+                obj.Colors = this.Colors == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
+                obj.ReverbParameters = this.ReverbParameters == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ReverbParameters.Overall), this.ReverbParameters.Specific?.Translate(eval));
+                obj.PackIns = this.PackIns == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.PackIns.Overall), this.PackIns.Specific?.Translate(eval));
+                obj.ReferenceGroups = this.ReferenceGroups == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ReferenceGroups.Overall), this.ReferenceGroups.Specific?.Translate(eval));
+                obj.AimModels = this.AimModels == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AimModels.Overall), this.AimModels.Specific?.Translate(eval));
+                obj.Layers = this.Layers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Layers.Overall), this.Layers.Specific?.Translate(eval));
+                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3253,6 +3428,34 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         CollisionLayers?.Print(sb);
                     }
+                    if (printMask?.Colors?.Overall ?? true)
+                    {
+                        Colors?.Print(sb);
+                    }
+                    if (printMask?.ReverbParameters?.Overall ?? true)
+                    {
+                        ReverbParameters?.Print(sb);
+                    }
+                    if (printMask?.PackIns?.Overall ?? true)
+                    {
+                        PackIns?.Print(sb);
+                    }
+                    if (printMask?.ReferenceGroups?.Overall ?? true)
+                    {
+                        ReferenceGroups?.Print(sb);
+                    }
+                    if (printMask?.AimModels?.Overall ?? true)
+                    {
+                        AimModels?.Print(sb);
+                    }
+                    if (printMask?.Layers?.Overall ?? true)
+                    {
+                        Layers?.Print(sb);
+                    }
+                    if (printMask?.ConstructibleObjects?.Overall ?? true)
+                    {
+                        ConstructibleObjects?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3383,6 +3586,13 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundCategory.ErrorMask>?>? SoundCategories;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundOutputModel.ErrorMask>?>? SoundOutputModels;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ColorRecord.ErrorMask>?>? Colors;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ReverbParameters.ErrorMask>?>? ReverbParameters;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<PackIn.ErrorMask>?>? PackIns;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ReferenceGroup.ErrorMask>?>? ReferenceGroups;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<AimModel.ErrorMask>?>? AimModels;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Layer.ErrorMask>?>? Layers;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
             #endregion
 
             #region IErrorMask
@@ -3603,6 +3813,20 @@ namespace Mutagen.Bethesda.Fallout4
                         return SoundOutputModels;
                     case Fallout4Mod_FieldIndex.CollisionLayers:
                         return CollisionLayers;
+                    case Fallout4Mod_FieldIndex.Colors:
+                        return Colors;
+                    case Fallout4Mod_FieldIndex.ReverbParameters:
+                        return ReverbParameters;
+                    case Fallout4Mod_FieldIndex.PackIns:
+                        return PackIns;
+                    case Fallout4Mod_FieldIndex.ReferenceGroups:
+                        return ReferenceGroups;
+                    case Fallout4Mod_FieldIndex.AimModels:
+                        return AimModels;
+                    case Fallout4Mod_FieldIndex.Layers:
+                        return Layers;
+                    case Fallout4Mod_FieldIndex.ConstructibleObjects:
+                        return ConstructibleObjects;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3930,6 +4154,27 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.CollisionLayers:
                         this.CollisionLayers = new MaskItem<Exception?, Fallout4Group.ErrorMask<CollisionLayer.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Colors:
+                        this.Colors = new MaskItem<Exception?, Fallout4Group.ErrorMask<ColorRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ReverbParameters:
+                        this.ReverbParameters = new MaskItem<Exception?, Fallout4Group.ErrorMask<ReverbParameters.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.PackIns:
+                        this.PackIns = new MaskItem<Exception?, Fallout4Group.ErrorMask<PackIn.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ReferenceGroups:
+                        this.ReferenceGroups = new MaskItem<Exception?, Fallout4Group.ErrorMask<ReferenceGroup.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.AimModels:
+                        this.AimModels = new MaskItem<Exception?, Fallout4Group.ErrorMask<AimModel.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Layers:
+                        this.Layers = new MaskItem<Exception?, Fallout4Group.ErrorMask<Layer.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = new MaskItem<Exception?, Fallout4Group.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4259,6 +4504,27 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.CollisionLayers:
                         this.CollisionLayers = (MaskItem<Exception?, Fallout4Group.ErrorMask<CollisionLayer.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Colors:
+                        this.Colors = (MaskItem<Exception?, Fallout4Group.ErrorMask<ColorRecord.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.ReverbParameters:
+                        this.ReverbParameters = (MaskItem<Exception?, Fallout4Group.ErrorMask<ReverbParameters.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.PackIns:
+                        this.PackIns = (MaskItem<Exception?, Fallout4Group.ErrorMask<PackIn.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.ReferenceGroups:
+                        this.ReferenceGroups = (MaskItem<Exception?, Fallout4Group.ErrorMask<ReferenceGroup.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.AimModels:
+                        this.AimModels = (MaskItem<Exception?, Fallout4Group.ErrorMask<AimModel.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Layers:
+                        this.Layers = (MaskItem<Exception?, Fallout4Group.ErrorMask<Layer.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = (MaskItem<Exception?, Fallout4Group.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4373,6 +4639,13 @@ namespace Mutagen.Bethesda.Fallout4
                 if (SoundCategories != null) return true;
                 if (SoundOutputModels != null) return true;
                 if (CollisionLayers != null) return true;
+                if (Colors != null) return true;
+                if (ReverbParameters != null) return true;
+                if (PackIns != null) return true;
+                if (ReferenceGroups != null) return true;
+                if (AimModels != null) return true;
+                if (Layers != null) return true;
+                if (ConstructibleObjects != null) return true;
                 return false;
             }
             #endregion
@@ -4504,6 +4777,13 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundCategories?.Print(sb);
                 SoundOutputModels?.Print(sb);
                 CollisionLayers?.Print(sb);
+                Colors?.Print(sb);
+                ReverbParameters?.Print(sb);
+                PackIns?.Print(sb);
+                ReferenceGroups?.Print(sb);
+                AimModels?.Print(sb);
+                Layers?.Print(sb);
+                ConstructibleObjects?.Print(sb);
             }
             #endregion
 
@@ -4618,6 +4898,13 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.SoundCategories = this.SoundCategories.Combine(rhs.SoundCategories, (l, r) => l.Combine(r));
                 ret.SoundOutputModels = this.SoundOutputModels.Combine(rhs.SoundOutputModels, (l, r) => l.Combine(r));
                 ret.CollisionLayers = this.CollisionLayers.Combine(rhs.CollisionLayers, (l, r) => l.Combine(r));
+                ret.Colors = this.Colors.Combine(rhs.Colors, (l, r) => l.Combine(r));
+                ret.ReverbParameters = this.ReverbParameters.Combine(rhs.ReverbParameters, (l, r) => l.Combine(r));
+                ret.PackIns = this.PackIns.Combine(rhs.PackIns, (l, r) => l.Combine(r));
+                ret.ReferenceGroups = this.ReferenceGroups.Combine(rhs.ReferenceGroups, (l, r) => l.Combine(r));
+                ret.AimModels = this.AimModels.Combine(rhs.AimModels, (l, r) => l.Combine(r));
+                ret.Layers = this.Layers.Combine(rhs.Layers, (l, r) => l.Combine(r));
+                ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4747,6 +5034,13 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<SoundCategory.TranslationMask>? SoundCategories;
             public Fallout4Group.TranslationMask<SoundOutputModel.TranslationMask>? SoundOutputModels;
             public Fallout4Group.TranslationMask<CollisionLayer.TranslationMask>? CollisionLayers;
+            public Fallout4Group.TranslationMask<ColorRecord.TranslationMask>? Colors;
+            public Fallout4Group.TranslationMask<ReverbParameters.TranslationMask>? ReverbParameters;
+            public Fallout4Group.TranslationMask<PackIn.TranslationMask>? PackIns;
+            public Fallout4Group.TranslationMask<ReferenceGroup.TranslationMask>? ReferenceGroups;
+            public Fallout4Group.TranslationMask<AimModel.TranslationMask>? AimModels;
+            public Fallout4Group.TranslationMask<Layer.TranslationMask>? Layers;
+            public Fallout4Group.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
             #endregion
 
             #region Ctors
@@ -4877,6 +5171,13 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((SoundCategories != null ? SoundCategories.OnOverall : DefaultOn, SoundCategories?.GetCrystal()));
                 ret.Add((SoundOutputModels != null ? SoundOutputModels.OnOverall : DefaultOn, SoundOutputModels?.GetCrystal()));
                 ret.Add((CollisionLayers != null ? CollisionLayers.OnOverall : DefaultOn, CollisionLayers?.GetCrystal()));
+                ret.Add((Colors != null ? Colors.OnOverall : DefaultOn, Colors?.GetCrystal()));
+                ret.Add((ReverbParameters != null ? ReverbParameters.OnOverall : DefaultOn, ReverbParameters?.GetCrystal()));
+                ret.Add((PackIns != null ? PackIns.OnOverall : DefaultOn, PackIns?.GetCrystal()));
+                ret.Add((ReferenceGroups != null ? ReferenceGroups.OnOverall : DefaultOn, ReferenceGroups?.GetCrystal()));
+                ret.Add((AimModels != null ? AimModels.OnOverall : DefaultOn, AimModels?.GetCrystal()));
+                ret.Add((Layers != null ? Layers.OnOverall : DefaultOn, Layers?.GetCrystal()));
+                ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -5022,6 +5323,13 @@ namespace Mutagen.Bethesda.Fallout4
             _SoundCategories_Object = new Fallout4Group<SoundCategory>(this);
             _SoundOutputModels_Object = new Fallout4Group<SoundOutputModel>(this);
             _CollisionLayers_Object = new Fallout4Group<CollisionLayer>(this);
+            _Colors_Object = new Fallout4Group<ColorRecord>(this);
+            _ReverbParameters_Object = new Fallout4Group<ReverbParameters>(this);
+            _PackIns_Object = new Fallout4Group<PackIn>(this);
+            _ReferenceGroups_Object = new Fallout4Group<ReferenceGroup>(this);
+            _AimModels_Object = new Fallout4Group<AimModel>(this);
+            _Layers_Object = new Fallout4Group<Layer>(this);
+            _ConstructibleObjects_Object = new Fallout4Group<ConstructibleObject>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5451,6 +5759,34 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.CollisionLayers.RecordCache.Set(rhsMod.CollisionLayers.RecordCache.Items);
             }
+            if (mask?.Colors ?? true)
+            {
+                this.Colors.RecordCache.Set(rhsMod.Colors.RecordCache.Items);
+            }
+            if (mask?.ReverbParameters ?? true)
+            {
+                this.ReverbParameters.RecordCache.Set(rhsMod.ReverbParameters.RecordCache.Items);
+            }
+            if (mask?.PackIns ?? true)
+            {
+                this.PackIns.RecordCache.Set(rhsMod.PackIns.RecordCache.Items);
+            }
+            if (mask?.ReferenceGroups ?? true)
+            {
+                this.ReferenceGroups.RecordCache.Set(rhsMod.ReferenceGroups.RecordCache.Items);
+            }
+            if (mask?.AimModels ?? true)
+            {
+                this.AimModels.RecordCache.Set(rhsMod.AimModels.RecordCache.Items);
+            }
+            if (mask?.Layers ?? true)
+            {
+                this.Layers.RecordCache.Set(rhsMod.Layers.RecordCache.Items);
+            }
+            if (mask?.ConstructibleObjects ?? true)
+            {
+                this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5566,6 +5902,13 @@ namespace Mutagen.Bethesda.Fallout4
             count += SoundCategories.RecordCache.Count > 0 ? 1 : default(uint);
             count += SoundOutputModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Colors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += PackIns.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ReferenceGroups.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5922,6 +6265,13 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<SoundCategory> SoundCategories { get; }
         new Fallout4Group<SoundOutputModel> SoundOutputModels { get; }
         new Fallout4Group<CollisionLayer> CollisionLayers { get; }
+        new Fallout4Group<ColorRecord> Colors { get; }
+        new Fallout4Group<ReverbParameters> ReverbParameters { get; }
+        new Fallout4Group<PackIn> PackIns { get; }
+        new Fallout4Group<ReferenceGroup> ReferenceGroups { get; }
+        new Fallout4Group<AimModel> AimModels { get; }
+        new Fallout4Group<Layer> Layers { get; }
+        new Fallout4Group<ConstructibleObject> ConstructibleObjects { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -6046,6 +6396,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ISoundCategoryGetter> SoundCategories { get; }
         IFallout4GroupGetter<ISoundOutputModelGetter> SoundOutputModels { get; }
         IFallout4GroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
+        IFallout4GroupGetter<IColorRecordGetter> Colors { get; }
+        IFallout4GroupGetter<IReverbParametersGetter> ReverbParameters { get; }
+        IFallout4GroupGetter<IPackInGetter> PackIns { get; }
+        IFallout4GroupGetter<IReferenceGroupGetter> ReferenceGroups { get; }
+        IFallout4GroupGetter<IAimModelGetter> AimModels { get; }
+        IFallout4GroupGetter<ILayerGetter> Layers { get; }
+        IFallout4GroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
 
     }
 
@@ -6722,6 +7079,13 @@ namespace Mutagen.Bethesda.Fallout4
         SoundCategories = 103,
         SoundOutputModels = 104,
         CollisionLayers = 105,
+        Colors = 106,
+        ReverbParameters = 107,
+        PackIns = 108,
+        ReferenceGroups = 109,
+        AimModels = 110,
+        Layers = 111,
+        ConstructibleObjects = 112,
     }
     #endregion
 
@@ -6739,9 +7103,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 106;
+        public const ushort AdditionalFieldCount = 113;
 
-        public const ushort FieldCount = 106;
+        public const ushort FieldCount = 113;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -6914,6 +7278,13 @@ namespace Mutagen.Bethesda.Fallout4
             item.SoundCategories.Clear();
             item.SoundOutputModels.Clear();
             item.CollisionLayers.Clear();
+            item.Colors.Clear();
+            item.ReverbParameters.Clear();
+            item.PackIns.Clear();
+            item.ReferenceGroups.Clear();
+            item.AimModels.Clear();
+            item.Layers.Clear();
+            item.ConstructibleObjects.Clear();
         }
         
         #region Mutagen
@@ -7011,6 +7382,11 @@ namespace Mutagen.Bethesda.Fallout4
             obj.SoundCategories.RemapLinks(mapping);
             obj.SoundOutputModels.RemapLinks(mapping);
             obj.CollisionLayers.RemapLinks(mapping);
+            obj.Colors.RemapLinks(mapping);
+            obj.PackIns.RemapLinks(mapping);
+            obj.ReferenceGroups.RemapLinks(mapping);
+            obj.Layers.RemapLinks(mapping);
+            obj.ConstructibleObjects.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -7150,6 +7526,13 @@ namespace Mutagen.Bethesda.Fallout4
             obj.SoundCategories.Remove(keys);
             obj.SoundOutputModels.Remove(keys);
             obj.CollisionLayers.Remove(keys);
+            obj.Colors.Remove(keys);
+            obj.ReverbParameters.Remove(keys);
+            obj.PackIns.Remove(keys);
+            obj.ReferenceGroups.Remove(keys);
+            obj.AimModels.Remove(keys);
+            obj.Layers.Remove(keys);
+            obj.ConstructibleObjects.Remove(keys);
         }
         
         public void Remove(
@@ -8045,6 +8428,62 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "ColorRecord":
+                case "IColorRecordGetter":
+                case "IColorRecord":
+                case "IColorRecordInternal":
+                    obj.Colors.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ReverbParameters":
+                case "IReverbParametersGetter":
+                case "IReverbParameters":
+                case "IReverbParametersInternal":
+                    obj.ReverbParameters.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PackIn":
+                case "IPackInGetter":
+                case "IPackIn":
+                case "IPackInInternal":
+                    obj.PackIns.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ReferenceGroup":
+                case "IReferenceGroupGetter":
+                case "IReferenceGroup":
+                case "IReferenceGroupInternal":
+                    obj.ReferenceGroups.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AimModel":
+                case "IAimModelGetter":
+                case "IAimModel":
+                case "IAimModelInternal":
+                    obj.AimModels.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Layer":
+                case "ILayerGetter":
+                case "ILayer":
+                case "ILayerInternal":
+                    obj.Layers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    obj.ConstructibleObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -8298,11 +8737,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IDamageTypeTargetGetter":
                     Remove(obj, keys, typeof(IActorValueInformationGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IItem":
+                case "IItemGetter":
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IComponentGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IConstructibleObjectGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IHolotapeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IHarvestTarget":
                 case "IHarvestTargetGetter":
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IConstructibleObjectGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IHolotapeGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
@@ -8312,17 +8768,6 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IItem":
-                case "IItemGetter":
-                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IOutfitTarget":
                 case "IOutfitTargetGetter":
@@ -8641,6 +9086,13 @@ namespace Mutagen.Bethesda.Fallout4
             ret.SoundCategories = MaskItemExt.Factory(item.SoundCategories.GetEqualsMask(rhs.SoundCategories, include), include);
             ret.SoundOutputModels = MaskItemExt.Factory(item.SoundOutputModels.GetEqualsMask(rhs.SoundOutputModels, include), include);
             ret.CollisionLayers = MaskItemExt.Factory(item.CollisionLayers.GetEqualsMask(rhs.CollisionLayers, include), include);
+            ret.Colors = MaskItemExt.Factory(item.Colors.GetEqualsMask(rhs.Colors, include), include);
+            ret.ReverbParameters = MaskItemExt.Factory(item.ReverbParameters.GetEqualsMask(rhs.ReverbParameters, include), include);
+            ret.PackIns = MaskItemExt.Factory(item.PackIns.GetEqualsMask(rhs.PackIns, include), include);
+            ret.ReferenceGroups = MaskItemExt.Factory(item.ReferenceGroups.GetEqualsMask(rhs.ReferenceGroups, include), include);
+            ret.AimModels = MaskItemExt.Factory(item.AimModels.GetEqualsMask(rhs.AimModels, include), include);
+            ret.Layers = MaskItemExt.Factory(item.Layers.GetEqualsMask(rhs.Layers, include), include);
+            ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
         }
         
         public string Print(
@@ -9108,6 +9560,34 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.CollisionLayers?.Overall ?? true)
             {
                 item.CollisionLayers?.Print(sb, "CollisionLayers");
+            }
+            if (printMask?.Colors?.Overall ?? true)
+            {
+                item.Colors?.Print(sb, "Colors");
+            }
+            if (printMask?.ReverbParameters?.Overall ?? true)
+            {
+                item.ReverbParameters?.Print(sb, "ReverbParameters");
+            }
+            if (printMask?.PackIns?.Overall ?? true)
+            {
+                item.PackIns?.Print(sb, "PackIns");
+            }
+            if (printMask?.ReferenceGroups?.Overall ?? true)
+            {
+                item.ReferenceGroups?.Print(sb, "ReferenceGroups");
+            }
+            if (printMask?.AimModels?.Overall ?? true)
+            {
+                item.AimModels?.Print(sb, "AimModels");
+            }
+            if (printMask?.Layers?.Overall ?? true)
+            {
+                item.Layers?.Print(sb, "Layers");
+            }
+            if (printMask?.ConstructibleObjects?.Overall ?? true)
+            {
+                item.ConstructibleObjects?.Print(sb, "ConstructibleObjects");
             }
         }
         
@@ -9966,6 +10446,62 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isCollisionLayersEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Colors) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Colors, rhs.Colors, out var lhsColors, out var rhsColors, out var isColorsEqual))
+                {
+                    if (!object.Equals(lhsColors, rhsColors)) return false;
+                }
+                else if (!isColorsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ReverbParameters) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ReverbParameters, rhs.ReverbParameters, out var lhsReverbParameters, out var rhsReverbParameters, out var isReverbParametersEqual))
+                {
+                    if (!object.Equals(lhsReverbParameters, rhsReverbParameters)) return false;
+                }
+                else if (!isReverbParametersEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.PackIns) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PackIns, rhs.PackIns, out var lhsPackIns, out var rhsPackIns, out var isPackInsEqual))
+                {
+                    if (!object.Equals(lhsPackIns, rhsPackIns)) return false;
+                }
+                else if (!isPackInsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ReferenceGroups) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ReferenceGroups, rhs.ReferenceGroups, out var lhsReferenceGroups, out var rhsReferenceGroups, out var isReferenceGroupsEqual))
+                {
+                    if (!object.Equals(lhsReferenceGroups, rhsReferenceGroups)) return false;
+                }
+                else if (!isReferenceGroupsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AimModels) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AimModels, rhs.AimModels, out var lhsAimModels, out var rhsAimModels, out var isAimModelsEqual))
+                {
+                    if (!object.Equals(lhsAimModels, rhsAimModels)) return false;
+                }
+                else if (!isAimModelsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Layers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Layers, rhs.Layers, out var lhsLayers, out var rhsLayers, out var isLayersEqual))
+                {
+                    if (!object.Equals(lhsLayers, rhsLayers)) return false;
+                }
+                else if (!isLayersEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ConstructibleObjects, rhs.ConstructibleObjects, out var lhsConstructibleObjects, out var rhsConstructibleObjects, out var isConstructibleObjectsEqual))
+                {
+                    if (!object.Equals(lhsConstructibleObjects, rhsConstructibleObjects)) return false;
+                }
+                else if (!isConstructibleObjectsEqual) return false;
+            }
             return true;
         }
         
@@ -10078,6 +10614,13 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.SoundCategories);
             hash.Add(item.SoundOutputModels);
             hash.Add(item.CollisionLayers);
+            hash.Add(item.Colors);
+            hash.Add(item.ReverbParameters);
+            hash.Add(item.PackIns);
+            hash.Add(item.ReferenceGroups);
+            hash.Add(item.AimModels);
+            hash.Add(item.Layers);
+            hash.Add(item.ConstructibleObjects);
             return hash.ToHashCode();
         }
         
@@ -10620,6 +11163,41 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ICollisionLayer":
                 case "ICollisionLayerInternal":
                     return obj.CollisionLayers;
+                case "ColorRecord":
+                case "IColorRecordGetter":
+                case "IColorRecord":
+                case "IColorRecordInternal":
+                    return obj.Colors;
+                case "ReverbParameters":
+                case "IReverbParametersGetter":
+                case "IReverbParameters":
+                case "IReverbParametersInternal":
+                    return obj.ReverbParameters;
+                case "PackIn":
+                case "IPackInGetter":
+                case "IPackIn":
+                case "IPackInInternal":
+                    return obj.PackIns;
+                case "ReferenceGroup":
+                case "IReferenceGroupGetter":
+                case "IReferenceGroup":
+                case "IReferenceGroupInternal":
+                    return obj.ReferenceGroups;
+                case "AimModel":
+                case "IAimModelGetter":
+                case "IAimModel":
+                case "IAimModelInternal":
+                    return obj.AimModels;
+                case "Layer":
+                case "ILayerGetter":
+                case "ILayer":
+                case "ILayerInternal":
+                    return obj.Layers;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    return obj.ConstructibleObjects;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -10644,7 +11222,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[105];
+            Stream[] outputStreams = new Stream[112];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10751,6 +11329,13 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.SoundCategories, 102, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, 103, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.CollisionLayers, 104, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Colors, 105, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, 106, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.PackIns, 107, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ReferenceGroups, 108, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 109, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 110, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 111, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11163,6 +11748,29 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.CollisionLayers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            if (obj.Colors is IFormLinkContainerGetter ColorslinkCont)
+            {
+                foreach (var item in ColorslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.PackIns.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ReferenceGroups.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Layers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ConstructibleObjects.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -11588,6 +12196,34 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.CollisionLayers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Colors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ReverbParameters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.PackIns.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ReferenceGroups.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AimModels.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Layers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12558,6 +13194,69 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ICollisionLayer":
                 case "ICollisionLayerInternal":
                     foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ColorRecord":
+                case "IColorRecordGetter":
+                case "IColorRecord":
+                case "IColorRecordInternal":
+                    foreach (var item in obj.Colors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ReverbParameters":
+                case "IReverbParametersGetter":
+                case "IReverbParameters":
+                case "IReverbParametersInternal":
+                    foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PackIn":
+                case "IPackInGetter":
+                case "IPackIn":
+                case "IPackInInternal":
+                    foreach (var item in obj.PackIns.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ReferenceGroup":
+                case "IReferenceGroupGetter":
+                case "IReferenceGroup":
+                case "IReferenceGroupInternal":
+                    foreach (var item in obj.ReferenceGroups.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AimModel":
+                case "IAimModelGetter":
+                case "IAimModel":
+                case "IAimModelInternal":
+                    foreach (var item in obj.AimModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Layer":
+                case "ILayerGetter":
+                case "ILayer":
+                case "ILayerInternal":
+                    foreach (var item in obj.Layers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13666,6 +14365,69 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.CollisionLayers,
                 groupGetter: (m) => m.CollisionLayers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ColorRecord, IColorRecordGetter>(
+                srcGroup: obj.Colors,
+                type: typeof(IColorRecordGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Colors,
+                groupGetter: (m) => m.Colors))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ReverbParameters, IReverbParametersGetter>(
+                srcGroup: obj.ReverbParameters,
+                type: typeof(IReverbParametersGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ReverbParameters,
+                groupGetter: (m) => m.ReverbParameters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, PackIn, IPackInGetter>(
+                srcGroup: obj.PackIns,
+                type: typeof(IPackInGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.PackIns,
+                groupGetter: (m) => m.PackIns))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ReferenceGroup, IReferenceGroupGetter>(
+                srcGroup: obj.ReferenceGroups,
+                type: typeof(IReferenceGroupGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ReferenceGroups,
+                groupGetter: (m) => m.ReferenceGroups))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AimModel, IAimModelGetter>(
+                srcGroup: obj.AimModels,
+                type: typeof(IAimModelGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AimModels,
+                groupGetter: (m) => m.AimModels))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Layer, ILayerGetter>(
+                srcGroup: obj.Layers,
+                type: typeof(ILayerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Layers,
+                groupGetter: (m) => m.Layers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                srcGroup: obj.ConstructibleObjects,
+                type: typeof(IConstructibleObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ConstructibleObjects,
+                groupGetter: (m) => m.ConstructibleObjects))
             {
                 yield return item;
             }
@@ -15152,6 +15914,104 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.CollisionLayers,
                         groupGetter: (m) => m.CollisionLayers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ColorRecord":
+                case "IColorRecordGetter":
+                case "IColorRecord":
+                case "IColorRecordInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ColorRecord, IColorRecordGetter>(
+                        srcGroup: obj.Colors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Colors,
+                        groupGetter: (m) => m.Colors))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ReverbParameters":
+                case "IReverbParametersGetter":
+                case "IReverbParameters":
+                case "IReverbParametersInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ReverbParameters, IReverbParametersGetter>(
+                        srcGroup: obj.ReverbParameters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ReverbParameters,
+                        groupGetter: (m) => m.ReverbParameters))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PackIn":
+                case "IPackInGetter":
+                case "IPackIn":
+                case "IPackInInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, PackIn, IPackInGetter>(
+                        srcGroup: obj.PackIns,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.PackIns,
+                        groupGetter: (m) => m.PackIns))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ReferenceGroup":
+                case "IReferenceGroupGetter":
+                case "IReferenceGroup":
+                case "IReferenceGroupInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ReferenceGroup, IReferenceGroupGetter>(
+                        srcGroup: obj.ReferenceGroups,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ReferenceGroups,
+                        groupGetter: (m) => m.ReferenceGroups))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AimModel":
+                case "IAimModelGetter":
+                case "IAimModel":
+                case "IAimModelInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AimModel, IAimModelGetter>(
+                        srcGroup: obj.AimModels,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AimModels,
+                        groupGetter: (m) => m.AimModels))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Layer":
+                case "ILayerGetter":
+                case "ILayer":
+                case "ILayerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Layer, ILayerGetter>(
+                        srcGroup: obj.Layers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Layers,
+                        groupGetter: (m) => m.Layers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                        srcGroup: obj.ConstructibleObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ConstructibleObjects,
+                        groupGetter: (m) => m.ConstructibleObjects))
                     {
                         yield return item;
                     }
@@ -17570,6 +18430,146 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Colors) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Colors);
+                try
+                {
+                    item.Colors.DeepCopyIn(
+                        rhs: rhs.Colors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Colors));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ReverbParameters) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ReverbParameters);
+                try
+                {
+                    item.ReverbParameters.DeepCopyIn(
+                        rhs: rhs.ReverbParameters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ReverbParameters));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.PackIns) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.PackIns);
+                try
+                {
+                    item.PackIns.DeepCopyIn(
+                        rhs: rhs.PackIns,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.PackIns));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ReferenceGroups) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ReferenceGroups);
+                try
+                {
+                    item.ReferenceGroups.DeepCopyIn(
+                        rhs: rhs.ReferenceGroups,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ReferenceGroups));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AimModels) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.AimModels);
+                try
+                {
+                    item.AimModels.DeepCopyIn(
+                        rhs: rhs.AimModels,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.AimModels));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Layers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Layers);
+                try
+                {
+                    item.Layers.DeepCopyIn(
+                        rhs: rhs.Layers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Layers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ConstructibleObjects);
+                try
+                {
+                    item.ConstructibleObjects.DeepCopyIn(
+                        rhs: rhs.ConstructibleObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ConstructibleObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -17765,6 +18765,13 @@ namespace Mutagen.Bethesda.Fallout4
         public bool SoundCategories;
         public bool SoundOutputModels;
         public bool CollisionLayers;
+        public bool Colors;
+        public bool ReverbParameters;
+        public bool PackIns;
+        public bool ReferenceGroups;
+        public bool AimModels;
+        public bool Layers;
+        public bool ConstructibleObjects;
         public GroupMask()
         {
         }
@@ -17875,6 +18882,13 @@ namespace Mutagen.Bethesda.Fallout4
             SoundCategories = defaultValue;
             SoundOutputModels = defaultValue;
             CollisionLayers = defaultValue;
+            Colors = defaultValue;
+            ReverbParameters = defaultValue;
+            PackIns = defaultValue;
+            ReferenceGroups = defaultValue;
+            AimModels = defaultValue;
+            Layers = defaultValue;
+            ConstructibleObjects = defaultValue;
         }
     }
 
@@ -19057,6 +20071,83 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)CollisionLayersItem).BinaryWriteTranslator).Write<ICollisionLayerGetter>(
                         item: CollisionLayersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Colors ?? true)
+            {
+                var ColorsItem = item.Colors;
+                if (ColorsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ColorsItem).BinaryWriteTranslator).Write<IColorRecordGetter>(
+                        item: ColorsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ReverbParameters ?? true)
+            {
+                var ReverbParametersItem = item.ReverbParameters;
+                if (ReverbParametersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ReverbParametersItem).BinaryWriteTranslator).Write<IReverbParametersGetter>(
+                        item: ReverbParametersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.PackIns ?? true)
+            {
+                var PackInsItem = item.PackIns;
+                if (PackInsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)PackInsItem).BinaryWriteTranslator).Write<IPackInGetter>(
+                        item: PackInsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ReferenceGroups ?? true)
+            {
+                var ReferenceGroupsItem = item.ReferenceGroups;
+                if (ReferenceGroupsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ReferenceGroupsItem).BinaryWriteTranslator).Write<IReferenceGroupGetter>(
+                        item: ReferenceGroupsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AimModels ?? true)
+            {
+                var AimModelsItem = item.AimModels;
+                if (AimModelsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AimModelsItem).BinaryWriteTranslator).Write<IAimModelGetter>(
+                        item: AimModelsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Layers ?? true)
+            {
+                var LayersItem = item.Layers;
+                if (LayersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LayersItem).BinaryWriteTranslator).Write<ILayerGetter>(
+                        item: LayersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ConstructibleObjects ?? true)
+            {
+                var ConstructibleObjectsItem = item.ConstructibleObjects;
+                if (ConstructibleObjectsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
+                        item: ConstructibleObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -20597,6 +21688,104 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.CollisionLayers;
                 }
+                case RecordTypeInts.CLFM:
+                {
+                    if (importMask?.Colors ?? true)
+                    {
+                        item.Colors.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Colors;
+                }
+                case RecordTypeInts.REVB:
+                {
+                    if (importMask?.ReverbParameters ?? true)
+                    {
+                        item.ReverbParameters.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ReverbParameters;
+                }
+                case RecordTypeInts.PKIN:
+                {
+                    if (importMask?.PackIns ?? true)
+                    {
+                        item.PackIns.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.PackIns;
+                }
+                case RecordTypeInts.RFGP:
+                {
+                    if (importMask?.ReferenceGroups ?? true)
+                    {
+                        item.ReferenceGroups.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ReferenceGroups;
+                }
+                case RecordTypeInts.AMDL:
+                {
+                    if (importMask?.AimModels ?? true)
+                    {
+                        item.AimModels.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.AimModels;
+                }
+                case RecordTypeInts.LAYR:
+                {
+                    if (importMask?.Layers ?? true)
+                    {
+                        item.Layers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Layers;
+                }
+                case RecordTypeInts.COBJ:
+                {
+                    if (importMask?.ConstructibleObjects ?? true)
+                    {
+                        item.ConstructibleObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ConstructibleObjects;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -21284,6 +22473,41 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _CollisionLayersLocations;
         private IFallout4GroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? Fallout4GroupBinaryOverlay<ICollisionLayerGetter>.Fallout4GroupFactory(_data, _CollisionLayersLocations, _package) : default;
         public IFallout4GroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new Fallout4Group<CollisionLayer>(this);
+        #endregion
+        #region Colors
+        private List<RangeInt64>? _ColorsLocations;
+        private IFallout4GroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? Fallout4GroupBinaryOverlay<IColorRecordGetter>.Fallout4GroupFactory(_data, _ColorsLocations, _package) : default;
+        public IFallout4GroupGetter<IColorRecordGetter> Colors => _Colors ?? new Fallout4Group<ColorRecord>(this);
+        #endregion
+        #region ReverbParameters
+        private List<RangeInt64>? _ReverbParametersLocations;
+        private IFallout4GroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? Fallout4GroupBinaryOverlay<IReverbParametersGetter>.Fallout4GroupFactory(_data, _ReverbParametersLocations, _package) : default;
+        public IFallout4GroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new Fallout4Group<ReverbParameters>(this);
+        #endregion
+        #region PackIns
+        private List<RangeInt64>? _PackInsLocations;
+        private IFallout4GroupGetter<IPackInGetter>? _PackIns => _PackInsLocations != null ? Fallout4GroupBinaryOverlay<IPackInGetter>.Fallout4GroupFactory(_data, _PackInsLocations, _package) : default;
+        public IFallout4GroupGetter<IPackInGetter> PackIns => _PackIns ?? new Fallout4Group<PackIn>(this);
+        #endregion
+        #region ReferenceGroups
+        private List<RangeInt64>? _ReferenceGroupsLocations;
+        private IFallout4GroupGetter<IReferenceGroupGetter>? _ReferenceGroups => _ReferenceGroupsLocations != null ? Fallout4GroupBinaryOverlay<IReferenceGroupGetter>.Fallout4GroupFactory(_data, _ReferenceGroupsLocations, _package) : default;
+        public IFallout4GroupGetter<IReferenceGroupGetter> ReferenceGroups => _ReferenceGroups ?? new Fallout4Group<ReferenceGroup>(this);
+        #endregion
+        #region AimModels
+        private List<RangeInt64>? _AimModelsLocations;
+        private IFallout4GroupGetter<IAimModelGetter>? _AimModels => _AimModelsLocations != null ? Fallout4GroupBinaryOverlay<IAimModelGetter>.Fallout4GroupFactory(_data, _AimModelsLocations, _package) : default;
+        public IFallout4GroupGetter<IAimModelGetter> AimModels => _AimModels ?? new Fallout4Group<AimModel>(this);
+        #endregion
+        #region Layers
+        private List<RangeInt64>? _LayersLocations;
+        private IFallout4GroupGetter<ILayerGetter>? _Layers => _LayersLocations != null ? Fallout4GroupBinaryOverlay<ILayerGetter>.Fallout4GroupFactory(_data, _LayersLocations, _package) : default;
+        public IFallout4GroupGetter<ILayerGetter> Layers => _Layers ?? new Fallout4Group<Layer>(this);
+        #endregion
+        #region ConstructibleObjects
+        private List<RangeInt64>? _ConstructibleObjectsLocations;
+        private IFallout4GroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? Fallout4GroupBinaryOverlay<IConstructibleObjectGetter>.Fallout4GroupFactory(_data, _ConstructibleObjectsLocations, _package) : default;
+        public IFallout4GroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new Fallout4Group<ConstructibleObject>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -22001,6 +23225,48 @@ namespace Mutagen.Bethesda.Fallout4
                     _CollisionLayersLocations ??= new();
                     _CollisionLayersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.CollisionLayers;
+                }
+                case RecordTypeInts.CLFM:
+                {
+                    _ColorsLocations ??= new();
+                    _ColorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Colors;
+                }
+                case RecordTypeInts.REVB:
+                {
+                    _ReverbParametersLocations ??= new();
+                    _ReverbParametersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ReverbParameters;
+                }
+                case RecordTypeInts.PKIN:
+                {
+                    _PackInsLocations ??= new();
+                    _PackInsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.PackIns;
+                }
+                case RecordTypeInts.RFGP:
+                {
+                    _ReferenceGroupsLocations ??= new();
+                    _ReferenceGroupsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ReferenceGroups;
+                }
+                case RecordTypeInts.AMDL:
+                {
+                    _AimModelsLocations ??= new();
+                    _AimModelsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.AimModels;
+                }
+                case RecordTypeInts.LAYR:
+                {
+                    _LayersLocations ??= new();
+                    _LayersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Layers;
+                }
+                case RecordTypeInts.COBJ:
+                {
+                    _ConstructibleObjectsLocations ??= new();
+                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ConstructibleObjects;
                 }
                 default:
                     return default(int?);

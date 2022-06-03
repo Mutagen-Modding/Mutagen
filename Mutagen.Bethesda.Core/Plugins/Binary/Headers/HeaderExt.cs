@@ -5,7 +5,6 @@ using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
-using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda;
 

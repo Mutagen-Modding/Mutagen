@@ -23,6 +23,7 @@
       </CustomLogic>
       <RefDirect name="Data" refName="AHolotapeData" binary="NoGeneration" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>

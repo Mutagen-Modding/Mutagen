@@ -518,7 +518,13 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             SoundOutputData_Registration.Instance,
             SoundOutputChannels_Registration.Instance,
             SoundOutputChannel_Registration.Instance,
-            DynamicAttentuationValues_Registration.Instance
+            DynamicAttentuationValues_Registration.Instance,
+            AColorRecordData_Registration.Instance,
+            ColorData_Registration.Instance,
+            ColorRemappingIndex_Registration.Instance,
+            PackIn_Registration.Instance,
+            ConstructibleObjectComponent_Registration.Instance,
+            ConstructibleCreatedObjectCount_Registration.Instance
         );
     }
 }

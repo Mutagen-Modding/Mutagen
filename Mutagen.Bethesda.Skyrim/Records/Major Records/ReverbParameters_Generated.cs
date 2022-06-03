@@ -81,10 +81,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte ReverbDelayMS { get; set; } = default;
         #endregion
         #region DiffusionPercent
-        public Byte DiffusionPercent { get; set; } = default;
+        public Percent DiffusionPercent { get; set; } = default;
         #endregion
         #region DensityPercent
-        public Byte DensityPercent { get; set; } = default;
+        public Percent DensityPercent { get; set; } = default;
         #endregion
         #region Unknown
         public Byte Unknown { get; set; } = default;
@@ -881,8 +881,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Single DecayHfRatio { get; set; }
         new Byte ReflectDelayMS { get; set; }
         new Byte ReverbDelayMS { get; set; }
-        new Byte DiffusionPercent { get; set; }
-        new Byte DensityPercent { get; set; }
+        new Percent DiffusionPercent { get; set; }
+        new Percent DensityPercent { get; set; }
         new Byte Unknown { get; set; }
         new ReverbParameters.DATADataType DATADataTypeState { get; set; }
     }
@@ -911,8 +911,8 @@ namespace Mutagen.Bethesda.Skyrim
         Single DecayHfRatio { get; }
         Byte ReflectDelayMS { get; }
         Byte ReverbDelayMS { get; }
-        Byte DiffusionPercent { get; }
-        Byte DensityPercent { get; }
+        Percent DiffusionPercent { get; }
+        Percent DensityPercent { get; }
         Byte Unknown { get; }
         ReverbParameters.DATADataType DATADataTypeState { get; }
 
@@ -1296,8 +1296,8 @@ namespace Mutagen.Bethesda.Skyrim
             ret.DecayHfRatio = item.DecayHfRatio.EqualsWithin(rhs.DecayHfRatio);
             ret.ReflectDelayMS = item.ReflectDelayMS == rhs.ReflectDelayMS;
             ret.ReverbDelayMS = item.ReverbDelayMS == rhs.ReverbDelayMS;
-            ret.DiffusionPercent = item.DiffusionPercent == rhs.DiffusionPercent;
-            ret.DensityPercent = item.DensityPercent == rhs.DensityPercent;
+            ret.DiffusionPercent = item.DiffusionPercent.Equals(rhs.DiffusionPercent);
+            ret.DensityPercent = item.DensityPercent.Equals(rhs.DensityPercent);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1487,11 +1487,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DiffusionPercent) ?? true))
             {
-                if (lhs.DiffusionPercent != rhs.DiffusionPercent) return false;
+                if (!lhs.DiffusionPercent.Equals(rhs.DiffusionPercent)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DensityPercent) ?? true))
             {
-                if (lhs.DensityPercent != rhs.DensityPercent) return false;
+                if (!lhs.DensityPercent.Equals(rhs.DensityPercent)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Unknown) ?? true))
             {
@@ -1878,8 +1878,14 @@ namespace Mutagen.Bethesda.Skyrim
                     multiplier: 0.01);
                 writer.Write(item.ReflectDelayMS);
                 writer.Write(item.ReverbDelayMS);
-                writer.Write(item.DiffusionPercent);
-                writer.Write(item.DensityPercent);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.DiffusionPercent,
+                    integerType: FloatIntegerType.Byte);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.DensityPercent,
+                    integerType: FloatIntegerType.Byte);
                 writer.Write(item.Unknown);
             }
         }
@@ -1989,8 +1995,12 @@ namespace Mutagen.Bethesda.Skyrim
                         multiplier: 0.01);
                     item.ReflectDelayMS = dataFrame.ReadUInt8();
                     item.ReverbDelayMS = dataFrame.ReadUInt8();
-                    item.DiffusionPercent = dataFrame.ReadUInt8();
-                    item.DensityPercent = dataFrame.ReadUInt8();
+                    item.DiffusionPercent = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    item.DensityPercent = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
                     item.Unknown = dataFrame.ReadUInt8();
                     return (int)ReverbParameters_FieldIndex.Unknown;
                 }
@@ -2101,12 +2111,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region DiffusionPercent
         private int _DiffusionPercentLocation => _DATALocation!.Value.Min + 0xB;
         private bool _DiffusionPercent_IsSet => _DATALocation.HasValue;
-        public Byte DiffusionPercent => _DiffusionPercent_IsSet ? _data.Span[_DiffusionPercentLocation] : default;
+        public Percent DiffusionPercent => _DiffusionPercent_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_DiffusionPercentLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region DensityPercent
         private int _DensityPercentLocation => _DATALocation!.Value.Min + 0xC;
         private bool _DensityPercent_IsSet => _DATALocation.HasValue;
-        public Byte DensityPercent => _DensityPercent_IsSet ? _data.Span[_DensityPercentLocation] : default;
+        public Percent DensityPercent => _DensityPercent_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_DensityPercentLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0xD;

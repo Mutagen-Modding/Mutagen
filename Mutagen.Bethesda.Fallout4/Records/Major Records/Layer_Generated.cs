@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +54,16 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Parent
+        private readonly IFormLinkNullable<ILayerGetter> _Parent = new FormLinkNullable<ILayerGetter>();
+        public IFormLinkNullable<ILayerGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILayerGetter> ILayerGetter.Parent => this.Parent;
+        #endregion
 
         #region To String
 
@@ -78,6 +89,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Parent = initialValue;
             }
 
             public Mask(
@@ -86,7 +98,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Parent)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Parent = Parent;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +117,10 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Parent;
             #endregion
 
             #region Equals
@@ -116,11 +134,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Parent);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +151,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Parent)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +160,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Parent)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +176,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Parent = eval(this.Parent);
             }
             #endregion
 
@@ -172,6 +195,10 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(Layer.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Parent ?? true)
+                    {
+                        sb.AppendItem(Parent, "Parent");
+                    }
                 }
             }
             #endregion
@@ -182,12 +209,18 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Parent;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Layer_FieldIndex enu = (Layer_FieldIndex)index;
                 switch (enu)
                 {
+                    case Layer_FieldIndex.Parent:
+                        return Parent;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +231,9 @@ namespace Mutagen.Bethesda.Fallout4
                 Layer_FieldIndex enu = (Layer_FieldIndex)index;
                 switch (enu)
                 {
+                    case Layer_FieldIndex.Parent:
+                        this.Parent = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +245,9 @@ namespace Mutagen.Bethesda.Fallout4
                 Layer_FieldIndex enu = (Layer_FieldIndex)index;
                 switch (enu)
                 {
+                    case Layer_FieldIndex.Parent:
+                        this.Parent = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +257,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Parent != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +284,9 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
             }
             #endregion
 
@@ -252,6 +295,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Parent = this.Parent.Combine(rhs.Parent);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +317,26 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Parent;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Parent = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Parent, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +348,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Layer_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayerCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerSetterCommon.Instance.RemapLinks(this, mapping);
         public Layer(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -415,9 +472,11 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ILayer :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILayerGetter,
         ILoquiObjectSetter<ILayerInternal>
     {
+        new IFormLinkNullable<ILayerGetter> Parent { get; set; }
     }
 
     public partial interface ILayerInternal :
@@ -431,10 +490,12 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ILayerGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ILayerGetter>,
         IMapsToGetter<ILayerGetter>
     {
         static new ILoquiRegistration StaticRegistration => Layer_Registration.Instance;
+        IFormLinkNullableGetter<ILayerGetter> Parent { get; }
 
     }
 
@@ -599,6 +660,7 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Parent = 6,
     }
     #endregion
 
@@ -616,9 +678,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "732a94be-1082-44ce-a4d4-169b255b8abe";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Layer.Mask<>);
 
@@ -648,8 +710,11 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LAYR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LAYR);
+            var all = RecordCollection.Factory(
+                RecordTypes.LAYR,
+                RecordTypes.PNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LayerBinaryWriteTranslation);
         #region Interface
@@ -693,6 +758,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILayerInternal item)
         {
             ClearPartial();
+            item.Parent.Clear();
             base.Clear(item);
         }
         
@@ -710,6 +776,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(ILayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Parent.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +845,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +895,10 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Parent ?? true)
+            {
+                sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
+            }
         }
         
         public static Layer_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +947,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Layer_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
             return true;
         }
         
@@ -903,6 +979,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ILayerGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Parent);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +1008,10 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
+            {
+                yield return ParentInfo;
             }
             yield break;
         }
@@ -1006,6 +1087,10 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Layer_FieldIndex.Parent) ?? true))
+            {
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1239,21 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static LayerBinaryWriteTranslation Instance = new LayerBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            ILayerGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Parent,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             ILayerGetter item,
@@ -1168,10 +1268,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1331,35 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            ILayerInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Layer_FieldIndex.Parent;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1261,6 +1392,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LayerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +1407,10 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(ILayer);
 
 
+        #region Parent
+        private int? _ParentLocation;
+        public IFormLinkNullableGetter<ILayerGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +1465,33 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    _ParentLocation = (stream.Position - offset);
+                    return (int)Layer_FieldIndex.Parent;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

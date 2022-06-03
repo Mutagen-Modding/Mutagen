@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -22,6 +23,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -53,6 +55,150 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region PickUpSound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
+        {
+            get => _PickUpSound;
+            set => _PickUpSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IConstructibleObjectGetter.PickUpSound => this.PickUpSound;
+        #endregion
+        #region PutDownSound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
+        {
+            get => _PutDownSound;
+            set => _PutDownSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IConstructibleObjectGetter.PutDownSound => this.PutDownSound;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ConstructibleObjectComponent>? _Components;
+        public ExtendedList<ConstructibleObjectComponent>? Components
+        {
+            get => this._Components;
+            set => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConstructibleObjectComponentGetter>? IConstructibleObjectGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Description
+        public TranslatedString? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IConstructibleObjectGetter.Description => this.Description;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IConstructibleObjectGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region CreatedObject
+        private readonly IFormLinkNullable<IItemGetter> _CreatedObject = new FormLinkNullable<IItemGetter>();
+        public IFormLinkNullable<IItemGetter> CreatedObject
+        {
+            get => _CreatedObject;
+            set => _CreatedObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IItemGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
+        #endregion
+        #region WorkbenchKeyword
+        private readonly IFormLinkNullable<IKeywordGetter> _WorkbenchKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> WorkbenchKeyword
+        {
+            get => _WorkbenchKeyword;
+            set => _WorkbenchKeyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword;
+        #endregion
+        #region NAM1
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _NAM1;
+        public MemorySlice<Byte>? NAM1
+        {
+            get => this._NAM1;
+            set => this._NAM1 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IConstructibleObjectGetter.NAM1 => this.NAM1;
+        #endregion
+        #region NAM2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _NAM2;
+        public MemorySlice<Byte>? NAM2
+        {
+            get => this._NAM2;
+            set => this._NAM2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IConstructibleObjectGetter.NAM2 => this.NAM2;
+        #endregion
+        #region NAM3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _NAM3;
+        public MemorySlice<Byte>? NAM3
+        {
+            get => this._NAM3;
+            set => this._NAM3 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IConstructibleObjectGetter.NAM3 => this.NAM3;
+        #endregion
+        #region MenuArtObject
+        private readonly IFormLinkNullable<IArtObjectGetter> _MenuArtObject = new FormLinkNullable<IArtObjectGetter>();
+        public IFormLinkNullable<IArtObjectGetter> MenuArtObject
+        {
+            get => _MenuArtObject;
+            set => _MenuArtObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IArtObjectGetter> IConstructibleObjectGetter.MenuArtObject => this.MenuArtObject;
+        #endregion
+        #region Categories
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Categories;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Categories
+        {
+            get => this._Categories;
+            set => this._Categories = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IConstructibleObjectGetter.Categories => _Categories;
+        #endregion
+
+        #endregion
+        #region CreatedObjectCounts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ConstructibleCreatedObjectCount>? _CreatedObjectCounts;
+        public ExtendedList<ConstructibleCreatedObjectCount>? CreatedObjectCounts
+        {
+            get => this._CreatedObjectCounts;
+            set => this._CreatedObjectCounts = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConstructibleCreatedObjectCountGetter>? IConstructibleObjectGetter.CreatedObjectCounts => _CreatedObjectCounts;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +224,19 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.PickUpSound = initialValue;
+                this.PutDownSound = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
+                this.Description = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.CreatedObject = initialValue;
+                this.WorkbenchKeyword = initialValue;
+                this.NAM1 = initialValue;
+                this.NAM2 = initialValue;
+                this.NAM3 = initialValue;
+                this.MenuArtObject = initialValue;
+                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CreatedObjectCounts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -86,7 +245,20 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem PickUpSound,
+                TItem PutDownSound,
+                TItem Components,
+                TItem Description,
+                TItem Conditions,
+                TItem CreatedObject,
+                TItem WorkbenchKeyword,
+                TItem NAM1,
+                TItem NAM2,
+                TItem NAM3,
+                TItem MenuArtObject,
+                TItem Categories,
+                TItem CreatedObjectCounts)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +267,19 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.PickUpSound = PickUpSound;
+                this.PutDownSound = PutDownSound;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
+                this.Description = Description;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.CreatedObject = CreatedObject;
+                this.WorkbenchKeyword = WorkbenchKeyword;
+                this.NAM1 = NAM1;
+                this.NAM2 = NAM2;
+                this.NAM3 = NAM3;
+                this.MenuArtObject = MenuArtObject;
+                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Categories, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CreatedObjectCounts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>?>(CreatedObjectCounts, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -103,6 +288,22 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem PickUpSound;
+            public TItem PutDownSound;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>? Components;
+            public TItem Description;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem CreatedObject;
+            public TItem WorkbenchKeyword;
+            public TItem NAM1;
+            public TItem NAM2;
+            public TItem NAM3;
+            public TItem MenuArtObject;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Categories;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>?>? CreatedObjectCounts;
             #endregion
 
             #region Equals
@@ -116,11 +317,37 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
+                if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.CreatedObject, rhs.CreatedObject)) return false;
+                if (!object.Equals(this.WorkbenchKeyword, rhs.WorkbenchKeyword)) return false;
+                if (!object.Equals(this.NAM1, rhs.NAM1)) return false;
+                if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
+                if (!object.Equals(this.NAM3, rhs.NAM3)) return false;
+                if (!object.Equals(this.MenuArtObject, rhs.MenuArtObject)) return false;
+                if (!object.Equals(this.Categories, rhs.Categories)) return false;
+                if (!object.Equals(this.CreatedObjectCounts, rhs.CreatedObjectCounts)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.PickUpSound);
+                hash.Add(this.PutDownSound);
+                hash.Add(this.Components);
+                hash.Add(this.Description);
+                hash.Add(this.Conditions);
+                hash.Add(this.CreatedObject);
+                hash.Add(this.WorkbenchKeyword);
+                hash.Add(this.NAM1);
+                hash.Add(this.NAM2);
+                hash.Add(this.NAM3);
+                hash.Add(this.MenuArtObject);
+                hash.Add(this.Categories);
+                hash.Add(this.CreatedObjectCounts);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +358,62 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.PickUpSound)) return false;
+                if (!eval(this.PutDownSound)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Description)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.CreatedObject)) return false;
+                if (!eval(this.WorkbenchKeyword)) return false;
+                if (!eval(this.NAM1)) return false;
+                if (!eval(this.NAM2)) return false;
+                if (!eval(this.NAM3)) return false;
+                if (!eval(this.MenuArtObject)) return false;
+                if (this.Categories != null)
+                {
+                    if (!eval(this.Categories.Overall)) return false;
+                    if (this.Categories.Specific != null)
+                    {
+                        foreach (var item in this.Categories.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.CreatedObjectCounts != null)
+                {
+                    if (!eval(this.CreatedObjectCounts.Overall)) return false;
+                    if (this.CreatedObjectCounts.Specific != null)
+                    {
+                        foreach (var item in this.CreatedObjectCounts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -139,6 +422,62 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.PickUpSound)) return true;
+                if (eval(this.PutDownSound)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Description)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.CreatedObject)) return true;
+                if (eval(this.WorkbenchKeyword)) return true;
+                if (eval(this.NAM1)) return true;
+                if (eval(this.NAM2)) return true;
+                if (eval(this.NAM3)) return true;
+                if (eval(this.MenuArtObject)) return true;
+                if (this.Categories != null)
+                {
+                    if (eval(this.Categories.Overall)) return true;
+                    if (this.Categories.Specific != null)
+                    {
+                        foreach (var item in this.Categories.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.CreatedObjectCounts != null)
+                {
+                    if (eval(this.CreatedObjectCounts.Overall)) return true;
+                    if (this.CreatedObjectCounts.Specific != null)
+                    {
+                        foreach (var item in this.CreatedObjectCounts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -154,6 +493,74 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.PickUpSound = eval(this.PickUpSound);
+                obj.PutDownSound = eval(this.PutDownSound);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Description = eval(this.Description);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.CreatedObject = eval(this.CreatedObject);
+                obj.WorkbenchKeyword = eval(this.WorkbenchKeyword);
+                obj.NAM1 = eval(this.NAM1);
+                obj.NAM2 = eval(this.NAM2);
+                obj.NAM3 = eval(this.NAM3);
+                obj.MenuArtObject = eval(this.MenuArtObject);
+                if (Categories != null)
+                {
+                    obj.Categories = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Categories.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Categories.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Categories.Specific = l;
+                        foreach (var item in Categories.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (CreatedObjectCounts != null)
+                {
+                    obj.CreatedObjectCounts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>>?>(eval(this.CreatedObjectCounts.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>>());
+                    if (CreatedObjectCounts.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>>();
+                        obj.CreatedObjectCounts.Specific = l;
+                        foreach (var item in CreatedObjectCounts.Specific)
+                        {
+                            MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -172,6 +579,120 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(ConstructibleObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.PickUpSound ?? true)
+                    {
+                        sb.AppendItem(PickUpSound, "PickUpSound");
+                    }
+                    if (printMask?.PutDownSound ?? true)
+                    {
+                        sb.AppendItem(PutDownSound, "PutDownSound");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.CreatedObject ?? true)
+                    {
+                        sb.AppendItem(CreatedObject, "CreatedObject");
+                    }
+                    if (printMask?.WorkbenchKeyword ?? true)
+                    {
+                        sb.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
+                    }
+                    if (printMask?.NAM1 ?? true)
+                    {
+                        sb.AppendItem(NAM1, "NAM1");
+                    }
+                    if (printMask?.NAM2 ?? true)
+                    {
+                        sb.AppendItem(NAM2, "NAM2");
+                    }
+                    if (printMask?.NAM3 ?? true)
+                    {
+                        sb.AppendItem(NAM3, "NAM3");
+                    }
+                    if (printMask?.MenuArtObject ?? true)
+                    {
+                        sb.AppendItem(MenuArtObject, "MenuArtObject");
+                    }
+                    if ((printMask?.Categories?.Overall ?? true)
+                        && Categories is {} CategoriesItem)
+                    {
+                        sb.AppendLine("Categories =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(CategoriesItem.Overall);
+                            if (CategoriesItem.Specific != null)
+                            {
+                                foreach (var subItem in CategoriesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.CreatedObjectCounts?.Overall ?? true)
+                        && CreatedObjectCounts is {} CreatedObjectCountsItem)
+                    {
+                        sb.AppendLine("CreatedObjectCounts =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(CreatedObjectCountsItem.Overall);
+                            if (CreatedObjectCountsItem.Specific != null)
+                            {
+                                foreach (var subItem in CreatedObjectCountsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -182,12 +703,54 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? PickUpSound;
+            public Exception? PutDownSound;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>? Components;
+            public Exception? Description;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? CreatedObject;
+            public Exception? WorkbenchKeyword;
+            public Exception? NAM1;
+            public Exception? NAM2;
+            public Exception? NAM3;
+            public Exception? MenuArtObject;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Categories;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleCreatedObjectCount.ErrorMask?>>?>? CreatedObjectCounts;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConstructibleObject_FieldIndex.PickUpSound:
+                        return PickUpSound;
+                    case ConstructibleObject_FieldIndex.PutDownSound:
+                        return PutDownSound;
+                    case ConstructibleObject_FieldIndex.Components:
+                        return Components;
+                    case ConstructibleObject_FieldIndex.Description:
+                        return Description;
+                    case ConstructibleObject_FieldIndex.Conditions:
+                        return Conditions;
+                    case ConstructibleObject_FieldIndex.CreatedObject:
+                        return CreatedObject;
+                    case ConstructibleObject_FieldIndex.WorkbenchKeyword:
+                        return WorkbenchKeyword;
+                    case ConstructibleObject_FieldIndex.NAM1:
+                        return NAM1;
+                    case ConstructibleObject_FieldIndex.NAM2:
+                        return NAM2;
+                    case ConstructibleObject_FieldIndex.NAM3:
+                        return NAM3;
+                    case ConstructibleObject_FieldIndex.MenuArtObject:
+                        return MenuArtObject;
+                    case ConstructibleObject_FieldIndex.Categories:
+                        return Categories;
+                    case ConstructibleObject_FieldIndex.CreatedObjectCounts:
+                        return CreatedObjectCounts;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +761,45 @@ namespace Mutagen.Bethesda.Fallout4
                 ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConstructibleObject_FieldIndex.PickUpSound:
+                        this.PickUpSound = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.PutDownSound:
+                        this.PutDownSound = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.CreatedObject:
+                        this.CreatedObject = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.WorkbenchKeyword:
+                        this.WorkbenchKeyword = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.NAM1:
+                        this.NAM1 = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.NAM2:
+                        this.NAM2 = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.NAM3:
+                        this.NAM3 = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.MenuArtObject:
+                        this.MenuArtObject = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.Categories:
+                        this.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.CreatedObjectCounts:
+                        this.CreatedObjectCounts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleCreatedObjectCount.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +811,45 @@ namespace Mutagen.Bethesda.Fallout4
                 ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConstructibleObject_FieldIndex.PickUpSound:
+                        this.PickUpSound = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.PutDownSound:
+                        this.PutDownSound = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.CreatedObject:
+                        this.CreatedObject = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.WorkbenchKeyword:
+                        this.WorkbenchKeyword = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.NAM1:
+                        this.NAM1 = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.NAM2:
+                        this.NAM2 = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.NAM3:
+                        this.NAM3 = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.MenuArtObject:
+                        this.MenuArtObject = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.Categories:
+                        this.Categories = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.CreatedObjectCounts:
+                        this.CreatedObjectCounts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleCreatedObjectCount.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +859,19 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (PickUpSound != null) return true;
+                if (PutDownSound != null) return true;
+                if (Components != null) return true;
+                if (Description != null) return true;
+                if (Conditions != null) return true;
+                if (CreatedObject != null) return true;
+                if (WorkbenchKeyword != null) return true;
+                if (NAM1 != null) return true;
+                if (NAM2 != null) return true;
+                if (NAM3 != null) return true;
+                if (MenuArtObject != null) return true;
+                if (Categories != null) return true;
+                if (CreatedObjectCounts != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +898,107 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(PickUpSound, "PickUpSound");
+                }
+                {
+                    sb.AppendItem(PutDownSound, "PutDownSound");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(CreatedObject, "CreatedObject");
+                }
+                {
+                    sb.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
+                }
+                {
+                    sb.AppendItem(NAM1, "NAM1");
+                }
+                {
+                    sb.AppendItem(NAM2, "NAM2");
+                }
+                {
+                    sb.AppendItem(NAM3, "NAM3");
+                }
+                {
+                    sb.AppendItem(MenuArtObject, "MenuArtObject");
+                }
+                if (Categories is {} CategoriesItem)
+                {
+                    sb.AppendLine("Categories =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(CategoriesItem.Overall);
+                        if (CategoriesItem.Specific != null)
+                        {
+                            foreach (var subItem in CategoriesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (CreatedObjectCounts is {} CreatedObjectCountsItem)
+                {
+                    sb.AppendLine("CreatedObjectCounts =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(CreatedObjectCountsItem.Overall);
+                        if (CreatedObjectCountsItem.Specific != null)
+                        {
+                            foreach (var subItem in CreatedObjectCountsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -252,6 +1007,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
+                ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.CreatedObject = this.CreatedObject.Combine(rhs.CreatedObject);
+                ret.WorkbenchKeyword = this.WorkbenchKeyword.Combine(rhs.WorkbenchKeyword);
+                ret.NAM1 = this.NAM1.Combine(rhs.NAM1);
+                ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
+                ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
+                ret.MenuArtObject = this.MenuArtObject.Combine(rhs.MenuArtObject);
+                ret.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Categories?.Overall, rhs.Categories?.Overall), ExceptionExt.Combine(this.Categories?.Specific, rhs.Categories?.Specific));
+                ret.CreatedObjectCounts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleCreatedObjectCount.ErrorMask?>>?>(ExceptionExt.Combine(this.CreatedObjectCounts?.Overall, rhs.CreatedObjectCounts?.Overall), ExceptionExt.Combine(this.CreatedObjectCounts?.Specific, rhs.CreatedObjectCounts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +1041,59 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool PickUpSound;
+            public bool PutDownSound;
+            public ConstructibleObjectComponent.TranslationMask? Components;
+            public bool Description;
+            public Condition.TranslationMask? Conditions;
+            public bool CreatedObject;
+            public bool WorkbenchKeyword;
+            public bool NAM1;
+            public bool NAM2;
+            public bool NAM3;
+            public bool MenuArtObject;
+            public bool Categories;
+            public ConstructibleCreatedObjectCount.TranslationMask? CreatedObjectCounts;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.PickUpSound = defaultOn;
+                this.PutDownSound = defaultOn;
+                this.Description = defaultOn;
+                this.CreatedObject = defaultOn;
+                this.WorkbenchKeyword = defaultOn;
+                this.NAM1 = defaultOn;
+                this.NAM2 = defaultOn;
+                this.NAM3 = defaultOn;
+                this.MenuArtObject = defaultOn;
+                this.Categories = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((PickUpSound, null));
+                ret.Add((PutDownSound, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Description, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((CreatedObject, null));
+                ret.Add((WorkbenchKeyword, null));
+                ret.Add((NAM1, null));
+                ret.Add((NAM2, null));
+                ret.Add((NAM3, null));
+                ret.Add((MenuArtObject, null));
+                ret.Add((Categories, null));
+                ret.Add((CreatedObjectCounts == null ? DefaultOn : !CreatedObjectCounts.GetCrystal().CopyNothing, CreatedObjectCounts?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +1105,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ConstructibleObject_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConstructibleObjectCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public ConstructibleObject(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -416,9 +1230,24 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IConstructibleObject :
         IConstructibleObjectGetter,
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         IHarvestTarget,
+        IItem,
         ILoquiObjectSetter<IConstructibleObjectInternal>
     {
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
+        new ExtendedList<ConstructibleObjectComponent>? Components { get; set; }
+        new TranslatedString? Description { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new IFormLinkNullable<IItemGetter> CreatedObject { get; set; }
+        new IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
+        new MemorySlice<Byte>? NAM1 { get; set; }
+        new MemorySlice<Byte>? NAM2 { get; set; }
+        new MemorySlice<Byte>? NAM3 { get; set; }
+        new IFormLinkNullable<IArtObjectGetter> MenuArtObject { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Categories { get; set; }
+        new ExtendedList<ConstructibleCreatedObjectCount>? CreatedObjectCounts { get; set; }
     }
 
     public partial interface IConstructibleObjectInternal :
@@ -432,11 +1261,26 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IConstructibleObjectGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         IHarvestTargetGetter,
+        IItemGetter,
         ILoquiObject<IConstructibleObjectGetter>,
         IMapsToGetter<IConstructibleObjectGetter>
     {
         static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
+        IReadOnlyList<IConstructibleObjectComponentGetter>? Components { get; }
+        ITranslatedStringGetter? Description { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        IFormLinkNullableGetter<IItemGetter> CreatedObject { get; }
+        IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword { get; }
+        ReadOnlyMemorySlice<Byte>? NAM1 { get; }
+        ReadOnlyMemorySlice<Byte>? NAM2 { get; }
+        ReadOnlyMemorySlice<Byte>? NAM3 { get; }
+        IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; }
+        IReadOnlyList<IConstructibleCreatedObjectCountGetter>? CreatedObjectCounts { get; }
 
     }
 
@@ -601,6 +1445,19 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        PickUpSound = 6,
+        PutDownSound = 7,
+        Components = 8,
+        Description = 9,
+        Conditions = 10,
+        CreatedObject = 11,
+        WorkbenchKeyword = 12,
+        NAM1 = 13,
+        NAM2 = 14,
+        NAM3 = 15,
+        MenuArtObject = 16,
+        Categories = 17,
+        CreatedObjectCounts = 18,
     }
     #endregion
 
@@ -618,9 +1475,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "b850f468-7ad2-4415-872c-e3a390f1c0e0";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(ConstructibleObject.Mask<>);
 
@@ -650,8 +1507,25 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.COBJ);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.COBJ);
+            var all = RecordCollection.Factory(
+                RecordTypes.COBJ,
+                RecordTypes.YNAM,
+                RecordTypes.ZNAM,
+                RecordTypes.FVPA,
+                RecordTypes.DESC,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.CNAM,
+                RecordTypes.BNAM,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.ANAM,
+                RecordTypes.FNAM,
+                RecordTypes.INTV);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ConstructibleObjectBinaryWriteTranslation);
         #region Interface
@@ -695,6 +1569,19 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IConstructibleObjectInternal item)
         {
             ClearPartial();
+            item.PickUpSound.Clear();
+            item.PutDownSound.Clear();
+            item.Components = null;
+            item.Description = default;
+            item.Conditions.Clear();
+            item.CreatedObject.Clear();
+            item.WorkbenchKeyword.Clear();
+            item.NAM1 = default;
+            item.NAM2 = default;
+            item.NAM3 = default;
+            item.MenuArtObject.Clear();
+            item.Categories = null;
+            item.CreatedObjectCounts = null;
             base.Clear(item);
         }
         
@@ -712,6 +1599,14 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IConstructibleObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound.Relink(mapping);
+            obj.Components?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.CreatedObject.Relink(mapping);
+            obj.WorkbenchKeyword.Relink(mapping);
+            obj.MenuArtObject.Relink(mapping);
+            obj.Categories?.RemapLinks(mapping);
         }
         
         #endregion
@@ -780,6 +1675,31 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CreatedObject = item.CreatedObject.Equals(rhs.CreatedObject);
+            ret.WorkbenchKeyword = item.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword);
+            ret.NAM1 = MemorySliceExt.Equal(item.NAM1, rhs.NAM1);
+            ret.NAM2 = MemorySliceExt.Equal(item.NAM2, rhs.NAM2);
+            ret.NAM3 = MemorySliceExt.Equal(item.NAM3, rhs.NAM3);
+            ret.MenuArtObject = item.MenuArtObject.Equals(rhs.MenuArtObject);
+            ret.Categories = item.Categories.CollectionEqualsHelper(
+                rhs.Categories,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.CreatedObjectCounts = item.CreatedObjectCounts.CollectionEqualsHelper(
+                rhs.CreatedObjectCounts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +1749,105 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.PickUpSound ?? true)
+            {
+                sb.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
+            }
+            if (printMask?.PutDownSound ?? true)
+            {
+                sb.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
+            }
+            if ((printMask?.Components?.Overall ?? true)
+                && item.Components is {} ComponentsItem)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ComponentsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
+            {
+                sb.AppendItem(DescriptionItem, "Description");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.CreatedObject ?? true)
+            {
+                sb.AppendItem(item.CreatedObject.FormKeyNullable, "CreatedObject");
+            }
+            if (printMask?.WorkbenchKeyword ?? true)
+            {
+                sb.AppendItem(item.WorkbenchKeyword.FormKeyNullable, "WorkbenchKeyword");
+            }
+            if ((printMask?.NAM1 ?? true)
+                && item.NAM1 is {} NAM1Item)
+            {
+                sb.AppendLine($"NAM1 => {SpanExt.ToHexString(NAM1Item)}");
+            }
+            if ((printMask?.NAM2 ?? true)
+                && item.NAM2 is {} NAM2Item)
+            {
+                sb.AppendLine($"NAM2 => {SpanExt.ToHexString(NAM2Item)}");
+            }
+            if ((printMask?.NAM3 ?? true)
+                && item.NAM3 is {} NAM3Item)
+            {
+                sb.AppendLine($"NAM3 => {SpanExt.ToHexString(NAM3Item)}");
+            }
+            if (printMask?.MenuArtObject ?? true)
+            {
+                sb.AppendItem(item.MenuArtObject.FormKeyNullable, "MenuArtObject");
+            }
+            if ((printMask?.Categories?.Overall ?? true)
+                && item.Categories is {} CategoriesItem)
+            {
+                sb.AppendLine("Categories =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in CategoriesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.CreatedObjectCounts?.Overall ?? true)
+                && item.CreatedObjectCounts is {} CreatedObjectCountsItem)
+            {
+                sb.AppendLine("CreatedObjectCounts =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in CreatedObjectCountsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static ConstructibleObject_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -877,6 +1896,58 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PutDownSound) ?? true))
+            {
+                if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqualNullable(rhs.Components, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Components)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Conditions)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
+            {
+                if (!lhs.CreatedObject.Equals(rhs.CreatedObject)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
+            {
+                if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM1) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NAM1, rhs.NAM1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM2) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM3) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
+            {
+                if (!lhs.MenuArtObject.Equals(rhs.MenuArtObject)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
+            {
+                if (!lhs.Categories.SequenceEqualNullable(rhs.Categories)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCounts) ?? true))
+            {
+                if (!lhs.CreatedObjectCounts.SequenceEqualNullable(rhs.CreatedObjectCounts, (l, r) => ((ConstructibleCreatedObjectCountCommon)((IConstructibleCreatedObjectCountGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.CreatedObjectCounts)))) return false;
+            }
             return true;
         }
         
@@ -905,6 +1976,31 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IConstructibleObjectGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.PickUpSound);
+            hash.Add(item.PutDownSound);
+            hash.Add(item.Components);
+            if (item.Description is {} Descriptionitem)
+            {
+                hash.Add(Descriptionitem);
+            }
+            hash.Add(item.Conditions);
+            hash.Add(item.CreatedObject);
+            hash.Add(item.WorkbenchKeyword);
+            if (item.NAM1 is {} NAM1Item)
+            {
+                hash.Add(NAM1Item);
+            }
+            if (item.NAM2 is {} NAM2Item)
+            {
+                hash.Add(NAM2Item);
+            }
+            if (item.NAM3 is {} NAM3Item)
+            {
+                hash.Add(NAM3Item);
+            }
+            hash.Add(item.MenuArtObject);
+            hash.Add(item.Categories);
+            hash.Add(item.CreatedObjectCounts);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,6 +2029,45 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
+            {
+                yield return PickUpSoundInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PutDownSound, out var PutDownSoundInfo))
+            {
+                yield return PutDownSoundInfo;
+            }
+            if (obj.Components is {} ComponentsItem)
+            {
+                foreach (var item in ComponentsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.CreatedObject, out var CreatedObjectInfo))
+            {
+                yield return CreatedObjectInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.WorkbenchKeyword, out var WorkbenchKeywordInfo))
+            {
+                yield return WorkbenchKeywordInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.MenuArtObject, out var MenuArtObjectInfo))
+            {
+                yield return MenuArtObjectInfo;
+            }
+            if (obj.Categories is {} CategoriesItem)
+            {
+                foreach (var item in CategoriesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1008,6 +2143,178 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PickUpSound) ?? true))
+            {
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PutDownSound) ?? true))
+            {
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.Components);
+                try
+                {
+                    if ((rhs.Components != null))
+                    {
+                        item.Components = 
+                            rhs.Components
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ConstructibleObjectComponent>();
+                    }
+                    else
+                    {
+                        item.Components = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
+            {
+                item.CreatedObject.SetTo(rhs.CreatedObject.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
+            {
+                item.WorkbenchKeyword.SetTo(rhs.WorkbenchKeyword.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM1) ?? true))
+            {
+                if(rhs.NAM1 is {} NAM1rhs)
+                {
+                    item.NAM1 = NAM1rhs.ToArray();
+                }
+                else
+                {
+                    item.NAM1 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM2) ?? true))
+            {
+                if(rhs.NAM2 is {} NAM2rhs)
+                {
+                    item.NAM2 = NAM2rhs.ToArray();
+                }
+                else
+                {
+                    item.NAM2 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM3) ?? true))
+            {
+                if(rhs.NAM3 is {} NAM3rhs)
+                {
+                    item.NAM3 = NAM3rhs.ToArray();
+                }
+                else
+                {
+                    item.NAM3 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
+            {
+                item.MenuArtObject.SetTo(rhs.MenuArtObject.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.Categories);
+                try
+                {
+                    if ((rhs.Categories != null))
+                    {
+                        item.Categories = 
+                            rhs.Categories
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Categories = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCounts) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.CreatedObjectCounts);
+                try
+                {
+                    if ((rhs.CreatedObjectCounts != null))
+                    {
+                        item.CreatedObjectCounts = 
+                            rhs.CreatedObjectCounts
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ConstructibleCreatedObjectCount>();
+                    }
+                    else
+                    {
+                        item.CreatedObjectCounts = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1156,6 +2463,100 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static ConstructibleObjectBinaryWriteTranslation Instance = new ConstructibleObjectBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IConstructibleObjectGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PickUpSound,
+                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PutDownSound,
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConstructibleObjectComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FVPA),
+                transl: (MutagenWriter subWriter, IConstructibleObjectComponentGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConstructibleObjectComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CreatedObject,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WorkbenchKeyword,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.NAM1,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.NAM2,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.NAM3,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM3));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MenuArtObject,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Categories,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConstructibleCreatedObjectCountGetter>.Instance.Write(
+                writer: writer,
+                items: item.CreatedObjectCounts,
+                recordType: translationParams.ConvertToCustom(RecordTypes.INTV),
+                transl: (MutagenWriter subWriter, IConstructibleCreatedObjectCountGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConstructibleCreatedObjectCountBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IConstructibleObjectGetter item,
@@ -1170,10 +2571,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1231,6 +2634,126 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IConstructibleObjectInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.YNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.PickUpSound;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.PutDownSound;
+                }
+                case RecordTypeInts.FVPA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Components = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ConstructibleObjectComponent>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ConstructibleObjectComponent.TryCreateFromBinary)
+                        .CastExtendedList<ConstructibleObjectComponent>();
+                    return (int)ConstructibleObject_FieldIndex.Components;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ConstructibleObject_FieldIndex.Description;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)ConstructibleObject_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CreatedObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.CreatedObject;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WorkbenchKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ConstructibleObject_FieldIndex.NAM1;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ConstructibleObject_FieldIndex.NAM2;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ConstructibleObject_FieldIndex.NAM3;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MenuArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.MenuArtObject;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Categories = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)ConstructibleObject_FieldIndex.Categories;
+                }
+                case RecordTypeInts.INTV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CreatedObjectCounts = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ConstructibleCreatedObjectCount>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ConstructibleCreatedObjectCount.TryCreateFromBinary)
+                        .CastExtendedList<ConstructibleCreatedObjectCount>();
+                    return (int)ConstructibleObject_FieldIndex.CreatedObjectCounts;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1263,6 +2786,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConstructibleObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ConstructibleObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1277,6 +2801,46 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IConstructibleObject);
 
 
+        #region PickUpSound
+        private int? _PickUpSoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region PutDownSound
+        private int? _PutDownSoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        public IReadOnlyList<IConstructibleObjectComponentGetter>? Components { get; private set; }
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        #region CreatedObject
+        private int? _CreatedObjectLocation;
+        public IFormLinkNullableGetter<IItemGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
+        #endregion
+        #region WorkbenchKeyword
+        private int? _WorkbenchKeywordLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region NAM1
+        private int? _NAM1Location;
+        public ReadOnlyMemorySlice<Byte>? NAM1 => _NAM1Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM1Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region NAM2
+        private int? _NAM2Location;
+        public ReadOnlyMemorySlice<Byte>? NAM2 => _NAM2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region NAM3
+        private int? _NAM3Location;
+        public ReadOnlyMemorySlice<Byte>? NAM3 => _NAM3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region MenuArtObject
+        private int? _MenuArtObjectLocation;
+        public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => _MenuArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; private set; }
+        public IReadOnlyList<IConstructibleCreatedObjectCountGetter>? CreatedObjectCounts { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1331,6 +2895,124 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.YNAM:
+                {
+                    _PickUpSoundLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.PickUpSound;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    _PutDownSoundLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.PutDownSound;
+                }
+                case RecordTypeInts.FVPA:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Components = BinaryOverlayList.FactoryByStartIndex<IConstructibleObjectComponentGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => ConstructibleObjectComponentBinaryOverlay.ConstructibleObjectComponentFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)ConstructibleObject_FieldIndex.Components;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.Description;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)ConstructibleObject_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CreatedObjectLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.CreatedObject;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _WorkbenchKeywordLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _NAM1Location = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.NAM1;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    _NAM2Location = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.NAM2;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    _NAM3Location = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.NAM3;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _MenuArtObjectLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.MenuArtObject;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Categories = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)ConstructibleObject_FieldIndex.Categories;
+                }
+                case RecordTypeInts.INTV:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.CreatedObjectCounts = BinaryOverlayList.FactoryByStartIndex<IConstructibleCreatedObjectCountGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => ConstructibleCreatedObjectCountBinaryOverlay.ConstructibleCreatedObjectCountFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)ConstructibleObject_FieldIndex.CreatedObjectCounts;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

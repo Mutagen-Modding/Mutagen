@@ -539,6 +539,11 @@ internal abstract class BinaryOverlayList
             _package = package;
             _getter = getter;
             _itemLength = itemLength;
+            Count = _mem.Length / _itemLength;
+            if (_mem.Length % _itemLength != 0)
+            {
+                Count++;
+            }
         }
 
         public T this[int index]
@@ -546,11 +551,11 @@ internal abstract class BinaryOverlayList
             get
             {
                 var startIndex = index * _itemLength;
-                return _getter(_mem.Slice(startIndex, _itemLength), _package);
+                return _getter(_mem.Slice(startIndex), _package);
             }
         }
 
-        public int Count => _mem.Length / _itemLength;
+        public int Count { get; }
 
         public IEnumerator<T> GetEnumerator()
         {

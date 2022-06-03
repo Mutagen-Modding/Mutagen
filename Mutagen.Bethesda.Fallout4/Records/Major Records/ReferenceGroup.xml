@@ -2,6 +2,11 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ReferenceGroup" objType="Record" recordType="RFGP" baseClass="Fallout4MajorRecord" GUID="4deaf871-34fe-481e-8fb7-0098b1b3fcbd" ID="483">
     <Fields>
+      <String name="Name" recordType="NNAM" />
+      <FormLink name="Reference" recordType="RNAM" >
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <ByteArray name="PNAM" recordType="PNAM" />
     </Fields>
   </Object>
 </Loqui>

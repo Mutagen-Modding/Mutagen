@@ -105,6 +105,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Cell
 - Class
 - CollisionLayer
+- ColorRecord
 - Component
 - Container
 - DialogTopic
@@ -150,6 +151,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - QuestLocationAlias
 - QuestReferenceAlias
 - Race
+- ReferenceGroup
 - RegionMap
 - SceneAction
 - ScenePhase
@@ -212,6 +214,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MovableStatic
 - Npc
 - ObjectEffect
+- PackIn
 - Projectile
 - SoundMarker
 - Spell
@@ -348,6 +351,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Climate
 - IModeled
 ### CollisionLayer
+- INamed
+### ColorRecord
 - INamed
 ### Component
 - INamed
@@ -512,6 +517,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### PackageDataTopic
 - INamed
+### PackIn
+- IObjectBounded
 ### Perk
 - INamed
 ### Phoneme
@@ -561,6 +568,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Race
 - IKeyworded
+- INamed
+### ReferenceGroup
 - INamed
 ### RegionData
 - IHasIcons

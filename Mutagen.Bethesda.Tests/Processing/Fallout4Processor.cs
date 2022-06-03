@@ -1120,6 +1120,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "LCTN", "FULL" },
                     new RecordType[] { "MESG", "FULL", "NNAM", "ITXT" },
                     new RecordType[] { "SNCT", "FULL" },
+                    new RecordType[] { "CLFM", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -1138,6 +1139,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "AVIF", "DESC" },
                     new RecordType[] { "MESG", "DESC" },
                     new RecordType[] { "COLL", "DESC" },
+                    new RecordType[] { "COBJ", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

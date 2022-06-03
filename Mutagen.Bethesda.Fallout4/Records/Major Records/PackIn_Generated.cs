@@ -41,58 +41,57 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class ReferenceGroup :
+    public partial class PackIn :
         Fallout4MajorRecord,
-        IEquatable<IReferenceGroupGetter>,
-        ILoquiObjectSetter<ReferenceGroup>,
-        IReferenceGroupInternal
+        IEquatable<IPackInGetter>,
+        ILoquiObjectSetter<PackIn>,
+        IPackInInternal
     {
         #region Ctor
-        protected ReferenceGroup()
+        protected PackIn()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Name
-        /// <summary>
-        /// Aspects: INamed, INamedRequired
-        /// </summary>
-        public String? Name { get; set; }
+        #region ObjectBounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IReferenceGroupGetter.Name => this.Name;
+        private ObjectBounds? _ObjectBounds;
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        public ObjectBounds? ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IPackInGetter.ObjectBounds => this.ObjectBounds;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region Reference
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _Reference = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> Reference
-        {
-            get => _Reference;
-            set => _Reference.SetTo(value);
-        }
+        #region Filter
+        public String? Filter { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IReferenceGroupGetter.Reference => this.Reference;
+        String? IPackInGetter.Filter => this.Filter;
         #endregion
-        #region PNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PNAM;
-        public MemorySlice<Byte>? PNAM
+        #region Cell
+        private readonly IFormLinkNullable<ICellGetter> _Cell = new FormLinkNullable<ICellGetter>();
+        public IFormLinkNullable<ICellGetter> Cell
         {
-            get => this._PNAM;
-            set => this._PNAM = value;
+            get => _Cell;
+            set => _Cell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IReferenceGroupGetter.PNAM => this.PNAM;
+        IFormLinkNullableGetter<ICellGetter> IPackInGetter.Cell => this.Cell;
+        #endregion
+        #region Version
+        public UInt32? Version { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IPackInGetter.Version => this.Version;
         #endregion
 
         #region To String
@@ -101,7 +100,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ReferenceGroupMixIn.Print(
+            PackInMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -119,9 +118,10 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Name = initialValue;
-                this.Reference = initialValue;
-                this.PNAM = initialValue;
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Filter = initialValue;
+                this.Cell = initialValue;
+                this.Version = initialValue;
             }
 
             public Mask(
@@ -131,9 +131,10 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Name,
-                TItem Reference,
-                TItem PNAM)
+                TItem ObjectBounds,
+                TItem Filter,
+                TItem Cell,
+                TItem Version)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -142,9 +143,10 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.Name = Name;
-                this.Reference = Reference;
-                this.PNAM = PNAM;
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Filter = Filter;
+                this.Cell = Cell;
+                this.Version = Version;
             }
 
             #pragma warning disable CS8618
@@ -156,9 +158,10 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Name;
-            public TItem Reference;
-            public TItem PNAM;
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Filter;
+            public TItem Cell;
+            public TItem Version;
             #endregion
 
             #region Equals
@@ -172,17 +175,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Reference, rhs.Reference)) return false;
-                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Filter, rhs.Filter)) return false;
+                if (!object.Equals(this.Cell, rhs.Cell)) return false;
+                if (!object.Equals(this.Version, rhs.Version)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Name);
-                hash.Add(this.Reference);
-                hash.Add(this.PNAM);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Filter);
+                hash.Add(this.Cell);
+                hash.Add(this.Version);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -193,9 +198,14 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Name)) return false;
-                if (!eval(this.Reference)) return false;
-                if (!eval(this.PNAM)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Filter)) return false;
+                if (!eval(this.Cell)) return false;
+                if (!eval(this.Version)) return false;
                 return true;
             }
             #endregion
@@ -204,9 +214,14 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Name)) return true;
-                if (eval(this.Reference)) return true;
-                if (eval(this.PNAM)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Filter)) return true;
+                if (eval(this.Cell)) return true;
+                if (eval(this.Version)) return true;
                 return false;
             }
             #endregion
@@ -214,7 +229,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ReferenceGroup.Mask<R>();
+                var ret = new PackIn.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -222,38 +237,43 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Name = eval(this.Name);
-                obj.Reference = eval(this.Reference);
-                obj.PNAM = eval(this.PNAM);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Filter = eval(this.Filter);
+                obj.Cell = eval(this.Cell);
+                obj.Version = eval(this.Version);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ReferenceGroup.Mask<bool>? printMask = null)
+            public string Print(PackIn.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ReferenceGroup.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PackIn.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ReferenceGroup.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PackIn.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Name ?? true)
+                    if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        sb.AppendItem(Name, "Name");
+                        ObjectBounds?.Print(sb);
                     }
-                    if (printMask?.Reference ?? true)
+                    if (printMask?.Filter ?? true)
                     {
-                        sb.AppendItem(Reference, "Reference");
+                        sb.AppendItem(Filter, "Filter");
                     }
-                    if (printMask?.PNAM ?? true)
+                    if (printMask?.Cell ?? true)
                     {
-                        sb.AppendItem(PNAM, "PNAM");
+                        sb.AppendItem(Cell, "Cell");
+                    }
+                    if (printMask?.Version ?? true)
+                    {
+                        sb.AppendItem(Version, "Version");
                     }
                 }
             }
@@ -266,23 +286,26 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Name;
-            public Exception? Reference;
-            public Exception? PNAM;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Filter;
+            public Exception? Cell;
+            public Exception? Version;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ReferenceGroup_FieldIndex enu = (ReferenceGroup_FieldIndex)index;
+                PackIn_FieldIndex enu = (PackIn_FieldIndex)index;
                 switch (enu)
                 {
-                    case ReferenceGroup_FieldIndex.Name:
-                        return Name;
-                    case ReferenceGroup_FieldIndex.Reference:
-                        return Reference;
-                    case ReferenceGroup_FieldIndex.PNAM:
-                        return PNAM;
+                    case PackIn_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case PackIn_FieldIndex.Filter:
+                        return Filter;
+                    case PackIn_FieldIndex.Cell:
+                        return Cell;
+                    case PackIn_FieldIndex.Version:
+                        return Version;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -290,17 +313,20 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                ReferenceGroup_FieldIndex enu = (ReferenceGroup_FieldIndex)index;
+                PackIn_FieldIndex enu = (PackIn_FieldIndex)index;
                 switch (enu)
                 {
-                    case ReferenceGroup_FieldIndex.Name:
-                        this.Name = ex;
+                    case PackIn_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case ReferenceGroup_FieldIndex.Reference:
-                        this.Reference = ex;
+                    case PackIn_FieldIndex.Filter:
+                        this.Filter = ex;
                         break;
-                    case ReferenceGroup_FieldIndex.PNAM:
-                        this.PNAM = ex;
+                    case PackIn_FieldIndex.Cell:
+                        this.Cell = ex;
+                        break;
+                    case PackIn_FieldIndex.Version:
+                        this.Version = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -310,17 +336,20 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                ReferenceGroup_FieldIndex enu = (ReferenceGroup_FieldIndex)index;
+                PackIn_FieldIndex enu = (PackIn_FieldIndex)index;
                 switch (enu)
                 {
-                    case ReferenceGroup_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
+                    case PackIn_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case ReferenceGroup_FieldIndex.Reference:
-                        this.Reference = (Exception?)obj;
+                    case PackIn_FieldIndex.Filter:
+                        this.Filter = (Exception?)obj;
                         break;
-                    case ReferenceGroup_FieldIndex.PNAM:
-                        this.PNAM = (Exception?)obj;
+                    case PackIn_FieldIndex.Cell:
+                        this.Cell = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.Version:
+                        this.Version = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -331,9 +360,10 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Name != null) return true;
-                if (Reference != null) return true;
-                if (PNAM != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Filter != null) return true;
+                if (Cell != null) return true;
+                if (Version != null) return true;
                 return false;
             }
             #endregion
@@ -360,14 +390,15 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
                 {
-                    sb.AppendItem(Name, "Name");
+                    sb.AppendItem(Filter, "Filter");
                 }
                 {
-                    sb.AppendItem(Reference, "Reference");
+                    sb.AppendItem(Cell, "Cell");
                 }
                 {
-                    sb.AppendItem(PNAM, "PNAM");
+                    sb.AppendItem(Version, "Version");
                 }
             }
             #endregion
@@ -377,9 +408,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Name = this.Name.Combine(rhs.Name);
-                ret.Reference = this.Reference.Combine(rhs.Reference);
-                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Filter = this.Filter.Combine(rhs.Filter);
+                ret.Cell = this.Cell.Combine(rhs.Cell);
+                ret.Version = this.Version.Combine(rhs.Version);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -402,9 +434,10 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool Name;
-            public bool Reference;
-            public bool PNAM;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool Filter;
+            public bool Cell;
+            public bool Version;
             #endregion
 
             #region Ctors
@@ -413,9 +446,9 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Name = defaultOn;
-                this.Reference = defaultOn;
-                this.PNAM = defaultOn;
+                this.Filter = defaultOn;
+                this.Cell = defaultOn;
+                this.Version = defaultOn;
             }
 
             #endregion
@@ -423,9 +456,10 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Name, null));
-                ret.Add((Reference, null));
-                ret.Add((PNAM, null));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Filter, null));
+                ret.Add((Cell, null));
+                ret.Add((Version, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -437,16 +471,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ReferenceGroup_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ReferenceGroupCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ReferenceGroupSetterCommon.Instance.RemapLinks(this, mapping);
-        public ReferenceGroup(FormKey formKey)
+        public static readonly RecordType GrupRecordType = PackIn_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackInCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackInSetterCommon.Instance.RemapLinks(this, mapping);
+        public PackIn(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private ReferenceGroup(
+        private PackIn(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -455,7 +489,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal ReferenceGroup(
+        internal PackIn(
             FormKey formKey,
             ushort formVersion)
         {
@@ -464,12 +498,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public ReferenceGroup(IFallout4Mod mod)
+        public PackIn(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ReferenceGroup(IFallout4Mod mod, string editorID)
+        public PackIn(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -477,11 +511,16 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ReferenceGroup>.ToString(this);
+            return MajorRecordPrinter<PackIn>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IReferenceGroup);
+        protected override Type LinkType => typeof(IPackIn);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -489,16 +528,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IReferenceGroupGetter rhs) return false;
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IPackInGetter rhs) return false;
+            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IReferenceGroupGetter? obj)
+        public bool Equals(IPackInGetter? obj)
         {
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PackInCommon)((IPackInGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -506,23 +545,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ReferenceGroupBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PackInBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ReferenceGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PackInBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static ReferenceGroup CreateFromBinary(
+        public new static PackIn CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new ReferenceGroup();
-            ((ReferenceGroupSetterCommon)((IReferenceGroupGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PackIn();
+            ((PackInSetterCommon)((IPackInGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -533,7 +572,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ReferenceGroup item,
+            out PackIn item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -548,102 +587,110 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ReferenceGroupSetterCommon)((IReferenceGroupGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PackInSetterCommon)((IPackInGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ReferenceGroup GetNew()
+        internal static new PackIn GetNew()
         {
-            return new ReferenceGroup();
+            return new PackIn();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IReferenceGroup :
+    public partial interface IPackIn :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
-        ILoquiObjectSetter<IReferenceGroupInternal>,
-        INamed,
-        INamedRequired,
-        IReferenceGroupGetter
+        ILoquiObjectSetter<IPackInInternal>,
+        IObjectBoundedOptional,
+        IPackInGetter
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: IObjectBoundedOptional
         /// </summary>
-        new String? Name { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> Reference { get; set; }
-        new MemorySlice<Byte>? PNAM { get; set; }
+        new ObjectBounds? ObjectBounds { get; set; }
+        new String? Filter { get; set; }
+        new IFormLinkNullable<ICellGetter> Cell { get; set; }
+        new UInt32? Version { get; set; }
+        #region Mutagen
+        new PackIn.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
-    public partial interface IReferenceGroupInternal :
+    public partial interface IPackInInternal :
         IFallout4MajorRecordInternal,
-        IReferenceGroup,
-        IReferenceGroupGetter
+        IPackIn,
+        IPackInGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.RFGP)]
-    public partial interface IReferenceGroupGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.PKIN)]
+    public partial interface IPackInGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IReferenceGroupGetter>,
-        IMapsToGetter<IReferenceGroupGetter>,
-        INamedGetter,
-        INamedRequiredGetter
+        ILoquiObject<IPackInGetter>,
+        IMapsToGetter<IPackInGetter>,
+        IObjectBoundedOptionalGetter
     {
-        static new ILoquiRegistration StaticRegistration => ReferenceGroup_Registration.Instance;
-        #region Name
+        static new ILoquiRegistration StaticRegistration => PackIn_Registration.Instance;
+        #region ObjectBounds
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: IObjectBoundedOptionalGetter
         /// </summary>
-        String? Name { get; }
+        IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
-        IFormLinkNullableGetter<ILinkedReferenceGetter> Reference { get; }
-        ReadOnlyMemorySlice<Byte>? PNAM { get; }
+        String? Filter { get; }
+        IFormLinkNullableGetter<ICellGetter> Cell { get; }
+        UInt32? Version { get; }
+
+        #region Mutagen
+        PackIn.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ReferenceGroupMixIn
+    public static partial class PackInMixIn
     {
-        public static void Clear(this IReferenceGroupInternal item)
+        public static void Clear(this IPackInInternal item)
         {
-            ((ReferenceGroupSetterCommon)((IReferenceGroupGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PackInSetterCommon)((IPackInGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ReferenceGroup.Mask<bool> GetEqualsMask(
-            this IReferenceGroupGetter item,
-            IReferenceGroupGetter rhs,
+        public static PackIn.Mask<bool> GetEqualsMask(
+            this IPackInGetter item,
+            IPackInGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PackInCommon)((IPackInGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IReferenceGroupGetter item,
+            this IPackInGetter item,
             string? name = null,
-            ReferenceGroup.Mask<bool>? printMask = null)
+            PackIn.Mask<bool>? printMask = null)
         {
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).Print(
+            return ((PackInCommon)((IPackInGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IReferenceGroupGetter item,
+            this IPackInGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ReferenceGroup.Mask<bool>? printMask = null)
+            PackIn.Mask<bool>? printMask = null)
         {
-            ((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).Print(
+            ((PackInCommon)((IPackInGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -651,39 +698,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IReferenceGroupGetter item,
-            IReferenceGroupGetter rhs,
-            ReferenceGroup.TranslationMask? equalsMask = null)
+            this IPackInGetter item,
+            IPackInGetter rhs,
+            PackIn.TranslationMask? equalsMask = null)
         {
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).Equals(
+            return ((PackInCommon)((IPackInGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IReferenceGroupInternal lhs,
-            IReferenceGroupGetter rhs,
-            out ReferenceGroup.ErrorMask errorMask,
-            ReferenceGroup.TranslationMask? copyMask = null)
+            this IPackInInternal lhs,
+            IPackInGetter rhs,
+            out PackIn.ErrorMask errorMask,
+            PackIn.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ReferenceGroupSetterTranslationCommon)((IReferenceGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PackInSetterTranslationCommon)((IPackInGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ReferenceGroup.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PackIn.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IReferenceGroupInternal lhs,
-            IReferenceGroupGetter rhs,
+            this IPackInInternal lhs,
+            IPackInGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ReferenceGroupSetterTranslationCommon)((IReferenceGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PackInSetterTranslationCommon)((IPackInGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -691,44 +738,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static ReferenceGroup DeepCopy(
-            this IReferenceGroupGetter item,
-            ReferenceGroup.TranslationMask? copyMask = null)
+        public static PackIn DeepCopy(
+            this IPackInGetter item,
+            PackIn.TranslationMask? copyMask = null)
         {
-            return ((ReferenceGroupSetterTranslationCommon)((IReferenceGroupGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackInSetterTranslationCommon)((IPackInGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ReferenceGroup DeepCopy(
-            this IReferenceGroupGetter item,
-            out ReferenceGroup.ErrorMask errorMask,
-            ReferenceGroup.TranslationMask? copyMask = null)
+        public static PackIn DeepCopy(
+            this IPackInGetter item,
+            out PackIn.ErrorMask errorMask,
+            PackIn.TranslationMask? copyMask = null)
         {
-            return ((ReferenceGroupSetterTranslationCommon)((IReferenceGroupGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackInSetterTranslationCommon)((IPackInGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ReferenceGroup DeepCopy(
-            this IReferenceGroupGetter item,
+        public static PackIn DeepCopy(
+            this IPackInGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ReferenceGroupSetterTranslationCommon)((IReferenceGroupGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackInSetterTranslationCommon)((IPackInGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ReferenceGroup Duplicate(
-            this IReferenceGroupGetter item,
+        public static PackIn Duplicate(
+            this IPackInGetter item,
             FormKey formKey,
-            ReferenceGroup.TranslationMask? copyMask = null)
+            PackIn.TranslationMask? copyMask = null)
         {
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).Duplicate(
+            return ((PackInCommon)((IPackInGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -738,11 +785,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IReferenceGroupInternal item,
+            this IPackInInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((ReferenceGroupSetterCommon)((IReferenceGroupGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PackInSetterCommon)((IPackInGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -758,7 +805,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum ReferenceGroup_FieldIndex
+    internal enum PackIn_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -766,47 +813,48 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Reference = 7,
-        PNAM = 8,
+        ObjectBounds = 6,
+        Filter = 7,
+        Cell = 8,
+        Version = 9,
     }
     #endregion
 
     #region Registration
-    internal partial class ReferenceGroup_Registration : ILoquiRegistration
+    internal partial class PackIn_Registration : ILoquiRegistration
     {
-        public static readonly ReferenceGroup_Registration Instance = new ReferenceGroup_Registration();
+        public static readonly PackIn_Registration Instance = new PackIn_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 483,
+            msgID: 651,
             version: 0);
 
-        public const string GUID = "4deaf871-34fe-481e-8fb7-0098b1b3fcbd";
+        public const string GUID = "0129a653-2320-4a50-90f2-567820b86377";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
-        public static readonly Type MaskType = typeof(ReferenceGroup.Mask<>);
+        public static readonly Type MaskType = typeof(PackIn.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ReferenceGroup.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PackIn.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ReferenceGroup);
+        public static readonly Type ClassType = typeof(PackIn);
 
-        public static readonly Type GetterType = typeof(IReferenceGroupGetter);
+        public static readonly Type GetterType = typeof(IPackInGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IReferenceGroup);
+        public static readonly Type SetterType = typeof(IPackIn);
 
-        public static readonly Type? InternalSetterType = typeof(IReferenceGroupInternal);
+        public static readonly Type? InternalSetterType = typeof(IPackInInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.ReferenceGroup";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.PackIn";
 
-        public const string Name = "ReferenceGroup";
+        public const string Name = "PackIn";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -814,19 +862,20 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.RFGP;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PKIN;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.RFGP);
+            var triggers = RecordCollection.Factory(RecordTypes.PKIN);
             var all = RecordCollection.Factory(
-                RecordTypes.RFGP,
-                RecordTypes.NNAM,
-                RecordTypes.RNAM,
-                RecordTypes.PNAM);
+                RecordTypes.PKIN,
+                RecordTypes.OBND,
+                RecordTypes.FLTR,
+                RecordTypes.CNAM,
+                RecordTypes.VNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ReferenceGroupBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PackInBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -859,52 +908,53 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class ReferenceGroupSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class PackInSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly ReferenceGroupSetterCommon Instance = new ReferenceGroupSetterCommon();
+        public new static readonly PackInSetterCommon Instance = new PackInSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IReferenceGroupInternal item)
+        public void Clear(IPackInInternal item)
         {
             ClearPartial();
-            item.Name = default;
-            item.Reference.Clear();
-            item.PNAM = default;
+            item.ObjectBounds = null;
+            item.Filter = default;
+            item.Cell.Clear();
+            item.Version = default;
             base.Clear(item);
         }
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IReferenceGroupInternal)item);
+            Clear(item: (IPackInInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IReferenceGroupInternal)item);
+            Clear(item: (IPackInInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IReferenceGroup obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPackIn obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Reference.Relink(mapping);
+            obj.Cell.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IReferenceGroupInternal item,
+            IPackInInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<IReferenceGroupInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IPackInInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ReferenceGroupBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ReferenceGroupBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: PackInBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PackInBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -913,7 +963,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ReferenceGroup)item,
+                item: (PackIn)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -924,7 +974,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ReferenceGroup)item,
+                item: (PackIn)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -932,17 +982,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ReferenceGroupCommon : Fallout4MajorRecordCommon
+    internal partial class PackInCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly ReferenceGroupCommon Instance = new ReferenceGroupCommon();
+        public new static readonly PackInCommon Instance = new PackInCommon();
 
-        public ReferenceGroup.Mask<bool> GetEqualsMask(
-            IReferenceGroupGetter item,
-            IReferenceGroupGetter rhs,
+        public PackIn.Mask<bool> GetEqualsMask(
+            IPackInGetter item,
+            IPackInGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ReferenceGroup.Mask<bool>(false);
-            ((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PackIn.Mask<bool>(false);
+            ((PackInCommon)((IPackInGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -951,22 +1001,27 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IReferenceGroupGetter item,
-            IReferenceGroupGetter rhs,
-            ReferenceGroup.Mask<bool> ret,
+            IPackInGetter item,
+            IPackInGetter rhs,
+            PackIn.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Reference = item.Reference.Equals(rhs.Reference);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
+                item.ObjectBounds,
+                rhs.ObjectBounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Filter = string.Equals(item.Filter, rhs.Filter);
+            ret.Cell = item.Cell.Equals(rhs.Cell);
+            ret.Version = item.Version == rhs.Version;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IReferenceGroupGetter item,
+            IPackInGetter item,
             string? name = null,
-            ReferenceGroup.Mask<bool>? printMask = null)
+            PackIn.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -978,18 +1033,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IReferenceGroupGetter item,
+            IPackInGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ReferenceGroup.Mask<bool>? printMask = null)
+            PackIn.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ReferenceGroup =>");
+                sb.AppendLine($"PackIn =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ReferenceGroup) =>");
+                sb.AppendLine($"{name} (PackIn) =>");
             }
             using (sb.Brace())
             {
@@ -1001,63 +1056,68 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IReferenceGroupGetter item,
+            IPackInGetter item,
             StructuredStringBuilder sb,
-            ReferenceGroup.Mask<bool>? printMask = null)
+            PackIn.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.Name ?? true)
-                && item.Name is {} NameItem)
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds is {} ObjectBoundsItem)
             {
-                sb.AppendItem(NameItem, "Name");
+                ObjectBoundsItem?.Print(sb, "ObjectBounds");
             }
-            if (printMask?.Reference ?? true)
+            if ((printMask?.Filter ?? true)
+                && item.Filter is {} FilterItem)
             {
-                sb.AppendItem(item.Reference.FormKeyNullable, "Reference");
+                sb.AppendItem(FilterItem, "Filter");
             }
-            if ((printMask?.PNAM ?? true)
-                && item.PNAM is {} PNAMItem)
+            if (printMask?.Cell ?? true)
             {
-                sb.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
+                sb.AppendItem(item.Cell.FormKeyNullable, "Cell");
+            }
+            if ((printMask?.Version ?? true)
+                && item.Version is {} VersionItem)
+            {
+                sb.AppendItem(VersionItem, "Version");
             }
         }
         
-        public static ReferenceGroup_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static PackIn_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ReferenceGroup_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new PackIn_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ReferenceGroup_FieldIndex)((int)index);
+                    return (PackIn_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1065,23 +1125,31 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            IReferenceGroupGetter? lhs,
-            IReferenceGroupGetter? rhs,
+            IPackInGetter? lhs,
+            IPackInGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.Name) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectBounds) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)PackIn_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.Reference) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PackIn_FieldIndex.Filter) ?? true))
             {
-                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+                if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.PNAM) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PackIn_FieldIndex.Cell) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!lhs.Cell.Equals(rhs.Cell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackIn_FieldIndex.Version) ?? true))
+            {
+                if (lhs.Version != rhs.Version) return false;
             }
             return true;
         }
@@ -1092,8 +1160,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IReferenceGroupGetter?)lhs,
-                rhs: rhs as IReferenceGroupGetter,
+                lhs: (IPackInGetter?)lhs,
+                rhs: rhs as IPackInGetter,
                 crystal: crystal);
         }
         
@@ -1103,22 +1171,26 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IReferenceGroupGetter?)lhs,
-                rhs: rhs as IReferenceGroupGetter,
+                lhs: (IPackInGetter?)lhs,
+                rhs: rhs as IPackInGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IReferenceGroupGetter item)
+        public virtual int GetHashCode(IPackInGetter item)
         {
             var hash = new HashCode();
-            if (item.Name is {} Nameitem)
+            if (item.ObjectBounds is {} ObjectBoundsitem)
             {
-                hash.Add(Nameitem);
+                hash.Add(ObjectBoundsitem);
             }
-            hash.Add(item.Reference);
-            if (item.PNAM is {} PNAMItem)
+            if (item.Filter is {} Filteritem)
             {
-                hash.Add(PNAMItem);
+                hash.Add(Filteritem);
+            }
+            hash.Add(item.Cell);
+            if (item.Version is {} Versionitem)
+            {
+                hash.Add(Versionitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1126,12 +1198,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IReferenceGroupGetter)item);
+            return GetHashCode(item: (IPackInGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IReferenceGroupGetter)item);
+            return GetHashCode(item: (IPackInGetter)item);
         }
         
         #endregion
@@ -1139,30 +1211,30 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return ReferenceGroup.GetNew();
+            return PackIn.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IReferenceGroupGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackInGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.Reference, out var ReferenceInfo))
+            if (FormLinkInformation.TryFactory(obj.Cell, out var CellInfo))
             {
-                yield return ReferenceInfo;
+                yield return CellInfo;
             }
             yield break;
         }
         
         #region Duplicate
-        public ReferenceGroup Duplicate(
-            IReferenceGroupGetter item,
+        public PackIn Duplicate(
+            IPackInGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ReferenceGroup(formKey);
+            var newRec = new PackIn(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1173,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IReferenceGroupGetter)item,
+                item: (IPackInGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1184,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IReferenceGroupGetter)item,
+                item: (IPackInGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1194,14 +1266,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ReferenceGroupSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class PackInSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly ReferenceGroupSetterTranslationCommon Instance = new ReferenceGroupSetterTranslationCommon();
+        public new static readonly PackInSetterTranslationCommon Instance = new PackInSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IReferenceGroupInternal item,
-            IReferenceGroupGetter rhs,
+            IPackInInternal item,
+            IPackInGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1215,8 +1287,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            IReferenceGroup item,
-            IReferenceGroupGetter rhs,
+            IPackIn item,
+            IPackInGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1227,24 +1299,43 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectBounds) ?? true))
             {
-                item.Name = rhs.Name;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.Reference) ?? true))
-            {
-                item.Reference.SetTo(rhs.Reference.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.PNAM) ?? true))
-            {
-                if(rhs.PNAM is {} PNAMrhs)
+                errorMask?.PushIndex((int)PackIn_FieldIndex.ObjectBounds);
+                try
                 {
-                    item.PNAM = PNAMrhs.ToArray();
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    {
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectBounds));
+                    }
+                    else
+                    {
+                        item.ObjectBounds = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.PNAM = default;
+                    errorMask.ReportException(ex);
                 }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Filter) ?? true))
+            {
+                item.Filter = rhs.Filter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Cell) ?? true))
+            {
+                item.Cell.SetTo(rhs.Cell.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Version) ?? true))
+            {
+                item.Version = rhs.Version;
             }
         }
         
@@ -1256,8 +1347,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IReferenceGroupInternal)item,
-                rhs: (IReferenceGroupGetter)rhs,
+                item: (IPackInInternal)item,
+                rhs: (IPackInGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1271,8 +1362,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IReferenceGroup)item,
-                rhs: (IReferenceGroupGetter)rhs,
+                item: (IPackIn)item,
+                rhs: (IPackInGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1286,8 +1377,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IReferenceGroupInternal)item,
-                rhs: (IReferenceGroupGetter)rhs,
+                item: (IPackInInternal)item,
+                rhs: (IPackInGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1301,8 +1392,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IReferenceGroup)item,
-                rhs: (IReferenceGroupGetter)rhs,
+                item: (IPackIn)item,
+                rhs: (IPackInGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1310,12 +1401,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public ReferenceGroup DeepCopy(
-            IReferenceGroupGetter item,
-            ReferenceGroup.TranslationMask? copyMask = null)
+        public PackIn DeepCopy(
+            IPackInGetter item,
+            PackIn.TranslationMask? copyMask = null)
         {
-            ReferenceGroup ret = (ReferenceGroup)((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).GetNew();
-            ((ReferenceGroupSetterTranslationCommon)((IReferenceGroupGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackIn ret = (PackIn)((PackInCommon)((IPackInGetter)item).CommonInstance()!).GetNew();
+            ((PackInSetterTranslationCommon)((IPackInGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1324,30 +1415,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public ReferenceGroup DeepCopy(
-            IReferenceGroupGetter item,
-            out ReferenceGroup.ErrorMask errorMask,
-            ReferenceGroup.TranslationMask? copyMask = null)
+        public PackIn DeepCopy(
+            IPackInGetter item,
+            out PackIn.ErrorMask errorMask,
+            PackIn.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ReferenceGroup ret = (ReferenceGroup)((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).GetNew();
-            ((ReferenceGroupSetterTranslationCommon)((IReferenceGroupGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackIn ret = (PackIn)((PackInCommon)((IPackInGetter)item).CommonInstance()!).GetNew();
+            ((PackInSetterTranslationCommon)((IPackInGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ReferenceGroup.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PackIn.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ReferenceGroup DeepCopy(
-            IReferenceGroupGetter item,
+        public PackIn DeepCopy(
+            IPackInGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ReferenceGroup ret = (ReferenceGroup)((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).GetNew();
-            ((ReferenceGroupSetterTranslationCommon)((IReferenceGroupGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackIn ret = (PackIn)((PackInCommon)((IPackInGetter)item).CommonInstance()!).GetNew();
+            ((PackInSetterTranslationCommon)((IPackInGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1363,21 +1454,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ReferenceGroup
+    public partial class PackIn
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ReferenceGroup_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ReferenceGroup_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PackIn_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackIn_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ReferenceGroupCommon.Instance;
+        protected override object CommonInstance() => PackInCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ReferenceGroupSetterCommon.Instance;
+            return PackInSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ReferenceGroupSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PackInSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1388,14 +1479,14 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ReferenceGroupBinaryWriteTranslation :
+    public partial class PackInBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ReferenceGroupBinaryWriteTranslation Instance = new ReferenceGroupBinaryWriteTranslation();
+        public new readonly static PackInBinaryWriteTranslation Instance = new PackInBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            IReferenceGroupGetter item,
+            IPackInGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
@@ -1403,29 +1494,36 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Name,
-                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                item: item.Filter,
+                header: translationParams.ConvertToCustom(RecordTypes.FLTR),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Reference,
-                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.Cell,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.PNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+                item: item.Version,
+                header: translationParams.ConvertToCustom(RecordTypes.VNAM));
         }
 
         public void Write(
             MutagenWriter writer,
-            IReferenceGroupGetter item,
+            IPackInGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RFGP)))
+                record: translationParams.ConvertToCustom(RecordTypes.PKIN)))
             {
                 try
                 {
@@ -1452,7 +1550,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IReferenceGroupGetter)item,
+                item: (IPackInGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1463,7 +1561,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IReferenceGroupGetter)item,
+                item: (IPackInGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1474,20 +1572,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IReferenceGroupGetter)item,
+                item: (IPackInGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ReferenceGroupBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class PackInBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ReferenceGroupBinaryCreateTranslation Instance = new ReferenceGroupBinaryCreateTranslation();
+        public new readonly static PackInBinaryCreateTranslation Instance = new PackInBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.RFGP;
+        public override RecordType RecordType => RecordTypes.PKIN;
         public static void FillBinaryStructs(
-            IReferenceGroupInternal item,
+            IPackInInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1496,7 +1594,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IReferenceGroupInternal item,
+            IPackInInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1507,25 +1605,30 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.NNAM:
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout4.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)PackIn_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FLTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = StringBinaryTranslation.Instance.Parse(
+                    item.Filter = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ReferenceGroup_FieldIndex.Name;
+                    return (int)PackIn_FieldIndex.Filter;
                 }
-                case RecordTypeInts.RNAM:
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)ReferenceGroup_FieldIndex.Reference;
+                    item.Cell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PackIn_FieldIndex.Cell;
                 }
-                case RecordTypeInts.PNAM:
+                case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ReferenceGroup_FieldIndex.PNAM;
+                    item.Version = frame.ReadUInt32();
+                    return (int)PackIn_FieldIndex.Version;
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1544,7 +1647,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ReferenceGroupBinaryTranslationMixIn
+    public static class PackInBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1553,53 +1656,54 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class ReferenceGroupBinaryOverlay :
+    internal partial class PackInBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        IReferenceGroupGetter
+        IPackInGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ReferenceGroup_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ReferenceGroup_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PackIn_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackIn_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ReferenceGroupCommon.Instance;
+        protected override object CommonInstance() => PackInCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ReferenceGroupSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PackInSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ReferenceGroupCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackInCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ReferenceGroupBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PackInBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ReferenceGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PackInBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IReferenceGroup);
+        protected override Type LinkType => typeof(IPackIn);
 
+        public PackIn.MajorFlag MajorFlags => (PackIn.MajorFlag)this.MajorRecordFlagsRaw;
 
-        #region Name
-        private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
         #endregion
+        #region Filter
+        private int? _FilterLocation;
+        public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region Reference
-        private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => _ReferenceLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        #region Cell
+        private int? _CellLocation;
+        public IFormLinkNullableGetter<ICellGetter> Cell => _CellLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
         #endregion
-        #region PNAM
-        private int? _PNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Version
+        private int? _VersionLocation;
+        public UInt32? Version => _VersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1607,7 +1711,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
 
         partial void CustomCtor();
-        protected ReferenceGroupBinaryOverlay(
+        protected PackInBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1617,13 +1721,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IReferenceGroupGetter ReferenceGroupFactory(
+        public static IPackInGetter PackInFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new ReferenceGroupBinaryOverlay(
+            var ret = new PackInBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
@@ -1644,12 +1748,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IReferenceGroupGetter ReferenceGroupFactory(
+        public static IPackInGetter PackInFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return ReferenceGroupFactory(
+            return PackInFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1667,20 +1771,25 @@ namespace Mutagen.Bethesda.Fallout4
             type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.NNAM:
+                case RecordTypeInts.OBND:
                 {
-                    _NameLocation = (stream.Position - offset);
-                    return (int)ReferenceGroup_FieldIndex.Name;
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PackIn_FieldIndex.ObjectBounds;
                 }
-                case RecordTypeInts.RNAM:
+                case RecordTypeInts.FLTR:
                 {
-                    _ReferenceLocation = (stream.Position - offset);
-                    return (int)ReferenceGroup_FieldIndex.Reference;
+                    _FilterLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.Filter;
                 }
-                case RecordTypeInts.PNAM:
+                case RecordTypeInts.CNAM:
                 {
-                    _PNAMLocation = (stream.Position - offset);
-                    return (int)ReferenceGroup_FieldIndex.PNAM;
+                    _CellLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.Cell;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    _VersionLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.Version;
                 }
                 default:
                     return base.FillRecordType(
@@ -1698,7 +1807,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ReferenceGroupMixIn.Print(
+            PackInMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1708,7 +1817,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ReferenceGroup>.ToString(this);
+            return MajorRecordPrinter<PackIn>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1718,16 +1827,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IReferenceGroupGetter rhs) return false;
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IPackInGetter rhs) return false;
+            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IReferenceGroupGetter? obj)
+        public bool Equals(IPackInGetter? obj)
         {
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PackInCommon)((IPackInGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

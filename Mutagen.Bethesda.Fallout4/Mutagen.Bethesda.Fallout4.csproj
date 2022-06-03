@@ -251,6 +251,9 @@
     <Compile Include="Records\Major Records\CollisionLayer.cs">
       <DependentUpon>CollisionLayer.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ColorRecord.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\CombatStyle.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
     </Compile>
@@ -515,6 +518,9 @@
     <Compile Include="Records\Major Records\PackageScriptFragments.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PackIn.cs">
+      <DependentUpon>PackIn.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Part.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
@@ -634,6 +640,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Relationship.cs">
       <DependentUpon>Relationship.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ReverbParameters.cs">
+      <DependentUpon>ReverbParameters.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Scene.cs">
       <DependentUpon>Scene.xml</DependentUpon>
@@ -1165,9 +1174,6 @@
     </Compile>
     <Compile Include="Records\Major Records\SoundOutputModel_Generated.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MiscItemComponent_Generated.cs">
-      <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\WeatherType_Generated.cs">
       <DependentUpon>WeatherType.xml</DependentUpon>
@@ -2320,6 +2326,27 @@
     </Compile>
     <Compile Include="Records\Major Records\DynamicAttentuationValues_Generated.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AColorRecordData_Generated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ColorData_Generated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ColorRemappingIndex_Generated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackIn_Generated.cs">
+      <DependentUpon>PackIn.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ConstructibleObjectComponent_Generated.cs">
+      <DependentUpon>ConstructibleObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MiscItemComponent_Generated.cs">
+      <DependentUpon>MiscItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ConstructibleCreatedObjectCount_Generated.cs">
+      <DependentUpon>ConstructibleObject.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

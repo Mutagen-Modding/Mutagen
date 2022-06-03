@@ -53,6 +53,57 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region ConeOfFireMinAngle
+        public Single ConeOfFireMinAngle { get; set; } = default;
+        #endregion
+        #region ConeOfFireMaxAngle
+        public Single ConeOfFireMaxAngle { get; set; } = default;
+        #endregion
+        #region ConeOfFireIncreasePerShot
+        public Single ConeOfFireIncreasePerShot { get; set; } = default;
+        #endregion
+        #region ConeOfFireIncreasePerSec
+        public Single ConeOfFireIncreasePerSec { get; set; } = default;
+        #endregion
+        #region ConeOfFireDecreaseDelayMilliseconds
+        public UInt32 ConeOfFireDecreaseDelayMilliseconds { get; set; } = default;
+        #endregion
+        #region ConeOfFireSneakMult
+        public Single ConeOfFireSneakMult { get; set; } = default;
+        #endregion
+        #region RecoilDiminishSpringForce
+        public Single RecoilDiminishSpringForce { get; set; } = default;
+        #endregion
+        #region RecoilDiminishSightsMult
+        public Single RecoilDiminishSightsMult { get; set; } = default;
+        #endregion
+        #region RecoilMaxPerShot
+        public Single RecoilMaxPerShot { get; set; } = default;
+        #endregion
+        #region RecoilMinPerShot
+        public Single RecoilMinPerShot { get; set; } = default;
+        #endregion
+        #region RecoilHipMult
+        public Single RecoilHipMult { get; set; } = default;
+        #endregion
+        #region RunawayRecoilShots
+        public UInt32 RunawayRecoilShots { get; set; } = default;
+        #endregion
+        #region RecoilArc
+        public Single RecoilArc { get; set; } = default;
+        #endregion
+        #region RecoilArcRotate
+        public Single RecoilArcRotate { get; set; } = default;
+        #endregion
+        #region ConeOfFireIronSightsMult
+        public Single ConeOfFireIronSightsMult { get; set; } = default;
+        #endregion
+        #region BaseStability
+        public Single BaseStability { get; set; } = default;
+        #endregion
+        #region DNAMDataTypeState
+        public AimModel.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +129,23 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ConeOfFireMinAngle = initialValue;
+                this.ConeOfFireMaxAngle = initialValue;
+                this.ConeOfFireIncreasePerShot = initialValue;
+                this.ConeOfFireIncreasePerSec = initialValue;
+                this.ConeOfFireDecreaseDelayMilliseconds = initialValue;
+                this.ConeOfFireSneakMult = initialValue;
+                this.RecoilDiminishSpringForce = initialValue;
+                this.RecoilDiminishSightsMult = initialValue;
+                this.RecoilMaxPerShot = initialValue;
+                this.RecoilMinPerShot = initialValue;
+                this.RecoilHipMult = initialValue;
+                this.RunawayRecoilShots = initialValue;
+                this.RecoilArc = initialValue;
+                this.RecoilArcRotate = initialValue;
+                this.ConeOfFireIronSightsMult = initialValue;
+                this.BaseStability = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +154,24 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ConeOfFireMinAngle,
+                TItem ConeOfFireMaxAngle,
+                TItem ConeOfFireIncreasePerShot,
+                TItem ConeOfFireIncreasePerSec,
+                TItem ConeOfFireDecreaseDelayMilliseconds,
+                TItem ConeOfFireSneakMult,
+                TItem RecoilDiminishSpringForce,
+                TItem RecoilDiminishSightsMult,
+                TItem RecoilMaxPerShot,
+                TItem RecoilMinPerShot,
+                TItem RecoilHipMult,
+                TItem RunawayRecoilShots,
+                TItem RecoilArc,
+                TItem RecoilArcRotate,
+                TItem ConeOfFireIronSightsMult,
+                TItem BaseStability,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +180,23 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ConeOfFireMinAngle = ConeOfFireMinAngle;
+                this.ConeOfFireMaxAngle = ConeOfFireMaxAngle;
+                this.ConeOfFireIncreasePerShot = ConeOfFireIncreasePerShot;
+                this.ConeOfFireIncreasePerSec = ConeOfFireIncreasePerSec;
+                this.ConeOfFireDecreaseDelayMilliseconds = ConeOfFireDecreaseDelayMilliseconds;
+                this.ConeOfFireSneakMult = ConeOfFireSneakMult;
+                this.RecoilDiminishSpringForce = RecoilDiminishSpringForce;
+                this.RecoilDiminishSightsMult = RecoilDiminishSightsMult;
+                this.RecoilMaxPerShot = RecoilMaxPerShot;
+                this.RecoilMinPerShot = RecoilMinPerShot;
+                this.RecoilHipMult = RecoilHipMult;
+                this.RunawayRecoilShots = RunawayRecoilShots;
+                this.RecoilArc = RecoilArc;
+                this.RecoilArcRotate = RecoilArcRotate;
+                this.ConeOfFireIronSightsMult = ConeOfFireIronSightsMult;
+                this.BaseStability = BaseStability;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +205,26 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem ConeOfFireMinAngle;
+            public TItem ConeOfFireMaxAngle;
+            public TItem ConeOfFireIncreasePerShot;
+            public TItem ConeOfFireIncreasePerSec;
+            public TItem ConeOfFireDecreaseDelayMilliseconds;
+            public TItem ConeOfFireSneakMult;
+            public TItem RecoilDiminishSpringForce;
+            public TItem RecoilDiminishSightsMult;
+            public TItem RecoilMaxPerShot;
+            public TItem RecoilMinPerShot;
+            public TItem RecoilHipMult;
+            public TItem RunawayRecoilShots;
+            public TItem RecoilArc;
+            public TItem RecoilArcRotate;
+            public TItem ConeOfFireIronSightsMult;
+            public TItem BaseStability;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +238,45 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ConeOfFireMinAngle, rhs.ConeOfFireMinAngle)) return false;
+                if (!object.Equals(this.ConeOfFireMaxAngle, rhs.ConeOfFireMaxAngle)) return false;
+                if (!object.Equals(this.ConeOfFireIncreasePerShot, rhs.ConeOfFireIncreasePerShot)) return false;
+                if (!object.Equals(this.ConeOfFireIncreasePerSec, rhs.ConeOfFireIncreasePerSec)) return false;
+                if (!object.Equals(this.ConeOfFireDecreaseDelayMilliseconds, rhs.ConeOfFireDecreaseDelayMilliseconds)) return false;
+                if (!object.Equals(this.ConeOfFireSneakMult, rhs.ConeOfFireSneakMult)) return false;
+                if (!object.Equals(this.RecoilDiminishSpringForce, rhs.RecoilDiminishSpringForce)) return false;
+                if (!object.Equals(this.RecoilDiminishSightsMult, rhs.RecoilDiminishSightsMult)) return false;
+                if (!object.Equals(this.RecoilMaxPerShot, rhs.RecoilMaxPerShot)) return false;
+                if (!object.Equals(this.RecoilMinPerShot, rhs.RecoilMinPerShot)) return false;
+                if (!object.Equals(this.RecoilHipMult, rhs.RecoilHipMult)) return false;
+                if (!object.Equals(this.RunawayRecoilShots, rhs.RunawayRecoilShots)) return false;
+                if (!object.Equals(this.RecoilArc, rhs.RecoilArc)) return false;
+                if (!object.Equals(this.RecoilArcRotate, rhs.RecoilArcRotate)) return false;
+                if (!object.Equals(this.ConeOfFireIronSightsMult, rhs.ConeOfFireIronSightsMult)) return false;
+                if (!object.Equals(this.BaseStability, rhs.BaseStability)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ConeOfFireMinAngle);
+                hash.Add(this.ConeOfFireMaxAngle);
+                hash.Add(this.ConeOfFireIncreasePerShot);
+                hash.Add(this.ConeOfFireIncreasePerSec);
+                hash.Add(this.ConeOfFireDecreaseDelayMilliseconds);
+                hash.Add(this.ConeOfFireSneakMult);
+                hash.Add(this.RecoilDiminishSpringForce);
+                hash.Add(this.RecoilDiminishSightsMult);
+                hash.Add(this.RecoilMaxPerShot);
+                hash.Add(this.RecoilMinPerShot);
+                hash.Add(this.RecoilHipMult);
+                hash.Add(this.RunawayRecoilShots);
+                hash.Add(this.RecoilArc);
+                hash.Add(this.RecoilArcRotate);
+                hash.Add(this.ConeOfFireIronSightsMult);
+                hash.Add(this.BaseStability);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +287,23 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.ConeOfFireMinAngle)) return false;
+                if (!eval(this.ConeOfFireMaxAngle)) return false;
+                if (!eval(this.ConeOfFireIncreasePerShot)) return false;
+                if (!eval(this.ConeOfFireIncreasePerSec)) return false;
+                if (!eval(this.ConeOfFireDecreaseDelayMilliseconds)) return false;
+                if (!eval(this.ConeOfFireSneakMult)) return false;
+                if (!eval(this.RecoilDiminishSpringForce)) return false;
+                if (!eval(this.RecoilDiminishSightsMult)) return false;
+                if (!eval(this.RecoilMaxPerShot)) return false;
+                if (!eval(this.RecoilMinPerShot)) return false;
+                if (!eval(this.RecoilHipMult)) return false;
+                if (!eval(this.RunawayRecoilShots)) return false;
+                if (!eval(this.RecoilArc)) return false;
+                if (!eval(this.RecoilArcRotate)) return false;
+                if (!eval(this.ConeOfFireIronSightsMult)) return false;
+                if (!eval(this.BaseStability)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +312,23 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.ConeOfFireMinAngle)) return true;
+                if (eval(this.ConeOfFireMaxAngle)) return true;
+                if (eval(this.ConeOfFireIncreasePerShot)) return true;
+                if (eval(this.ConeOfFireIncreasePerSec)) return true;
+                if (eval(this.ConeOfFireDecreaseDelayMilliseconds)) return true;
+                if (eval(this.ConeOfFireSneakMult)) return true;
+                if (eval(this.RecoilDiminishSpringForce)) return true;
+                if (eval(this.RecoilDiminishSightsMult)) return true;
+                if (eval(this.RecoilMaxPerShot)) return true;
+                if (eval(this.RecoilMinPerShot)) return true;
+                if (eval(this.RecoilHipMult)) return true;
+                if (eval(this.RunawayRecoilShots)) return true;
+                if (eval(this.RecoilArc)) return true;
+                if (eval(this.RecoilArcRotate)) return true;
+                if (eval(this.ConeOfFireIronSightsMult)) return true;
+                if (eval(this.BaseStability)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +344,23 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ConeOfFireMinAngle = eval(this.ConeOfFireMinAngle);
+                obj.ConeOfFireMaxAngle = eval(this.ConeOfFireMaxAngle);
+                obj.ConeOfFireIncreasePerShot = eval(this.ConeOfFireIncreasePerShot);
+                obj.ConeOfFireIncreasePerSec = eval(this.ConeOfFireIncreasePerSec);
+                obj.ConeOfFireDecreaseDelayMilliseconds = eval(this.ConeOfFireDecreaseDelayMilliseconds);
+                obj.ConeOfFireSneakMult = eval(this.ConeOfFireSneakMult);
+                obj.RecoilDiminishSpringForce = eval(this.RecoilDiminishSpringForce);
+                obj.RecoilDiminishSightsMult = eval(this.RecoilDiminishSightsMult);
+                obj.RecoilMaxPerShot = eval(this.RecoilMaxPerShot);
+                obj.RecoilMinPerShot = eval(this.RecoilMinPerShot);
+                obj.RecoilHipMult = eval(this.RecoilHipMult);
+                obj.RunawayRecoilShots = eval(this.RunawayRecoilShots);
+                obj.RecoilArc = eval(this.RecoilArc);
+                obj.RecoilArcRotate = eval(this.RecoilArcRotate);
+                obj.ConeOfFireIronSightsMult = eval(this.ConeOfFireIronSightsMult);
+                obj.BaseStability = eval(this.BaseStability);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -172,6 +379,74 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(AimModel.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ConeOfFireMinAngle ?? true)
+                    {
+                        sb.AppendItem(ConeOfFireMinAngle, "ConeOfFireMinAngle");
+                    }
+                    if (printMask?.ConeOfFireMaxAngle ?? true)
+                    {
+                        sb.AppendItem(ConeOfFireMaxAngle, "ConeOfFireMaxAngle");
+                    }
+                    if (printMask?.ConeOfFireIncreasePerShot ?? true)
+                    {
+                        sb.AppendItem(ConeOfFireIncreasePerShot, "ConeOfFireIncreasePerShot");
+                    }
+                    if (printMask?.ConeOfFireIncreasePerSec ?? true)
+                    {
+                        sb.AppendItem(ConeOfFireIncreasePerSec, "ConeOfFireIncreasePerSec");
+                    }
+                    if (printMask?.ConeOfFireDecreaseDelayMilliseconds ?? true)
+                    {
+                        sb.AppendItem(ConeOfFireDecreaseDelayMilliseconds, "ConeOfFireDecreaseDelayMilliseconds");
+                    }
+                    if (printMask?.ConeOfFireSneakMult ?? true)
+                    {
+                        sb.AppendItem(ConeOfFireSneakMult, "ConeOfFireSneakMult");
+                    }
+                    if (printMask?.RecoilDiminishSpringForce ?? true)
+                    {
+                        sb.AppendItem(RecoilDiminishSpringForce, "RecoilDiminishSpringForce");
+                    }
+                    if (printMask?.RecoilDiminishSightsMult ?? true)
+                    {
+                        sb.AppendItem(RecoilDiminishSightsMult, "RecoilDiminishSightsMult");
+                    }
+                    if (printMask?.RecoilMaxPerShot ?? true)
+                    {
+                        sb.AppendItem(RecoilMaxPerShot, "RecoilMaxPerShot");
+                    }
+                    if (printMask?.RecoilMinPerShot ?? true)
+                    {
+                        sb.AppendItem(RecoilMinPerShot, "RecoilMinPerShot");
+                    }
+                    if (printMask?.RecoilHipMult ?? true)
+                    {
+                        sb.AppendItem(RecoilHipMult, "RecoilHipMult");
+                    }
+                    if (printMask?.RunawayRecoilShots ?? true)
+                    {
+                        sb.AppendItem(RunawayRecoilShots, "RunawayRecoilShots");
+                    }
+                    if (printMask?.RecoilArc ?? true)
+                    {
+                        sb.AppendItem(RecoilArc, "RecoilArc");
+                    }
+                    if (printMask?.RecoilArcRotate ?? true)
+                    {
+                        sb.AppendItem(RecoilArcRotate, "RecoilArcRotate");
+                    }
+                    if (printMask?.ConeOfFireIronSightsMult ?? true)
+                    {
+                        sb.AppendItem(ConeOfFireIronSightsMult, "ConeOfFireIronSightsMult");
+                    }
+                    if (printMask?.BaseStability ?? true)
+                    {
+                        sb.AppendItem(BaseStability, "BaseStability");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +457,66 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? ConeOfFireMinAngle;
+            public Exception? ConeOfFireMaxAngle;
+            public Exception? ConeOfFireIncreasePerShot;
+            public Exception? ConeOfFireIncreasePerSec;
+            public Exception? ConeOfFireDecreaseDelayMilliseconds;
+            public Exception? ConeOfFireSneakMult;
+            public Exception? RecoilDiminishSpringForce;
+            public Exception? RecoilDiminishSightsMult;
+            public Exception? RecoilMaxPerShot;
+            public Exception? RecoilMinPerShot;
+            public Exception? RecoilHipMult;
+            public Exception? RunawayRecoilShots;
+            public Exception? RecoilArc;
+            public Exception? RecoilArcRotate;
+            public Exception? ConeOfFireIronSightsMult;
+            public Exception? BaseStability;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AimModel_FieldIndex enu = (AimModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case AimModel_FieldIndex.ConeOfFireMinAngle:
+                        return ConeOfFireMinAngle;
+                    case AimModel_FieldIndex.ConeOfFireMaxAngle:
+                        return ConeOfFireMaxAngle;
+                    case AimModel_FieldIndex.ConeOfFireIncreasePerShot:
+                        return ConeOfFireIncreasePerShot;
+                    case AimModel_FieldIndex.ConeOfFireIncreasePerSec:
+                        return ConeOfFireIncreasePerSec;
+                    case AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds:
+                        return ConeOfFireDecreaseDelayMilliseconds;
+                    case AimModel_FieldIndex.ConeOfFireSneakMult:
+                        return ConeOfFireSneakMult;
+                    case AimModel_FieldIndex.RecoilDiminishSpringForce:
+                        return RecoilDiminishSpringForce;
+                    case AimModel_FieldIndex.RecoilDiminishSightsMult:
+                        return RecoilDiminishSightsMult;
+                    case AimModel_FieldIndex.RecoilMaxPerShot:
+                        return RecoilMaxPerShot;
+                    case AimModel_FieldIndex.RecoilMinPerShot:
+                        return RecoilMinPerShot;
+                    case AimModel_FieldIndex.RecoilHipMult:
+                        return RecoilHipMult;
+                    case AimModel_FieldIndex.RunawayRecoilShots:
+                        return RunawayRecoilShots;
+                    case AimModel_FieldIndex.RecoilArc:
+                        return RecoilArc;
+                    case AimModel_FieldIndex.RecoilArcRotate:
+                        return RecoilArcRotate;
+                    case AimModel_FieldIndex.ConeOfFireIronSightsMult:
+                        return ConeOfFireIronSightsMult;
+                    case AimModel_FieldIndex.BaseStability:
+                        return BaseStability;
+                    case AimModel_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +527,57 @@ namespace Mutagen.Bethesda.Fallout4
                 AimModel_FieldIndex enu = (AimModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case AimModel_FieldIndex.ConeOfFireMinAngle:
+                        this.ConeOfFireMinAngle = ex;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireMaxAngle:
+                        this.ConeOfFireMaxAngle = ex;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireIncreasePerShot:
+                        this.ConeOfFireIncreasePerShot = ex;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireIncreasePerSec:
+                        this.ConeOfFireIncreasePerSec = ex;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds:
+                        this.ConeOfFireDecreaseDelayMilliseconds = ex;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireSneakMult:
+                        this.ConeOfFireSneakMult = ex;
+                        break;
+                    case AimModel_FieldIndex.RecoilDiminishSpringForce:
+                        this.RecoilDiminishSpringForce = ex;
+                        break;
+                    case AimModel_FieldIndex.RecoilDiminishSightsMult:
+                        this.RecoilDiminishSightsMult = ex;
+                        break;
+                    case AimModel_FieldIndex.RecoilMaxPerShot:
+                        this.RecoilMaxPerShot = ex;
+                        break;
+                    case AimModel_FieldIndex.RecoilMinPerShot:
+                        this.RecoilMinPerShot = ex;
+                        break;
+                    case AimModel_FieldIndex.RecoilHipMult:
+                        this.RecoilHipMult = ex;
+                        break;
+                    case AimModel_FieldIndex.RunawayRecoilShots:
+                        this.RunawayRecoilShots = ex;
+                        break;
+                    case AimModel_FieldIndex.RecoilArc:
+                        this.RecoilArc = ex;
+                        break;
+                    case AimModel_FieldIndex.RecoilArcRotate:
+                        this.RecoilArcRotate = ex;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireIronSightsMult:
+                        this.ConeOfFireIronSightsMult = ex;
+                        break;
+                    case AimModel_FieldIndex.BaseStability:
+                        this.BaseStability = ex;
+                        break;
+                    case AimModel_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +589,57 @@ namespace Mutagen.Bethesda.Fallout4
                 AimModel_FieldIndex enu = (AimModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case AimModel_FieldIndex.ConeOfFireMinAngle:
+                        this.ConeOfFireMinAngle = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireMaxAngle:
+                        this.ConeOfFireMaxAngle = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireIncreasePerShot:
+                        this.ConeOfFireIncreasePerShot = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireIncreasePerSec:
+                        this.ConeOfFireIncreasePerSec = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds:
+                        this.ConeOfFireDecreaseDelayMilliseconds = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireSneakMult:
+                        this.ConeOfFireSneakMult = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.RecoilDiminishSpringForce:
+                        this.RecoilDiminishSpringForce = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.RecoilDiminishSightsMult:
+                        this.RecoilDiminishSightsMult = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.RecoilMaxPerShot:
+                        this.RecoilMaxPerShot = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.RecoilMinPerShot:
+                        this.RecoilMinPerShot = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.RecoilHipMult:
+                        this.RecoilHipMult = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.RunawayRecoilShots:
+                        this.RunawayRecoilShots = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.RecoilArc:
+                        this.RecoilArc = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.RecoilArcRotate:
+                        this.RecoilArcRotate = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.ConeOfFireIronSightsMult:
+                        this.ConeOfFireIronSightsMult = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.BaseStability:
+                        this.BaseStability = (Exception?)obj;
+                        break;
+                    case AimModel_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +649,23 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ConeOfFireMinAngle != null) return true;
+                if (ConeOfFireMaxAngle != null) return true;
+                if (ConeOfFireIncreasePerShot != null) return true;
+                if (ConeOfFireIncreasePerSec != null) return true;
+                if (ConeOfFireDecreaseDelayMilliseconds != null) return true;
+                if (ConeOfFireSneakMult != null) return true;
+                if (RecoilDiminishSpringForce != null) return true;
+                if (RecoilDiminishSightsMult != null) return true;
+                if (RecoilMaxPerShot != null) return true;
+                if (RecoilMinPerShot != null) return true;
+                if (RecoilHipMult != null) return true;
+                if (RunawayRecoilShots != null) return true;
+                if (RecoilArc != null) return true;
+                if (RecoilArcRotate != null) return true;
+                if (ConeOfFireIronSightsMult != null) return true;
+                if (BaseStability != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +692,57 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ConeOfFireMinAngle, "ConeOfFireMinAngle");
+                }
+                {
+                    sb.AppendItem(ConeOfFireMaxAngle, "ConeOfFireMaxAngle");
+                }
+                {
+                    sb.AppendItem(ConeOfFireIncreasePerShot, "ConeOfFireIncreasePerShot");
+                }
+                {
+                    sb.AppendItem(ConeOfFireIncreasePerSec, "ConeOfFireIncreasePerSec");
+                }
+                {
+                    sb.AppendItem(ConeOfFireDecreaseDelayMilliseconds, "ConeOfFireDecreaseDelayMilliseconds");
+                }
+                {
+                    sb.AppendItem(ConeOfFireSneakMult, "ConeOfFireSneakMult");
+                }
+                {
+                    sb.AppendItem(RecoilDiminishSpringForce, "RecoilDiminishSpringForce");
+                }
+                {
+                    sb.AppendItem(RecoilDiminishSightsMult, "RecoilDiminishSightsMult");
+                }
+                {
+                    sb.AppendItem(RecoilMaxPerShot, "RecoilMaxPerShot");
+                }
+                {
+                    sb.AppendItem(RecoilMinPerShot, "RecoilMinPerShot");
+                }
+                {
+                    sb.AppendItem(RecoilHipMult, "RecoilHipMult");
+                }
+                {
+                    sb.AppendItem(RunawayRecoilShots, "RunawayRecoilShots");
+                }
+                {
+                    sb.AppendItem(RecoilArc, "RecoilArc");
+                }
+                {
+                    sb.AppendItem(RecoilArcRotate, "RecoilArcRotate");
+                }
+                {
+                    sb.AppendItem(ConeOfFireIronSightsMult, "ConeOfFireIronSightsMult");
+                }
+                {
+                    sb.AppendItem(BaseStability, "BaseStability");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +751,23 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ConeOfFireMinAngle = this.ConeOfFireMinAngle.Combine(rhs.ConeOfFireMinAngle);
+                ret.ConeOfFireMaxAngle = this.ConeOfFireMaxAngle.Combine(rhs.ConeOfFireMaxAngle);
+                ret.ConeOfFireIncreasePerShot = this.ConeOfFireIncreasePerShot.Combine(rhs.ConeOfFireIncreasePerShot);
+                ret.ConeOfFireIncreasePerSec = this.ConeOfFireIncreasePerSec.Combine(rhs.ConeOfFireIncreasePerSec);
+                ret.ConeOfFireDecreaseDelayMilliseconds = this.ConeOfFireDecreaseDelayMilliseconds.Combine(rhs.ConeOfFireDecreaseDelayMilliseconds);
+                ret.ConeOfFireSneakMult = this.ConeOfFireSneakMult.Combine(rhs.ConeOfFireSneakMult);
+                ret.RecoilDiminishSpringForce = this.RecoilDiminishSpringForce.Combine(rhs.RecoilDiminishSpringForce);
+                ret.RecoilDiminishSightsMult = this.RecoilDiminishSightsMult.Combine(rhs.RecoilDiminishSightsMult);
+                ret.RecoilMaxPerShot = this.RecoilMaxPerShot.Combine(rhs.RecoilMaxPerShot);
+                ret.RecoilMinPerShot = this.RecoilMinPerShot.Combine(rhs.RecoilMinPerShot);
+                ret.RecoilHipMult = this.RecoilHipMult.Combine(rhs.RecoilHipMult);
+                ret.RunawayRecoilShots = this.RunawayRecoilShots.Combine(rhs.RunawayRecoilShots);
+                ret.RecoilArc = this.RecoilArc.Combine(rhs.RecoilArc);
+                ret.RecoilArcRotate = this.RecoilArcRotate.Combine(rhs.RecoilArcRotate);
+                ret.ConeOfFireIronSightsMult = this.ConeOfFireIronSightsMult.Combine(rhs.ConeOfFireIronSightsMult);
+                ret.BaseStability = this.BaseStability.Combine(rhs.BaseStability);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +789,74 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool ConeOfFireMinAngle;
+            public bool ConeOfFireMaxAngle;
+            public bool ConeOfFireIncreasePerShot;
+            public bool ConeOfFireIncreasePerSec;
+            public bool ConeOfFireDecreaseDelayMilliseconds;
+            public bool ConeOfFireSneakMult;
+            public bool RecoilDiminishSpringForce;
+            public bool RecoilDiminishSightsMult;
+            public bool RecoilMaxPerShot;
+            public bool RecoilMinPerShot;
+            public bool RecoilHipMult;
+            public bool RunawayRecoilShots;
+            public bool RecoilArc;
+            public bool RecoilArcRotate;
+            public bool ConeOfFireIronSightsMult;
+            public bool BaseStability;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ConeOfFireMinAngle = defaultOn;
+                this.ConeOfFireMaxAngle = defaultOn;
+                this.ConeOfFireIncreasePerShot = defaultOn;
+                this.ConeOfFireIncreasePerSec = defaultOn;
+                this.ConeOfFireDecreaseDelayMilliseconds = defaultOn;
+                this.ConeOfFireSneakMult = defaultOn;
+                this.RecoilDiminishSpringForce = defaultOn;
+                this.RecoilDiminishSightsMult = defaultOn;
+                this.RecoilMaxPerShot = defaultOn;
+                this.RecoilMinPerShot = defaultOn;
+                this.RecoilHipMult = defaultOn;
+                this.RunawayRecoilShots = defaultOn;
+                this.RecoilArc = defaultOn;
+                this.RecoilArcRotate = defaultOn;
+                this.ConeOfFireIronSightsMult = defaultOn;
+                this.BaseStability = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ConeOfFireMinAngle, null));
+                ret.Add((ConeOfFireMaxAngle, null));
+                ret.Add((ConeOfFireIncreasePerShot, null));
+                ret.Add((ConeOfFireIncreasePerSec, null));
+                ret.Add((ConeOfFireDecreaseDelayMilliseconds, null));
+                ret.Add((ConeOfFireSneakMult, null));
+                ret.Add((RecoilDiminishSpringForce, null));
+                ret.Add((RecoilDiminishSightsMult, null));
+                ret.Add((RecoilMaxPerShot, null));
+                ret.Add((RecoilMinPerShot, null));
+                ret.Add((RecoilHipMult, null));
+                ret.Add((RunawayRecoilShots, null));
+                ret.Add((RecoilArc, null));
+                ret.Add((RecoilArcRotate, null));
+                ret.Add((ConeOfFireIronSightsMult, null));
+                ret.Add((BaseStability, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -335,6 +910,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IAimModel);
 
+        [Flags]
+        public enum DNAMDataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -418,6 +997,23 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IAimModelInternal>
     {
+        new Single ConeOfFireMinAngle { get; set; }
+        new Single ConeOfFireMaxAngle { get; set; }
+        new Single ConeOfFireIncreasePerShot { get; set; }
+        new Single ConeOfFireIncreasePerSec { get; set; }
+        new UInt32 ConeOfFireDecreaseDelayMilliseconds { get; set; }
+        new Single ConeOfFireSneakMult { get; set; }
+        new Single RecoilDiminishSpringForce { get; set; }
+        new Single RecoilDiminishSightsMult { get; set; }
+        new Single RecoilMaxPerShot { get; set; }
+        new Single RecoilMinPerShot { get; set; }
+        new Single RecoilHipMult { get; set; }
+        new UInt32 RunawayRecoilShots { get; set; }
+        new Single RecoilArc { get; set; }
+        new Single RecoilArcRotate { get; set; }
+        new Single ConeOfFireIronSightsMult { get; set; }
+        new Single BaseStability { get; set; }
+        new AimModel.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IAimModelInternal :
@@ -435,6 +1031,23 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IAimModelGetter>
     {
         static new ILoquiRegistration StaticRegistration => AimModel_Registration.Instance;
+        Single ConeOfFireMinAngle { get; }
+        Single ConeOfFireMaxAngle { get; }
+        Single ConeOfFireIncreasePerShot { get; }
+        Single ConeOfFireIncreasePerSec { get; }
+        UInt32 ConeOfFireDecreaseDelayMilliseconds { get; }
+        Single ConeOfFireSneakMult { get; }
+        Single RecoilDiminishSpringForce { get; }
+        Single RecoilDiminishSightsMult { get; }
+        Single RecoilMaxPerShot { get; }
+        Single RecoilMinPerShot { get; }
+        Single RecoilHipMult { get; }
+        UInt32 RunawayRecoilShots { get; }
+        Single RecoilArc { get; }
+        Single RecoilArcRotate { get; }
+        Single ConeOfFireIronSightsMult { get; }
+        Single BaseStability { get; }
+        AimModel.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -599,6 +1212,23 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ConeOfFireMinAngle = 6,
+        ConeOfFireMaxAngle = 7,
+        ConeOfFireIncreasePerShot = 8,
+        ConeOfFireIncreasePerSec = 9,
+        ConeOfFireDecreaseDelayMilliseconds = 10,
+        ConeOfFireSneakMult = 11,
+        RecoilDiminishSpringForce = 12,
+        RecoilDiminishSightsMult = 13,
+        RecoilMaxPerShot = 14,
+        RecoilMinPerShot = 15,
+        RecoilHipMult = 16,
+        RunawayRecoilShots = 17,
+        RecoilArc = 18,
+        RecoilArcRotate = 19,
+        ConeOfFireIronSightsMult = 20,
+        BaseStability = 21,
+        DNAMDataTypeState = 22,
     }
     #endregion
 
@@ -616,9 +1246,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "646f5dc0-24dd-45a1-a3e7-2bdfbc2bbcc7";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(AimModel.Mask<>);
 
@@ -648,8 +1278,11 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.AMDL);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.AMDL);
+            var all = RecordCollection.Factory(
+                RecordTypes.AMDL,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AimModelBinaryWriteTranslation);
         #region Interface
@@ -693,6 +1326,23 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAimModelInternal item)
         {
             ClearPartial();
+            item.ConeOfFireMinAngle = default;
+            item.ConeOfFireMaxAngle = default;
+            item.ConeOfFireIncreasePerShot = default;
+            item.ConeOfFireIncreasePerSec = default;
+            item.ConeOfFireDecreaseDelayMilliseconds = default;
+            item.ConeOfFireSneakMult = default;
+            item.RecoilDiminishSpringForce = default;
+            item.RecoilDiminishSightsMult = default;
+            item.RecoilMaxPerShot = default;
+            item.RecoilMinPerShot = default;
+            item.RecoilHipMult = default;
+            item.RunawayRecoilShots = default;
+            item.RecoilArc = default;
+            item.RecoilArcRotate = default;
+            item.ConeOfFireIronSightsMult = default;
+            item.BaseStability = default;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -778,6 +1428,23 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ConeOfFireMinAngle = item.ConeOfFireMinAngle.EqualsWithin(rhs.ConeOfFireMinAngle);
+            ret.ConeOfFireMaxAngle = item.ConeOfFireMaxAngle.EqualsWithin(rhs.ConeOfFireMaxAngle);
+            ret.ConeOfFireIncreasePerShot = item.ConeOfFireIncreasePerShot.EqualsWithin(rhs.ConeOfFireIncreasePerShot);
+            ret.ConeOfFireIncreasePerSec = item.ConeOfFireIncreasePerSec.EqualsWithin(rhs.ConeOfFireIncreasePerSec);
+            ret.ConeOfFireDecreaseDelayMilliseconds = item.ConeOfFireDecreaseDelayMilliseconds == rhs.ConeOfFireDecreaseDelayMilliseconds;
+            ret.ConeOfFireSneakMult = item.ConeOfFireSneakMult.EqualsWithin(rhs.ConeOfFireSneakMult);
+            ret.RecoilDiminishSpringForce = item.RecoilDiminishSpringForce.EqualsWithin(rhs.RecoilDiminishSpringForce);
+            ret.RecoilDiminishSightsMult = item.RecoilDiminishSightsMult.EqualsWithin(rhs.RecoilDiminishSightsMult);
+            ret.RecoilMaxPerShot = item.RecoilMaxPerShot.EqualsWithin(rhs.RecoilMaxPerShot);
+            ret.RecoilMinPerShot = item.RecoilMinPerShot.EqualsWithin(rhs.RecoilMinPerShot);
+            ret.RecoilHipMult = item.RecoilHipMult.EqualsWithin(rhs.RecoilHipMult);
+            ret.RunawayRecoilShots = item.RunawayRecoilShots == rhs.RunawayRecoilShots;
+            ret.RecoilArc = item.RecoilArc.EqualsWithin(rhs.RecoilArc);
+            ret.RecoilArcRotate = item.RecoilArcRotate.EqualsWithin(rhs.RecoilArcRotate);
+            ret.ConeOfFireIronSightsMult = item.ConeOfFireIronSightsMult.EqualsWithin(rhs.ConeOfFireIronSightsMult);
+            ret.BaseStability = item.BaseStability.EqualsWithin(rhs.BaseStability);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1494,74 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ConeOfFireMinAngle ?? true)
+            {
+                sb.AppendItem(item.ConeOfFireMinAngle, "ConeOfFireMinAngle");
+            }
+            if (printMask?.ConeOfFireMaxAngle ?? true)
+            {
+                sb.AppendItem(item.ConeOfFireMaxAngle, "ConeOfFireMaxAngle");
+            }
+            if (printMask?.ConeOfFireIncreasePerShot ?? true)
+            {
+                sb.AppendItem(item.ConeOfFireIncreasePerShot, "ConeOfFireIncreasePerShot");
+            }
+            if (printMask?.ConeOfFireIncreasePerSec ?? true)
+            {
+                sb.AppendItem(item.ConeOfFireIncreasePerSec, "ConeOfFireIncreasePerSec");
+            }
+            if (printMask?.ConeOfFireDecreaseDelayMilliseconds ?? true)
+            {
+                sb.AppendItem(item.ConeOfFireDecreaseDelayMilliseconds, "ConeOfFireDecreaseDelayMilliseconds");
+            }
+            if (printMask?.ConeOfFireSneakMult ?? true)
+            {
+                sb.AppendItem(item.ConeOfFireSneakMult, "ConeOfFireSneakMult");
+            }
+            if (printMask?.RecoilDiminishSpringForce ?? true)
+            {
+                sb.AppendItem(item.RecoilDiminishSpringForce, "RecoilDiminishSpringForce");
+            }
+            if (printMask?.RecoilDiminishSightsMult ?? true)
+            {
+                sb.AppendItem(item.RecoilDiminishSightsMult, "RecoilDiminishSightsMult");
+            }
+            if (printMask?.RecoilMaxPerShot ?? true)
+            {
+                sb.AppendItem(item.RecoilMaxPerShot, "RecoilMaxPerShot");
+            }
+            if (printMask?.RecoilMinPerShot ?? true)
+            {
+                sb.AppendItem(item.RecoilMinPerShot, "RecoilMinPerShot");
+            }
+            if (printMask?.RecoilHipMult ?? true)
+            {
+                sb.AppendItem(item.RecoilHipMult, "RecoilHipMult");
+            }
+            if (printMask?.RunawayRecoilShots ?? true)
+            {
+                sb.AppendItem(item.RunawayRecoilShots, "RunawayRecoilShots");
+            }
+            if (printMask?.RecoilArc ?? true)
+            {
+                sb.AppendItem(item.RecoilArc, "RecoilArc");
+            }
+            if (printMask?.RecoilArcRotate ?? true)
+            {
+                sb.AppendItem(item.RecoilArcRotate, "RecoilArcRotate");
+            }
+            if (printMask?.ConeOfFireIronSightsMult ?? true)
+            {
+                sb.AppendItem(item.ConeOfFireIronSightsMult, "ConeOfFireIronSightsMult");
+            }
+            if (printMask?.BaseStability ?? true)
+            {
+                sb.AppendItem(item.BaseStability, "BaseStability");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public static AimModel_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1610,74 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMinAngle) ?? true))
+            {
+                if (!lhs.ConeOfFireMinAngle.EqualsWithin(rhs.ConeOfFireMinAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMaxAngle) ?? true))
+            {
+                if (!lhs.ConeOfFireMaxAngle.EqualsWithin(rhs.ConeOfFireMaxAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerShot) ?? true))
+            {
+                if (!lhs.ConeOfFireIncreasePerShot.EqualsWithin(rhs.ConeOfFireIncreasePerShot)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerSec) ?? true))
+            {
+                if (!lhs.ConeOfFireIncreasePerSec.EqualsWithin(rhs.ConeOfFireIncreasePerSec)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds) ?? true))
+            {
+                if (lhs.ConeOfFireDecreaseDelayMilliseconds != rhs.ConeOfFireDecreaseDelayMilliseconds) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireSneakMult) ?? true))
+            {
+                if (!lhs.ConeOfFireSneakMult.EqualsWithin(rhs.ConeOfFireSneakMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSpringForce) ?? true))
+            {
+                if (!lhs.RecoilDiminishSpringForce.EqualsWithin(rhs.RecoilDiminishSpringForce)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSightsMult) ?? true))
+            {
+                if (!lhs.RecoilDiminishSightsMult.EqualsWithin(rhs.RecoilDiminishSightsMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMaxPerShot) ?? true))
+            {
+                if (!lhs.RecoilMaxPerShot.EqualsWithin(rhs.RecoilMaxPerShot)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMinPerShot) ?? true))
+            {
+                if (!lhs.RecoilMinPerShot.EqualsWithin(rhs.RecoilMinPerShot)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilHipMult) ?? true))
+            {
+                if (!lhs.RecoilHipMult.EqualsWithin(rhs.RecoilHipMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RunawayRecoilShots) ?? true))
+            {
+                if (lhs.RunawayRecoilShots != rhs.RunawayRecoilShots) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArc) ?? true))
+            {
+                if (!lhs.RecoilArc.EqualsWithin(rhs.RecoilArc)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArcRotate) ?? true))
+            {
+                if (!lhs.RecoilArcRotate.EqualsWithin(rhs.RecoilArcRotate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIronSightsMult) ?? true))
+            {
+                if (!lhs.ConeOfFireIronSightsMult.EqualsWithin(rhs.ConeOfFireIronSightsMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
+            {
+                if (!lhs.BaseStability.EqualsWithin(rhs.BaseStability)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
@@ -903,6 +1706,23 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IAimModelGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ConeOfFireMinAngle);
+            hash.Add(item.ConeOfFireMaxAngle);
+            hash.Add(item.ConeOfFireIncreasePerShot);
+            hash.Add(item.ConeOfFireIncreasePerSec);
+            hash.Add(item.ConeOfFireDecreaseDelayMilliseconds);
+            hash.Add(item.ConeOfFireSneakMult);
+            hash.Add(item.RecoilDiminishSpringForce);
+            hash.Add(item.RecoilDiminishSightsMult);
+            hash.Add(item.RecoilMaxPerShot);
+            hash.Add(item.RecoilMinPerShot);
+            hash.Add(item.RecoilHipMult);
+            hash.Add(item.RunawayRecoilShots);
+            hash.Add(item.RecoilArc);
+            hash.Add(item.RecoilArcRotate);
+            hash.Add(item.ConeOfFireIronSightsMult);
+            hash.Add(item.BaseStability);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1006,6 +1826,74 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMinAngle) ?? true))
+            {
+                item.ConeOfFireMinAngle = rhs.ConeOfFireMinAngle;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMaxAngle) ?? true))
+            {
+                item.ConeOfFireMaxAngle = rhs.ConeOfFireMaxAngle;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerShot) ?? true))
+            {
+                item.ConeOfFireIncreasePerShot = rhs.ConeOfFireIncreasePerShot;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerSec) ?? true))
+            {
+                item.ConeOfFireIncreasePerSec = rhs.ConeOfFireIncreasePerSec;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds) ?? true))
+            {
+                item.ConeOfFireDecreaseDelayMilliseconds = rhs.ConeOfFireDecreaseDelayMilliseconds;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireSneakMult) ?? true))
+            {
+                item.ConeOfFireSneakMult = rhs.ConeOfFireSneakMult;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSpringForce) ?? true))
+            {
+                item.RecoilDiminishSpringForce = rhs.RecoilDiminishSpringForce;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSightsMult) ?? true))
+            {
+                item.RecoilDiminishSightsMult = rhs.RecoilDiminishSightsMult;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMaxPerShot) ?? true))
+            {
+                item.RecoilMaxPerShot = rhs.RecoilMaxPerShot;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMinPerShot) ?? true))
+            {
+                item.RecoilMinPerShot = rhs.RecoilMinPerShot;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilHipMult) ?? true))
+            {
+                item.RecoilHipMult = rhs.RecoilHipMult;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RunawayRecoilShots) ?? true))
+            {
+                item.RunawayRecoilShots = rhs.RunawayRecoilShots;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArc) ?? true))
+            {
+                item.RecoilArc = rhs.RecoilArc;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArcRotate) ?? true))
+            {
+                item.RecoilArcRotate = rhs.RecoilArcRotate;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIronSightsMult) ?? true))
+            {
+                item.ConeOfFireIronSightsMult = rhs.ConeOfFireIronSightsMult;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
+            {
+                item.BaseStability = rhs.BaseStability;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +2042,73 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static AimModelBinaryWriteTranslation Instance = new AimModelBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IAimModelGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IAimModelGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConeOfFireMinAngle);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConeOfFireMaxAngle);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConeOfFireIncreasePerShot);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConeOfFireIncreasePerSec);
+                writer.Write(item.ConeOfFireDecreaseDelayMilliseconds);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConeOfFireSneakMult);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RecoilDiminishSpringForce);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RecoilDiminishSightsMult);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RecoilMaxPerShot);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RecoilMinPerShot);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RecoilHipMult);
+                writer.Write(item.RunawayRecoilShots);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RecoilArc);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RecoilArcRotate);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConeOfFireIronSightsMult);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.BaseStability);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IAimModelGetter item,
@@ -1165,13 +2120,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +2186,51 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IAimModelInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.ConeOfFireMinAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ConeOfFireMaxAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ConeOfFireIncreasePerShot = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ConeOfFireIncreasePerSec = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ConeOfFireDecreaseDelayMilliseconds = dataFrame.ReadUInt32();
+                    item.ConeOfFireSneakMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilDiminishSpringForce = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilDiminishSightsMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilMaxPerShot = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilMinPerShot = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilHipMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RunawayRecoilShots = dataFrame.ReadUInt32();
+                    item.RecoilArc = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilArcRotate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ConeOfFireIronSightsMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BaseStability = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)AimModel_FieldIndex.BaseStability;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1275,6 +2277,88 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IAimModel);
 
 
+        private RangeInt32? _DNAMLocation;
+        public AimModel.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region ConeOfFireMinAngle
+        private int _ConeOfFireMinAngleLocation => _DNAMLocation!.Value.Min;
+        private bool _ConeOfFireMinAngle_IsSet => _DNAMLocation.HasValue;
+        public Single ConeOfFireMinAngle => _ConeOfFireMinAngle_IsSet ? _data.Slice(_ConeOfFireMinAngleLocation, 4).Float() : default;
+        #endregion
+        #region ConeOfFireMaxAngle
+        private int _ConeOfFireMaxAngleLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _ConeOfFireMaxAngle_IsSet => _DNAMLocation.HasValue;
+        public Single ConeOfFireMaxAngle => _ConeOfFireMaxAngle_IsSet ? _data.Slice(_ConeOfFireMaxAngleLocation, 4).Float() : default;
+        #endregion
+        #region ConeOfFireIncreasePerShot
+        private int _ConeOfFireIncreasePerShotLocation => _DNAMLocation!.Value.Min + 0x8;
+        private bool _ConeOfFireIncreasePerShot_IsSet => _DNAMLocation.HasValue;
+        public Single ConeOfFireIncreasePerShot => _ConeOfFireIncreasePerShot_IsSet ? _data.Slice(_ConeOfFireIncreasePerShotLocation, 4).Float() : default;
+        #endregion
+        #region ConeOfFireIncreasePerSec
+        private int _ConeOfFireIncreasePerSecLocation => _DNAMLocation!.Value.Min + 0xC;
+        private bool _ConeOfFireIncreasePerSec_IsSet => _DNAMLocation.HasValue;
+        public Single ConeOfFireIncreasePerSec => _ConeOfFireIncreasePerSec_IsSet ? _data.Slice(_ConeOfFireIncreasePerSecLocation, 4).Float() : default;
+        #endregion
+        #region ConeOfFireDecreaseDelayMilliseconds
+        private int _ConeOfFireDecreaseDelayMillisecondsLocation => _DNAMLocation!.Value.Min + 0x10;
+        private bool _ConeOfFireDecreaseDelayMilliseconds_IsSet => _DNAMLocation.HasValue;
+        public UInt32 ConeOfFireDecreaseDelayMilliseconds => _ConeOfFireDecreaseDelayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ConeOfFireDecreaseDelayMillisecondsLocation, 4)) : default;
+        #endregion
+        #region ConeOfFireSneakMult
+        private int _ConeOfFireSneakMultLocation => _DNAMLocation!.Value.Min + 0x14;
+        private bool _ConeOfFireSneakMult_IsSet => _DNAMLocation.HasValue;
+        public Single ConeOfFireSneakMult => _ConeOfFireSneakMult_IsSet ? _data.Slice(_ConeOfFireSneakMultLocation, 4).Float() : default;
+        #endregion
+        #region RecoilDiminishSpringForce
+        private int _RecoilDiminishSpringForceLocation => _DNAMLocation!.Value.Min + 0x18;
+        private bool _RecoilDiminishSpringForce_IsSet => _DNAMLocation.HasValue;
+        public Single RecoilDiminishSpringForce => _RecoilDiminishSpringForce_IsSet ? _data.Slice(_RecoilDiminishSpringForceLocation, 4).Float() : default;
+        #endregion
+        #region RecoilDiminishSightsMult
+        private int _RecoilDiminishSightsMultLocation => _DNAMLocation!.Value.Min + 0x1C;
+        private bool _RecoilDiminishSightsMult_IsSet => _DNAMLocation.HasValue;
+        public Single RecoilDiminishSightsMult => _RecoilDiminishSightsMult_IsSet ? _data.Slice(_RecoilDiminishSightsMultLocation, 4).Float() : default;
+        #endregion
+        #region RecoilMaxPerShot
+        private int _RecoilMaxPerShotLocation => _DNAMLocation!.Value.Min + 0x20;
+        private bool _RecoilMaxPerShot_IsSet => _DNAMLocation.HasValue;
+        public Single RecoilMaxPerShot => _RecoilMaxPerShot_IsSet ? _data.Slice(_RecoilMaxPerShotLocation, 4).Float() : default;
+        #endregion
+        #region RecoilMinPerShot
+        private int _RecoilMinPerShotLocation => _DNAMLocation!.Value.Min + 0x24;
+        private bool _RecoilMinPerShot_IsSet => _DNAMLocation.HasValue;
+        public Single RecoilMinPerShot => _RecoilMinPerShot_IsSet ? _data.Slice(_RecoilMinPerShotLocation, 4).Float() : default;
+        #endregion
+        #region RecoilHipMult
+        private int _RecoilHipMultLocation => _DNAMLocation!.Value.Min + 0x28;
+        private bool _RecoilHipMult_IsSet => _DNAMLocation.HasValue;
+        public Single RecoilHipMult => _RecoilHipMult_IsSet ? _data.Slice(_RecoilHipMultLocation, 4).Float() : default;
+        #endregion
+        #region RunawayRecoilShots
+        private int _RunawayRecoilShotsLocation => _DNAMLocation!.Value.Min + 0x2C;
+        private bool _RunawayRecoilShots_IsSet => _DNAMLocation.HasValue;
+        public UInt32 RunawayRecoilShots => _RunawayRecoilShots_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_RunawayRecoilShotsLocation, 4)) : default;
+        #endregion
+        #region RecoilArc
+        private int _RecoilArcLocation => _DNAMLocation!.Value.Min + 0x30;
+        private bool _RecoilArc_IsSet => _DNAMLocation.HasValue;
+        public Single RecoilArc => _RecoilArc_IsSet ? _data.Slice(_RecoilArcLocation, 4).Float() : default;
+        #endregion
+        #region RecoilArcRotate
+        private int _RecoilArcRotateLocation => _DNAMLocation!.Value.Min + 0x34;
+        private bool _RecoilArcRotate_IsSet => _DNAMLocation.HasValue;
+        public Single RecoilArcRotate => _RecoilArcRotate_IsSet ? _data.Slice(_RecoilArcRotateLocation, 4).Float() : default;
+        #endregion
+        #region ConeOfFireIronSightsMult
+        private int _ConeOfFireIronSightsMultLocation => _DNAMLocation!.Value.Min + 0x38;
+        private bool _ConeOfFireIronSightsMult_IsSet => _DNAMLocation.HasValue;
+        public Single ConeOfFireIronSightsMult => _ConeOfFireIronSightsMult_IsSet ? _data.Slice(_ConeOfFireIronSightsMultLocation, 4).Float() : default;
+        #endregion
+        #region BaseStability
+        private int _BaseStabilityLocation => _DNAMLocation!.Value.Min + 0x3C;
+        private bool _BaseStability_IsSet => _DNAMLocation.HasValue;
+        public Single BaseStability => _BaseStability_IsSet ? _data.Slice(_BaseStabilityLocation, 4).Float() : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +2413,33 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)AimModel_FieldIndex.BaseStability;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

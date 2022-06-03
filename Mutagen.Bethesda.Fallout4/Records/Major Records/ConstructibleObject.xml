@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="Fallout4MajorRecord" GUID="b850f468-7ad2-4415-872c-e3a390f1c0e0" ID="332">
+    <Fields>
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <RefList name="Components" recordType="FVPA" refName="ConstructibleObjectComponent" />
+      <String name="Description" recordType="DESC" translated="DL" />
+      <RefList name="Conditions" refName="Condition" />
+      <FormLink name="CreatedObject" recordType="CNAM">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <FormLink name="WorkbenchKeyword" refName="Keyword" recordType="BNAM" />
+      <ByteArray name="NAM1" recordType="NAM1" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <ByteArray name="NAM3" recordType="NAM3" />
+      <FormLink name="MenuArtObject" recordType="ANAM" refName="ArtObject" />
+      <List name="Categories" recordType="FNAM">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="CreatedObjectCounts" recordType="INTV" refName="ConstructibleCreatedObjectCount" />
+    </Fields>
     <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
+  </Object>
+  <Object name="ConstructibleObjectComponent" objType="Subrecord" GUID="c43e9372-638e-4849-aabb-1575e750f577" ID="652">
+    <Fields>
+      <FormLink name="Component">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <UInt32 name="Count" />
+    </Fields>
+  </Object>
+  <Object name="ConstructibleCreatedObjectCount" objType="Subrecord" GUID="8a6a89e7-a3e8-4dbc-99fa-62537e2230f6" ID="653">
+    <Fields>
+      <UInt16 name="Count" />
+      <Break />
+      <UInt16 name="Priority" />
+    </Fields>
   </Object>
 </Loqui>
