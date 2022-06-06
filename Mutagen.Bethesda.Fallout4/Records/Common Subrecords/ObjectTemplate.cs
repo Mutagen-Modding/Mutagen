@@ -103,6 +103,14 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
                 ret = prop;
                 break;
             }
+            case ObjectModProperty.ValueType.Enum:
+                ret = new ObjectModEnumProperty<T>()
+                {
+                    FunctionType = (ObjectModProperty.EnumFunctionType)enumVal,
+                    EnumIntValue = BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(12, 4)),
+                    Unused = BinaryPrimitives.ReadUInt32LittleEndian(data[16..]),
+                };
+                break;
             case ObjectModProperty.ValueType.FormIdFloat:
             {
                 var prop = new ObjectModFormLinkFloatProperty<T>()
@@ -197,6 +205,11 @@ partial class ObjectTemplateBinaryWriteTranslation
                 WritePropertyFields(writer, property, ObjectModProperty.ValueType.FormIdInt, linkIntProp.FunctionType);
                 FormLinkBinaryTranslation.Instance.Write(writer, linkIntProp.Record);
                 writer.Write(linkIntProp.Value);
+                break;
+            case IObjectModEnumPropertyGetter<T> enumProp:
+                WritePropertyFields(writer, property, ObjectModProperty.ValueType.Enum, enumProp.FunctionType);
+                writer.Write(enumProp.EnumIntValue);
+                writer.Write(enumProp.Unused);
                 break;
             case IObjectModFormLinkFloatPropertyGetter<T> linkFloatProp:
                 WritePropertyFields(writer, property, ObjectModProperty.ValueType.FormIdFloat, linkFloatProp.FunctionType);

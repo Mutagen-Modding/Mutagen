@@ -37,13 +37,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class ObjectTemplateInclude :
-        IEquatable<IObjectTemplateIncludeGetter>,
-        ILoquiObjectSetter<ObjectTemplateInclude>,
-        IObjectTemplateInclude
+    public partial class ObjectModInclude :
+        IEquatable<IObjectModIncludeGetter>,
+        ILoquiObjectSetter<ObjectModInclude>,
+        IObjectModInclude
     {
         #region Ctor
-        public ObjectTemplateInclude()
+        public ObjectModInclude()
         {
             CustomCtor();
         }
@@ -58,16 +58,16 @@ namespace Mutagen.Bethesda.Fallout4
             set => _Mod.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IAObjectModificationGetter> IObjectTemplateIncludeGetter.Mod => this.Mod;
+        IFormLinkGetter<IAObjectModificationGetter> IObjectModIncludeGetter.Mod => this.Mod;
         #endregion
-        #region AttachPointIndex
-        public Byte AttachPointIndex { get; set; } = default;
+        #region MinimumLevel
+        public Byte MinimumLevel { get; set; } = default;
         #endregion
         #region Optional
         public Boolean Optional { get; set; } = default;
         #endregion
-        #region DontUseAll
-        public Boolean DontUseAll { get; set; } = default;
+        #region DoNotUseAll
+        public Boolean DoNotUseAll { get; set; } = default;
         #endregion
 
         #region To String
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectTemplateIncludeMixIn.Print(
+            ObjectModIncludeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -87,16 +87,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IObjectTemplateIncludeGetter rhs) return false;
-            return ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IObjectModIncludeGetter rhs) return false;
+            return ((ObjectModIncludeCommon)((IObjectModIncludeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IObjectTemplateIncludeGetter? obj)
+        public bool Equals(IObjectModIncludeGetter? obj)
         {
-            return ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectModIncludeCommon)((IObjectModIncludeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ObjectModIncludeCommon)((IObjectModIncludeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -109,21 +109,21 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Mod = initialValue;
-                this.AttachPointIndex = initialValue;
+                this.MinimumLevel = initialValue;
                 this.Optional = initialValue;
-                this.DontUseAll = initialValue;
+                this.DoNotUseAll = initialValue;
             }
 
             public Mask(
                 TItem Mod,
-                TItem AttachPointIndex,
+                TItem MinimumLevel,
                 TItem Optional,
-                TItem DontUseAll)
+                TItem DoNotUseAll)
             {
                 this.Mod = Mod;
-                this.AttachPointIndex = AttachPointIndex;
+                this.MinimumLevel = MinimumLevel;
                 this.Optional = Optional;
-                this.DontUseAll = DontUseAll;
+                this.DoNotUseAll = DoNotUseAll;
             }
 
             #pragma warning disable CS8618
@@ -136,9 +136,9 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Mod;
-            public TItem AttachPointIndex;
+            public TItem MinimumLevel;
             public TItem Optional;
-            public TItem DontUseAll;
+            public TItem DoNotUseAll;
             #endregion
 
             #region Equals
@@ -152,18 +152,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Mod, rhs.Mod)) return false;
-                if (!object.Equals(this.AttachPointIndex, rhs.AttachPointIndex)) return false;
+                if (!object.Equals(this.MinimumLevel, rhs.MinimumLevel)) return false;
                 if (!object.Equals(this.Optional, rhs.Optional)) return false;
-                if (!object.Equals(this.DontUseAll, rhs.DontUseAll)) return false;
+                if (!object.Equals(this.DoNotUseAll, rhs.DoNotUseAll)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Mod);
-                hash.Add(this.AttachPointIndex);
+                hash.Add(this.MinimumLevel);
                 hash.Add(this.Optional);
-                hash.Add(this.DontUseAll);
+                hash.Add(this.DoNotUseAll);
                 return hash.ToHashCode();
             }
 
@@ -173,9 +173,9 @@ namespace Mutagen.Bethesda.Fallout4
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Mod)) return false;
-                if (!eval(this.AttachPointIndex)) return false;
+                if (!eval(this.MinimumLevel)) return false;
                 if (!eval(this.Optional)) return false;
-                if (!eval(this.DontUseAll)) return false;
+                if (!eval(this.DoNotUseAll)) return false;
                 return true;
             }
             #endregion
@@ -184,9 +184,9 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Mod)) return true;
-                if (eval(this.AttachPointIndex)) return true;
+                if (eval(this.MinimumLevel)) return true;
                 if (eval(this.Optional)) return true;
-                if (eval(this.DontUseAll)) return true;
+                if (eval(this.DoNotUseAll)) return true;
                 return false;
             }
             #endregion
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ObjectTemplateInclude.Mask<R>();
+                var ret = new ObjectModInclude.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -202,42 +202,42 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Mod = eval(this.Mod);
-                obj.AttachPointIndex = eval(this.AttachPointIndex);
+                obj.MinimumLevel = eval(this.MinimumLevel);
                 obj.Optional = eval(this.Optional);
-                obj.DontUseAll = eval(this.DontUseAll);
+                obj.DoNotUseAll = eval(this.DoNotUseAll);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ObjectTemplateInclude.Mask<bool>? printMask = null)
+            public string Print(ObjectModInclude.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ObjectTemplateInclude.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ObjectModInclude.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ObjectTemplateInclude.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ObjectModInclude.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Mod ?? true)
                     {
                         sb.AppendItem(Mod, "Mod");
                     }
-                    if (printMask?.AttachPointIndex ?? true)
+                    if (printMask?.MinimumLevel ?? true)
                     {
-                        sb.AppendItem(AttachPointIndex, "AttachPointIndex");
+                        sb.AppendItem(MinimumLevel, "MinimumLevel");
                     }
                     if (printMask?.Optional ?? true)
                     {
                         sb.AppendItem(Optional, "Optional");
                     }
-                    if (printMask?.DontUseAll ?? true)
+                    if (printMask?.DoNotUseAll ?? true)
                     {
-                        sb.AppendItem(DontUseAll, "DontUseAll");
+                        sb.AppendItem(DoNotUseAll, "DoNotUseAll");
                     }
                 }
             }
@@ -264,25 +264,25 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? Mod;
-            public Exception? AttachPointIndex;
+            public Exception? MinimumLevel;
             public Exception? Optional;
-            public Exception? DontUseAll;
+            public Exception? DoNotUseAll;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ObjectTemplateInclude_FieldIndex enu = (ObjectTemplateInclude_FieldIndex)index;
+                ObjectModInclude_FieldIndex enu = (ObjectModInclude_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectTemplateInclude_FieldIndex.Mod:
+                    case ObjectModInclude_FieldIndex.Mod:
                         return Mod;
-                    case ObjectTemplateInclude_FieldIndex.AttachPointIndex:
-                        return AttachPointIndex;
-                    case ObjectTemplateInclude_FieldIndex.Optional:
+                    case ObjectModInclude_FieldIndex.MinimumLevel:
+                        return MinimumLevel;
+                    case ObjectModInclude_FieldIndex.Optional:
                         return Optional;
-                    case ObjectTemplateInclude_FieldIndex.DontUseAll:
-                        return DontUseAll;
+                    case ObjectModInclude_FieldIndex.DoNotUseAll:
+                        return DoNotUseAll;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -290,20 +290,20 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                ObjectTemplateInclude_FieldIndex enu = (ObjectTemplateInclude_FieldIndex)index;
+                ObjectModInclude_FieldIndex enu = (ObjectModInclude_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectTemplateInclude_FieldIndex.Mod:
+                    case ObjectModInclude_FieldIndex.Mod:
                         this.Mod = ex;
                         break;
-                    case ObjectTemplateInclude_FieldIndex.AttachPointIndex:
-                        this.AttachPointIndex = ex;
+                    case ObjectModInclude_FieldIndex.MinimumLevel:
+                        this.MinimumLevel = ex;
                         break;
-                    case ObjectTemplateInclude_FieldIndex.Optional:
+                    case ObjectModInclude_FieldIndex.Optional:
                         this.Optional = ex;
                         break;
-                    case ObjectTemplateInclude_FieldIndex.DontUseAll:
-                        this.DontUseAll = ex;
+                    case ObjectModInclude_FieldIndex.DoNotUseAll:
+                        this.DoNotUseAll = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -312,20 +312,20 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                ObjectTemplateInclude_FieldIndex enu = (ObjectTemplateInclude_FieldIndex)index;
+                ObjectModInclude_FieldIndex enu = (ObjectModInclude_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectTemplateInclude_FieldIndex.Mod:
+                    case ObjectModInclude_FieldIndex.Mod:
                         this.Mod = (Exception?)obj;
                         break;
-                    case ObjectTemplateInclude_FieldIndex.AttachPointIndex:
-                        this.AttachPointIndex = (Exception?)obj;
+                    case ObjectModInclude_FieldIndex.MinimumLevel:
+                        this.MinimumLevel = (Exception?)obj;
                         break;
-                    case ObjectTemplateInclude_FieldIndex.Optional:
+                    case ObjectModInclude_FieldIndex.Optional:
                         this.Optional = (Exception?)obj;
                         break;
-                    case ObjectTemplateInclude_FieldIndex.DontUseAll:
-                        this.DontUseAll = (Exception?)obj;
+                    case ObjectModInclude_FieldIndex.DoNotUseAll:
+                        this.DoNotUseAll = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -336,9 +336,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (Mod != null) return true;
-                if (AttachPointIndex != null) return true;
+                if (MinimumLevel != null) return true;
                 if (Optional != null) return true;
-                if (DontUseAll != null) return true;
+                if (DoNotUseAll != null) return true;
                 return false;
             }
             #endregion
@@ -368,13 +368,13 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Mod, "Mod");
                 }
                 {
-                    sb.AppendItem(AttachPointIndex, "AttachPointIndex");
+                    sb.AppendItem(MinimumLevel, "MinimumLevel");
                 }
                 {
                     sb.AppendItem(Optional, "Optional");
                 }
                 {
-                    sb.AppendItem(DontUseAll, "DontUseAll");
+                    sb.AppendItem(DoNotUseAll, "DoNotUseAll");
                 }
             }
             #endregion
@@ -385,9 +385,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Mod = this.Mod.Combine(rhs.Mod);
-                ret.AttachPointIndex = this.AttachPointIndex.Combine(rhs.AttachPointIndex);
+                ret.MinimumLevel = this.MinimumLevel.Combine(rhs.MinimumLevel);
                 ret.Optional = this.Optional.Combine(rhs.Optional);
-                ret.DontUseAll = this.DontUseAll.Combine(rhs.DontUseAll);
+                ret.DoNotUseAll = this.DoNotUseAll.Combine(rhs.DoNotUseAll);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -412,9 +412,9 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Mod;
-            public bool AttachPointIndex;
+            public bool MinimumLevel;
             public bool Optional;
-            public bool DontUseAll;
+            public bool DoNotUseAll;
             #endregion
 
             #region Ctors
@@ -425,9 +425,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Mod = defaultOn;
-                this.AttachPointIndex = defaultOn;
+                this.MinimumLevel = defaultOn;
                 this.Optional = defaultOn;
-                this.DontUseAll = defaultOn;
+                this.DoNotUseAll = defaultOn;
             }
 
             #endregion
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Fallout4
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Mod, null));
-                ret.Add((AttachPointIndex, null));
+                ret.Add((MinimumLevel, null));
                 ret.Add((Optional, null));
-                ret.Add((DontUseAll, null));
+                ret.Add((DoNotUseAll, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -458,31 +458,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectTemplateIncludeCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectTemplateIncludeSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModIncludeCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectModIncludeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ObjectTemplateIncludeBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ObjectModIncludeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ObjectTemplateIncludeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ObjectModIncludeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ObjectTemplateInclude CreateFromBinary(
+        public static ObjectModInclude CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new ObjectTemplateInclude();
-            ((ObjectTemplateIncludeSetterCommon)((IObjectTemplateIncludeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ObjectModInclude();
+            ((ObjectModIncludeSetterCommon)((IObjectModIncludeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ObjectTemplateInclude item,
+            out ObjectModInclude item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -508,34 +508,34 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ObjectTemplateIncludeSetterCommon)((IObjectTemplateIncludeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ObjectModIncludeSetterCommon)((IObjectModIncludeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ObjectTemplateInclude GetNew()
+        internal static ObjectModInclude GetNew()
         {
-            return new ObjectTemplateInclude();
+            return new ObjectModInclude();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IObjectTemplateInclude :
+    public partial interface IObjectModInclude :
         IFormLinkContainer,
-        ILoquiObjectSetter<IObjectTemplateInclude>,
-        IObjectTemplateIncludeGetter
+        ILoquiObjectSetter<IObjectModInclude>,
+        IObjectModIncludeGetter
     {
         new IFormLink<IAObjectModificationGetter> Mod { get; set; }
-        new Byte AttachPointIndex { get; set; }
+        new Byte MinimumLevel { get; set; }
         new Boolean Optional { get; set; }
-        new Boolean DontUseAll { get; set; }
+        new Boolean DoNotUseAll { get; set; }
     }
 
-    public partial interface IObjectTemplateIncludeGetter :
+    public partial interface IObjectModIncludeGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IObjectTemplateIncludeGetter>
+        ILoquiObject<IObjectModIncludeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -543,53 +543,53 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ObjectTemplateInclude_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ObjectModInclude_Registration.Instance;
         IFormLinkGetter<IAObjectModificationGetter> Mod { get; }
-        Byte AttachPointIndex { get; }
+        Byte MinimumLevel { get; }
         Boolean Optional { get; }
-        Boolean DontUseAll { get; }
+        Boolean DoNotUseAll { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ObjectTemplateIncludeMixIn
+    public static partial class ObjectModIncludeMixIn
     {
-        public static void Clear(this IObjectTemplateInclude item)
+        public static void Clear(this IObjectModInclude item)
         {
-            ((ObjectTemplateIncludeSetterCommon)((IObjectTemplateIncludeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ObjectModIncludeSetterCommon)((IObjectModIncludeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ObjectTemplateInclude.Mask<bool> GetEqualsMask(
-            this IObjectTemplateIncludeGetter item,
-            IObjectTemplateIncludeGetter rhs,
+        public static ObjectModInclude.Mask<bool> GetEqualsMask(
+            this IObjectModIncludeGetter item,
+            IObjectModIncludeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ObjectModIncludeCommon)((IObjectModIncludeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IObjectTemplateIncludeGetter item,
+            this IObjectModIncludeGetter item,
             string? name = null,
-            ObjectTemplateInclude.Mask<bool>? printMask = null)
+            ObjectModInclude.Mask<bool>? printMask = null)
         {
-            return ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)item).CommonInstance()!).Print(
+            return ((ObjectModIncludeCommon)((IObjectModIncludeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IObjectTemplateIncludeGetter item,
+            this IObjectModIncludeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ObjectTemplateInclude.Mask<bool>? printMask = null)
+            ObjectModInclude.Mask<bool>? printMask = null)
         {
-            ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)item).CommonInstance()!).Print(
+            ((ObjectModIncludeCommon)((IObjectModIncludeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -597,21 +597,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IObjectTemplateIncludeGetter item,
-            IObjectTemplateIncludeGetter rhs,
-            ObjectTemplateInclude.TranslationMask? equalsMask = null)
+            this IObjectModIncludeGetter item,
+            IObjectModIncludeGetter rhs,
+            ObjectModInclude.TranslationMask? equalsMask = null)
         {
-            return ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)item).CommonInstance()!).Equals(
+            return ((ObjectModIncludeCommon)((IObjectModIncludeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IObjectTemplateInclude lhs,
-            IObjectTemplateIncludeGetter rhs)
+            this IObjectModInclude lhs,
+            IObjectModIncludeGetter rhs)
         {
-            ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -620,11 +620,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IObjectTemplateInclude lhs,
-            IObjectTemplateIncludeGetter rhs,
-            ObjectTemplateInclude.TranslationMask? copyMask = null)
+            this IObjectModInclude lhs,
+            IObjectModIncludeGetter rhs,
+            ObjectModInclude.TranslationMask? copyMask = null)
         {
-            ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -633,28 +633,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IObjectTemplateInclude lhs,
-            IObjectTemplateIncludeGetter rhs,
-            out ObjectTemplateInclude.ErrorMask errorMask,
-            ObjectTemplateInclude.TranslationMask? copyMask = null)
+            this IObjectModInclude lhs,
+            IObjectModIncludeGetter rhs,
+            out ObjectModInclude.ErrorMask errorMask,
+            ObjectModInclude.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ObjectTemplateInclude.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectModInclude.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IObjectTemplateInclude lhs,
-            IObjectTemplateIncludeGetter rhs,
+            this IObjectModInclude lhs,
+            IObjectModIncludeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -662,32 +662,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static ObjectTemplateInclude DeepCopy(
-            this IObjectTemplateIncludeGetter item,
-            ObjectTemplateInclude.TranslationMask? copyMask = null)
+        public static ObjectModInclude DeepCopy(
+            this IObjectModIncludeGetter item,
+            ObjectModInclude.TranslationMask? copyMask = null)
         {
-            return ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ObjectTemplateInclude DeepCopy(
-            this IObjectTemplateIncludeGetter item,
-            out ObjectTemplateInclude.ErrorMask errorMask,
-            ObjectTemplateInclude.TranslationMask? copyMask = null)
+        public static ObjectModInclude DeepCopy(
+            this IObjectModIncludeGetter item,
+            out ObjectModInclude.ErrorMask errorMask,
+            ObjectModInclude.TranslationMask? copyMask = null)
         {
-            return ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ObjectTemplateInclude DeepCopy(
-            this IObjectTemplateIncludeGetter item,
+        public static ObjectModInclude DeepCopy(
+            this IObjectModIncludeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -695,11 +695,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IObjectTemplateInclude item,
+            this IObjectModInclude item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((ObjectTemplateIncludeSetterCommon)((IObjectTemplateIncludeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ObjectModIncludeSetterCommon)((IObjectModIncludeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -715,50 +715,50 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum ObjectTemplateInclude_FieldIndex
+    internal enum ObjectModInclude_FieldIndex
     {
         Mod = 0,
-        AttachPointIndex = 1,
+        MinimumLevel = 1,
         Optional = 2,
-        DontUseAll = 3,
+        DoNotUseAll = 3,
     }
     #endregion
 
     #region Registration
-    internal partial class ObjectTemplateInclude_Registration : ILoquiRegistration
+    internal partial class ObjectModInclude_Registration : ILoquiRegistration
     {
-        public static readonly ObjectTemplateInclude_Registration Instance = new ObjectTemplateInclude_Registration();
+        public static readonly ObjectModInclude_Registration Instance = new ObjectModInclude_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 267,
+            msgID: 655,
             version: 0);
 
-        public const string GUID = "cd5b9ab8-7825-4ee4-8c47-68678ddc3d65";
+        public const string GUID = "3ef02a2f-8f49-40a6-95c5-8ccb780ad182";
 
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(ObjectTemplateInclude.Mask<>);
+        public static readonly Type MaskType = typeof(ObjectModInclude.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ObjectTemplateInclude.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ObjectModInclude.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ObjectTemplateInclude);
+        public static readonly Type ClassType = typeof(ObjectModInclude);
 
-        public static readonly Type GetterType = typeof(IObjectTemplateIncludeGetter);
+        public static readonly Type GetterType = typeof(IObjectModIncludeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IObjectTemplateInclude);
+        public static readonly Type SetterType = typeof(IObjectModInclude);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.ObjectTemplateInclude";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.ObjectModInclude";
 
-        public const string Name = "ObjectTemplateInclude";
+        public const string Name = "ObjectModInclude";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(ObjectTemplateIncludeBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ObjectModIncludeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -799,23 +799,23 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class ObjectTemplateIncludeSetterCommon
+    internal partial class ObjectModIncludeSetterCommon
     {
-        public static readonly ObjectTemplateIncludeSetterCommon Instance = new ObjectTemplateIncludeSetterCommon();
+        public static readonly ObjectModIncludeSetterCommon Instance = new ObjectModIncludeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IObjectTemplateInclude item)
+        public void Clear(IObjectModInclude item)
         {
             ClearPartial();
             item.Mod.Clear();
-            item.AttachPointIndex = default;
+            item.MinimumLevel = default;
             item.Optional = default;
-            item.DontUseAll = default;
+            item.DoNotUseAll = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IObjectTemplateInclude obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IObjectModInclude obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Mod.Relink(mapping);
         }
@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IObjectTemplateInclude item,
+            IObjectModInclude item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -832,23 +832,23 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ObjectTemplateIncludeBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: ObjectModIncludeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class ObjectTemplateIncludeCommon
+    internal partial class ObjectModIncludeCommon
     {
-        public static readonly ObjectTemplateIncludeCommon Instance = new ObjectTemplateIncludeCommon();
+        public static readonly ObjectModIncludeCommon Instance = new ObjectModIncludeCommon();
 
-        public ObjectTemplateInclude.Mask<bool> GetEqualsMask(
-            IObjectTemplateIncludeGetter item,
-            IObjectTemplateIncludeGetter rhs,
+        public ObjectModInclude.Mask<bool> GetEqualsMask(
+            IObjectModIncludeGetter item,
+            IObjectModIncludeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ObjectTemplateInclude.Mask<bool>(false);
-            ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ObjectModInclude.Mask<bool>(false);
+            ((ObjectModIncludeCommon)((IObjectModIncludeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -857,22 +857,22 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IObjectTemplateIncludeGetter item,
-            IObjectTemplateIncludeGetter rhs,
-            ObjectTemplateInclude.Mask<bool> ret,
+            IObjectModIncludeGetter item,
+            IObjectModIncludeGetter rhs,
+            ObjectModInclude.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Mod = item.Mod.Equals(rhs.Mod);
-            ret.AttachPointIndex = item.AttachPointIndex == rhs.AttachPointIndex;
+            ret.MinimumLevel = item.MinimumLevel == rhs.MinimumLevel;
             ret.Optional = item.Optional == rhs.Optional;
-            ret.DontUseAll = item.DontUseAll == rhs.DontUseAll;
+            ret.DoNotUseAll = item.DoNotUseAll == rhs.DoNotUseAll;
         }
         
         public string Print(
-            IObjectTemplateIncludeGetter item,
+            IObjectModIncludeGetter item,
             string? name = null,
-            ObjectTemplateInclude.Mask<bool>? printMask = null)
+            ObjectModInclude.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -884,18 +884,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IObjectTemplateIncludeGetter item,
+            IObjectModIncludeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ObjectTemplateInclude.Mask<bool>? printMask = null)
+            ObjectModInclude.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ObjectTemplateInclude =>");
+                sb.AppendLine($"ObjectModInclude =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ObjectTemplateInclude) =>");
+                sb.AppendLine($"{name} (ObjectModInclude) =>");
             }
             using (sb.Brace())
             {
@@ -907,61 +907,61 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IObjectTemplateIncludeGetter item,
+            IObjectModIncludeGetter item,
             StructuredStringBuilder sb,
-            ObjectTemplateInclude.Mask<bool>? printMask = null)
+            ObjectModInclude.Mask<bool>? printMask = null)
         {
             if (printMask?.Mod ?? true)
             {
                 sb.AppendItem(item.Mod.FormKey, "Mod");
             }
-            if (printMask?.AttachPointIndex ?? true)
+            if (printMask?.MinimumLevel ?? true)
             {
-                sb.AppendItem(item.AttachPointIndex, "AttachPointIndex");
+                sb.AppendItem(item.MinimumLevel, "MinimumLevel");
             }
             if (printMask?.Optional ?? true)
             {
                 sb.AppendItem(item.Optional, "Optional");
             }
-            if (printMask?.DontUseAll ?? true)
+            if (printMask?.DoNotUseAll ?? true)
             {
-                sb.AppendItem(item.DontUseAll, "DontUseAll");
+                sb.AppendItem(item.DoNotUseAll, "DoNotUseAll");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IObjectTemplateIncludeGetter? lhs,
-            IObjectTemplateIncludeGetter? rhs,
+            IObjectModIncludeGetter? lhs,
+            IObjectModIncludeGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplateInclude_FieldIndex.Mod) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ObjectModInclude_FieldIndex.Mod) ?? true))
             {
                 if (!lhs.Mod.Equals(rhs.Mod)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplateInclude_FieldIndex.AttachPointIndex) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ObjectModInclude_FieldIndex.MinimumLevel) ?? true))
             {
-                if (lhs.AttachPointIndex != rhs.AttachPointIndex) return false;
+                if (lhs.MinimumLevel != rhs.MinimumLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplateInclude_FieldIndex.Optional) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ObjectModInclude_FieldIndex.Optional) ?? true))
             {
                 if (lhs.Optional != rhs.Optional) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplateInclude_FieldIndex.DontUseAll) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ObjectModInclude_FieldIndex.DoNotUseAll) ?? true))
             {
-                if (lhs.DontUseAll != rhs.DontUseAll) return false;
+                if (lhs.DoNotUseAll != rhs.DoNotUseAll) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IObjectTemplateIncludeGetter item)
+        public virtual int GetHashCode(IObjectModIncludeGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Mod);
-            hash.Add(item.AttachPointIndex);
+            hash.Add(item.MinimumLevel);
             hash.Add(item.Optional);
-            hash.Add(item.DontUseAll);
+            hash.Add(item.DoNotUseAll);
             return hash.ToHashCode();
         }
         
@@ -970,11 +970,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return ObjectTemplateInclude.GetNew();
+            return ObjectModInclude.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectTemplateIncludeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectModIncludeGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Mod);
             yield break;
@@ -983,44 +983,44 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ObjectTemplateIncludeSetterTranslationCommon
+    internal partial class ObjectModIncludeSetterTranslationCommon
     {
-        public static readonly ObjectTemplateIncludeSetterTranslationCommon Instance = new ObjectTemplateIncludeSetterTranslationCommon();
+        public static readonly ObjectModIncludeSetterTranslationCommon Instance = new ObjectModIncludeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IObjectTemplateInclude item,
-            IObjectTemplateIncludeGetter rhs,
+            IObjectModInclude item,
+            IObjectModIncludeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ObjectTemplateInclude_FieldIndex.Mod) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ObjectModInclude_FieldIndex.Mod) ?? true))
             {
                 item.Mod.SetTo(rhs.Mod.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)ObjectTemplateInclude_FieldIndex.AttachPointIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ObjectModInclude_FieldIndex.MinimumLevel) ?? true))
             {
-                item.AttachPointIndex = rhs.AttachPointIndex;
+                item.MinimumLevel = rhs.MinimumLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)ObjectTemplateInclude_FieldIndex.Optional) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ObjectModInclude_FieldIndex.Optional) ?? true))
             {
                 item.Optional = rhs.Optional;
             }
-            if ((copyMask?.GetShouldTranslate((int)ObjectTemplateInclude_FieldIndex.DontUseAll) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ObjectModInclude_FieldIndex.DoNotUseAll) ?? true))
             {
-                item.DontUseAll = rhs.DontUseAll;
+                item.DoNotUseAll = rhs.DoNotUseAll;
             }
         }
         
         #endregion
         
-        public ObjectTemplateInclude DeepCopy(
-            IObjectTemplateIncludeGetter item,
-            ObjectTemplateInclude.TranslationMask? copyMask = null)
+        public ObjectModInclude DeepCopy(
+            IObjectModIncludeGetter item,
+            ObjectModInclude.TranslationMask? copyMask = null)
         {
-            ObjectTemplateInclude ret = (ObjectTemplateInclude)((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)item).CommonInstance()!).GetNew();
-            ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectModInclude ret = (ObjectModInclude)((ObjectModIncludeCommon)((IObjectModIncludeGetter)item).CommonInstance()!).GetNew();
+            ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1029,30 +1029,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public ObjectTemplateInclude DeepCopy(
-            IObjectTemplateIncludeGetter item,
-            out ObjectTemplateInclude.ErrorMask errorMask,
-            ObjectTemplateInclude.TranslationMask? copyMask = null)
+        public ObjectModInclude DeepCopy(
+            IObjectModIncludeGetter item,
+            out ObjectModInclude.ErrorMask errorMask,
+            ObjectModInclude.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ObjectTemplateInclude ret = (ObjectTemplateInclude)((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)item).CommonInstance()!).GetNew();
-            ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectModInclude ret = (ObjectModInclude)((ObjectModIncludeCommon)((IObjectModIncludeGetter)item).CommonInstance()!).GetNew();
+            ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ObjectTemplateInclude.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectModInclude.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ObjectTemplateInclude DeepCopy(
-            IObjectTemplateIncludeGetter item,
+        public ObjectModInclude DeepCopy(
+            IObjectModIncludeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ObjectTemplateInclude ret = (ObjectTemplateInclude)((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)item).CommonInstance()!).GetNew();
-            ((ObjectTemplateIncludeSetterTranslationCommon)((IObjectTemplateIncludeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectModInclude ret = (ObjectModInclude)((ObjectModIncludeCommon)((IObjectModIncludeGetter)item).CommonInstance()!).GetNew();
+            ((ObjectModIncludeSetterTranslationCommon)((IObjectModIncludeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1068,27 +1068,27 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectTemplateInclude
+    public partial class ObjectModInclude
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ObjectTemplateInclude_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ObjectTemplateInclude_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ObjectModInclude_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectModInclude_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ObjectTemplateIncludeCommon.Instance;
+        protected object CommonInstance() => ObjectModIncludeCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ObjectTemplateIncludeSetterCommon.Instance;
+            return ObjectModIncludeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ObjectTemplateIncludeSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ObjectModIncludeSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IObjectTemplateIncludeGetter.CommonInstance() => this.CommonInstance();
+        object IObjectModIncludeGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IObjectTemplateIncludeGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IObjectModIncludeGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IObjectTemplateIncludeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IObjectModIncludeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1099,25 +1099,25 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectTemplateIncludeBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ObjectModIncludeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ObjectTemplateIncludeBinaryWriteTranslation Instance = new ObjectTemplateIncludeBinaryWriteTranslation();
+        public readonly static ObjectModIncludeBinaryWriteTranslation Instance = new ObjectModIncludeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IObjectTemplateIncludeGetter item,
+            IObjectModIncludeGetter item,
             MutagenWriter writer)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Mod);
-            writer.Write(item.AttachPointIndex);
+            writer.Write(item.MinimumLevel);
             writer.Write(item.Optional);
-            writer.Write(item.DontUseAll);
+            writer.Write(item.DoNotUseAll);
         }
 
         public void Write(
             MutagenWriter writer,
-            IObjectTemplateIncludeGetter item,
+            IObjectModIncludeGetter item,
             TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
@@ -1131,25 +1131,25 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectTemplateIncludeGetter)item,
+                item: (IObjectModIncludeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ObjectTemplateIncludeBinaryCreateTranslation
+    internal partial class ObjectModIncludeBinaryCreateTranslation
     {
-        public readonly static ObjectTemplateIncludeBinaryCreateTranslation Instance = new ObjectTemplateIncludeBinaryCreateTranslation();
+        public readonly static ObjectModIncludeBinaryCreateTranslation Instance = new ObjectModIncludeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IObjectTemplateInclude item,
+            IObjectModInclude item,
             MutagenFrame frame)
         {
             item.Mod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.AttachPointIndex = frame.ReadUInt8();
+            item.MinimumLevel = frame.ReadUInt8();
             item.Optional = frame.ReadBoolean();
-            item.DontUseAll = frame.ReadBoolean();
+            item.DoNotUseAll = frame.ReadBoolean();
         }
 
     }
@@ -1158,14 +1158,14 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ObjectTemplateIncludeBinaryTranslationMixIn
+    public static class ObjectModIncludeBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IObjectTemplateIncludeGetter item,
+            this IObjectModIncludeGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ObjectTemplateIncludeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ObjectModIncludeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1178,55 +1178,55 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class ObjectTemplateIncludeBinaryOverlay :
+    internal partial class ObjectModIncludeBinaryOverlay :
         PluginBinaryOverlay,
-        IObjectTemplateIncludeGetter
+        IObjectModIncludeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ObjectTemplateInclude_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ObjectTemplateInclude_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ObjectModInclude_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectModInclude_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ObjectTemplateIncludeCommon.Instance;
+        protected object CommonInstance() => ObjectModIncludeCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ObjectTemplateIncludeSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ObjectModIncludeSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IObjectTemplateIncludeGetter.CommonInstance() => this.CommonInstance();
+        object IObjectModIncludeGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IObjectTemplateIncludeGetter.CommonSetterInstance() => null;
+        object? IObjectModIncludeGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IObjectTemplateIncludeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IObjectModIncludeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectTemplateIncludeCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModIncludeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ObjectTemplateIncludeBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ObjectModIncludeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ObjectTemplateIncludeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ObjectModIncludeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
         public IFormLinkGetter<IAObjectModificationGetter> Mod => new FormLink<IAObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Byte AttachPointIndex => _data.Span[0x4];
+        public Byte MinimumLevel => _data.Span[0x4];
         public Boolean Optional => _data.Slice(0x5, 0x1)[0] >= 1;
-        public Boolean DontUseAll => _data.Slice(0x6, 0x1)[0] >= 1;
+        public Boolean DoNotUseAll => _data.Slice(0x6, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ObjectTemplateIncludeBinaryOverlay(
+        protected ObjectModIncludeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1236,12 +1236,12 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IObjectTemplateIncludeGetter ObjectTemplateIncludeFactory(
+        public static IObjectModIncludeGetter ObjectModIncludeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new ObjectTemplateIncludeBinaryOverlay(
+            var ret = new ObjectModIncludeBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x7),
                 package: package);
             int offset = stream.Position;
@@ -1253,12 +1253,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IObjectTemplateIncludeGetter ObjectTemplateIncludeFactory(
+        public static IObjectModIncludeGetter ObjectModIncludeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return ObjectTemplateIncludeFactory(
+            return ObjectModIncludeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectTemplateIncludeMixIn.Print(
+            ObjectModIncludeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1281,16 +1281,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IObjectTemplateIncludeGetter rhs) return false;
-            return ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IObjectModIncludeGetter rhs) return false;
+            return ((ObjectModIncludeCommon)((IObjectModIncludeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IObjectTemplateIncludeGetter? obj)
+        public bool Equals(IObjectModIncludeGetter? obj)
         {
-            return ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectModIncludeCommon)((IObjectModIncludeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ObjectModIncludeCommon)((IObjectModIncludeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

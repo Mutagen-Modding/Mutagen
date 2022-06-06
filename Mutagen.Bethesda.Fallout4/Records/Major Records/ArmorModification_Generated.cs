@@ -41,14 +41,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class ObjectModification :
+    public partial class ArmorModification :
         AObjectModification,
-        IEquatable<IObjectModificationGetter>,
-        ILoquiObjectSetter<ObjectModification>,
-        IObjectModificationInternal
+        IArmorModificationInternal,
+        IEquatable<IArmorModificationGetter>,
+        ILoquiObjectSetter<ArmorModification>
     {
         #region Ctor
-        protected ObjectModification()
+        protected ArmorModification()
         {
             CustomCtor();
         }
@@ -57,15 +57,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> _Properties = new ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>>();
-        public ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> Properties
+        private ExtendedList<AObjectModProperty<Armor.Property>> _Properties = new ExtendedList<AObjectModProperty<Armor.Property>>();
+        public ExtendedList<AObjectModProperty<Armor.Property>> Properties
         {
             get => this._Properties;
             init => this._Properties = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> IObjectModificationGetter.Properties => _Properties;
+        IReadOnlyList<IAObjectModPropertyGetter<Armor.Property>> IArmorModificationGetter.Properties => _Properties;
         #endregion
 
         #endregion
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectModificationMixIn.Print(
+            ArmorModificationMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ObjectModification.Mask<R>();
+                var ret = new ArmorModification.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -256,16 +256,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ObjectModification.Mask<bool>? printMask = null)
+            public string Print(ArmorModification.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ObjectModification.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ArmorModification.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ObjectModification.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ArmorModification.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if ((printMask?.Properties?.Overall ?? true)
@@ -304,10 +304,10 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                ArmorModification_FieldIndex enu = (ArmorModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case ArmorModification_FieldIndex.Properties:
                         return Properties;
                     default:
                         return base.GetNthMask(index);
@@ -316,10 +316,10 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                ArmorModification_FieldIndex enu = (ArmorModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case ArmorModification_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(ex, null);
                         break;
                     default:
@@ -330,10 +330,10 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                ArmorModification_FieldIndex enu = (ArmorModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case ArmorModification_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>)obj;
                         break;
                     default:
@@ -449,16 +449,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ObjectModification_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModificationCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectModificationSetterCommon.Instance.RemapLinks(this, mapping);
-        public ObjectModification(FormKey formKey)
+        public static readonly RecordType GrupRecordType = ArmorModification_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModificationCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorModificationSetterCommon.Instance.RemapLinks(this, mapping);
+        public ArmorModification(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private ObjectModification(
+        private ArmorModification(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal ObjectModification(
+        internal ArmorModification(
             FormKey formKey,
             ushort formVersion)
         {
@@ -476,12 +476,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public ObjectModification(IFallout4Mod mod)
+        public ArmorModification(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ObjectModification(IFallout4Mod mod, string editorID)
+        public ArmorModification(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -489,10 +489,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ObjectModification>.ToString(this);
+            return MajorRecordPrinter<ArmorModification>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IObjectModification);
+        protected override Type LinkType => typeof(IArmorModification);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -501,16 +501,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IObjectModificationGetter rhs) return false;
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IArmorModificationGetter rhs) return false;
+            return ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IObjectModificationGetter? obj)
+        public bool Equals(IArmorModificationGetter? obj)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -518,23 +518,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ObjectModificationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ArmorModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ObjectModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static ObjectModification CreateFromBinary(
+        public new static ArmorModification CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new ObjectModification();
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ArmorModification();
+            ((ArmorModificationSetterCommon)((IArmorModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ObjectModification item,
+            out ArmorModification item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -560,96 +560,96 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ArmorModificationSetterCommon)((IArmorModificationGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ObjectModification GetNew()
+        internal static new ArmorModification GetNew()
         {
-            return new ObjectModification();
+            return new ArmorModification();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IObjectModification :
+    public partial interface IArmorModification :
         IAObjectModificationInternal,
+        IArmorModificationGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IObjectModificationInternal>,
+        ILoquiObjectSetter<IArmorModificationInternal>,
         IModeled,
         INamed,
         INamedRequired,
-        IObjectModificationGetter,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
-        new ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> Properties { get; }
+        new ExtendedList<AObjectModProperty<Armor.Property>> Properties { get; }
     }
 
-    public partial interface IObjectModificationInternal :
+    public partial interface IArmorModificationInternal :
         IAObjectModificationInternal,
-        IObjectModification,
-        IObjectModificationGetter
+        IArmorModification,
+        IArmorModificationGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.OMOD)]
-    public partial interface IObjectModificationGetter :
+    public partial interface IArmorModificationGetter :
         IAObjectModificationGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IObjectModificationGetter>,
-        IMapsToGetter<IObjectModificationGetter>,
+        ILoquiObject<IArmorModificationGetter>,
+        IMapsToGetter<IArmorModificationGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
-        IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> Properties { get; }
+        static new ILoquiRegistration StaticRegistration => ArmorModification_Registration.Instance;
+        IReadOnlyList<IAObjectModPropertyGetter<Armor.Property>> Properties { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ObjectModificationMixIn
+    public static partial class ArmorModificationMixIn
     {
-        public static void Clear(this IObjectModificationInternal item)
+        public static void Clear(this IArmorModificationInternal item)
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ArmorModificationSetterCommon)((IArmorModificationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ObjectModification.Mask<bool> GetEqualsMask(
-            this IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
+        public static ArmorModification.Mask<bool> GetEqualsMask(
+            this IArmorModificationGetter item,
+            IArmorModificationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IObjectModificationGetter item,
+            this IArmorModificationGetter item,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Print(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IObjectModificationGetter item,
+            this IArmorModificationGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
-            ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Print(
+            ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -657,39 +657,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
-            ObjectModification.TranslationMask? equalsMask = null)
+            this IArmorModificationGetter item,
+            IArmorModificationGetter rhs,
+            ArmorModification.TranslationMask? equalsMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Equals(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IObjectModificationInternal lhs,
-            IObjectModificationGetter rhs,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+            this IArmorModificationInternal lhs,
+            IArmorModificationGetter rhs,
+            out ArmorModification.ErrorMask errorMask,
+            ArmorModification.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ObjectModification.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorModification.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IObjectModificationInternal lhs,
-            IObjectModificationGetter rhs,
+            this IArmorModificationInternal lhs,
+            IArmorModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -697,44 +697,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
-            ObjectModification.TranslationMask? copyMask = null)
+        public static ArmorModification DeepCopy(
+            this IArmorModificationGetter item,
+            ArmorModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+        public static ArmorModification DeepCopy(
+            this IArmorModificationGetter item,
+            out ArmorModification.ErrorMask errorMask,
+            ArmorModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
+        public static ArmorModification DeepCopy(
+            this IArmorModificationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ObjectModification Duplicate(
-            this IObjectModificationGetter item,
+        public static ArmorModification Duplicate(
+            this IArmorModificationGetter item,
             FormKey formKey,
-            ObjectModification.TranslationMask? copyMask = null)
+            ArmorModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Duplicate(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -744,11 +744,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IObjectModificationInternal item,
+            this IArmorModificationInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ArmorModificationSetterCommon)((IArmorModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum ObjectModification_FieldIndex
+    internal enum ArmorModification_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -793,40 +793,40 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Registration
-    internal partial class ObjectModification_Registration : ILoquiRegistration
+    internal partial class ArmorModification_Registration : ILoquiRegistration
     {
-        public static readonly ObjectModification_Registration Instance = new ObjectModification_Registration();
+        public static readonly ArmorModification_Registration Instance = new ArmorModification_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 659,
+            msgID: 656,
             version: 0);
 
-        public const string GUID = "ea6acf0a-4fa1-474f-bb0d-95dc4cf7bd97";
+        public const string GUID = "c762d78b-2491-4f14-a1fd-e2373071b5e1";
 
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 23;
 
-        public static readonly Type MaskType = typeof(ObjectModification.Mask<>);
+        public static readonly Type MaskType = typeof(ArmorModification.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ObjectModification.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ArmorModification.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ObjectModification);
+        public static readonly Type ClassType = typeof(ArmorModification);
 
-        public static readonly Type GetterType = typeof(IObjectModificationGetter);
+        public static readonly Type GetterType = typeof(IArmorModificationGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IObjectModification);
+        public static readonly Type SetterType = typeof(IArmorModification);
 
-        public static readonly Type? InternalSetterType = typeof(IObjectModificationInternal);
+        public static readonly Type? InternalSetterType = typeof(IArmorModificationInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.ObjectModification";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.ArmorModification";
 
-        public const string Name = "ObjectModification";
+        public const string Name = "ArmorModification";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(RecordTypes.OMOD);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ObjectModificationBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ArmorModificationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -874,13 +874,13 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class ObjectModificationSetterCommon : AObjectModificationSetterCommon
+    internal partial class ArmorModificationSetterCommon : AObjectModificationSetterCommon
     {
-        public new static readonly ObjectModificationSetterCommon Instance = new ObjectModificationSetterCommon();
+        public new static readonly ArmorModificationSetterCommon Instance = new ArmorModificationSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IObjectModificationInternal item)
+        public void Clear(IArmorModificationInternal item)
         {
             ClearPartial();
             item.Properties.Clear();
@@ -889,21 +889,21 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override void Clear(IAObjectModificationInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (IArmorModificationInternal)item);
         }
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (IArmorModificationInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (IArmorModificationInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IObjectModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IArmorModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.Properties.RemapLinks(mapping);
@@ -913,16 +913,16 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IObjectModificationInternal item,
+            IArmorModificationInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<IObjectModificationInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IArmorModificationInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ObjectModificationBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ObjectModificationBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ArmorModificationBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ArmorModificationBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (ArmorModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (ArmorModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (ArmorModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -961,17 +961,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ObjectModificationCommon : AObjectModificationCommon
+    internal partial class ArmorModificationCommon : AObjectModificationCommon
     {
-        public new static readonly ObjectModificationCommon Instance = new ObjectModificationCommon();
+        public new static readonly ArmorModificationCommon Instance = new ArmorModificationCommon();
 
-        public ObjectModification.Mask<bool> GetEqualsMask(
-            IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
+        public ArmorModification.Mask<bool> GetEqualsMask(
+            IArmorModificationGetter item,
+            IArmorModificationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ObjectModification.Mask<bool>(false);
-            ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ArmorModification.Mask<bool>(false);
+            ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -980,9 +980,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
-            ObjectModification.Mask<bool> ret,
+            IArmorModificationGetter item,
+            IArmorModificationGetter rhs,
+            ArmorModification.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -994,9 +994,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public string Print(
-            IObjectModificationGetter item,
+            IArmorModificationGetter item,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1008,18 +1008,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IObjectModificationGetter item,
+            IArmorModificationGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ObjectModification =>");
+                sb.AppendLine($"ArmorModification =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ObjectModification) =>");
+                sb.AppendLine($"{name} (ArmorModification) =>");
             }
             using (sb.Brace())
             {
@@ -1031,9 +1031,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IObjectModificationGetter item,
+            IArmorModificationGetter item,
             StructuredStringBuilder sb,
-            ObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
             AObjectModificationCommon.ToStringFields(
                 item: item,
@@ -1055,92 +1055,92 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-        public static ObjectModification_FieldIndex ConvertFieldIndex(AObjectModification_FieldIndex index)
+        public static ArmorModification_FieldIndex ConvertFieldIndex(AObjectModification_FieldIndex index)
         {
             switch (index)
             {
                 case AObjectModification_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FormVersion:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Version2:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Name:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Description:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Model:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Unknown:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Unknown2:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.MaxRank:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.LevelTierScaledOffset:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.AttachPoint:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.AttachParentSlots:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Items:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Includes:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.TargetOmodKeywords:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FilterKeywords:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.LooseMod:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Priority:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Filter:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ObjectModification_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static new ArmorModification_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ObjectModification_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new ArmorModification_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1148,15 +1148,15 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            IObjectModificationGetter? lhs,
-            IObjectModificationGetter? rhs,
+            IArmorModificationGetter? lhs,
+            IArmorModificationGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ObjectModification_FieldIndex.Properties) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ArmorModification_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<AObjectModification.NoneProperty>)((IAObjectModPropertyGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectModification_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<Armor.Property>)((IAObjectModPropertyGetter<Armor.Property>)l).CommonInstance(typeof(Armor.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)ArmorModification_FieldIndex.Properties)))) return false;
             }
             return true;
         }
@@ -1167,8 +1167,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (IArmorModificationGetter?)lhs,
+                rhs: rhs as IArmorModificationGetter,
                 crystal: crystal);
         }
         
@@ -1178,8 +1178,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (IArmorModificationGetter?)lhs,
+                rhs: rhs as IArmorModificationGetter,
                 crystal: crystal);
         }
         
@@ -1189,12 +1189,12 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (IArmorModificationGetter?)lhs,
+                rhs: rhs as IArmorModificationGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IObjectModificationGetter item)
+        public virtual int GetHashCode(IArmorModificationGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Properties);
@@ -1204,17 +1204,17 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override int GetHashCode(IAObjectModificationGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (IArmorModificationGetter)item);
         }
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (IArmorModificationGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (IArmorModificationGetter)item);
         }
         
         #endregion
@@ -1222,17 +1222,17 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return ObjectModification.GetNew();
+            return ArmorModification.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectModificationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorModificationGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<AObjectModification.NoneProperty>, IFormLinkContainerGetter>()
+            foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<Armor.Property>, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -1241,12 +1241,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Duplicate
-        public ObjectModification Duplicate(
-            IObjectModificationGetter item,
+        public ArmorModification Duplicate(
+            IArmorModificationGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ObjectModification(formKey);
+            var newRec = new ArmorModification(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1289,14 +1289,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ObjectModificationSetterTranslationCommon : AObjectModificationSetterTranslationCommon
+    internal partial class ArmorModificationSetterTranslationCommon : AObjectModificationSetterTranslationCommon
     {
-        public new static readonly ObjectModificationSetterTranslationCommon Instance = new ObjectModificationSetterTranslationCommon();
+        public new static readonly ArmorModificationSetterTranslationCommon Instance = new ArmorModificationSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IObjectModificationInternal item,
-            IObjectModificationGetter rhs,
+            IArmorModificationInternal item,
+            IArmorModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1310,8 +1310,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            IObjectModification item,
-            IObjectModificationGetter rhs,
+            IArmorModification item,
+            IArmorModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1322,16 +1322,16 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ObjectModification_FieldIndex.Properties) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorModification_FieldIndex.Properties) ?? true))
             {
-                errorMask?.PushIndex((int)ObjectModification_FieldIndex.Properties);
+                errorMask?.PushIndex((int)ArmorModification_FieldIndex.Properties);
                 try
                 {
                     item.Properties.SetTo(
                         rhs.Properties
                         .Select(r =>
                         {
-                            return r.DeepCopy<AObjectModification.NoneProperty>(
+                            return r.DeepCopy<Armor.Property>(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
@@ -1356,8 +1356,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IArmorModificationInternal)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1371,8 +1371,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IArmorModification)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1386,8 +1386,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IArmorModificationInternal)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1401,8 +1401,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IArmorModification)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1416,8 +1416,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IArmorModificationInternal)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1431,8 +1431,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IArmorModification)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1440,12 +1440,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
-            ObjectModification.TranslationMask? copyMask = null)
+        public ArmorModification DeepCopy(
+            IArmorModificationGetter item,
+            ArmorModification.TranslationMask? copyMask = null)
         {
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorModification ret = (ArmorModification)((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).GetNew();
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1454,30 +1454,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+        public ArmorModification DeepCopy(
+            IArmorModificationGetter item,
+            out ArmorModification.ErrorMask errorMask,
+            ArmorModification.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorModification ret = (ArmorModification)((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).GetNew();
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ObjectModification.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorModification.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
+        public ArmorModification DeepCopy(
+            IArmorModificationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorModification ret = (ArmorModification)((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).GetNew();
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1493,21 +1493,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectModification
+    public partial class ArmorModification
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ObjectModification_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorModification_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorModification_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ObjectModificationCommon.Instance;
+        protected override object CommonInstance() => ArmorModificationCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ObjectModificationSetterCommon.Instance;
+            return ArmorModificationSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ObjectModificationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ArmorModificationSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1518,14 +1518,14 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectModificationBinaryWriteTranslation :
+    public partial class ArmorModificationBinaryWriteTranslation :
         AObjectModificationBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ObjectModificationBinaryWriteTranslation Instance = new ObjectModificationBinaryWriteTranslation();
+        public new readonly static ArmorModificationBinaryWriteTranslation Instance = new ArmorModificationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IObjectModificationGetter item,
+            IArmorModificationGetter item,
             MutagenWriter writer)
         {
             AObjectModificationBinaryWriteTranslation.WriteEmbedded(
@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public void Write(
             MutagenWriter writer,
-            IObjectModificationGetter item,
+            IArmorModificationGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1598,20 +1598,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ObjectModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
+    internal partial class ArmorModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
     {
-        public new readonly static ObjectModificationBinaryCreateTranslation Instance = new ObjectModificationBinaryCreateTranslation();
+        public new readonly static ArmorModificationBinaryCreateTranslation Instance = new ArmorModificationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OMOD;
         public static void FillBinaryStructs(
-            IObjectModificationInternal item,
+            IArmorModificationInternal item,
             MutagenFrame frame)
         {
             AObjectModificationBinaryCreateTranslation.FillBinaryStructs(
@@ -1625,7 +1625,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ObjectModificationBinaryTranslationMixIn
+    public static class ArmorModificationBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1634,36 +1634,36 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class ObjectModificationBinaryOverlay :
+    internal partial class ArmorModificationBinaryOverlay :
         AObjectModificationBinaryOverlay,
-        IObjectModificationGetter
+        IArmorModificationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ObjectModification_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorModification_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorModification_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ObjectModificationCommon.Instance;
+        protected override object CommonInstance() => ArmorModificationCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ObjectModificationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ArmorModificationSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModificationCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModificationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ObjectModificationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ArmorModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ObjectModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IObjectModification);
+        protected override Type LinkType => typeof(IArmorModification);
 
 
         partial void CustomFactoryEnd(
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
 
         partial void CustomCtor();
-        protected ObjectModificationBinaryOverlay(
+        protected ArmorModificationBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1682,13 +1682,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IObjectModificationGetter ObjectModificationFactory(
+        public static IArmorModificationGetter ArmorModificationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new ObjectModificationBinaryOverlay(
+            var ret = new ArmorModificationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
@@ -1709,12 +1709,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IObjectModificationGetter ObjectModificationFactory(
+        public static IArmorModificationGetter ArmorModificationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return ObjectModificationFactory(
+            return ArmorModificationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1726,7 +1726,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectModificationMixIn.Print(
+            ArmorModificationMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ObjectModification>.ToString(this);
+            return MajorRecordPrinter<ArmorModification>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1746,16 +1746,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IObjectModificationGetter rhs) return false;
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IArmorModificationGetter rhs) return false;
+            return ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IObjectModificationGetter? obj)
+        public bool Equals(IArmorModificationGetter? obj)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

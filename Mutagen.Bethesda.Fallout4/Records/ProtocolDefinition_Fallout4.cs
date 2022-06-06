@@ -205,7 +205,7 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             IdleMarker_Registration.Instance,
             CollisionLayer_Registration.Instance,
             Holotape_Registration.Instance,
-            ObjectModification_Registration.Instance,
+            AObjectModification_Registration.Instance,
             PlacedNpc_Registration.Instance,
             KeyFrame_Registration.Instance,
             Attack_Registration.Instance,
@@ -524,7 +524,14 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             ColorRemappingIndex_Registration.Instance,
             PackIn_Registration.Instance,
             ConstructibleObjectComponent_Registration.Instance,
-            ConstructibleCreatedObjectCount_Registration.Instance
+            ConstructibleCreatedObjectCount_Registration.Instance,
+            ObjectModItem_Registration.Instance,
+            ObjectModInclude_Registration.Instance,
+            ArmorModification_Registration.Instance,
+            NpcModification_Registration.Instance,
+            WeaponModification_Registration.Instance,
+            ObjectModification_Registration.Instance,
+            ObjectModEnumProperty_Registration.Instance
         );
     }
 }

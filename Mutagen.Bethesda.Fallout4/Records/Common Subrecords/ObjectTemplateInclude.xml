@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-    <Object name="ObjectTemplateInclude" objType="Subrecord" GUID="cd5b9ab8-7825-4ee4-8c47-68678ddc3d65" ID="267">
-        <Fields>
-            <FormLink name="Mod" refName="ObjectModification"/>
-            <UInt8 name="AttachPointIndex"/>
-            <Bool name="Optional" byteLength="1"/>
-            <Bool name="DontUseAll" byteLength="1"/>
-        </Fields>
-    </Object>
+  <Object name="ObjectTemplateInclude" objType="Subrecord" GUID="cd5b9ab8-7825-4ee4-8c47-68678ddc3d65" ID="267">
+    <Fields>
+      <FormLink name="Mod" refName="AObjectModification"/>
+      <UInt8 name="AttachPointIndex"/>
+      <Bool name="Optional" byteLength="1"/>
+      <Bool name="DontUseAll" byteLength="1"/>
+    </Fields>
+  </Object>
 </Loqui>

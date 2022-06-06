@@ -19,7 +19,7 @@
       <UInt8 name="MinLevelForRanks" binary="NoGeneration" />
       <UInt8 name="AltLevelsPerTier" binary="NoGeneration" />
       <RefList name="Includes" refName="ObjectTemplateInclude" binary="NoGeneration" />
-      <List name="Properties" binary="NoGeneration" >
+      <List name="Properties" binary="NoGeneration">
         <Ref>
           <Direct refName="AObjectModProperty">
             <GenericSpecification Definition="T" TypeToSpecify="T" />
@@ -71,6 +71,13 @@
       <FormLink name="Record" refName="Fallout4MajorRecord" />
       <UInt32 name="Value" />
       <Enum name="FunctionType" enumName="ObjectModProperty.FormLinkFunctionType" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModEnumProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="4f65602a-d047-45ad-8e7d-936462753128" ID="660">
+    <Fields>
+      <UInt32 name="EnumIntValue" />
+      <UInt32 name="Unused" />
+      <Enum name="FunctionType" enumName="ObjectModProperty.EnumFunctionType" />
     </Fields>
   </Object>
   <Object name="ObjectModFormLinkFloatProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="3c7efd81-1f19-433c-9780-92d63f24eb19" ID="301">

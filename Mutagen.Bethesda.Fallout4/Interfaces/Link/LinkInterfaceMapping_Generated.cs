@@ -116,7 +116,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             MiscItem_Registration.Instance,
             MovableStatic_Registration.Instance,
             Npc_Registration.Instance,
-            ObjectModification_Registration.Instance,
+            AObjectModification_Registration.Instance,
             Projectile_Registration.Instance,
             Spell_Registration.Instance,
             Static_Registration.Instance,

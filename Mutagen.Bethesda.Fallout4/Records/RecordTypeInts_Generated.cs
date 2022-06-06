@@ -442,6 +442,7 @@ public partial class RecordTypeInts
     public const int NNGT = 0x54474E4E;
     public const int NNUS = 0x53554E4E;
     public const int NNUT = 0x54554E4E;
+    public const int NONE = 0x454E4F4E;
     public const int NOTE = 0x45544F4E;
     public const int NPC_ = 0x5F43504E;
     public const int NPOS = 0x534F504E;

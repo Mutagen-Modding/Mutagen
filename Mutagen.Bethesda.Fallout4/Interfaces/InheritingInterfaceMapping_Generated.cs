@@ -19,6 +19,11 @@ internal class Fallout4InheritingInterfaceMapping : IInterfaceMapping
     public Fallout4InheritingInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IArmorModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IArmorModificationGetter)] = dict[typeof(IArmorModification)] with { Setter = false };
         dict[typeof(IDamageType)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ADamageType_Registration.Instance,
@@ -74,6 +79,16 @@ internal class Fallout4InheritingInterfaceMapping : IInterfaceMapping
             Global_Registration.Instance,
         });
         dict[typeof(IGlobalShortGetter)] = dict[typeof(IGlobalShort)] with { Setter = false };
+        dict[typeof(INpcModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(INpcModificationGetter)] = dict[typeof(INpcModification)] with { Setter = false };
+        dict[typeof(IObjectModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IObjectModificationGetter)] = dict[typeof(IObjectModification)] with { Setter = false };
         dict[typeof(IPlacedArrow)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             APlacedTrap_Registration.Instance,
@@ -114,6 +129,11 @@ internal class Fallout4InheritingInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IPlacedTrapGetter)] = dict[typeof(IPlacedTrap)] with { Setter = false };
+        dict[typeof(IWeaponModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IWeaponModificationGetter)] = dict[typeof(IWeaponModification)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

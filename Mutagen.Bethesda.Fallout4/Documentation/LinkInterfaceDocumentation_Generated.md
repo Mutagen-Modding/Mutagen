@@ -129,6 +129,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IObjectId
 - Activator
 - Ammunition
+- AObjectModification
 - Armor
 - Book
 - Container
@@ -145,7 +146,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - MiscItem
 - MovableStatic
 - Npc
-- ObjectModification
 - Projectile
 - Spell
 - Static
@@ -246,6 +246,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IStaticTarget
+### AObjectModification
+- IObjectId
 ### APlacedTrap
 - IKeywordLinkedReference
 - ILinkedReference
@@ -407,8 +409,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ObjectEffect
 - IEffectRecord
 - IExplodeSpawn
-### ObjectModification
-- IObjectId
 ### Perk
 - IFurnitureAssociation
 ### PlacedNpc

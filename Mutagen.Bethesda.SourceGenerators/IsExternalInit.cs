@@ -1,4 +1,4 @@
-﻿#if NET_5
+#if NET_6
 #else
 namespace System.Runtime.CompilerServices
 {

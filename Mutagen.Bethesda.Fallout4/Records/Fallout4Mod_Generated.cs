@@ -169,6 +169,7 @@ namespace Mutagen.Bethesda.Fallout4
             _AimModels_Object = new Fallout4Group<AimModel>(this);
             _Layers_Object = new Fallout4Group<Layer>(this);
             _ConstructibleObjects_Object = new Fallout4Group<ConstructibleObject>(this);
+            _ObjectModifications_Object = new Fallout4Group<AObjectModification>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -965,6 +966,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IConstructibleObjectGetter> IFallout4ModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
         #endregion
+        #region ObjectModifications
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<AObjectModification> _ObjectModifications_Object;
+        public Fallout4Group<AObjectModification> ObjectModifications => _ObjectModifications_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAObjectModificationGetter> IFallout4ModGetter.ObjectModifications => _ObjectModifications_Object;
+        #endregion
 
         #region To String
 
@@ -1117,6 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AimModels = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Layers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.ConstructibleObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ObjectModifications = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1232,7 +1241,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ReferenceGroups,
                 TItem AimModels,
                 TItem Layers,
-                TItem ConstructibleObjects)
+                TItem ConstructibleObjects,
+                TItem ObjectModifications)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1347,6 +1357,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AimModels = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AimModels, new Fallout4Group.Mask<TItem>(AimModels));
                 this.Layers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Layers, new Fallout4Group.Mask<TItem>(Layers));
                 this.ConstructibleObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ConstructibleObjects, new Fallout4Group.Mask<TItem>(ConstructibleObjects));
+                this.ObjectModifications = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ObjectModifications, new Fallout4Group.Mask<TItem>(ObjectModifications));
             }
 
             #pragma warning disable CS8618
@@ -1471,6 +1482,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AimModels { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Layers { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ConstructibleObjects { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ObjectModifications { get; set; }
             #endregion
 
             #region Equals
@@ -1596,6 +1608,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.AimModels, rhs.AimModels)) return false;
                 if (!object.Equals(this.Layers, rhs.Layers)) return false;
                 if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
+                if (!object.Equals(this.ObjectModifications, rhs.ObjectModifications)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1714,6 +1727,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.AimModels);
                 hash.Add(this.Layers);
                 hash.Add(this.ConstructibleObjects);
+                hash.Add(this.ObjectModifications);
                 return hash.ToHashCode();
             }
 
@@ -2287,6 +2301,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.ConstructibleObjects.Overall)) return false;
                     if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
                 }
+                if (ObjectModifications != null)
+                {
+                    if (!eval(this.ObjectModifications.Overall)) return false;
+                    if (this.ObjectModifications.Specific != null && !this.ObjectModifications.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2859,6 +2878,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.ConstructibleObjects.Overall)) return true;
                     if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
                 }
+                if (ObjectModifications != null)
+                {
+                    if (eval(this.ObjectModifications.Overall)) return true;
+                    if (this.ObjectModifications.Specific != null && this.ObjectModifications.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2986,6 +3010,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AimModels = this.AimModels == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AimModels.Overall), this.AimModels.Specific?.Translate(eval));
                 obj.Layers = this.Layers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Layers.Overall), this.Layers.Specific?.Translate(eval));
                 obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
+                obj.ObjectModifications = this.ObjectModifications == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ObjectModifications.Overall), this.ObjectModifications.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3456,6 +3481,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         ConstructibleObjects?.Print(sb);
                     }
+                    if (printMask?.ObjectModifications?.Overall ?? true)
+                    {
+                        ObjectModifications?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3593,6 +3622,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AimModel.ErrorMask>?>? AimModels;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Layer.ErrorMask>?>? Layers;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<AObjectModification.ErrorMask>?>? ObjectModifications;
             #endregion
 
             #region IErrorMask
@@ -3827,6 +3857,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Layers;
                     case Fallout4Mod_FieldIndex.ConstructibleObjects:
                         return ConstructibleObjects;
+                    case Fallout4Mod_FieldIndex.ObjectModifications:
+                        return ObjectModifications;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4175,6 +4207,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.ConstructibleObjects:
                         this.ConstructibleObjects = new MaskItem<Exception?, Fallout4Group.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ObjectModifications:
+                        this.ObjectModifications = new MaskItem<Exception?, Fallout4Group.ErrorMask<AObjectModification.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4525,6 +4560,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.ConstructibleObjects:
                         this.ConstructibleObjects = (MaskItem<Exception?, Fallout4Group.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.ObjectModifications:
+                        this.ObjectModifications = (MaskItem<Exception?, Fallout4Group.ErrorMask<AObjectModification.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4646,6 +4684,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (AimModels != null) return true;
                 if (Layers != null) return true;
                 if (ConstructibleObjects != null) return true;
+                if (ObjectModifications != null) return true;
                 return false;
             }
             #endregion
@@ -4784,6 +4823,7 @@ namespace Mutagen.Bethesda.Fallout4
                 AimModels?.Print(sb);
                 Layers?.Print(sb);
                 ConstructibleObjects?.Print(sb);
+                ObjectModifications?.Print(sb);
             }
             #endregion
 
@@ -4905,6 +4945,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AimModels = this.AimModels.Combine(rhs.AimModels, (l, r) => l.Combine(r));
                 ret.Layers = this.Layers.Combine(rhs.Layers, (l, r) => l.Combine(r));
                 ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
+                ret.ObjectModifications = this.ObjectModifications.Combine(rhs.ObjectModifications, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -5041,6 +5082,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<AimModel.TranslationMask>? AimModels;
             public Fallout4Group.TranslationMask<Layer.TranslationMask>? Layers;
             public Fallout4Group.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
+            public Fallout4Group.TranslationMask<AObjectModification.TranslationMask>? ObjectModifications;
             #endregion
 
             #region Ctors
@@ -5178,6 +5220,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((AimModels != null ? AimModels.OnOverall : DefaultOn, AimModels?.GetCrystal()));
                 ret.Add((Layers != null ? Layers.OnOverall : DefaultOn, Layers?.GetCrystal()));
                 ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
+                ret.Add((ObjectModifications != null ? ObjectModifications.OnOverall : DefaultOn, ObjectModifications?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -5330,6 +5373,7 @@ namespace Mutagen.Bethesda.Fallout4
             _AimModels_Object = new Fallout4Group<AimModel>(this);
             _Layers_Object = new Fallout4Group<Layer>(this);
             _ConstructibleObjects_Object = new Fallout4Group<ConstructibleObject>(this);
+            _ObjectModifications_Object = new Fallout4Group<AObjectModification>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5787,6 +5831,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
             }
+            if (mask?.ObjectModifications ?? true)
+            {
+                this.ObjectModifications.RecordCache.Set(rhsMod.ObjectModifications.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5909,6 +5957,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6272,6 +6321,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<AimModel> AimModels { get; }
         new Fallout4Group<Layer> Layers { get; }
         new Fallout4Group<ConstructibleObject> ConstructibleObjects { get; }
+        new Fallout4Group<AObjectModification> ObjectModifications { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -6403,6 +6453,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IAimModelGetter> AimModels { get; }
         IFallout4GroupGetter<ILayerGetter> Layers { get; }
         IFallout4GroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
+        IFallout4GroupGetter<IAObjectModificationGetter> ObjectModifications { get; }
 
     }
 
@@ -7086,6 +7137,7 @@ namespace Mutagen.Bethesda.Fallout4
         AimModels = 110,
         Layers = 111,
         ConstructibleObjects = 112,
+        ObjectModifications = 113,
     }
     #endregion
 
@@ -7103,9 +7155,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 113;
+        public const ushort AdditionalFieldCount = 114;
 
-        public const ushort FieldCount = 113;
+        public const ushort FieldCount = 114;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -7285,6 +7337,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.AimModels.Clear();
             item.Layers.Clear();
             item.ConstructibleObjects.Clear();
+            item.ObjectModifications.Clear();
         }
         
         #region Mutagen
@@ -7387,6 +7440,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.ReferenceGroups.RemapLinks(mapping);
             obj.Layers.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
+            obj.ObjectModifications.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -7533,6 +7587,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.AimModels.Remove(keys);
             obj.Layers.Remove(keys);
             obj.ConstructibleObjects.Remove(keys);
+            obj.ObjectModifications.Remove(keys);
         }
         
         public void Remove(
@@ -8484,6 +8539,30 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "AObjectModification":
+                case "IAObjectModificationGetter":
+                case "IAObjectModification":
+                case "IAObjectModificationInternal":
+                case "ArmorModification":
+                case "IArmorModificationGetter":
+                case "IArmorModification":
+                case "IArmorModificationInternal":
+                case "NpcModification":
+                case "INpcModificationGetter":
+                case "INpcModification":
+                case "INpcModificationInternal":
+                case "WeaponModification":
+                case "IWeaponModificationGetter":
+                case "IWeaponModification":
+                case "IWeaponModificationInternal":
+                case "ObjectModification":
+                case "IObjectModificationGetter":
+                case "IObjectModification":
+                case "IObjectModificationInternal":
+                    obj.ObjectModifications.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -8711,6 +8790,7 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAObjectModificationGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
@@ -9093,6 +9173,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AimModels = MaskItemExt.Factory(item.AimModels.GetEqualsMask(rhs.AimModels, include), include);
             ret.Layers = MaskItemExt.Factory(item.Layers.GetEqualsMask(rhs.Layers, include), include);
             ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
+            ret.ObjectModifications = MaskItemExt.Factory(item.ObjectModifications.GetEqualsMask(rhs.ObjectModifications, include), include);
         }
         
         public string Print(
@@ -9588,6 +9669,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.ConstructibleObjects?.Overall ?? true)
             {
                 item.ConstructibleObjects?.Print(sb, "ConstructibleObjects");
+            }
+            if (printMask?.ObjectModifications?.Overall ?? true)
+            {
+                item.ObjectModifications?.Print(sb, "ObjectModifications");
             }
         }
         
@@ -10502,6 +10587,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isConstructibleObjectsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectModifications) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectModifications, rhs.ObjectModifications, out var lhsObjectModifications, out var rhsObjectModifications, out var isObjectModificationsEqual))
+                {
+                    if (!object.Equals(lhsObjectModifications, rhsObjectModifications)) return false;
+                }
+                else if (!isObjectModificationsEqual) return false;
+            }
             return true;
         }
         
@@ -10621,6 +10714,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.AimModels);
             hash.Add(item.Layers);
             hash.Add(item.ConstructibleObjects);
+            hash.Add(item.ObjectModifications);
             return hash.ToHashCode();
         }
         
@@ -11198,6 +11292,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IConstructibleObject":
                 case "IConstructibleObjectInternal":
                     return obj.ConstructibleObjects;
+                case "AObjectModification":
+                case "IAObjectModificationGetter":
+                case "IAObjectModification":
+                case "IAObjectModificationInternal":
+                    return obj.ObjectModifications;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -11222,7 +11321,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[112];
+            Stream[] outputStreams = new Stream[113];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -11336,6 +11435,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.AimModels, 109, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Layers, 110, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 111, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 112, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11771,6 +11871,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.ConstructibleObjects.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectModifications.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -12224,6 +12328,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectModifications.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13257,6 +13365,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IConstructibleObject":
                 case "IConstructibleObjectInternal":
                     foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AObjectModification":
+                case "IAObjectModificationGetter":
+                case "IAObjectModification":
+                case "IAObjectModificationInternal":
+                    foreach (var item in obj.ObjectModifications.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -14428,6 +14545,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.ConstructibleObjects,
                 groupGetter: (m) => m.ConstructibleObjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AObjectModification, IAObjectModificationGetter>(
+                srcGroup: obj.ObjectModifications,
+                type: typeof(IAObjectModificationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ObjectModifications,
+                groupGetter: (m) => m.ObjectModifications))
             {
                 yield return item;
             }
@@ -16012,6 +16138,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.ConstructibleObjects,
                         groupGetter: (m) => m.ConstructibleObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AObjectModification":
+                case "IAObjectModificationGetter":
+                case "IAObjectModification":
+                case "IAObjectModificationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AObjectModification, IAObjectModificationGetter>(
+                        srcGroup: obj.ObjectModifications,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ObjectModifications,
+                        groupGetter: (m) => m.ObjectModifications))
                     {
                         yield return item;
                     }
@@ -18570,6 +18710,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectModifications) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ObjectModifications);
+                try
+                {
+                    item.ObjectModifications.DeepCopyIn(
+                        rhs: rhs.ObjectModifications,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ObjectModifications));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -18772,6 +18932,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool AimModels;
         public bool Layers;
         public bool ConstructibleObjects;
+        public bool ObjectModifications;
         public GroupMask()
         {
         }
@@ -18889,6 +19050,7 @@ namespace Mutagen.Bethesda.Fallout4
             AimModels = defaultValue;
             Layers = defaultValue;
             ConstructibleObjects = defaultValue;
+            ObjectModifications = defaultValue;
         }
     }
 
@@ -20148,6 +20310,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
                         item: ConstructibleObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ObjectModifications ?? true)
+            {
+                var ObjectModificationsItem = item.ObjectModifications;
+                if (ObjectModificationsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ObjectModificationsItem).BinaryWriteTranslator).Write<IAObjectModificationGetter>(
+                        item: ObjectModificationsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -21786,6 +21959,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.ConstructibleObjects;
                 }
+                case RecordTypeInts.OMOD:
+                {
+                    if (importMask?.ObjectModifications ?? true)
+                    {
+                        item.ObjectModifications.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ObjectModifications;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -22508,6 +22695,11 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _ConstructibleObjectsLocations;
         private IFallout4GroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? Fallout4GroupBinaryOverlay<IConstructibleObjectGetter>.Fallout4GroupFactory(_data, _ConstructibleObjectsLocations, _package) : default;
         public IFallout4GroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new Fallout4Group<ConstructibleObject>(this);
+        #endregion
+        #region ObjectModifications
+        private List<RangeInt64>? _ObjectModificationsLocations;
+        private IFallout4GroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? Fallout4GroupBinaryOverlay<IAObjectModificationGetter>.Fallout4GroupFactory(_data, _ObjectModificationsLocations, _package) : default;
+        public IFallout4GroupGetter<IAObjectModificationGetter> ObjectModifications => _ObjectModifications ?? new Fallout4Group<AObjectModification>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -23267,6 +23459,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _ConstructibleObjectsLocations ??= new();
                     _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.ConstructibleObjects;
+                }
+                case RecordTypeInts.OMOD:
+                {
+                    _ObjectModificationsLocations ??= new();
+                    _ObjectModificationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ObjectModifications;
                 }
                 default:
                     return default(int?);

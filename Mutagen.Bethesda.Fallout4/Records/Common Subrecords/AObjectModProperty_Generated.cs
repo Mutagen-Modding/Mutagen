@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ObjectModIntProperty, ObjectModFloatProperty, ObjectModBoolProperty, ObjectModStringProperty, ObjectModFormLinkIntProperty, ObjectModFormLinkFloatProperty]
+    /// Implemented by: [ObjectModIntProperty, ObjectModFloatProperty, ObjectModBoolProperty, ObjectModStringProperty, ObjectModFormLinkIntProperty, ObjectModEnumProperty, ObjectModFormLinkFloatProperty]
     /// </summary>
     public abstract partial class AObjectModProperty<T> :
         IAObjectModProperty<T>,
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ObjectModIntProperty, ObjectModFloatProperty, ObjectModBoolProperty, ObjectModStringProperty, ObjectModFormLinkIntProperty, ObjectModFormLinkFloatProperty]
+    /// Implemented by: [ObjectModIntProperty, ObjectModFloatProperty, ObjectModBoolProperty, ObjectModStringProperty, ObjectModFormLinkIntProperty, ObjectModEnumProperty, ObjectModFormLinkFloatProperty]
     /// </summary>
     public partial interface IAObjectModProperty<T> :
         IAObjectModPropertyGetter<T>,
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [ObjectModIntProperty, ObjectModFloatProperty, ObjectModBoolProperty, ObjectModStringProperty, ObjectModFormLinkIntProperty, ObjectModFormLinkFloatProperty]
+    /// Implemented by: [ObjectModIntProperty, ObjectModFloatProperty, ObjectModBoolProperty, ObjectModStringProperty, ObjectModFormLinkIntProperty, ObjectModEnumProperty, ObjectModFormLinkFloatProperty]
     /// </summary>
     public partial interface IAObjectModPropertyGetter<out T> :
         ILoquiObject,

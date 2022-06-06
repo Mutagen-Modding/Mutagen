@@ -444,6 +444,7 @@ public partial class RecordTypes
     public static readonly RecordType NNGT = new(0x54474E4E);
     public static readonly RecordType NNUS = new(0x53554E4E);
     public static readonly RecordType NNUT = new(0x54554E4E);
+    public static readonly RecordType NONE = new(0x454E4F4E);
     public static readonly RecordType NOTE = new(0x45544F4E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType NPOS = new(0x534F504E);

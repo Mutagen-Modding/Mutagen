@@ -327,14 +327,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region EmbeddedWeaponMod
-        private readonly IFormLinkNullable<IObjectModificationGetter> _EmbeddedWeaponMod = new FormLinkNullable<IObjectModificationGetter>();
-        public IFormLinkNullable<IObjectModificationGetter> EmbeddedWeaponMod
+        private readonly IFormLinkNullable<IAObjectModificationGetter> _EmbeddedWeaponMod = new FormLinkNullable<IAObjectModificationGetter>();
+        public IFormLinkNullable<IAObjectModificationGetter> EmbeddedWeaponMod
         {
             get => _EmbeddedWeaponMod;
             set => _EmbeddedWeaponMod.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IObjectModificationGetter> IWeaponGetter.EmbeddedWeaponMod => this.EmbeddedWeaponMod;
+        IFormLinkNullableGetter<IAObjectModificationGetter> IWeaponGetter.EmbeddedWeaponMod => this.EmbeddedWeaponMod;
         #endregion
         #region FirstPersonModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3555,7 +3555,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IInstanceNamingRuleGetter> InstanceNaming { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new ExtendedList<ObjectTemplate<Weapon.Property>>? ObjectTemplates { get; set; }
-        new IFormLinkNullable<IObjectModificationGetter> EmbeddedWeaponMod { get; set; }
+        new IFormLinkNullable<IAObjectModificationGetter> EmbeddedWeaponMod { get; set; }
         new Model? FirstPersonModel { get; set; }
         new Single? FirstPersonColorRemappingIndex { get; set; }
         new Int32? MO4F { get; set; }
@@ -3698,7 +3698,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IInstanceNamingRuleGetter> InstanceNaming { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IReadOnlyList<IObjectTemplateGetter<Weapon.Property>>? ObjectTemplates { get; }
-        IFormLinkNullableGetter<IObjectModificationGetter> EmbeddedWeaponMod { get; }
+        IFormLinkNullableGetter<IAObjectModificationGetter> EmbeddedWeaponMod { get; }
         IModelGetter? FirstPersonModel { get; }
         Single? FirstPersonColorRemappingIndex { get; }
         Int32? MO4F { get; }
@@ -7128,7 +7128,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IObjectTemplateGetter<Weapon.Property>>? ObjectTemplates { get; private set; }
         #region EmbeddedWeaponMod
         private int? _EmbeddedWeaponModLocation;
-        public IFormLinkNullableGetter<IObjectModificationGetter> EmbeddedWeaponMod => _EmbeddedWeaponModLocation.HasValue ? new FormLinkNullable<IObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmbeddedWeaponModLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IObjectModificationGetter>.Null;
+        public IFormLinkNullableGetter<IAObjectModificationGetter> EmbeddedWeaponMod => _EmbeddedWeaponModLocation.HasValue ? new FormLinkNullable<IAObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmbeddedWeaponModLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAObjectModificationGetter>.Null;
         #endregion
         public IModelGetter? FirstPersonModel { get; private set; }
         #region FirstPersonColorRemappingIndex

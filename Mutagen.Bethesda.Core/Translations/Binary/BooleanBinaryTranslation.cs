@@ -22,8 +22,7 @@ public class BooleanBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTransla
 
     public void Write(TWriter writer, bool item, byte byteLength)
     {
-        writer.Write(item);
-        writer.WriteZeros(byteLength);
+        writer.Write(item, byteLength);
     }
 
     public bool Parse(

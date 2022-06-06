@@ -41,14 +41,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class ObjectModification :
+    public partial class NpcModification :
         AObjectModification,
-        IEquatable<IObjectModificationGetter>,
-        ILoquiObjectSetter<ObjectModification>,
-        IObjectModificationInternal
+        IEquatable<INpcModificationGetter>,
+        ILoquiObjectSetter<NpcModification>,
+        INpcModificationInternal
     {
         #region Ctor
-        protected ObjectModification()
+        protected NpcModification()
         {
             CustomCtor();
         }
@@ -57,15 +57,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> _Properties = new ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>>();
-        public ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> Properties
+        private ExtendedList<AObjectModProperty<Npc.Property>> _Properties = new ExtendedList<AObjectModProperty<Npc.Property>>();
+        public ExtendedList<AObjectModProperty<Npc.Property>> Properties
         {
             get => this._Properties;
             init => this._Properties = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> IObjectModificationGetter.Properties => _Properties;
+        IReadOnlyList<IAObjectModPropertyGetter<Npc.Property>> INpcModificationGetter.Properties => _Properties;
         #endregion
 
         #endregion
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectModificationMixIn.Print(
+            NpcModificationMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ObjectModification.Mask<R>();
+                var ret = new NpcModification.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -256,16 +256,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ObjectModification.Mask<bool>? printMask = null)
+            public string Print(NpcModification.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ObjectModification.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NpcModification.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ObjectModification.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(NpcModification.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if ((printMask?.Properties?.Overall ?? true)
@@ -304,10 +304,10 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                NpcModification_FieldIndex enu = (NpcModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case NpcModification_FieldIndex.Properties:
                         return Properties;
                     default:
                         return base.GetNthMask(index);
@@ -316,10 +316,10 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                NpcModification_FieldIndex enu = (NpcModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case NpcModification_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(ex, null);
                         break;
                     default:
@@ -330,10 +330,10 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                NpcModification_FieldIndex enu = (NpcModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case NpcModification_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>)obj;
                         break;
                     default:
@@ -449,16 +449,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ObjectModification_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModificationCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectModificationSetterCommon.Instance.RemapLinks(this, mapping);
-        public ObjectModification(FormKey formKey)
+        public static readonly RecordType GrupRecordType = NpcModification_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcModificationCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcModificationSetterCommon.Instance.RemapLinks(this, mapping);
+        public NpcModification(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private ObjectModification(
+        private NpcModification(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal ObjectModification(
+        internal NpcModification(
             FormKey formKey,
             ushort formVersion)
         {
@@ -476,12 +476,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public ObjectModification(IFallout4Mod mod)
+        public NpcModification(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ObjectModification(IFallout4Mod mod, string editorID)
+        public NpcModification(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -489,10 +489,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ObjectModification>.ToString(this);
+            return MajorRecordPrinter<NpcModification>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IObjectModification);
+        protected override Type LinkType => typeof(INpcModification);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -501,16 +501,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IObjectModificationGetter rhs) return false;
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INpcModificationGetter rhs) return false;
+            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IObjectModificationGetter? obj)
+        public bool Equals(INpcModificationGetter? obj)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -518,23 +518,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ObjectModificationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NpcModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ObjectModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NpcModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static ObjectModification CreateFromBinary(
+        public new static NpcModification CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new ObjectModification();
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new NpcModification();
+            ((NpcModificationSetterCommon)((INpcModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ObjectModification item,
+            out NpcModification item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -560,96 +560,96 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)this).CommonSetterInstance()!).Clear(this);
+            ((NpcModificationSetterCommon)((INpcModificationGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ObjectModification GetNew()
+        internal static new NpcModification GetNew()
         {
-            return new ObjectModification();
+            return new NpcModification();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IObjectModification :
+    public partial interface INpcModification :
         IAObjectModificationInternal,
         IFormLinkContainer,
-        ILoquiObjectSetter<IObjectModificationInternal>,
+        ILoquiObjectSetter<INpcModificationInternal>,
         IModeled,
         INamed,
         INamedRequired,
-        IObjectModificationGetter,
+        INpcModificationGetter,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
-        new ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> Properties { get; }
+        new ExtendedList<AObjectModProperty<Npc.Property>> Properties { get; }
     }
 
-    public partial interface IObjectModificationInternal :
+    public partial interface INpcModificationInternal :
         IAObjectModificationInternal,
-        IObjectModification,
-        IObjectModificationGetter
+        INpcModification,
+        INpcModificationGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.OMOD)]
-    public partial interface IObjectModificationGetter :
+    public partial interface INpcModificationGetter :
         IAObjectModificationGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IObjectModificationGetter>,
-        IMapsToGetter<IObjectModificationGetter>,
+        ILoquiObject<INpcModificationGetter>,
+        IMapsToGetter<INpcModificationGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
-        IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> Properties { get; }
+        static new ILoquiRegistration StaticRegistration => NpcModification_Registration.Instance;
+        IReadOnlyList<IAObjectModPropertyGetter<Npc.Property>> Properties { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ObjectModificationMixIn
+    public static partial class NpcModificationMixIn
     {
-        public static void Clear(this IObjectModificationInternal item)
+        public static void Clear(this INpcModificationInternal item)
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((NpcModificationSetterCommon)((INpcModificationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ObjectModification.Mask<bool> GetEqualsMask(
-            this IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
+        public static NpcModification.Mask<bool> GetEqualsMask(
+            this INpcModificationGetter item,
+            INpcModificationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IObjectModificationGetter item,
+            this INpcModificationGetter item,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            NpcModification.Mask<bool>? printMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Print(
+            return ((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IObjectModificationGetter item,
+            this INpcModificationGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            NpcModification.Mask<bool>? printMask = null)
         {
-            ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Print(
+            ((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -657,39 +657,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
-            ObjectModification.TranslationMask? equalsMask = null)
+            this INpcModificationGetter item,
+            INpcModificationGetter rhs,
+            NpcModification.TranslationMask? equalsMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Equals(
+            return ((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IObjectModificationInternal lhs,
-            IObjectModificationGetter rhs,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+            this INpcModificationInternal lhs,
+            INpcModificationGetter rhs,
+            out NpcModification.ErrorMask errorMask,
+            NpcModification.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NpcModificationSetterTranslationCommon)((INpcModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ObjectModification.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NpcModification.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IObjectModificationInternal lhs,
-            IObjectModificationGetter rhs,
+            this INpcModificationInternal lhs,
+            INpcModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NpcModificationSetterTranslationCommon)((INpcModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -697,44 +697,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
-            ObjectModification.TranslationMask? copyMask = null)
+        public static NpcModification DeepCopy(
+            this INpcModificationGetter item,
+            NpcModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcModificationSetterTranslationCommon)((INpcModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+        public static NpcModification DeepCopy(
+            this INpcModificationGetter item,
+            out NpcModification.ErrorMask errorMask,
+            NpcModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcModificationSetterTranslationCommon)((INpcModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
+        public static NpcModification DeepCopy(
+            this INpcModificationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcModificationSetterTranslationCommon)((INpcModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ObjectModification Duplicate(
-            this IObjectModificationGetter item,
+        public static NpcModification Duplicate(
+            this INpcModificationGetter item,
             FormKey formKey,
-            ObjectModification.TranslationMask? copyMask = null)
+            NpcModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Duplicate(
+            return ((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -744,11 +744,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IObjectModificationInternal item,
+            this INpcModificationInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((NpcModificationSetterCommon)((INpcModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum ObjectModification_FieldIndex
+    internal enum NpcModification_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -793,40 +793,40 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Registration
-    internal partial class ObjectModification_Registration : ILoquiRegistration
+    internal partial class NpcModification_Registration : ILoquiRegistration
     {
-        public static readonly ObjectModification_Registration Instance = new ObjectModification_Registration();
+        public static readonly NpcModification_Registration Instance = new NpcModification_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 659,
+            msgID: 657,
             version: 0);
 
-        public const string GUID = "ea6acf0a-4fa1-474f-bb0d-95dc4cf7bd97";
+        public const string GUID = "03f6227f-e295-4869-bc28-e65a6001f00e";
 
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 23;
 
-        public static readonly Type MaskType = typeof(ObjectModification.Mask<>);
+        public static readonly Type MaskType = typeof(NpcModification.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ObjectModification.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NpcModification.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ObjectModification);
+        public static readonly Type ClassType = typeof(NpcModification);
 
-        public static readonly Type GetterType = typeof(IObjectModificationGetter);
+        public static readonly Type GetterType = typeof(INpcModificationGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IObjectModification);
+        public static readonly Type SetterType = typeof(INpcModification);
 
-        public static readonly Type? InternalSetterType = typeof(IObjectModificationInternal);
+        public static readonly Type? InternalSetterType = typeof(INpcModificationInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.ObjectModification";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.NpcModification";
 
-        public const string Name = "ObjectModification";
+        public const string Name = "NpcModification";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(RecordTypes.OMOD);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ObjectModificationBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NpcModificationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -874,13 +874,13 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class ObjectModificationSetterCommon : AObjectModificationSetterCommon
+    internal partial class NpcModificationSetterCommon : AObjectModificationSetterCommon
     {
-        public new static readonly ObjectModificationSetterCommon Instance = new ObjectModificationSetterCommon();
+        public new static readonly NpcModificationSetterCommon Instance = new NpcModificationSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IObjectModificationInternal item)
+        public void Clear(INpcModificationInternal item)
         {
             ClearPartial();
             item.Properties.Clear();
@@ -889,21 +889,21 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override void Clear(IAObjectModificationInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (INpcModificationInternal)item);
         }
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (INpcModificationInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (INpcModificationInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IObjectModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(INpcModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.Properties.RemapLinks(mapping);
@@ -913,16 +913,16 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IObjectModificationInternal item,
+            INpcModificationInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<IObjectModificationInternal>(
+            PluginUtilityTranslation.MajorRecordParse<INpcModificationInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ObjectModificationBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ObjectModificationBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: NpcModificationBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: NpcModificationBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (NpcModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (NpcModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (NpcModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -961,17 +961,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ObjectModificationCommon : AObjectModificationCommon
+    internal partial class NpcModificationCommon : AObjectModificationCommon
     {
-        public new static readonly ObjectModificationCommon Instance = new ObjectModificationCommon();
+        public new static readonly NpcModificationCommon Instance = new NpcModificationCommon();
 
-        public ObjectModification.Mask<bool> GetEqualsMask(
-            IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
+        public NpcModification.Mask<bool> GetEqualsMask(
+            INpcModificationGetter item,
+            INpcModificationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ObjectModification.Mask<bool>(false);
-            ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new NpcModification.Mask<bool>(false);
+            ((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -980,9 +980,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
-            ObjectModification.Mask<bool> ret,
+            INpcModificationGetter item,
+            INpcModificationGetter rhs,
+            NpcModification.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -994,9 +994,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public string Print(
-            IObjectModificationGetter item,
+            INpcModificationGetter item,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            NpcModification.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1008,18 +1008,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IObjectModificationGetter item,
+            INpcModificationGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            NpcModification.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ObjectModification =>");
+                sb.AppendLine($"NpcModification =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ObjectModification) =>");
+                sb.AppendLine($"{name} (NpcModification) =>");
             }
             using (sb.Brace())
             {
@@ -1031,9 +1031,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IObjectModificationGetter item,
+            INpcModificationGetter item,
             StructuredStringBuilder sb,
-            ObjectModification.Mask<bool>? printMask = null)
+            NpcModification.Mask<bool>? printMask = null)
         {
             AObjectModificationCommon.ToStringFields(
                 item: item,
@@ -1055,92 +1055,92 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-        public static ObjectModification_FieldIndex ConvertFieldIndex(AObjectModification_FieldIndex index)
+        public static NpcModification_FieldIndex ConvertFieldIndex(AObjectModification_FieldIndex index)
         {
             switch (index)
             {
                 case AObjectModification_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FormVersion:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Version2:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Name:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Description:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Model:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Unknown:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Unknown2:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.MaxRank:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.LevelTierScaledOffset:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.AttachPoint:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.AttachParentSlots:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Items:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Includes:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.TargetOmodKeywords:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FilterKeywords:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.LooseMod:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Priority:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Filter:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ObjectModification_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static new NpcModification_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ObjectModification_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new NpcModification_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (NpcModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1148,15 +1148,15 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            IObjectModificationGetter? lhs,
-            IObjectModificationGetter? rhs,
+            INpcModificationGetter? lhs,
+            INpcModificationGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ObjectModification_FieldIndex.Properties) ?? true))
+            if ((crystal?.GetShouldTranslate((int)NpcModification_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<AObjectModification.NoneProperty>)((IAObjectModPropertyGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectModification_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<Npc.Property>)((IAObjectModPropertyGetter<Npc.Property>)l).CommonInstance(typeof(Npc.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)NpcModification_FieldIndex.Properties)))) return false;
             }
             return true;
         }
@@ -1167,8 +1167,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (INpcModificationGetter?)lhs,
+                rhs: rhs as INpcModificationGetter,
                 crystal: crystal);
         }
         
@@ -1178,8 +1178,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (INpcModificationGetter?)lhs,
+                rhs: rhs as INpcModificationGetter,
                 crystal: crystal);
         }
         
@@ -1189,12 +1189,12 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (INpcModificationGetter?)lhs,
+                rhs: rhs as INpcModificationGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IObjectModificationGetter item)
+        public virtual int GetHashCode(INpcModificationGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Properties);
@@ -1204,17 +1204,17 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override int GetHashCode(IAObjectModificationGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (INpcModificationGetter)item);
         }
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (INpcModificationGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (INpcModificationGetter)item);
         }
         
         #endregion
@@ -1222,17 +1222,17 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return ObjectModification.GetNew();
+            return NpcModification.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectModificationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcModificationGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<AObjectModification.NoneProperty>, IFormLinkContainerGetter>()
+            foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<Npc.Property>, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -1241,12 +1241,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Duplicate
-        public ObjectModification Duplicate(
-            IObjectModificationGetter item,
+        public NpcModification Duplicate(
+            INpcModificationGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ObjectModification(formKey);
+            var newRec = new NpcModification(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (INpcModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (INpcModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (INpcModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1289,14 +1289,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ObjectModificationSetterTranslationCommon : AObjectModificationSetterTranslationCommon
+    internal partial class NpcModificationSetterTranslationCommon : AObjectModificationSetterTranslationCommon
     {
-        public new static readonly ObjectModificationSetterTranslationCommon Instance = new ObjectModificationSetterTranslationCommon();
+        public new static readonly NpcModificationSetterTranslationCommon Instance = new NpcModificationSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IObjectModificationInternal item,
-            IObjectModificationGetter rhs,
+            INpcModificationInternal item,
+            INpcModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1310,8 +1310,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            IObjectModification item,
-            IObjectModificationGetter rhs,
+            INpcModification item,
+            INpcModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1322,16 +1322,16 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ObjectModification_FieldIndex.Properties) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcModification_FieldIndex.Properties) ?? true))
             {
-                errorMask?.PushIndex((int)ObjectModification_FieldIndex.Properties);
+                errorMask?.PushIndex((int)NpcModification_FieldIndex.Properties);
                 try
                 {
                     item.Properties.SetTo(
                         rhs.Properties
                         .Select(r =>
                         {
-                            return r.DeepCopy<AObjectModification.NoneProperty>(
+                            return r.DeepCopy<Npc.Property>(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
@@ -1356,8 +1356,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (INpcModificationInternal)item,
+                rhs: (INpcModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1371,8 +1371,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (INpcModification)item,
+                rhs: (INpcModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1386,8 +1386,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (INpcModificationInternal)item,
+                rhs: (INpcModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1401,8 +1401,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (INpcModification)item,
+                rhs: (INpcModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1416,8 +1416,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (INpcModificationInternal)item,
+                rhs: (INpcModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1431,8 +1431,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (INpcModification)item,
+                rhs: (INpcModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1440,12 +1440,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
-            ObjectModification.TranslationMask? copyMask = null)
+        public NpcModification DeepCopy(
+            INpcModificationGetter item,
+            NpcModification.TranslationMask? copyMask = null)
         {
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NpcModification ret = (NpcModification)((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).GetNew();
+            ((NpcModificationSetterTranslationCommon)((INpcModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1454,30 +1454,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+        public NpcModification DeepCopy(
+            INpcModificationGetter item,
+            out NpcModification.ErrorMask errorMask,
+            NpcModification.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NpcModification ret = (NpcModification)((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).GetNew();
+            ((NpcModificationSetterTranslationCommon)((INpcModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ObjectModification.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NpcModification.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
+        public NpcModification DeepCopy(
+            INpcModificationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NpcModification ret = (NpcModification)((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).GetNew();
+            ((NpcModificationSetterTranslationCommon)((INpcModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1493,21 +1493,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectModification
+    public partial class NpcModification
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ObjectModification_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NpcModification_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcModification_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ObjectModificationCommon.Instance;
+        protected override object CommonInstance() => NpcModificationCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ObjectModificationSetterCommon.Instance;
+            return NpcModificationSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ObjectModificationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NpcModificationSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1518,14 +1518,14 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectModificationBinaryWriteTranslation :
+    public partial class NpcModificationBinaryWriteTranslation :
         AObjectModificationBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ObjectModificationBinaryWriteTranslation Instance = new ObjectModificationBinaryWriteTranslation();
+        public new readonly static NpcModificationBinaryWriteTranslation Instance = new NpcModificationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IObjectModificationGetter item,
+            INpcModificationGetter item,
             MutagenWriter writer)
         {
             AObjectModificationBinaryWriteTranslation.WriteEmbedded(
@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public void Write(
             MutagenWriter writer,
-            IObjectModificationGetter item,
+            INpcModificationGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (INpcModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (INpcModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (INpcModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1598,20 +1598,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (INpcModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ObjectModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
+    internal partial class NpcModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
     {
-        public new readonly static ObjectModificationBinaryCreateTranslation Instance = new ObjectModificationBinaryCreateTranslation();
+        public new readonly static NpcModificationBinaryCreateTranslation Instance = new NpcModificationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OMOD;
         public static void FillBinaryStructs(
-            IObjectModificationInternal item,
+            INpcModificationInternal item,
             MutagenFrame frame)
         {
             AObjectModificationBinaryCreateTranslation.FillBinaryStructs(
@@ -1625,7 +1625,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ObjectModificationBinaryTranslationMixIn
+    public static class NpcModificationBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1634,36 +1634,36 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class ObjectModificationBinaryOverlay :
+    internal partial class NpcModificationBinaryOverlay :
         AObjectModificationBinaryOverlay,
-        IObjectModificationGetter
+        INpcModificationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ObjectModification_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NpcModification_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcModification_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ObjectModificationCommon.Instance;
+        protected override object CommonInstance() => NpcModificationCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ObjectModificationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NpcModificationSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModificationCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcModificationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ObjectModificationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NpcModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ObjectModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NpcModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IObjectModification);
+        protected override Type LinkType => typeof(INpcModification);
 
 
         partial void CustomFactoryEnd(
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
 
         partial void CustomCtor();
-        protected ObjectModificationBinaryOverlay(
+        protected NpcModificationBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1682,13 +1682,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IObjectModificationGetter ObjectModificationFactory(
+        public static INpcModificationGetter NpcModificationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new ObjectModificationBinaryOverlay(
+            var ret = new NpcModificationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
@@ -1709,12 +1709,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IObjectModificationGetter ObjectModificationFactory(
+        public static INpcModificationGetter NpcModificationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return ObjectModificationFactory(
+            return NpcModificationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1726,7 +1726,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectModificationMixIn.Print(
+            NpcModificationMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ObjectModification>.ToString(this);
+            return MajorRecordPrinter<NpcModification>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1746,16 +1746,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IObjectModificationGetter rhs) return false;
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INpcModificationGetter rhs) return false;
+            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IObjectModificationGetter? obj)
+        public bool Equals(INpcModificationGetter? obj)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

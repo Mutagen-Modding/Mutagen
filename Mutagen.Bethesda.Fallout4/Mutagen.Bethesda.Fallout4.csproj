@@ -476,6 +476,9 @@
     <Compile Include="Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ObjectModification.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Package.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -1412,9 +1415,6 @@
     <Compile Include="Records\Major Records\RuleName_Generated.cs">
       <DependentUpon>InstanceNamingRule.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ObjectModification_Generated.cs">
-      <DependentUpon>ObjectModification.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\IdleAnimation_Generated.cs">
       <DependentUpon>IdleAnimation.xml</DependentUpon>
     </Compile>
@@ -2347,6 +2347,30 @@
     </Compile>
     <Compile Include="Records\Major Records\ConstructibleCreatedObjectCount_Generated.cs">
       <DependentUpon>ConstructibleObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectModItem_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectModInclude_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AObjectModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModEnumProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -119,6 +119,7 @@
       <Group name="AimModels" refName="AimModel"/>
       <Group name="Layers" refName="Layer"/>
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
+      <Group name="ObjectModifications" refName="AObjectModification" />
     </Fields>
   </Object>
 </Loqui>
