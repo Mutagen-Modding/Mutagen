@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="InstanceNaming" objType="Subrecord" recordType="INRD" GUID="73c7a0e4-b33b-44ce-8c61-c33fc9815e07" ID="224">
-    <Fields>
-      <FormLink name="InstanceNamingRules" refName="InstanceNamingRule" nullable="True" />
-    </Fields>
-  </Object>
-</Loqui>

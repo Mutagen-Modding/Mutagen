@@ -289,14 +289,14 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? IWeaponGetter.Description => this.Description;
         #endregion
         #region InstanceNaming
-        private readonly IFormLinkNullable<IInstanceNamingRuleGetter> _InstanceNaming = new FormLinkNullable<IInstanceNamingRuleGetter>();
-        public IFormLinkNullable<IInstanceNamingRuleGetter> InstanceNaming
+        private readonly IFormLinkNullable<IInstanceNamingRulesGetter> _InstanceNaming = new FormLinkNullable<IInstanceNamingRulesGetter>();
+        public IFormLinkNullable<IInstanceNamingRulesGetter> InstanceNaming
         {
             get => _InstanceNaming;
             set => _InstanceNaming.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IInstanceNamingRuleGetter> IWeaponGetter.InstanceNaming => this.InstanceNaming;
+        IFormLinkNullableGetter<IInstanceNamingRulesGetter> IWeaponGetter.InstanceNaming => this.InstanceNaming;
         #endregion
         #region AttachParentSlots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3552,7 +3552,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
-        new IFormLinkNullable<IInstanceNamingRuleGetter> InstanceNaming { get; set; }
+        new IFormLinkNullable<IInstanceNamingRulesGetter> InstanceNaming { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new ExtendedList<ObjectTemplate<Weapon.Property>>? ObjectTemplates { get; set; }
         new IFormLinkNullable<IAObjectModificationGetter> EmbeddedWeaponMod { get; set; }
@@ -3695,7 +3695,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
         ITranslatedStringGetter? Description { get; }
-        IFormLinkNullableGetter<IInstanceNamingRuleGetter> InstanceNaming { get; }
+        IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IReadOnlyList<IObjectTemplateGetter<Weapon.Property>>? ObjectTemplates { get; }
         IFormLinkNullableGetter<IAObjectModificationGetter> EmbeddedWeaponMod { get; }
@@ -7122,7 +7122,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region InstanceNaming
         private int? _InstanceNamingLocation;
-        public IFormLinkNullableGetter<IInstanceNamingRuleGetter> InstanceNaming => _InstanceNamingLocation.HasValue ? new FormLinkNullable<IInstanceNamingRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InstanceNamingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IInstanceNamingRuleGetter>.Null;
+        public IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming => _InstanceNamingLocation.HasValue ? new FormLinkNullable<IInstanceNamingRulesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InstanceNamingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IInstanceNamingRulesGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
         public IReadOnlyList<IObjectTemplateGetter<Weapon.Property>>? ObjectTemplates { get; private set; }

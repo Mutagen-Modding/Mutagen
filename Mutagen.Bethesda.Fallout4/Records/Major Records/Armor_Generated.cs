@@ -263,14 +263,14 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? IArmorGetter.Description => this.Description;
         #endregion
         #region InstanceNaming
-        private readonly IFormLinkNullable<IInstanceNamingRuleGetter> _InstanceNaming = new FormLinkNullable<IInstanceNamingRuleGetter>();
-        public IFormLinkNullable<IInstanceNamingRuleGetter> InstanceNaming
+        private readonly IFormLinkNullable<IInstanceNamingRulesGetter> _InstanceNaming = new FormLinkNullable<IInstanceNamingRulesGetter>();
+        public IFormLinkNullable<IInstanceNamingRulesGetter> InstanceNaming
         {
             get => _InstanceNaming;
             set => _InstanceNaming.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IInstanceNamingRuleGetter> IArmorGetter.InstanceNaming => this.InstanceNaming;
+        IFormLinkNullableGetter<IInstanceNamingRulesGetter> IArmorGetter.InstanceNaming => this.InstanceNaming;
         #endregion
         #region Armatures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2091,7 +2091,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
-        new IFormLinkNullable<IInstanceNamingRuleGetter> InstanceNaming { get; set; }
+        new IFormLinkNullable<IInstanceNamingRulesGetter> InstanceNaming { get; set; }
         new ExtendedList<ArmorAddonModel> Armatures { get; }
         new Int32 Value { get; set; }
         new Single Weight { get; set; }
@@ -2181,7 +2181,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
         ITranslatedStringGetter? Description { get; }
-        IFormLinkNullableGetter<IInstanceNamingRuleGetter> InstanceNaming { get; }
+        IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming { get; }
         IReadOnlyList<IArmorAddonModelGetter> Armatures { get; }
         Int32 Value { get; }
         Single Weight { get; }
@@ -4538,7 +4538,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region InstanceNaming
         private int? _InstanceNamingLocation;
-        public IFormLinkNullableGetter<IInstanceNamingRuleGetter> InstanceNaming => _InstanceNamingLocation.HasValue ? new FormLinkNullable<IInstanceNamingRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InstanceNamingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IInstanceNamingRuleGetter>.Null;
+        public IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming => _InstanceNamingLocation.HasValue ? new FormLinkNullable<IInstanceNamingRulesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InstanceNamingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IInstanceNamingRulesGetter>.Null;
         #endregion
         public IReadOnlyList<IArmorAddonModelGetter> Armatures { get; private set; } = Array.Empty<IArmorAddonModelGetter>();
         private RangeInt32? _DATALocation;

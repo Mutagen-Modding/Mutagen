@@ -3,17 +3,7 @@ namespace Mutagen.Bethesda.Fallout4;
 public partial class InstanceNamingRule
 {
     [Flags]
-    public enum TargetEnum
-    {
-        None = 0x00,
-        Armor = 0x1D,
-        Actor = 0x2D,
-        Furniture = 0x2A,
-        Weapon = 0x2B
-    }
-
-    [Flags]
-    public enum PropertyEnum
+    public enum PropertyTarget
     {
         Enchantments = 0x0,
         BashImpactDataSet = 0x1,
@@ -31,7 +21,7 @@ public partial class InstanceNamingRule
         MaterialSwaps = 0xD
     }
 
-    public enum OpEnum
+    public enum Operations
     {
         GreaterThanOrEqualTo = 0,
         GreaterThan = 1,

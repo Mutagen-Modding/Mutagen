@@ -35,6 +35,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IdleMarker
 - Ingestible
 - Ingredient
+- InstanceNamingRule
 - Key
 - Light
 - Location
@@ -45,7 +46,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ObjectTemplate
 - QuestReferenceAlias
 - Race
-- RuleName
 - Scene
 - Spell
 - TalkingActivator
@@ -128,6 +128,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Holotape
 - Ingestible
 - Ingredient
+- InstanceNamingRule
 - Key
 - Keyword
 - Light
@@ -450,6 +451,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### InstanceNamingRule
+- IKeyworded
+- INamed
 ### Key
 - IHasIcons
 - IKeyworded
@@ -608,8 +612,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHasIcons
 ### RegionWeather
 - IHasIcons
-### RuleName
-- IKeyworded
 ### Scene
 - IKeyworded
 ### SceneAction

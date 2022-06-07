@@ -11,17 +11,18 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
-using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -40,23 +41,95 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class InstanceNamingRule :
-        Fallout4MajorRecord,
         IEquatable<IInstanceNamingRuleGetter>,
-        IInstanceNamingRuleInternal,
+        IInstanceNamingRule,
         ILoquiObjectSetter<InstanceNamingRule>
     {
         #region Ctor
-        protected InstanceNamingRule()
+        public InstanceNamingRule()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IInstanceNamingRuleGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IInstanceNamingRuleGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region Properties
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private InstanceNamingRuleProperties? _Properties;
+        public InstanceNamingRuleProperties? Properties
+        {
+            get => _Properties;
+            set => _Properties = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IInstanceNamingRulePropertiesGetter? IInstanceNamingRuleGetter.Properties => this.Properties;
+        #endregion
+        #region Index
+        public UInt16? Index { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IInstanceNamingRuleGetter.Index => this.Index;
+        #endregion
 
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
@@ -68,33 +141,46 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is not IInstanceNamingRuleGetter rhs) return false;
+            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IInstanceNamingRuleGetter? obj)
+        {
+            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #region Mask
-        public new class Mask<TItem> :
-            Fallout4MajorRecord.Mask<TItem>,
+        public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
-            : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Properties = new MaskItem<TItem, InstanceNamingRuleProperties.Mask<TItem>?>(initialValue, new InstanceNamingRuleProperties.Mask<TItem>(initialValue));
+                this.Index = initialValue;
             }
 
             public Mask(
-                TItem MajorRecordFlagsRaw,
-                TItem FormKey,
-                TItem VersionControl,
-                TItem EditorID,
-                TItem FormVersion,
-                TItem Version2)
-            : base(
-                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-                FormKey: FormKey,
-                VersionControl: VersionControl,
-                EditorID: EditorID,
-                FormVersion: FormVersion,
-                Version2: Version2)
+                TItem Name,
+                TItem Keywords,
+                TItem Properties,
+                TItem Index)
             {
+                this.Name = Name;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Properties = new MaskItem<TItem, InstanceNamingRuleProperties.Mask<TItem>?>(Properties, new InstanceNamingRuleProperties.Mask<TItem>(Properties));
+                this.Index = Index;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +189,13 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, InstanceNamingRuleProperties.Mask<TItem>?>? Properties { get; set; }
+            public TItem Index;
             #endregion
 
             #region Equals
@@ -115,36 +208,76 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Properties, rhs.Properties)) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(base.GetHashCode());
+                hash.Add(this.Name);
+                hash.Add(this.Keywords);
+                hash.Add(this.Properties);
+                hash.Add(this.Index);
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public override bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Properties != null)
+                {
+                    if (!eval(this.Properties.Overall)) return false;
+                    if (this.Properties.Specific != null && !this.Properties.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Index)) return false;
                 return true;
             }
             #endregion
 
             #region Any
-            public override bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Properties != null)
+                {
+                    if (eval(this.Properties.Overall)) return true;
+                    if (this.Properties.Specific != null && this.Properties.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Index)) return true;
                 return false;
             }
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<TItem, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new InstanceNamingRule.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
@@ -153,7 +286,23 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Properties = this.Properties == null ? null : new MaskItem<R, InstanceNamingRuleProperties.Mask<R>?>(eval(this.Properties.Overall), this.Properties.Specific?.Translate(eval));
+                obj.Index = eval(this.Index);
             }
             #endregion
 
@@ -172,52 +321,139 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(InstanceNamingRule.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Properties?.Overall ?? true)
+                    {
+                        Properties?.Print(sb);
+                    }
+                    if (printMask?.Index ?? true)
+                    {
+                        sb.AppendItem(Index, "Index");
+                    }
                 }
             }
             #endregion
 
         }
 
-        public new class ErrorMask :
-            Fallout4MajorRecord.ErrorMask,
+        public class ErrorMask :
+            IErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, InstanceNamingRuleProperties.ErrorMask?>? Properties;
+            public Exception? Index;
+            #endregion
+
             #region IErrorMask
-            public override object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
                 InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
                 switch (enu)
                 {
+                    case InstanceNamingRule_FieldIndex.Name:
+                        return Name;
+                    case InstanceNamingRule_FieldIndex.Keywords:
+                        return Keywords;
+                    case InstanceNamingRule_FieldIndex.Properties:
+                        return Properties;
+                    case InstanceNamingRule_FieldIndex.Index:
+                        return Index;
                     default:
-                        return base.GetNthMask(index);
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
                 InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
                 switch (enu)
                 {
-                    default:
-                        base.SetNthException(index, ex);
+                    case InstanceNamingRule_FieldIndex.Name:
+                        this.Name = ex;
                         break;
+                    case InstanceNamingRule_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case InstanceNamingRule_FieldIndex.Properties:
+                        this.Properties = new MaskItem<Exception?, InstanceNamingRuleProperties.ErrorMask?>(ex, null);
+                        break;
+                    case InstanceNamingRule_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
                 InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
                 switch (enu)
                 {
-                    default:
-                        base.SetNthMask(index, obj);
+                    case InstanceNamingRule_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
                         break;
+                    case InstanceNamingRule_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case InstanceNamingRule_FieldIndex.Properties:
+                        this.Properties = (MaskItem<Exception?, InstanceNamingRuleProperties.ErrorMask?>?)obj;
+                        break;
+                    case InstanceNamingRule_FieldIndex.Index:
+                        this.Index = (Exception?)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Keywords != null) return true;
+                if (Properties != null) return true;
+                if (Index != null) return true;
                 return false;
             }
             #endregion
@@ -225,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public override void Print(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -241,9 +477,35 @@ namespace Mutagen.Bethesda.Fallout4
                     PrintFillInternal(sb);
                 }
             }
-            protected override void PrintFillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Properties?.Print(sb);
+                {
+                    sb.AppendItem(Index, "Index");
+                }
             }
             #endregion
 
@@ -252,6 +514,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = this.Properties.Combine(rhs.Properties, (l, r) => l.Combine(r));
+                ret.Index = this.Index.Combine(rhs.Index);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -262,26 +528,55 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Factory
-            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
             {
                 return new ErrorMask();
             }
             #endregion
 
         }
-        public new class TranslationMask :
-            Fallout4MajorRecord.TranslationMask,
-            ITranslationMask
+        public class TranslationMask : ITranslationMask
         {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
+            public bool OnOverall;
+            public bool Name;
+            public bool Keywords;
+            public InstanceNamingRuleProperties.TranslationMask? Properties;
+            public bool Index;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
-                : base(defaultOn, onOverall)
             {
+                this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
+                this.Name = defaultOn;
+                this.Keywords = defaultOn;
+                this.Index = defaultOn;
             }
 
             #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Name, null));
+                ret.Add((Keywords, null));
+                ret.Add((Properties != null ? Properties.OnOverall : DefaultOn, Properties?.GetCrystal()));
+                ret.Add((Index, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -292,74 +587,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = InstanceNamingRule_Registration.TriggeringRecordType;
-        public InstanceNamingRule(FormKey formKey)
-        {
-            this.FormKey = formKey;
-            CustomCtor();
-        }
-
-        private InstanceNamingRule(
-            FormKey formKey,
-            GameRelease gameRelease)
-        {
-            this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
-            CustomCtor();
-        }
-
-        internal InstanceNamingRule(
-            FormKey formKey,
-            ushort formVersion)
-        {
-            this.FormKey = formKey;
-            this.FormVersion = formVersion;
-            CustomCtor();
-        }
-
-        public InstanceNamingRule(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
-        {
-        }
-
-        public InstanceNamingRule(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
-        {
-            this.EditorID = editorID;
-        }
-
-        public override string ToString()
-        {
-            return MajorRecordPrinter<InstanceNamingRule>.ToString(this);
-        }
-
-        protected override Type LinkType => typeof(IInstanceNamingRule);
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is IFormLinkGetter formLink)
-            {
-                return formLink.Equals(this);
-            }
-            if (obj is not IInstanceNamingRuleGetter rhs) return false;
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
-        }
-
-        public bool Equals(IInstanceNamingRuleGetter? obj)
-        {
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
-        }
-
-        public override int GetHashCode() => ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => InstanceNamingRuleSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => InstanceNamingRuleBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => InstanceNamingRuleBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
@@ -370,7 +606,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static InstanceNamingRule CreateFromBinary(
+        public static InstanceNamingRule CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -404,7 +640,7 @@ namespace Mutagen.Bethesda.Fallout4
             ((InstanceNamingRuleSetterCommon)((IInstanceNamingRuleGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new InstanceNamingRule GetNew()
+        internal static InstanceNamingRule GetNew()
         {
             return new InstanceNamingRule();
         }
@@ -414,27 +650,59 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IInstanceNamingRule :
-        IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         IInstanceNamingRuleGetter,
-        ILoquiObjectSetter<IInstanceNamingRuleInternal>
+        IKeyworded<IKeywordGetter>,
+        ILoquiObjectSetter<IInstanceNamingRule>,
+        INamed,
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new InstanceNamingRuleProperties? Properties { get; set; }
+        new UInt16? Index { get; set; }
     }
 
-    public partial interface IInstanceNamingRuleInternal :
-        IFallout4MajorRecordInternal,
-        IInstanceNamingRule,
-        IInstanceNamingRuleGetter
-    {
-    }
-
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.INNR)]
     public partial interface IInstanceNamingRuleGetter :
-        IFallout4MajorRecordGetter,
+        ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IInstanceNamingRuleGetter>,
-        IMapsToGetter<IInstanceNamingRuleGetter>
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object? CommonSetterInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonSetterTranslationInstance();
+        static ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IInstanceNamingRulePropertiesGetter? Properties { get; }
+        UInt16? Index { get; }
 
     }
 
@@ -443,7 +711,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Common MixIn
     public static partial class InstanceNamingRuleMixIn
     {
-        public static void Clear(this IInstanceNamingRuleInternal item)
+        public static void Clear(this IInstanceNamingRule item)
         {
             ((InstanceNamingRuleSetterCommon)((IInstanceNamingRuleGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -495,7 +763,32 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IInstanceNamingRuleInternal lhs,
+            this IInstanceNamingRule lhs,
+            IInstanceNamingRuleGetter rhs)
+        {
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default,
+                deepCopy: false);
+        }
+
+        public static void DeepCopyIn(
+            this IInstanceNamingRule lhs,
+            IInstanceNamingRuleGetter rhs,
+            InstanceNamingRule.TranslationMask? copyMask = null)
+        {
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
+        }
+
+        public static void DeepCopyIn(
+            this IInstanceNamingRule lhs,
             IInstanceNamingRuleGetter rhs,
             out InstanceNamingRule.ErrorMask errorMask,
             InstanceNamingRule.TranslationMask? copyMask = null)
@@ -511,7 +804,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IInstanceNamingRuleInternal lhs,
+            this IInstanceNamingRule lhs,
             IInstanceNamingRuleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -555,23 +848,9 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask: errorMask);
         }
 
-        #region Mutagen
-        public static InstanceNamingRule Duplicate(
-            this IInstanceNamingRuleGetter item,
-            FormKey formKey,
-            InstanceNamingRule.TranslationMask? copyMask = null)
-        {
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).Duplicate(
-                item: item,
-                formKey: formKey,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IInstanceNamingRuleInternal item,
+            this IInstanceNamingRule item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -593,12 +872,10 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum InstanceNamingRule_FieldIndex
     {
-        MajorRecordFlagsRaw = 0,
-        FormKey = 1,
-        VersionControl = 2,
-        EditorID = 3,
-        FormVersion = 4,
-        Version2 = 5,
+        Name = 0,
+        Keywords = 1,
+        Properties = 2,
+        Index = 3,
     }
     #endregion
 
@@ -611,14 +888,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 225,
+            msgID: 227,
             version: 0);
 
-        public const string GUID = "c44c988e-1e23-4bd1-9f55-8ba444d98bb3";
+        public const string GUID = "35cded28-9557-4403-89cc-2a1779d1e97d";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(InstanceNamingRule.Mask<>);
 
@@ -632,7 +909,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type SetterType = typeof(IInstanceNamingRule);
 
-        public static readonly Type? InternalSetterType = typeof(IInstanceNamingRuleInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Fallout4.InstanceNamingRule";
 
@@ -644,11 +921,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.INNR;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.INNR);
+            var all = RecordCollection.Factory(
+                RecordTypes.WNAM,
+                RecordTypes.KSIZ,
+                RecordTypes.KWDA,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(InstanceNamingRuleBinaryWriteTranslation);
@@ -684,43 +965,36 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class InstanceNamingRuleSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class InstanceNamingRuleSetterCommon
     {
-        public new static readonly InstanceNamingRuleSetterCommon Instance = new InstanceNamingRuleSetterCommon();
+        public static readonly InstanceNamingRuleSetterCommon Instance = new InstanceNamingRuleSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IInstanceNamingRuleInternal item)
+        public void Clear(IInstanceNamingRule item)
         {
             ClearPartial();
-            base.Clear(item);
-        }
-        
-        public override void Clear(IFallout4MajorRecordInternal item)
-        {
-            Clear(item: (IInstanceNamingRuleInternal)item);
-        }
-        
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IInstanceNamingRuleInternal)item);
+            item.Name = default;
+            item.Keywords = null;
+            item.Properties = null;
+            item.Index = default;
         }
         
         #region Mutagen
         public void RemapLinks(IInstanceNamingRule obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            base.RemapLinks(obj, mapping);
+            obj.Keywords?.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IInstanceNamingRuleInternal item,
+            IInstanceNamingRule item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<IInstanceNamingRuleInternal>(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
@@ -728,34 +1002,12 @@ namespace Mutagen.Bethesda.Fallout4
                 fillTyped: InstanceNamingRuleBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
-        public override void CopyInFromBinary(
-            IFallout4MajorRecordInternal item,
-            MutagenFrame frame,
-            TypedParseParams? translationParams = null)
-        {
-            CopyInFromBinary(
-                item: (InstanceNamingRule)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
-            IMajorRecordInternal item,
-            MutagenFrame frame,
-            TypedParseParams? translationParams = null)
-        {
-            CopyInFromBinary(
-                item: (InstanceNamingRule)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
         #endregion
         
     }
-    internal partial class InstanceNamingRuleCommon : Fallout4MajorRecordCommon
+    internal partial class InstanceNamingRuleCommon
     {
-        public new static readonly InstanceNamingRuleCommon Instance = new InstanceNamingRuleCommon();
+        public static readonly InstanceNamingRuleCommon Instance = new InstanceNamingRuleCommon();
 
         public InstanceNamingRule.Mask<bool> GetEqualsMask(
             IInstanceNamingRuleGetter item,
@@ -778,7 +1030,17 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            base.FillEqualsMask(item, rhs, ret, include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Properties = EqualsMaskHelper.EqualsHelper(
+                item.Properties,
+                rhs.Properties,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Index = item.Index == rhs.Index;
         }
         
         public string Print(
@@ -823,47 +1085,35 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             InstanceNamingRule.Mask<bool>? printMask = null)
         {
-            Fallout4MajorRecordCommon.ToStringFields(
-                item: item,
-                sb: sb,
-                printMask: printMask);
-        }
-        
-        public static InstanceNamingRule_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
-        {
-            switch (index)
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
             {
-                case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                sb.AppendItem(NameItem, "Name");
             }
-        }
-        
-        public static new InstanceNamingRule_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.VersionControl:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (InstanceNamingRule_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Properties?.Overall ?? true)
+                && item.Properties is {} PropertiesItem)
+            {
+                PropertiesItem?.Print(sb, "Properties");
+            }
+            if ((printMask?.Index ?? true)
+                && item.Index is {} IndexItem)
+            {
+                sb.AppendItem(IndexItem, "Index");
             }
         }
         
@@ -874,53 +1124,52 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Properties) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Properties, rhs.Properties, out var lhsProperties, out var rhsProperties, out var isPropertiesEqual))
+                {
+                    if (!((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)lhsProperties).CommonInstance()!).Equals(lhsProperties, rhsProperties, crystal?.GetSubCrystal((int)InstanceNamingRule_FieldIndex.Properties))) return false;
+                }
+                else if (!isPropertiesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
             return true;
-        }
-        
-        public override bool Equals(
-            IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
-        {
-            return Equals(
-                lhs: (IInstanceNamingRuleGetter?)lhs,
-                rhs: rhs as IInstanceNamingRuleGetter,
-                crystal: crystal);
-        }
-        
-        public override bool Equals(
-            IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
-        {
-            return Equals(
-                lhs: (IInstanceNamingRuleGetter?)lhs,
-                rhs: rhs as IInstanceNamingRuleGetter,
-                crystal: crystal);
         }
         
         public virtual int GetHashCode(IInstanceNamingRuleGetter item)
         {
             var hash = new HashCode();
-            hash.Add(base.GetHashCode());
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Keywords);
+            if (item.Properties is {} Propertiesitem)
+            {
+                hash.Add(Propertiesitem);
+            }
+            if (item.Index is {} Indexitem)
+            {
+                hash.Add(Indexitem);
+            }
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IFallout4MajorRecordGetter item)
-        {
-            return GetHashCode(item: (IInstanceNamingRuleGetter)item);
-        }
-        
-        public override int GetHashCode(IMajorRecordGetter item)
-        {
-            return GetHashCode(item: (IInstanceNamingRuleGetter)item);
         }
         
         #endregion
         
         
-        public override object GetNew()
+        public object GetNew()
         {
             return InstanceNamingRule.GetNew();
         }
@@ -928,71 +1177,24 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRuleGetter obj)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            if (obj.Keywords is {} KeywordsItem)
             {
-                yield return item;
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
         
-        #region Duplicate
-        public InstanceNamingRule Duplicate(
-            IInstanceNamingRuleGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            var newRec = new InstanceNamingRule(formKey);
-            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
-            return newRec;
-        }
-        
-        public override Fallout4MajorRecord Duplicate(
-            IFallout4MajorRecordGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IInstanceNamingRuleGetter)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override MajorRecord Duplicate(
-            IMajorRecordGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IInstanceNamingRuleGetter)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        #endregion
-        
         #endregion
         
     }
-    internal partial class InstanceNamingRuleSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class InstanceNamingRuleSetterTranslationCommon
     {
-        public new static readonly InstanceNamingRuleSetterTranslationCommon Instance = new InstanceNamingRuleSetterTranslationCommon();
+        public static readonly InstanceNamingRuleSetterTranslationCommon Instance = new InstanceNamingRuleSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
-            IInstanceNamingRuleInternal item,
-            IInstanceNamingRuleGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
-        }
-        
         public void DeepCopyIn(
             IInstanceNamingRule item,
             IInstanceNamingRuleGetter rhs,
@@ -1000,72 +1202,67 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            base.DeepCopyIn(
-                (IFallout4MajorRecord)item,
-                (IFallout4MajorRecordGetter)rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IFallout4MajorRecordInternal item,
-            IFallout4MajorRecordGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IInstanceNamingRuleInternal)item,
-                rhs: (IInstanceNamingRuleGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IFallout4MajorRecord item,
-            IFallout4MajorRecordGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IInstanceNamingRule)item,
-                rhs: (IInstanceNamingRuleGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IMajorRecordInternal item,
-            IMajorRecordGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IInstanceNamingRuleInternal)item,
-                rhs: (IInstanceNamingRuleGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IMajorRecord item,
-            IMajorRecordGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IInstanceNamingRule)item,
-                rhs: (IInstanceNamingRuleGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)InstanceNamingRule_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Properties) ?? true))
+            {
+                errorMask?.PushIndex((int)InstanceNamingRule_FieldIndex.Properties);
+                try
+                {
+                    if(rhs.Properties is {} rhsProperties)
+                    {
+                        item.Properties = rhsProperties.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)InstanceNamingRule_FieldIndex.Properties));
+                    }
+                    else
+                    {
+                        item.Properties = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Index) ?? true))
+            {
+                item.Index = rhs.Index;
+            }
         }
         
         #endregion
@@ -1128,16 +1325,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InstanceNamingRule_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => InstanceNamingRuleCommon.Instance;
+        protected object CommonInstance() => InstanceNamingRuleCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
             return InstanceNamingRuleSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => InstanceNamingRuleSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => InstanceNamingRuleSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object IInstanceNamingRuleGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object IInstanceNamingRuleGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
+        object IInstanceNamingRuleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1148,39 +1351,58 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class InstanceNamingRuleBinaryWriteTranslation :
-        Fallout4MajorRecordBinaryWriteTranslation,
-        IBinaryWriteTranslator
+    public partial class InstanceNamingRuleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public new readonly static InstanceNamingRuleBinaryWriteTranslation Instance = new InstanceNamingRuleBinaryWriteTranslation();
+        public readonly static InstanceNamingRuleBinaryWriteTranslation Instance = new InstanceNamingRuleBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IInstanceNamingRuleGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.WNAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            if (item.Properties is {} PropertiesItem)
+            {
+                ((InstanceNamingRulePropertiesBinaryWriteTranslation)((IBinaryItem)PropertiesItem).BinaryWriteTranslator).Write(
+                    item: PropertiesItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Index,
+                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
+        }
 
         public void Write(
             MutagenWriter writer,
             IInstanceNamingRuleGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Record(
+            WriteRecordTypes(
+                item: item,
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.INNR)))
-            {
-                try
-                {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                translationParams: translationParams);
         }
 
-        public override void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams? translationParams = null)
@@ -1191,42 +1413,70 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public override void Write(
-            MutagenWriter writer,
-            IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
-        {
-            Write(
-                item: (IInstanceNamingRuleGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
-        {
-            Write(
-                item: (IInstanceNamingRuleGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
     }
 
-    internal partial class InstanceNamingRuleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class InstanceNamingRuleBinaryCreateTranslation
     {
-        public new readonly static InstanceNamingRuleBinaryCreateTranslation Instance = new InstanceNamingRuleBinaryCreateTranslation();
+        public readonly static InstanceNamingRuleBinaryCreateTranslation Instance = new InstanceNamingRuleBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.INNR;
         public static void FillBinaryStructs(
-            IInstanceNamingRuleInternal item,
+            IInstanceNamingRule item,
             MutagenFrame frame)
         {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IInstanceNamingRule item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.WNAM:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Name) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)InstanceNamingRule_FieldIndex.Name;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Keywords) return ParseResult.Stop;
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)InstanceNamingRule_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Properties) return ParseResult.Stop;
+                    item.Properties = Mutagen.Bethesda.Fallout4.InstanceNamingRuleProperties.CreateFromBinary(frame: frame);
+                    return (int)InstanceNamingRule_FieldIndex.Properties;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Index) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = frame.ReadUInt16();
+                    return (int)InstanceNamingRule_FieldIndex.Index;
+                }
+                default:
+                    return ParseResult.Stop;
+            }
         }
 
     }
@@ -1237,6 +1487,17 @@ namespace Mutagen.Bethesda.Fallout4
     #region Binary Write Mixins
     public static class InstanceNamingRuleBinaryTranslationMixIn
     {
+        public static void WriteToBinary(
+            this IInstanceNamingRuleGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams = null)
+        {
+            ((InstanceNamingRuleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
     }
     #endregion
 
@@ -1245,24 +1506,33 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     internal partial class InstanceNamingRuleBinaryOverlay :
-        Fallout4MajorRecordBinaryOverlay,
+        PluginBinaryOverlay,
         IInstanceNamingRuleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InstanceNamingRule_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => InstanceNamingRuleCommon.Instance;
+        protected object CommonInstance() => InstanceNamingRuleCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => InstanceNamingRuleSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => InstanceNamingRuleSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object IInstanceNamingRuleGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object? IInstanceNamingRuleGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
+        object IInstanceNamingRuleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => InstanceNamingRuleBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => InstanceNamingRuleBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
@@ -1272,9 +1542,31 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IInstanceNamingRule);
 
-
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region Properties
+        private RangeInt32? _PropertiesLocation;
+        public IInstanceNamingRulePropertiesGetter? Properties => _PropertiesLocation.HasValue ? InstanceNamingRulePropertiesBinaryOverlay.InstanceNamingRulePropertiesFactory(new OverlayStream(_data.Slice(_PropertiesLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region Index
+        private int? _IndexLocation;
+        public UInt16? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1296,22 +1588,13 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            stream = Decompression.DecompressStream(stream);
             var ret = new InstanceNamingRuleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                bytes: stream.RemainingMemory,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret.CustomFactoryEnd(
+            int offset = stream.Position;
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
-                finalPos: finalPos,
-                offset: offset);
-            ret.FillSubrecordTypes(
-                majorReference: ret,
-                stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset,
                 parseParams: parseParams,
                 fill: ret.FillRecordType);
@@ -1329,9 +1612,57 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.WNAM:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Name) return ParseResult.Stop;
+                    _NameLocation = (stream.Position - offset);
+                    return (int)InstanceNamingRule_FieldIndex.Name;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Keywords) return ParseResult.Stop;
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)InstanceNamingRule_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Properties) return ParseResult.Stop;
+                    _PropertiesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)InstanceNamingRule_FieldIndex.Properties;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Index) return ParseResult.Stop;
+                    _IndexLocation = (stream.Position - offset);
+                    return (int)InstanceNamingRule_FieldIndex.Index;
+                }
+                default:
+                    return ParseResult.Stop;
+            }
+        }
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
@@ -1343,18 +1674,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        public override string ToString()
-        {
-            return MajorRecordPrinter<InstanceNamingRule>.ToString(this);
-        }
-
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is IFormLinkGetter formLink)
-            {
-                return formLink.Equals(this);
-            }
             if (obj is not IInstanceNamingRuleGetter rhs) return false;
             return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }

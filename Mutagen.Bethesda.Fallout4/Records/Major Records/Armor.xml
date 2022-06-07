@@ -38,7 +38,7 @@
         <FormLink refName="Keyword" />
       </List>
       <String name="Description" recordType="DESC" translated="Normal" />
-      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRule" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
       <RefList name="Armatures" refName="ArmorAddonModel" />
       <Data>
         <Fields>

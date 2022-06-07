@@ -170,6 +170,9 @@ namespace Mutagen.Bethesda.Fallout4
             _Layers_Object = new Fallout4Group<Layer>(this);
             _ConstructibleObjects_Object = new Fallout4Group<ConstructibleObject>(this);
             _ObjectModifications_Object = new Fallout4Group<AObjectModification>(this);
+            _MaterialSwaps_Object = new Fallout4Group<MaterialSwap>(this);
+            _Zooms_Object = new Fallout4Group<Zoom>(this);
+            _InstanceNamingRules_Object = new Fallout4Group<InstanceNamingRules>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -973,6 +976,27 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IAObjectModificationGetter> IFallout4ModGetter.ObjectModifications => _ObjectModifications_Object;
         #endregion
+        #region MaterialSwaps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<MaterialSwap> _MaterialSwaps_Object;
+        public Fallout4Group<MaterialSwap> MaterialSwaps => _MaterialSwaps_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IMaterialSwapGetter> IFallout4ModGetter.MaterialSwaps => _MaterialSwaps_Object;
+        #endregion
+        #region Zooms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Zoom> _Zooms_Object;
+        public Fallout4Group<Zoom> Zooms => _Zooms_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IZoomGetter> IFallout4ModGetter.Zooms => _Zooms_Object;
+        #endregion
+        #region InstanceNamingRules
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<InstanceNamingRules> _InstanceNamingRules_Object;
+        public Fallout4Group<InstanceNamingRules> InstanceNamingRules => _InstanceNamingRules_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IInstanceNamingRulesGetter> IFallout4ModGetter.InstanceNamingRules => _InstanceNamingRules_Object;
+        #endregion
 
         #region To String
 
@@ -1126,6 +1150,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Layers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.ConstructibleObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.ObjectModifications = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.MaterialSwaps = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Zooms = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.InstanceNamingRules = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1242,7 +1269,10 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem AimModels,
                 TItem Layers,
                 TItem ConstructibleObjects,
-                TItem ObjectModifications)
+                TItem ObjectModifications,
+                TItem MaterialSwaps,
+                TItem Zooms,
+                TItem InstanceNamingRules)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1358,6 +1388,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Layers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Layers, new Fallout4Group.Mask<TItem>(Layers));
                 this.ConstructibleObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ConstructibleObjects, new Fallout4Group.Mask<TItem>(ConstructibleObjects));
                 this.ObjectModifications = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ObjectModifications, new Fallout4Group.Mask<TItem>(ObjectModifications));
+                this.MaterialSwaps = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MaterialSwaps, new Fallout4Group.Mask<TItem>(MaterialSwaps));
+                this.Zooms = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Zooms, new Fallout4Group.Mask<TItem>(Zooms));
+                this.InstanceNamingRules = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(InstanceNamingRules, new Fallout4Group.Mask<TItem>(InstanceNamingRules));
             }
 
             #pragma warning disable CS8618
@@ -1483,6 +1516,9 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Layers { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ConstructibleObjects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ObjectModifications { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MaterialSwaps { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Zooms { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? InstanceNamingRules { get; set; }
             #endregion
 
             #region Equals
@@ -1609,6 +1645,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Layers, rhs.Layers)) return false;
                 if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
                 if (!object.Equals(this.ObjectModifications, rhs.ObjectModifications)) return false;
+                if (!object.Equals(this.MaterialSwaps, rhs.MaterialSwaps)) return false;
+                if (!object.Equals(this.Zooms, rhs.Zooms)) return false;
+                if (!object.Equals(this.InstanceNamingRules, rhs.InstanceNamingRules)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1728,6 +1767,9 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Layers);
                 hash.Add(this.ConstructibleObjects);
                 hash.Add(this.ObjectModifications);
+                hash.Add(this.MaterialSwaps);
+                hash.Add(this.Zooms);
+                hash.Add(this.InstanceNamingRules);
                 return hash.ToHashCode();
             }
 
@@ -2306,6 +2348,21 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.ObjectModifications.Overall)) return false;
                     if (this.ObjectModifications.Specific != null && !this.ObjectModifications.Specific.All(eval)) return false;
                 }
+                if (MaterialSwaps != null)
+                {
+                    if (!eval(this.MaterialSwaps.Overall)) return false;
+                    if (this.MaterialSwaps.Specific != null && !this.MaterialSwaps.Specific.All(eval)) return false;
+                }
+                if (Zooms != null)
+                {
+                    if (!eval(this.Zooms.Overall)) return false;
+                    if (this.Zooms.Specific != null && !this.Zooms.Specific.All(eval)) return false;
+                }
+                if (InstanceNamingRules != null)
+                {
+                    if (!eval(this.InstanceNamingRules.Overall)) return false;
+                    if (this.InstanceNamingRules.Specific != null && !this.InstanceNamingRules.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2883,6 +2940,21 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.ObjectModifications.Overall)) return true;
                     if (this.ObjectModifications.Specific != null && this.ObjectModifications.Specific.Any(eval)) return true;
                 }
+                if (MaterialSwaps != null)
+                {
+                    if (eval(this.MaterialSwaps.Overall)) return true;
+                    if (this.MaterialSwaps.Specific != null && this.MaterialSwaps.Specific.Any(eval)) return true;
+                }
+                if (Zooms != null)
+                {
+                    if (eval(this.Zooms.Overall)) return true;
+                    if (this.Zooms.Specific != null && this.Zooms.Specific.Any(eval)) return true;
+                }
+                if (InstanceNamingRules != null)
+                {
+                    if (eval(this.InstanceNamingRules.Overall)) return true;
+                    if (this.InstanceNamingRules.Specific != null && this.InstanceNamingRules.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -3011,6 +3083,9 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Layers = this.Layers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Layers.Overall), this.Layers.Specific?.Translate(eval));
                 obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
                 obj.ObjectModifications = this.ObjectModifications == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ObjectModifications.Overall), this.ObjectModifications.Specific?.Translate(eval));
+                obj.MaterialSwaps = this.MaterialSwaps == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MaterialSwaps.Overall), this.MaterialSwaps.Specific?.Translate(eval));
+                obj.Zooms = this.Zooms == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Zooms.Overall), this.Zooms.Specific?.Translate(eval));
+                obj.InstanceNamingRules = this.InstanceNamingRules == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.InstanceNamingRules.Overall), this.InstanceNamingRules.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3485,6 +3560,18 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         ObjectModifications?.Print(sb);
                     }
+                    if (printMask?.MaterialSwaps?.Overall ?? true)
+                    {
+                        MaterialSwaps?.Print(sb);
+                    }
+                    if (printMask?.Zooms?.Overall ?? true)
+                    {
+                        Zooms?.Print(sb);
+                    }
+                    if (printMask?.InstanceNamingRules?.Overall ?? true)
+                    {
+                        InstanceNamingRules?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3623,6 +3710,9 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Layer.ErrorMask>?>? Layers;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AObjectModification.ErrorMask>?>? ObjectModifications;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialSwap.ErrorMask>?>? MaterialSwaps;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Zoom.ErrorMask>?>? Zooms;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<InstanceNamingRules.ErrorMask>?>? InstanceNamingRules;
             #endregion
 
             #region IErrorMask
@@ -3859,6 +3949,12 @@ namespace Mutagen.Bethesda.Fallout4
                         return ConstructibleObjects;
                     case Fallout4Mod_FieldIndex.ObjectModifications:
                         return ObjectModifications;
+                    case Fallout4Mod_FieldIndex.MaterialSwaps:
+                        return MaterialSwaps;
+                    case Fallout4Mod_FieldIndex.Zooms:
+                        return Zooms;
+                    case Fallout4Mod_FieldIndex.InstanceNamingRules:
+                        return InstanceNamingRules;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4210,6 +4306,15 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.ObjectModifications:
                         this.ObjectModifications = new MaskItem<Exception?, Fallout4Group.ErrorMask<AObjectModification.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.MaterialSwaps:
+                        this.MaterialSwaps = new MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialSwap.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Zooms:
+                        this.Zooms = new MaskItem<Exception?, Fallout4Group.ErrorMask<Zoom.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.InstanceNamingRules:
+                        this.InstanceNamingRules = new MaskItem<Exception?, Fallout4Group.ErrorMask<InstanceNamingRules.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4563,6 +4668,15 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.ObjectModifications:
                         this.ObjectModifications = (MaskItem<Exception?, Fallout4Group.ErrorMask<AObjectModification.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.MaterialSwaps:
+                        this.MaterialSwaps = (MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialSwap.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Zooms:
+                        this.Zooms = (MaskItem<Exception?, Fallout4Group.ErrorMask<Zoom.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.InstanceNamingRules:
+                        this.InstanceNamingRules = (MaskItem<Exception?, Fallout4Group.ErrorMask<InstanceNamingRules.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4685,6 +4799,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Layers != null) return true;
                 if (ConstructibleObjects != null) return true;
                 if (ObjectModifications != null) return true;
+                if (MaterialSwaps != null) return true;
+                if (Zooms != null) return true;
+                if (InstanceNamingRules != null) return true;
                 return false;
             }
             #endregion
@@ -4824,6 +4941,9 @@ namespace Mutagen.Bethesda.Fallout4
                 Layers?.Print(sb);
                 ConstructibleObjects?.Print(sb);
                 ObjectModifications?.Print(sb);
+                MaterialSwaps?.Print(sb);
+                Zooms?.Print(sb);
+                InstanceNamingRules?.Print(sb);
             }
             #endregion
 
@@ -4946,6 +5066,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Layers = this.Layers.Combine(rhs.Layers, (l, r) => l.Combine(r));
                 ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
                 ret.ObjectModifications = this.ObjectModifications.Combine(rhs.ObjectModifications, (l, r) => l.Combine(r));
+                ret.MaterialSwaps = this.MaterialSwaps.Combine(rhs.MaterialSwaps, (l, r) => l.Combine(r));
+                ret.Zooms = this.Zooms.Combine(rhs.Zooms, (l, r) => l.Combine(r));
+                ret.InstanceNamingRules = this.InstanceNamingRules.Combine(rhs.InstanceNamingRules, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -5083,6 +5206,9 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Layer.TranslationMask>? Layers;
             public Fallout4Group.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
             public Fallout4Group.TranslationMask<AObjectModification.TranslationMask>? ObjectModifications;
+            public Fallout4Group.TranslationMask<MaterialSwap.TranslationMask>? MaterialSwaps;
+            public Fallout4Group.TranslationMask<Zoom.TranslationMask>? Zooms;
+            public Fallout4Group.TranslationMask<InstanceNamingRules.TranslationMask>? InstanceNamingRules;
             #endregion
 
             #region Ctors
@@ -5221,6 +5347,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Layers != null ? Layers.OnOverall : DefaultOn, Layers?.GetCrystal()));
                 ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
                 ret.Add((ObjectModifications != null ? ObjectModifications.OnOverall : DefaultOn, ObjectModifications?.GetCrystal()));
+                ret.Add((MaterialSwaps != null ? MaterialSwaps.OnOverall : DefaultOn, MaterialSwaps?.GetCrystal()));
+                ret.Add((Zooms != null ? Zooms.OnOverall : DefaultOn, Zooms?.GetCrystal()));
+                ret.Add((InstanceNamingRules != null ? InstanceNamingRules.OnOverall : DefaultOn, InstanceNamingRules?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -5374,6 +5503,9 @@ namespace Mutagen.Bethesda.Fallout4
             _Layers_Object = new Fallout4Group<Layer>(this);
             _ConstructibleObjects_Object = new Fallout4Group<ConstructibleObject>(this);
             _ObjectModifications_Object = new Fallout4Group<AObjectModification>(this);
+            _MaterialSwaps_Object = new Fallout4Group<MaterialSwap>(this);
+            _Zooms_Object = new Fallout4Group<Zoom>(this);
+            _InstanceNamingRules_Object = new Fallout4Group<InstanceNamingRules>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5835,6 +5967,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ObjectModifications.RecordCache.Set(rhsMod.ObjectModifications.RecordCache.Items);
             }
+            if (mask?.MaterialSwaps ?? true)
+            {
+                this.MaterialSwaps.RecordCache.Set(rhsMod.MaterialSwaps.RecordCache.Items);
+            }
+            if (mask?.Zooms ?? true)
+            {
+                this.Zooms.RecordCache.Set(rhsMod.Zooms.RecordCache.Items);
+            }
+            if (mask?.InstanceNamingRules ?? true)
+            {
+                this.InstanceNamingRules.RecordCache.Set(rhsMod.InstanceNamingRules.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5958,6 +6102,9 @@ namespace Mutagen.Bethesda.Fallout4
             count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MaterialSwaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Zooms.RecordCache.Count > 0 ? 1 : default(uint);
+            count += InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6322,6 +6469,9 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Layer> Layers { get; }
         new Fallout4Group<ConstructibleObject> ConstructibleObjects { get; }
         new Fallout4Group<AObjectModification> ObjectModifications { get; }
+        new Fallout4Group<MaterialSwap> MaterialSwaps { get; }
+        new Fallout4Group<Zoom> Zooms { get; }
+        new Fallout4Group<InstanceNamingRules> InstanceNamingRules { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -6454,6 +6604,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ILayerGetter> Layers { get; }
         IFallout4GroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
         IFallout4GroupGetter<IAObjectModificationGetter> ObjectModifications { get; }
+        IFallout4GroupGetter<IMaterialSwapGetter> MaterialSwaps { get; }
+        IFallout4GroupGetter<IZoomGetter> Zooms { get; }
+        IFallout4GroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules { get; }
 
     }
 
@@ -7138,6 +7291,9 @@ namespace Mutagen.Bethesda.Fallout4
         Layers = 111,
         ConstructibleObjects = 112,
         ObjectModifications = 113,
+        MaterialSwaps = 114,
+        Zooms = 115,
+        InstanceNamingRules = 116,
     }
     #endregion
 
@@ -7155,9 +7311,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 114;
+        public const ushort AdditionalFieldCount = 117;
 
-        public const ushort FieldCount = 114;
+        public const ushort FieldCount = 117;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -7338,6 +7494,9 @@ namespace Mutagen.Bethesda.Fallout4
             item.Layers.Clear();
             item.ConstructibleObjects.Clear();
             item.ObjectModifications.Clear();
+            item.MaterialSwaps.Clear();
+            item.Zooms.Clear();
+            item.InstanceNamingRules.Clear();
         }
         
         #region Mutagen
@@ -7441,6 +7600,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Layers.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
             obj.ObjectModifications.RemapLinks(mapping);
+            obj.Zooms.RemapLinks(mapping);
+            obj.InstanceNamingRules.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -7588,6 +7749,9 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Layers.Remove(keys);
             obj.ConstructibleObjects.Remove(keys);
             obj.ObjectModifications.Remove(keys);
+            obj.MaterialSwaps.Remove(keys);
+            obj.Zooms.Remove(keys);
+            obj.InstanceNamingRules.Remove(keys);
         }
         
         public void Remove(
@@ -8563,6 +8727,30 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "MaterialSwap":
+                case "IMaterialSwapGetter":
+                case "IMaterialSwap":
+                case "IMaterialSwapInternal":
+                    obj.MaterialSwaps.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Zoom":
+                case "IZoomGetter":
+                case "IZoom":
+                case "IZoomInternal":
+                    obj.Zooms.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "InstanceNamingRules":
+                case "IInstanceNamingRulesGetter":
+                case "IInstanceNamingRules":
+                case "IInstanceNamingRulesInternal":
+                    obj.InstanceNamingRules.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -9174,6 +9362,9 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Layers = MaskItemExt.Factory(item.Layers.GetEqualsMask(rhs.Layers, include), include);
             ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
             ret.ObjectModifications = MaskItemExt.Factory(item.ObjectModifications.GetEqualsMask(rhs.ObjectModifications, include), include);
+            ret.MaterialSwaps = MaskItemExt.Factory(item.MaterialSwaps.GetEqualsMask(rhs.MaterialSwaps, include), include);
+            ret.Zooms = MaskItemExt.Factory(item.Zooms.GetEqualsMask(rhs.Zooms, include), include);
+            ret.InstanceNamingRules = MaskItemExt.Factory(item.InstanceNamingRules.GetEqualsMask(rhs.InstanceNamingRules, include), include);
         }
         
         public string Print(
@@ -9673,6 +9864,18 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.ObjectModifications?.Overall ?? true)
             {
                 item.ObjectModifications?.Print(sb, "ObjectModifications");
+            }
+            if (printMask?.MaterialSwaps?.Overall ?? true)
+            {
+                item.MaterialSwaps?.Print(sb, "MaterialSwaps");
+            }
+            if (printMask?.Zooms?.Overall ?? true)
+            {
+                item.Zooms?.Print(sb, "Zooms");
+            }
+            if (printMask?.InstanceNamingRules?.Overall ?? true)
+            {
+                item.InstanceNamingRules?.Print(sb, "InstanceNamingRules");
             }
         }
         
@@ -10595,6 +10798,30 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isObjectModificationsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialSwaps) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MaterialSwaps, rhs.MaterialSwaps, out var lhsMaterialSwaps, out var rhsMaterialSwaps, out var isMaterialSwapsEqual))
+                {
+                    if (!object.Equals(lhsMaterialSwaps, rhsMaterialSwaps)) return false;
+                }
+                else if (!isMaterialSwapsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Zooms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Zooms, rhs.Zooms, out var lhsZooms, out var rhsZooms, out var isZoomsEqual))
+                {
+                    if (!object.Equals(lhsZooms, rhsZooms)) return false;
+                }
+                else if (!isZoomsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.InstanceNamingRules) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.InstanceNamingRules, rhs.InstanceNamingRules, out var lhsInstanceNamingRules, out var rhsInstanceNamingRules, out var isInstanceNamingRulesEqual))
+                {
+                    if (!object.Equals(lhsInstanceNamingRules, rhsInstanceNamingRules)) return false;
+                }
+                else if (!isInstanceNamingRulesEqual) return false;
+            }
             return true;
         }
         
@@ -10715,6 +10942,9 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Layers);
             hash.Add(item.ConstructibleObjects);
             hash.Add(item.ObjectModifications);
+            hash.Add(item.MaterialSwaps);
+            hash.Add(item.Zooms);
+            hash.Add(item.InstanceNamingRules);
             return hash.ToHashCode();
         }
         
@@ -11297,6 +11527,21 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAObjectModification":
                 case "IAObjectModificationInternal":
                     return obj.ObjectModifications;
+                case "MaterialSwap":
+                case "IMaterialSwapGetter":
+                case "IMaterialSwap":
+                case "IMaterialSwapInternal":
+                    return obj.MaterialSwaps;
+                case "Zoom":
+                case "IZoomGetter":
+                case "IZoom":
+                case "IZoomInternal":
+                    return obj.Zooms;
+                case "InstanceNamingRules":
+                case "IInstanceNamingRulesGetter":
+                case "IInstanceNamingRules":
+                case "IInstanceNamingRulesInternal":
+                    return obj.InstanceNamingRules;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -11321,7 +11566,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[113];
+            Stream[] outputStreams = new Stream[116];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -11436,6 +11681,9 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.Layers, 110, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 111, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 112, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MaterialSwaps, 113, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Zooms, 114, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 115, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11875,6 +12123,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.ObjectModifications.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Zooms.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.InstanceNamingRules.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -12332,6 +12588,18 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.ObjectModifications.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialSwaps.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Zooms.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.InstanceNamingRules.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13374,6 +13642,33 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAObjectModification":
                 case "IAObjectModificationInternal":
                     foreach (var item in obj.ObjectModifications.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialSwap":
+                case "IMaterialSwapGetter":
+                case "IMaterialSwap":
+                case "IMaterialSwapInternal":
+                    foreach (var item in obj.MaterialSwaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Zoom":
+                case "IZoomGetter":
+                case "IZoom":
+                case "IZoomInternal":
+                    foreach (var item in obj.Zooms.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "InstanceNamingRules":
+                case "IInstanceNamingRulesGetter":
+                case "IInstanceNamingRules":
+                case "IInstanceNamingRulesInternal":
+                    foreach (var item in obj.InstanceNamingRules.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -14554,6 +14849,33 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.ObjectModifications,
                 groupGetter: (m) => m.ObjectModifications))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MaterialSwap, IMaterialSwapGetter>(
+                srcGroup: obj.MaterialSwaps,
+                type: typeof(IMaterialSwapGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MaterialSwaps,
+                groupGetter: (m) => m.MaterialSwaps))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Zoom, IZoomGetter>(
+                srcGroup: obj.Zooms,
+                type: typeof(IZoomGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Zooms,
+                groupGetter: (m) => m.Zooms))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, InstanceNamingRules, IInstanceNamingRulesGetter>(
+                srcGroup: obj.InstanceNamingRules,
+                type: typeof(IInstanceNamingRulesGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.InstanceNamingRules,
+                groupGetter: (m) => m.InstanceNamingRules))
             {
                 yield return item;
             }
@@ -16152,6 +16474,48 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.ObjectModifications,
                         groupGetter: (m) => m.ObjectModifications))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialSwap":
+                case "IMaterialSwapGetter":
+                case "IMaterialSwap":
+                case "IMaterialSwapInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MaterialSwap, IMaterialSwapGetter>(
+                        srcGroup: obj.MaterialSwaps,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MaterialSwaps,
+                        groupGetter: (m) => m.MaterialSwaps))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Zoom":
+                case "IZoomGetter":
+                case "IZoom":
+                case "IZoomInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Zoom, IZoomGetter>(
+                        srcGroup: obj.Zooms,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Zooms,
+                        groupGetter: (m) => m.Zooms))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "InstanceNamingRules":
+                case "IInstanceNamingRulesGetter":
+                case "IInstanceNamingRules":
+                case "IInstanceNamingRulesInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, InstanceNamingRules, IInstanceNamingRulesGetter>(
+                        srcGroup: obj.InstanceNamingRules,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.InstanceNamingRules,
+                        groupGetter: (m) => m.InstanceNamingRules))
                     {
                         yield return item;
                     }
@@ -18730,6 +19094,66 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialSwaps) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.MaterialSwaps);
+                try
+                {
+                    item.MaterialSwaps.DeepCopyIn(
+                        rhs: rhs.MaterialSwaps,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.MaterialSwaps));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Zooms) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Zooms);
+                try
+                {
+                    item.Zooms.DeepCopyIn(
+                        rhs: rhs.Zooms,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Zooms));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.InstanceNamingRules) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.InstanceNamingRules);
+                try
+                {
+                    item.InstanceNamingRules.DeepCopyIn(
+                        rhs: rhs.InstanceNamingRules,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.InstanceNamingRules));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -18933,6 +19357,9 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Layers;
         public bool ConstructibleObjects;
         public bool ObjectModifications;
+        public bool MaterialSwaps;
+        public bool Zooms;
+        public bool InstanceNamingRules;
         public GroupMask()
         {
         }
@@ -19051,6 +19478,9 @@ namespace Mutagen.Bethesda.Fallout4
             Layers = defaultValue;
             ConstructibleObjects = defaultValue;
             ObjectModifications = defaultValue;
+            MaterialSwaps = defaultValue;
+            Zooms = defaultValue;
+            InstanceNamingRules = defaultValue;
         }
     }
 
@@ -20321,6 +20751,39 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ObjectModificationsItem).BinaryWriteTranslator).Write<IAObjectModificationGetter>(
                         item: ObjectModificationsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MaterialSwaps ?? true)
+            {
+                var MaterialSwapsItem = item.MaterialSwaps;
+                if (MaterialSwapsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MaterialSwapsItem).BinaryWriteTranslator).Write<IMaterialSwapGetter>(
+                        item: MaterialSwapsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Zooms ?? true)
+            {
+                var ZoomsItem = item.Zooms;
+                if (ZoomsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ZoomsItem).BinaryWriteTranslator).Write<IZoomGetter>(
+                        item: ZoomsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.InstanceNamingRules ?? true)
+            {
+                var InstanceNamingRulesItem = item.InstanceNamingRules;
+                if (InstanceNamingRulesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)InstanceNamingRulesItem).BinaryWriteTranslator).Write<IInstanceNamingRulesGetter>(
+                        item: InstanceNamingRulesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -21973,6 +22436,48 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.ObjectModifications;
                 }
+                case RecordTypeInts.MSWP:
+                {
+                    if (importMask?.MaterialSwaps ?? true)
+                    {
+                        item.MaterialSwaps.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.MaterialSwaps;
+                }
+                case RecordTypeInts.ZOOM:
+                {
+                    if (importMask?.Zooms ?? true)
+                    {
+                        item.Zooms.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Zooms;
+                }
+                case RecordTypeInts.INNR:
+                {
+                    if (importMask?.InstanceNamingRules ?? true)
+                    {
+                        item.InstanceNamingRules.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.InstanceNamingRules;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -22700,6 +23205,21 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _ObjectModificationsLocations;
         private IFallout4GroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? Fallout4GroupBinaryOverlay<IAObjectModificationGetter>.Fallout4GroupFactory(_data, _ObjectModificationsLocations, _package) : default;
         public IFallout4GroupGetter<IAObjectModificationGetter> ObjectModifications => _ObjectModifications ?? new Fallout4Group<AObjectModification>(this);
+        #endregion
+        #region MaterialSwaps
+        private List<RangeInt64>? _MaterialSwapsLocations;
+        private IFallout4GroupGetter<IMaterialSwapGetter>? _MaterialSwaps => _MaterialSwapsLocations != null ? Fallout4GroupBinaryOverlay<IMaterialSwapGetter>.Fallout4GroupFactory(_data, _MaterialSwapsLocations, _package) : default;
+        public IFallout4GroupGetter<IMaterialSwapGetter> MaterialSwaps => _MaterialSwaps ?? new Fallout4Group<MaterialSwap>(this);
+        #endregion
+        #region Zooms
+        private List<RangeInt64>? _ZoomsLocations;
+        private IFallout4GroupGetter<IZoomGetter>? _Zooms => _ZoomsLocations != null ? Fallout4GroupBinaryOverlay<IZoomGetter>.Fallout4GroupFactory(_data, _ZoomsLocations, _package) : default;
+        public IFallout4GroupGetter<IZoomGetter> Zooms => _Zooms ?? new Fallout4Group<Zoom>(this);
+        #endregion
+        #region InstanceNamingRules
+        private List<RangeInt64>? _InstanceNamingRulesLocations;
+        private IFallout4GroupGetter<IInstanceNamingRulesGetter>? _InstanceNamingRules => _InstanceNamingRulesLocations != null ? Fallout4GroupBinaryOverlay<IInstanceNamingRulesGetter>.Fallout4GroupFactory(_data, _InstanceNamingRulesLocations, _package) : default;
+        public IFallout4GroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules => _InstanceNamingRules ?? new Fallout4Group<InstanceNamingRules>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -23465,6 +23985,24 @@ namespace Mutagen.Bethesda.Fallout4
                     _ObjectModificationsLocations ??= new();
                     _ObjectModificationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.ObjectModifications;
+                }
+                case RecordTypeInts.MSWP:
+                {
+                    _MaterialSwapsLocations ??= new();
+                    _MaterialSwapsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.MaterialSwaps;
+                }
+                case RecordTypeInts.ZOOM:
+                {
+                    _ZoomsLocations ??= new();
+                    _ZoomsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Zooms;
+                }
+                case RecordTypeInts.INNR:
+                {
+                    _InstanceNamingRulesLocations ??= new();
+                    _InstanceNamingRulesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.InstanceNamingRules;
                 }
                 default:
                     return default(int?);

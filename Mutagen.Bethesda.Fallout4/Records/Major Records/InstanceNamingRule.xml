@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="InstanceNamingRule" recordType="INNR" objType="Record" baseClass="Fallout4MajorRecord" GUID="c44c988e-1e23-4bd1-9f55-8ba444d98bb3" ID="225">
-    <Enum name="TargetEnum" enumName="InstanceNamingRule.TargetEnum" byteLength="4" recordType="UNAM" />
-    <RefList name="NamingRules" refName="RuleSet" />
-  </Object>
-  <Object name="RuleSet" objType="Subrecord" GUID="71e89a3f-bb5c-48c0-ae13-39b4be69fd07" ID="226">
+  <Object name="InstanceNamingRules" recordType="INNR" objType="Record" baseClass="Fallout4MajorRecord" GUID="c44c988e-1e23-4bd1-9f55-8ba444d98bb3" ID="225">
     <Fields>
-      <UInt32 name="Count" />
-      <RefList name="Names" refName="RuleName" />
+      <Enum name="Target" enumName="InstanceNamingRules.RuleTarget" byteLength="4" recordType="UNAM" />
+      <RefList name="RuleSets" refName="InstanceNamingRuleSet" />
     </Fields>
   </Object>
-  <Object name="RuleName" objType="Subrecord" GUID="35cded28-9557-4403-89cc-2a1779d1e97d" ID="227">
+  <Object name="InstanceNamingRuleSet" objType="Subrecord" GUID="71e89a3f-bb5c-48c0-ae13-39b4be69fd07" ID="226">
     <Fields>
-      <String name="Text" recordType="WNAM" translated="DL" />
+      <RefList name="Names" refName="InstanceNamingRule" counterRecType="VNAM" allowNoCounter="false" />
+    </Fields>
+  </Object>
+  <Object name="InstanceNamingRule" objType="Subrecord" GUID="35cded28-9557-4403-89cc-2a1779d1e97d" ID="227">
+    <Fields>
+      <String name="Name" recordType="WNAM" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <Data name="Property" recordType="XNAM">
-        <Fields>
-          <Float name="Value" />
-          <Enum name="PropertyEnum" enumName="InstanceNamingRule.PropertyEnum" byteLength="1" />
-          <Enum name="OpEnum" enumName="InstanceNamingRule.OpEnum" byteLength="1" />
-        </Fields>
-      </Data>
+      <RefDirect name="Properties" refName="InstanceNamingRuleProperties" />
       <UInt16 name="Index" recordType="YNAM" />
+    </Fields>
+  </Object>
+  <Object name="InstanceNamingRuleProperties" objType="Subrecord" recordType="XNAM" GUID="2085fcd7-fe05-49dd-a480-7ad0b20b8e8e" ID="662">
+    <Fields>
+      <Float name="Value" />
+      <Enum name="Target" enumName="InstanceNamingRule.PropertyTarget" byteLength="1" />
+      <Enum name="Operation" enumName="InstanceNamingRule.Operations" byteLength="1" />
     </Fields>
   </Object>
 </Loqui>

@@ -23,7 +23,7 @@
         <FormLink refName="Keyword" />
       </List>
       <String name="Description" recordType="DESC" translated="Normal" />
-      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRule" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>

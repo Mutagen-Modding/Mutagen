@@ -196,10 +196,9 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             Key_Registration.Instance,
             Ingestible_Registration.Instance,
             RadioReceiver_Registration.Instance,
-            InstanceNaming_Registration.Instance,
+            InstanceNamingRules_Registration.Instance,
+            InstanceNamingRuleSet_Registration.Instance,
             InstanceNamingRule_Registration.Instance,
-            RuleSet_Registration.Instance,
-            RuleName_Registration.Instance,
             Ammunition_Registration.Instance,
             IdleAnimation_Registration.Instance,
             IdleMarker_Registration.Instance,
@@ -531,7 +530,9 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             NpcModification_Registration.Instance,
             WeaponModification_Registration.Instance,
             ObjectModification_Registration.Instance,
-            ObjectModEnumProperty_Registration.Instance
+            ObjectModEnumProperty_Registration.Instance,
+            MaterialSubstitution_Registration.Instance,
+            InstanceNamingRuleProperties_Registration.Instance
         );
     }
 }

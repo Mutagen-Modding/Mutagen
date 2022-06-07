@@ -40,41 +40,38 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class Zoom :
+    public partial class InstanceNamingRules :
         Fallout4MajorRecord,
-        IEquatable<IZoomGetter>,
-        ILoquiObjectSetter<Zoom>,
-        IZoomInternal
+        IEquatable<IInstanceNamingRulesGetter>,
+        IInstanceNamingRulesInternal,
+        ILoquiObjectSetter<InstanceNamingRules>
     {
         #region Ctor
-        protected Zoom()
+        protected InstanceNamingRules()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FovMult
-        public Single FovMult { get; set; } = default;
-        #endregion
-        #region Overlay
-        public Zoom.OverlayType Overlay { get; set; } = default;
-        #endregion
-        #region ImagespaceModifier
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImagespaceModifier = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImagespaceModifier
-        {
-            get => _ImagespaceModifier;
-            set => _ImagespaceModifier.SetTo(value);
-        }
+        #region Target
+        public InstanceNamingRules.RuleTarget? Target { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IZoomGetter.ImagespaceModifier => this.ImagespaceModifier;
+        InstanceNamingRules.RuleTarget? IInstanceNamingRulesGetter.Target => this.Target;
         #endregion
-        #region CameraOffset
-        public P3Float CameraOffset { get; set; } = default;
+        #region RuleSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<InstanceNamingRuleSet> _RuleSets = new ExtendedList<InstanceNamingRuleSet>();
+        public ExtendedList<InstanceNamingRuleSet> RuleSets
+        {
+            get => this._RuleSets;
+            init => this._RuleSets = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IInstanceNamingRuleSetGetter> IInstanceNamingRulesGetter.RuleSets => _RuleSets;
         #endregion
-        #region GNAMDataTypeState
-        public Zoom.GNAMDataType GNAMDataTypeState { get; set; } = default;
+
         #endregion
 
         #region To String
@@ -83,7 +80,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ZoomMixIn.Print(
+            InstanceNamingRulesMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -101,11 +98,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FovMult = initialValue;
-                this.Overlay = initialValue;
-                this.ImagespaceModifier = initialValue;
-                this.CameraOffset = initialValue;
-                this.GNAMDataTypeState = initialValue;
+                this.Target = initialValue;
+                this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -115,11 +109,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem FovMult,
-                TItem Overlay,
-                TItem ImagespaceModifier,
-                TItem CameraOffset,
-                TItem GNAMDataTypeState)
+                TItem Target,
+                TItem RuleSets)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -128,11 +119,8 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.FovMult = FovMult;
-                this.Overlay = Overlay;
-                this.ImagespaceModifier = ImagespaceModifier;
-                this.CameraOffset = CameraOffset;
-                this.GNAMDataTypeState = GNAMDataTypeState;
+                this.Target = Target;
+                this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(RuleSets, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -144,11 +132,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem FovMult;
-            public TItem Overlay;
-            public TItem ImagespaceModifier;
-            public TItem CameraOffset;
-            public TItem GNAMDataTypeState;
+            public TItem Target;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>? RuleSets;
             #endregion
 
             #region Equals
@@ -162,21 +147,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FovMult, rhs.FovMult)) return false;
-                if (!object.Equals(this.Overlay, rhs.Overlay)) return false;
-                if (!object.Equals(this.ImagespaceModifier, rhs.ImagespaceModifier)) return false;
-                if (!object.Equals(this.CameraOffset, rhs.CameraOffset)) return false;
-                if (!object.Equals(this.GNAMDataTypeState, rhs.GNAMDataTypeState)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.RuleSets, rhs.RuleSets)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FovMult);
-                hash.Add(this.Overlay);
-                hash.Add(this.ImagespaceModifier);
-                hash.Add(this.CameraOffset);
-                hash.Add(this.GNAMDataTypeState);
+                hash.Add(this.Target);
+                hash.Add(this.RuleSets);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -187,11 +166,19 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FovMult)) return false;
-                if (!eval(this.Overlay)) return false;
-                if (!eval(this.ImagespaceModifier)) return false;
-                if (!eval(this.CameraOffset)) return false;
-                if (!eval(this.GNAMDataTypeState)) return false;
+                if (!eval(this.Target)) return false;
+                if (this.RuleSets != null)
+                {
+                    if (!eval(this.RuleSets.Overall)) return false;
+                    if (this.RuleSets.Specific != null)
+                    {
+                        foreach (var item in this.RuleSets.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -200,11 +187,19 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FovMult)) return true;
-                if (eval(this.Overlay)) return true;
-                if (eval(this.ImagespaceModifier)) return true;
-                if (eval(this.CameraOffset)) return true;
-                if (eval(this.GNAMDataTypeState)) return true;
+                if (eval(this.Target)) return true;
+                if (this.RuleSets != null)
+                {
+                    if (eval(this.RuleSets.Overall)) return true;
+                    if (this.RuleSets.Specific != null)
+                    {
+                        foreach (var item in this.RuleSets.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -212,7 +207,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Zoom.Mask<R>();
+                var ret = new InstanceNamingRules.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -220,48 +215,62 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FovMult = eval(this.FovMult);
-                obj.Overlay = eval(this.Overlay);
-                obj.ImagespaceModifier = eval(this.ImagespaceModifier);
-                obj.CameraOffset = eval(this.CameraOffset);
-                obj.GNAMDataTypeState = eval(this.GNAMDataTypeState);
+                obj.Target = eval(this.Target);
+                if (RuleSets != null)
+                {
+                    obj.RuleSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>?>(eval(this.RuleSets.Overall), Enumerable.Empty<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>());
+                    if (RuleSets.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>();
+                        obj.RuleSets.Specific = l;
+                        foreach (var item in RuleSets.Specific)
+                        {
+                            MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Zoom.Mask<bool>? printMask = null)
+            public string Print(InstanceNamingRules.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Zoom.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, InstanceNamingRules.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Zoom.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(InstanceNamingRules.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FovMult ?? true)
+                    if (printMask?.Target ?? true)
                     {
-                        sb.AppendItem(FovMult, "FovMult");
+                        sb.AppendItem(Target, "Target");
                     }
-                    if (printMask?.Overlay ?? true)
+                    if ((printMask?.RuleSets?.Overall ?? true)
+                        && RuleSets is {} RuleSetsItem)
                     {
-                        sb.AppendItem(Overlay, "Overlay");
-                    }
-                    if (printMask?.ImagespaceModifier ?? true)
-                    {
-                        sb.AppendItem(ImagespaceModifier, "ImagespaceModifier");
-                    }
-                    if (printMask?.CameraOffset ?? true)
-                    {
-                        sb.AppendItem(CameraOffset, "CameraOffset");
-                    }
-                    if (printMask?.GNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(GNAMDataTypeState, "GNAMDataTypeState");
+                        sb.AppendLine("RuleSets =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RuleSetsItem.Overall);
+                            if (RuleSetsItem.Specific != null)
+                            {
+                                foreach (var subItem in RuleSetsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -274,29 +283,20 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FovMult;
-            public Exception? Overlay;
-            public Exception? ImagespaceModifier;
-            public Exception? CameraOffset;
-            public Exception? GNAMDataTypeState;
+            public Exception? Target;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>? RuleSets;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Zoom_FieldIndex enu = (Zoom_FieldIndex)index;
+                InstanceNamingRules_FieldIndex enu = (InstanceNamingRules_FieldIndex)index;
                 switch (enu)
                 {
-                    case Zoom_FieldIndex.FovMult:
-                        return FovMult;
-                    case Zoom_FieldIndex.Overlay:
-                        return Overlay;
-                    case Zoom_FieldIndex.ImagespaceModifier:
-                        return ImagespaceModifier;
-                    case Zoom_FieldIndex.CameraOffset:
-                        return CameraOffset;
-                    case Zoom_FieldIndex.GNAMDataTypeState:
-                        return GNAMDataTypeState;
+                    case InstanceNamingRules_FieldIndex.Target:
+                        return Target;
+                    case InstanceNamingRules_FieldIndex.RuleSets:
+                        return RuleSets;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -304,23 +304,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                Zoom_FieldIndex enu = (Zoom_FieldIndex)index;
+                InstanceNamingRules_FieldIndex enu = (InstanceNamingRules_FieldIndex)index;
                 switch (enu)
                 {
-                    case Zoom_FieldIndex.FovMult:
-                        this.FovMult = ex;
+                    case InstanceNamingRules_FieldIndex.Target:
+                        this.Target = ex;
                         break;
-                    case Zoom_FieldIndex.Overlay:
-                        this.Overlay = ex;
-                        break;
-                    case Zoom_FieldIndex.ImagespaceModifier:
-                        this.ImagespaceModifier = ex;
-                        break;
-                    case Zoom_FieldIndex.CameraOffset:
-                        this.CameraOffset = ex;
-                        break;
-                    case Zoom_FieldIndex.GNAMDataTypeState:
-                        this.GNAMDataTypeState = ex;
+                    case InstanceNamingRules_FieldIndex.RuleSets:
+                        this.RuleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -330,23 +321,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                Zoom_FieldIndex enu = (Zoom_FieldIndex)index;
+                InstanceNamingRules_FieldIndex enu = (InstanceNamingRules_FieldIndex)index;
                 switch (enu)
                 {
-                    case Zoom_FieldIndex.FovMult:
-                        this.FovMult = (Exception?)obj;
+                    case InstanceNamingRules_FieldIndex.Target:
+                        this.Target = (Exception?)obj;
                         break;
-                    case Zoom_FieldIndex.Overlay:
-                        this.Overlay = (Exception?)obj;
-                        break;
-                    case Zoom_FieldIndex.ImagespaceModifier:
-                        this.ImagespaceModifier = (Exception?)obj;
-                        break;
-                    case Zoom_FieldIndex.CameraOffset:
-                        this.CameraOffset = (Exception?)obj;
-                        break;
-                    case Zoom_FieldIndex.GNAMDataTypeState:
-                        this.GNAMDataTypeState = (Exception?)obj;
+                    case InstanceNamingRules_FieldIndex.RuleSets:
+                        this.RuleSets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -357,11 +339,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FovMult != null) return true;
-                if (Overlay != null) return true;
-                if (ImagespaceModifier != null) return true;
-                if (CameraOffset != null) return true;
-                if (GNAMDataTypeState != null) return true;
+                if (Target != null) return true;
+                if (RuleSets != null) return true;
                 return false;
             }
             #endregion
@@ -389,19 +368,25 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FovMult, "FovMult");
+                    sb.AppendItem(Target, "Target");
                 }
+                if (RuleSets is {} RuleSetsItem)
                 {
-                    sb.AppendItem(Overlay, "Overlay");
-                }
-                {
-                    sb.AppendItem(ImagespaceModifier, "ImagespaceModifier");
-                }
-                {
-                    sb.AppendItem(CameraOffset, "CameraOffset");
-                }
-                {
-                    sb.AppendItem(GNAMDataTypeState, "GNAMDataTypeState");
+                    sb.AppendLine("RuleSets =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RuleSetsItem.Overall);
+                        if (RuleSetsItem.Specific != null)
+                        {
+                            foreach (var subItem in RuleSetsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -411,11 +396,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FovMult = this.FovMult.Combine(rhs.FovMult);
-                ret.Overlay = this.Overlay.Combine(rhs.Overlay);
-                ret.ImagespaceModifier = this.ImagespaceModifier.Combine(rhs.ImagespaceModifier);
-                ret.CameraOffset = this.CameraOffset.Combine(rhs.CameraOffset);
-                ret.GNAMDataTypeState = this.GNAMDataTypeState.Combine(rhs.GNAMDataTypeState);
+                ret.Target = this.Target.Combine(rhs.Target);
+                ret.RuleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>(ExceptionExt.Combine(this.RuleSets?.Overall, rhs.RuleSets?.Overall), ExceptionExt.Combine(this.RuleSets?.Specific, rhs.RuleSets?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -438,11 +420,8 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool FovMult;
-            public bool Overlay;
-            public bool ImagespaceModifier;
-            public bool CameraOffset;
-            public bool GNAMDataTypeState;
+            public bool Target;
+            public InstanceNamingRuleSet.TranslationMask? RuleSets;
             #endregion
 
             #region Ctors
@@ -451,11 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FovMult = defaultOn;
-                this.Overlay = defaultOn;
-                this.ImagespaceModifier = defaultOn;
-                this.CameraOffset = defaultOn;
-                this.GNAMDataTypeState = defaultOn;
+                this.Target = defaultOn;
             }
 
             #endregion
@@ -463,11 +438,8 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FovMult, null));
-                ret.Add((Overlay, null));
-                ret.Add((ImagespaceModifier, null));
-                ret.Add((CameraOffset, null));
-                ret.Add((GNAMDataTypeState, null));
+                ret.Add((Target, null));
+                ret.Add((RuleSets == null ? DefaultOn : !RuleSets.GetCrystal().CopyNothing, RuleSets?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -479,16 +451,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Zoom_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ZoomCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ZoomSetterCommon.Instance.RemapLinks(this, mapping);
-        public Zoom(FormKey formKey)
+        public static readonly RecordType GrupRecordType = InstanceNamingRules_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRulesCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => InstanceNamingRulesSetterCommon.Instance.RemapLinks(this, mapping);
+        public InstanceNamingRules(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private Zoom(
+        private InstanceNamingRules(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -497,7 +469,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal Zoom(
+        internal InstanceNamingRules(
             FormKey formKey,
             ushort formVersion)
         {
@@ -506,12 +478,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public Zoom(IFallout4Mod mod)
+        public InstanceNamingRules(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Zoom(IFallout4Mod mod, string editorID)
+        public InstanceNamingRules(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -519,15 +491,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Zoom>.ToString(this);
+            return MajorRecordPrinter<InstanceNamingRules>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IZoom);
+        protected override Type LinkType => typeof(IInstanceNamingRules);
 
-        [Flags]
-        public enum GNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -535,16 +503,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IZoomGetter rhs) return false;
-            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IInstanceNamingRulesGetter rhs) return false;
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IZoomGetter? obj)
+        public bool Equals(IInstanceNamingRulesGetter? obj)
         {
-            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -552,23 +520,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ZoomBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => InstanceNamingRulesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ZoomBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((InstanceNamingRulesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Zoom CreateFromBinary(
+        public new static InstanceNamingRules CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new Zoom();
-            ((ZoomSetterCommon)((IZoomGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new InstanceNamingRules();
+            ((InstanceNamingRulesSetterCommon)((IInstanceNamingRulesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -579,7 +547,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Zoom item,
+            out InstanceNamingRules item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -594,94 +562,88 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ZoomSetterCommon)((IZoomGetter)this).CommonSetterInstance()!).Clear(this);
+            ((InstanceNamingRulesSetterCommon)((IInstanceNamingRulesGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Zoom GetNew()
+        internal static new InstanceNamingRules GetNew()
         {
-            return new Zoom();
+            return new InstanceNamingRules();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IZoom :
+    public partial interface IInstanceNamingRules :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
-        ILoquiObjectSetter<IZoomInternal>,
-        IZoomGetter
+        IInstanceNamingRulesGetter,
+        ILoquiObjectSetter<IInstanceNamingRulesInternal>
     {
-        new Single FovMult { get; set; }
-        new Zoom.OverlayType Overlay { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> ImagespaceModifier { get; set; }
-        new P3Float CameraOffset { get; set; }
-        new Zoom.GNAMDataType GNAMDataTypeState { get; set; }
+        new InstanceNamingRules.RuleTarget? Target { get; set; }
+        new ExtendedList<InstanceNamingRuleSet> RuleSets { get; }
     }
 
-    public partial interface IZoomInternal :
+    public partial interface IInstanceNamingRulesInternal :
         IFallout4MajorRecordInternal,
-        IZoom,
-        IZoomGetter
+        IInstanceNamingRules,
+        IInstanceNamingRulesGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.ZOOM)]
-    public partial interface IZoomGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.INNR)]
+    public partial interface IInstanceNamingRulesGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IZoomGetter>,
-        IMapsToGetter<IZoomGetter>
+        ILoquiObject<IInstanceNamingRulesGetter>,
+        IMapsToGetter<IInstanceNamingRulesGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Zoom_Registration.Instance;
-        Single FovMult { get; }
-        Zoom.OverlayType Overlay { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier { get; }
-        P3Float CameraOffset { get; }
-        Zoom.GNAMDataType GNAMDataTypeState { get; }
+        static new ILoquiRegistration StaticRegistration => InstanceNamingRules_Registration.Instance;
+        InstanceNamingRules.RuleTarget? Target { get; }
+        IReadOnlyList<IInstanceNamingRuleSetGetter> RuleSets { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ZoomMixIn
+    public static partial class InstanceNamingRulesMixIn
     {
-        public static void Clear(this IZoomInternal item)
+        public static void Clear(this IInstanceNamingRulesInternal item)
         {
-            ((ZoomSetterCommon)((IZoomGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((InstanceNamingRulesSetterCommon)((IInstanceNamingRulesGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Zoom.Mask<bool> GetEqualsMask(
-            this IZoomGetter item,
-            IZoomGetter rhs,
+        public static InstanceNamingRules.Mask<bool> GetEqualsMask(
+            this IInstanceNamingRulesGetter item,
+            IInstanceNamingRulesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ZoomCommon)((IZoomGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IZoomGetter item,
+            this IInstanceNamingRulesGetter item,
             string? name = null,
-            Zoom.Mask<bool>? printMask = null)
+            InstanceNamingRules.Mask<bool>? printMask = null)
         {
-            return ((ZoomCommon)((IZoomGetter)item).CommonInstance()!).Print(
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IZoomGetter item,
+            this IInstanceNamingRulesGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Zoom.Mask<bool>? printMask = null)
+            InstanceNamingRules.Mask<bool>? printMask = null)
         {
-            ((ZoomCommon)((IZoomGetter)item).CommonInstance()!).Print(
+            ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -689,39 +651,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IZoomGetter item,
-            IZoomGetter rhs,
-            Zoom.TranslationMask? equalsMask = null)
+            this IInstanceNamingRulesGetter item,
+            IInstanceNamingRulesGetter rhs,
+            InstanceNamingRules.TranslationMask? equalsMask = null)
         {
-            return ((ZoomCommon)((IZoomGetter)item).CommonInstance()!).Equals(
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IZoomInternal lhs,
-            IZoomGetter rhs,
-            out Zoom.ErrorMask errorMask,
-            Zoom.TranslationMask? copyMask = null)
+            this IInstanceNamingRulesInternal lhs,
+            IInstanceNamingRulesGetter rhs,
+            out InstanceNamingRules.ErrorMask errorMask,
+            InstanceNamingRules.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ZoomSetterTranslationCommon)((IZoomGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRulesSetterTranslationCommon)((IInstanceNamingRulesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Zoom.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = InstanceNamingRules.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IZoomInternal lhs,
-            IZoomGetter rhs,
+            this IInstanceNamingRulesInternal lhs,
+            IInstanceNamingRulesGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ZoomSetterTranslationCommon)((IZoomGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRulesSetterTranslationCommon)((IInstanceNamingRulesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -729,44 +691,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static Zoom DeepCopy(
-            this IZoomGetter item,
-            Zoom.TranslationMask? copyMask = null)
+        public static InstanceNamingRules DeepCopy(
+            this IInstanceNamingRulesGetter item,
+            InstanceNamingRules.TranslationMask? copyMask = null)
         {
-            return ((ZoomSetterTranslationCommon)((IZoomGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRulesSetterTranslationCommon)((IInstanceNamingRulesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Zoom DeepCopy(
-            this IZoomGetter item,
-            out Zoom.ErrorMask errorMask,
-            Zoom.TranslationMask? copyMask = null)
+        public static InstanceNamingRules DeepCopy(
+            this IInstanceNamingRulesGetter item,
+            out InstanceNamingRules.ErrorMask errorMask,
+            InstanceNamingRules.TranslationMask? copyMask = null)
         {
-            return ((ZoomSetterTranslationCommon)((IZoomGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRulesSetterTranslationCommon)((IInstanceNamingRulesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Zoom DeepCopy(
-            this IZoomGetter item,
+        public static InstanceNamingRules DeepCopy(
+            this IInstanceNamingRulesGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ZoomSetterTranslationCommon)((IZoomGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRulesSetterTranslationCommon)((IInstanceNamingRulesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Zoom Duplicate(
-            this IZoomGetter item,
+        public static InstanceNamingRules Duplicate(
+            this IInstanceNamingRulesGetter item,
             FormKey formKey,
-            Zoom.TranslationMask? copyMask = null)
+            InstanceNamingRules.TranslationMask? copyMask = null)
         {
-            return ((ZoomCommon)((IZoomGetter)item).CommonInstance()!).Duplicate(
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -776,11 +738,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IZoomInternal item,
+            this IInstanceNamingRulesInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((ZoomSetterCommon)((IZoomGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((InstanceNamingRulesSetterCommon)((IInstanceNamingRulesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -796,7 +758,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum Zoom_FieldIndex
+    internal enum InstanceNamingRules_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -804,49 +766,46 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        FovMult = 6,
-        Overlay = 7,
-        ImagespaceModifier = 8,
-        CameraOffset = 9,
-        GNAMDataTypeState = 10,
+        Target = 6,
+        RuleSets = 7,
     }
     #endregion
 
     #region Registration
-    internal partial class Zoom_Registration : ILoquiRegistration
+    internal partial class InstanceNamingRules_Registration : ILoquiRegistration
     {
-        public static readonly Zoom_Registration Instance = new Zoom_Registration();
+        public static readonly InstanceNamingRules_Registration Instance = new InstanceNamingRules_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 336,
+            msgID: 225,
             version: 0);
 
-        public const string GUID = "7c3747ae-d998-47c1-8b4e-0c5b0d325b84";
+        public const string GUID = "c44c988e-1e23-4bd1-9f55-8ba444d98bb3";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(Zoom.Mask<>);
+        public static readonly Type MaskType = typeof(InstanceNamingRules.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Zoom.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(InstanceNamingRules.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Zoom);
+        public static readonly Type ClassType = typeof(InstanceNamingRules);
 
-        public static readonly Type GetterType = typeof(IZoomGetter);
+        public static readonly Type GetterType = typeof(IInstanceNamingRulesGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IZoom);
+        public static readonly Type SetterType = typeof(IInstanceNamingRules);
 
-        public static readonly Type? InternalSetterType = typeof(IZoomInternal);
+        public static readonly Type? InternalSetterType = typeof(IInstanceNamingRulesInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.Zoom";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.InstanceNamingRules";
 
-        public const string Name = "Zoom";
+        public const string Name = "InstanceNamingRules";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -854,17 +813,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.ZOOM;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.INNR;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.ZOOM);
+            var triggers = RecordCollection.Factory(RecordTypes.INNR);
             var all = RecordCollection.Factory(
-                RecordTypes.ZOOM,
-                RecordTypes.GNAM);
+                RecordTypes.INNR,
+                RecordTypes.UNAM,
+                RecordTypes.VNAM,
+                RecordTypes.WNAM,
+                RecordTypes.KSIZ,
+                RecordTypes.KWDA,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ZoomBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(InstanceNamingRulesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -897,54 +862,51 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class ZoomSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class InstanceNamingRulesSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly ZoomSetterCommon Instance = new ZoomSetterCommon();
+        public new static readonly InstanceNamingRulesSetterCommon Instance = new InstanceNamingRulesSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IZoomInternal item)
+        public void Clear(IInstanceNamingRulesInternal item)
         {
             ClearPartial();
-            item.FovMult = default;
-            item.Overlay = default;
-            item.ImagespaceModifier.Clear();
-            item.CameraOffset = default;
-            item.GNAMDataTypeState = default;
+            item.Target = default;
+            item.RuleSets.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IZoomInternal)item);
+            Clear(item: (IInstanceNamingRulesInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IZoomInternal)item);
+            Clear(item: (IInstanceNamingRulesInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IZoom obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IInstanceNamingRules obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ImagespaceModifier.Relink(mapping);
+            obj.RuleSets.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IZoomInternal item,
+            IInstanceNamingRulesInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<IZoomInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IInstanceNamingRulesInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ZoomBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ZoomBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: InstanceNamingRulesBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: InstanceNamingRulesBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -953,7 +915,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (Zoom)item,
+                item: (InstanceNamingRules)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -964,7 +926,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (Zoom)item,
+                item: (InstanceNamingRules)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -972,17 +934,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ZoomCommon : Fallout4MajorRecordCommon
+    internal partial class InstanceNamingRulesCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly ZoomCommon Instance = new ZoomCommon();
+        public new static readonly InstanceNamingRulesCommon Instance = new InstanceNamingRulesCommon();
 
-        public Zoom.Mask<bool> GetEqualsMask(
-            IZoomGetter item,
-            IZoomGetter rhs,
+        public InstanceNamingRules.Mask<bool> GetEqualsMask(
+            IInstanceNamingRulesGetter item,
+            IInstanceNamingRulesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Zoom.Mask<bool>(false);
-            ((ZoomCommon)((IZoomGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new InstanceNamingRules.Mask<bool>(false);
+            ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -991,24 +953,24 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IZoomGetter item,
-            IZoomGetter rhs,
-            Zoom.Mask<bool> ret,
+            IInstanceNamingRulesGetter item,
+            IInstanceNamingRulesGetter rhs,
+            InstanceNamingRules.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.FovMult = item.FovMult.EqualsWithin(rhs.FovMult);
-            ret.Overlay = item.Overlay == rhs.Overlay;
-            ret.ImagespaceModifier = item.ImagespaceModifier.Equals(rhs.ImagespaceModifier);
-            ret.CameraOffset = item.CameraOffset.Equals(rhs.CameraOffset);
-            ret.GNAMDataTypeState = item.GNAMDataTypeState == rhs.GNAMDataTypeState;
+            ret.Target = item.Target == rhs.Target;
+            ret.RuleSets = item.RuleSets.CollectionEqualsHelper(
+                rhs.RuleSets,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IZoomGetter item,
+            IInstanceNamingRulesGetter item,
             string? name = null,
-            Zoom.Mask<bool>? printMask = null)
+            InstanceNamingRules.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1020,18 +982,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IZoomGetter item,
+            IInstanceNamingRulesGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Zoom.Mask<bool>? printMask = null)
+            InstanceNamingRules.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Zoom =>");
+                sb.AppendLine($"InstanceNamingRules =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Zoom) =>");
+                sb.AppendLine($"{name} (InstanceNamingRules) =>");
             }
             using (sb.Brace())
             {
@@ -1043,69 +1005,68 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IZoomGetter item,
+            IInstanceNamingRulesGetter item,
             StructuredStringBuilder sb,
-            Zoom.Mask<bool>? printMask = null)
+            InstanceNamingRules.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FovMult ?? true)
+            if ((printMask?.Target ?? true)
+                && item.Target is {} TargetItem)
             {
-                sb.AppendItem(item.FovMult, "FovMult");
+                sb.AppendItem(TargetItem, "Target");
             }
-            if (printMask?.Overlay ?? true)
+            if (printMask?.RuleSets?.Overall ?? true)
             {
-                sb.AppendItem(item.Overlay, "Overlay");
-            }
-            if (printMask?.ImagespaceModifier ?? true)
-            {
-                sb.AppendItem(item.ImagespaceModifier.FormKey, "ImagespaceModifier");
-            }
-            if (printMask?.CameraOffset ?? true)
-            {
-                sb.AppendItem(item.CameraOffset, "CameraOffset");
-            }
-            if (printMask?.GNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.GNAMDataTypeState, "GNAMDataTypeState");
+                sb.AppendLine("RuleSets =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.RuleSets)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
         }
         
-        public static Zoom_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static InstanceNamingRules_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Zoom_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new InstanceNamingRules_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Zoom_FieldIndex)((int)index);
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1113,31 +1074,19 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            IZoomGetter? lhs,
-            IZoomGetter? rhs,
+            IInstanceNamingRulesGetter? lhs,
+            IInstanceNamingRulesGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.FovMult) ?? true))
+            if ((crystal?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.Target) ?? true))
             {
-                if (!lhs.FovMult.EqualsWithin(rhs.FovMult)) return false;
+                if (lhs.Target != rhs.Target) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.Overlay) ?? true))
+            if ((crystal?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.RuleSets) ?? true))
             {
-                if (lhs.Overlay != rhs.Overlay) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.ImagespaceModifier) ?? true))
-            {
-                if (!lhs.ImagespaceModifier.Equals(rhs.ImagespaceModifier)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.CameraOffset) ?? true))
-            {
-                if (!lhs.CameraOffset.Equals(rhs.CameraOffset)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.GNAMDataTypeState) ?? true))
-            {
-                if (lhs.GNAMDataTypeState != rhs.GNAMDataTypeState) return false;
+                if (!lhs.RuleSets.SequenceEqual(rhs.RuleSets, (l, r) => ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)InstanceNamingRules_FieldIndex.RuleSets)))) return false;
             }
             return true;
         }
@@ -1148,8 +1097,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IZoomGetter?)lhs,
-                rhs: rhs as IZoomGetter,
+                lhs: (IInstanceNamingRulesGetter?)lhs,
+                rhs: rhs as IInstanceNamingRulesGetter,
                 crystal: crystal);
         }
         
@@ -1159,31 +1108,31 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IZoomGetter?)lhs,
-                rhs: rhs as IZoomGetter,
+                lhs: (IInstanceNamingRulesGetter?)lhs,
+                rhs: rhs as IInstanceNamingRulesGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IZoomGetter item)
+        public virtual int GetHashCode(IInstanceNamingRulesGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FovMult);
-            hash.Add(item.Overlay);
-            hash.Add(item.ImagespaceModifier);
-            hash.Add(item.CameraOffset);
-            hash.Add(item.GNAMDataTypeState);
+            if (item.Target is {} Targetitem)
+            {
+                hash.Add(Targetitem);
+            }
+            hash.Add(item.RuleSets);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IZoomGetter)item);
+            return GetHashCode(item: (IInstanceNamingRulesGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IZoomGetter)item);
+            return GetHashCode(item: (IInstanceNamingRulesGetter)item);
         }
         
         #endregion
@@ -1191,27 +1140,30 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return Zoom.GetNew();
+            return InstanceNamingRules.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IZoomGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRulesGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.ImagespaceModifier);
+            foreach (var item in obj.RuleSets.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             yield break;
         }
         
         #region Duplicate
-        public Zoom Duplicate(
-            IZoomGetter item,
+        public InstanceNamingRules Duplicate(
+            IInstanceNamingRulesGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Zoom(formKey);
+            var newRec = new InstanceNamingRules(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1222,7 +1174,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IZoomGetter)item,
+                item: (IInstanceNamingRulesGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1233,7 +1185,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IZoomGetter)item,
+                item: (IInstanceNamingRulesGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1243,14 +1195,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ZoomSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class InstanceNamingRulesSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly ZoomSetterTranslationCommon Instance = new ZoomSetterTranslationCommon();
+        public new static readonly InstanceNamingRulesSetterTranslationCommon Instance = new InstanceNamingRulesSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IZoomInternal item,
-            IZoomGetter rhs,
+            IInstanceNamingRulesInternal item,
+            IInstanceNamingRulesGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1264,8 +1216,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            IZoom item,
-            IZoomGetter rhs,
+            IInstanceNamingRules item,
+            IInstanceNamingRulesGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1276,25 +1228,33 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.FovMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.Target) ?? true))
             {
-                item.FovMult = rhs.FovMult;
+                item.Target = rhs.Target;
             }
-            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.Overlay) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.RuleSets) ?? true))
             {
-                item.Overlay = rhs.Overlay;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.ImagespaceModifier) ?? true))
-            {
-                item.ImagespaceModifier.SetTo(rhs.ImagespaceModifier.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.CameraOffset) ?? true))
-            {
-                item.CameraOffset = rhs.CameraOffset;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.GNAMDataTypeState) ?? true))
-            {
-                item.GNAMDataTypeState = rhs.GNAMDataTypeState;
+                errorMask?.PushIndex((int)InstanceNamingRules_FieldIndex.RuleSets);
+                try
+                {
+                    item.RuleSets.SetTo(
+                        rhs.RuleSets
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -1306,8 +1266,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IZoomInternal)item,
-                rhs: (IZoomGetter)rhs,
+                item: (IInstanceNamingRulesInternal)item,
+                rhs: (IInstanceNamingRulesGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1321,8 +1281,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IZoom)item,
-                rhs: (IZoomGetter)rhs,
+                item: (IInstanceNamingRules)item,
+                rhs: (IInstanceNamingRulesGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1336,8 +1296,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IZoomInternal)item,
-                rhs: (IZoomGetter)rhs,
+                item: (IInstanceNamingRulesInternal)item,
+                rhs: (IInstanceNamingRulesGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1351,8 +1311,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IZoom)item,
-                rhs: (IZoomGetter)rhs,
+                item: (IInstanceNamingRules)item,
+                rhs: (IInstanceNamingRulesGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1360,12 +1320,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public Zoom DeepCopy(
-            IZoomGetter item,
-            Zoom.TranslationMask? copyMask = null)
+        public InstanceNamingRules DeepCopy(
+            IInstanceNamingRulesGetter item,
+            InstanceNamingRules.TranslationMask? copyMask = null)
         {
-            Zoom ret = (Zoom)((ZoomCommon)((IZoomGetter)item).CommonInstance()!).GetNew();
-            ((ZoomSetterTranslationCommon)((IZoomGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRules ret = (InstanceNamingRules)((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).GetNew();
+            ((InstanceNamingRulesSetterTranslationCommon)((IInstanceNamingRulesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1374,30 +1334,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public Zoom DeepCopy(
-            IZoomGetter item,
-            out Zoom.ErrorMask errorMask,
-            Zoom.TranslationMask? copyMask = null)
+        public InstanceNamingRules DeepCopy(
+            IInstanceNamingRulesGetter item,
+            out InstanceNamingRules.ErrorMask errorMask,
+            InstanceNamingRules.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Zoom ret = (Zoom)((ZoomCommon)((IZoomGetter)item).CommonInstance()!).GetNew();
-            ((ZoomSetterTranslationCommon)((IZoomGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRules ret = (InstanceNamingRules)((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).GetNew();
+            ((InstanceNamingRulesSetterTranslationCommon)((IInstanceNamingRulesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Zoom.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = InstanceNamingRules.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Zoom DeepCopy(
-            IZoomGetter item,
+        public InstanceNamingRules DeepCopy(
+            IInstanceNamingRulesGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Zoom ret = (Zoom)((ZoomCommon)((IZoomGetter)item).CommonInstance()!).GetNew();
-            ((ZoomSetterTranslationCommon)((IZoomGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRules ret = (InstanceNamingRules)((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).GetNew();
+            ((InstanceNamingRulesSetterTranslationCommon)((IInstanceNamingRulesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1413,21 +1373,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Zoom
+    public partial class InstanceNamingRules
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Zoom_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Zoom_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => InstanceNamingRules_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => InstanceNamingRules_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ZoomCommon.Instance;
+        protected override object CommonInstance() => InstanceNamingRulesCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ZoomSetterCommon.Instance;
+            return InstanceNamingRulesSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ZoomSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => InstanceNamingRulesSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1438,23 +1398,14 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ZoomBinaryWriteTranslation :
+    public partial class InstanceNamingRulesBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ZoomBinaryWriteTranslation Instance = new ZoomBinaryWriteTranslation();
-
-        public static void WriteEmbedded(
-            IZoomGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
+        public new readonly static InstanceNamingRulesBinaryWriteTranslation Instance = new InstanceNamingRulesBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            IZoomGetter item,
+            IInstanceNamingRulesGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
@@ -1462,36 +1413,36 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.GNAM)))
-            {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.FovMult);
-                EnumBinaryTranslation<Zoom.OverlayType, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Overlay,
-                    length: 4);
-                FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ImagespaceModifier);
-                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.CameraOffset);
-            }
+            EnumBinaryTranslation<InstanceNamingRules.RuleTarget, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Target,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.UNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IInstanceNamingRuleSetGetter>.Instance.Write(
+                writer: writer,
+                items: item.RuleSets,
+                transl: (MutagenWriter subWriter, IInstanceNamingRuleSetGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((InstanceNamingRuleSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
         }
 
         public void Write(
             MutagenWriter writer,
-            IZoomGetter item,
+            IInstanceNamingRulesGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ZOOM)))
+                record: translationParams.ConvertToCustom(RecordTypes.INNR)))
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     writer.MetaData.FormVersion = item.FormVersion;
@@ -1514,7 +1465,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IZoomGetter)item,
+                item: (IInstanceNamingRulesGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1525,7 +1476,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IZoomGetter)item,
+                item: (IInstanceNamingRulesGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1536,20 +1487,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IZoomGetter)item,
+                item: (IInstanceNamingRulesGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ZoomBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class InstanceNamingRulesBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ZoomBinaryCreateTranslation Instance = new ZoomBinaryCreateTranslation();
+        public new readonly static InstanceNamingRulesBinaryCreateTranslation Instance = new InstanceNamingRulesBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.ZOOM;
+        public override RecordType RecordType => RecordTypes.INNR;
         public static void FillBinaryStructs(
-            IZoomInternal item,
+            IInstanceNamingRulesInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1558,7 +1509,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IZoomInternal item,
+            IInstanceNamingRulesInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1569,17 +1520,23 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.GNAM:
+                case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.FovMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Overlay = EnumBinaryTranslation<Zoom.OverlayType, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 4);
-                    item.ImagespaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.CameraOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)Zoom_FieldIndex.CameraOffset;
+                    item.Target = EnumBinaryTranslation<InstanceNamingRules.RuleTarget, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)InstanceNamingRules_FieldIndex.Target;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    item.RuleSets.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<InstanceNamingRuleSet>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: InstanceNamingRuleSet_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: InstanceNamingRuleSet.TryCreateFromBinary));
+                    return (int)InstanceNamingRules_FieldIndex.RuleSets;
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1598,7 +1555,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ZoomBinaryTranslationMixIn
+    public static class InstanceNamingRulesBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1607,67 +1564,50 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class ZoomBinaryOverlay :
+    internal partial class InstanceNamingRulesBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        IZoomGetter
+        IInstanceNamingRulesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Zoom_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Zoom_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => InstanceNamingRules_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => InstanceNamingRules_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ZoomCommon.Instance;
+        protected override object CommonInstance() => InstanceNamingRulesCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ZoomSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => InstanceNamingRulesSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ZoomCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRulesCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ZoomBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => InstanceNamingRulesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ZoomBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((InstanceNamingRulesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IZoom);
+        protected override Type LinkType => typeof(IInstanceNamingRules);
 
 
-        private RangeInt32? _GNAMLocation;
-        public Zoom.GNAMDataType GNAMDataTypeState { get; private set; }
-        #region FovMult
-        private int _FovMultLocation => _GNAMLocation!.Value.Min;
-        private bool _FovMult_IsSet => _GNAMLocation.HasValue;
-        public Single FovMult => _FovMult_IsSet ? _data.Slice(_FovMultLocation, 4).Float() : default;
+        #region Target
+        private int? _TargetLocation;
+        public InstanceNamingRules.RuleTarget? Target => _TargetLocation.HasValue ? (InstanceNamingRules.RuleTarget)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TargetLocation!.Value, _package.MetaData.Constants)) : default(InstanceNamingRules.RuleTarget?);
         #endregion
-        #region Overlay
-        private int _OverlayLocation => _GNAMLocation!.Value.Min + 0x4;
-        private bool _Overlay_IsSet => _GNAMLocation.HasValue;
-        public Zoom.OverlayType Overlay => _Overlay_IsSet ? (Zoom.OverlayType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_OverlayLocation, 0x4)) : default;
-        #endregion
-        #region ImagespaceModifier
-        private int _ImagespaceModifierLocation => _GNAMLocation!.Value.Min + 0x8;
-        private bool _ImagespaceModifier_IsSet => _GNAMLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => _ImagespaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImagespaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
-        #endregion
-        #region CameraOffset
-        private int _CameraOffsetLocation => _GNAMLocation!.Value.Min + 0xC;
-        private bool _CameraOffset_IsSet => _GNAMLocation.HasValue;
-        public P3Float CameraOffset => _CameraOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_CameraOffsetLocation, 12)) : default;
-        #endregion
+        public IReadOnlyList<IInstanceNamingRuleSetGetter> RuleSets { get; private set; } = Array.Empty<IInstanceNamingRuleSetGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ZoomBinaryOverlay(
+        protected InstanceNamingRulesBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1677,13 +1617,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IZoomGetter ZoomFactory(
+        public static IInstanceNamingRulesGetter InstanceNamingRulesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new ZoomBinaryOverlay(
+            var ret = new InstanceNamingRulesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
@@ -1704,12 +1644,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IZoomGetter ZoomFactory(
+        public static IInstanceNamingRulesGetter InstanceNamingRulesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return ZoomFactory(
+            return InstanceNamingRulesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1727,10 +1667,19 @@ namespace Mutagen.Bethesda.Fallout4
             type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.GNAM:
+                case RecordTypeInts.UNAM:
                 {
-                    _GNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Zoom_FieldIndex.CameraOffset;
+                    _TargetLocation = (stream.Position - offset);
+                    return (int)InstanceNamingRules_FieldIndex.Target;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    this.RuleSets = this.ParseRepeatedTypelessSubrecord<IInstanceNamingRuleSetGetter>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: InstanceNamingRuleSet_Registration.TriggerSpecs,
+                        factory: InstanceNamingRuleSetBinaryOverlay.InstanceNamingRuleSetFactory);
+                    return (int)InstanceNamingRules_FieldIndex.RuleSets;
                 }
                 default:
                     return base.FillRecordType(
@@ -1748,7 +1697,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ZoomMixIn.Print(
+            InstanceNamingRulesMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1758,7 +1707,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Zoom>.ToString(this);
+            return MajorRecordPrinter<InstanceNamingRules>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1768,16 +1717,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IZoomGetter rhs) return false;
-            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IInstanceNamingRulesGetter rhs) return false;
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IZoomGetter? obj)
+        public bool Equals(IInstanceNamingRulesGetter? obj)
         {
-            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

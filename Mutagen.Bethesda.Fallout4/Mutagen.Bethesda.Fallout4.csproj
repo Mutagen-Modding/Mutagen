@@ -386,6 +386,9 @@
     <Compile Include="Records\Major Records\InstanceNamingRule.cs">
       <DependentUpon>InstanceNamingRule.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRules.cs">
+      <DependentUpon>InstanceNamingRule.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Key.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
@@ -442,6 +445,9 @@
     </Compile>
     <Compile Include="Records\Major Records\MaterialObject_Generated.cs">
       <DependentUpon>MaterialObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialSwap.cs">
+      <DependentUpon>MaterialSwap.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MaterialType.cs">
       <DependentUpon>MaterialType.xml</DependentUpon>
@@ -757,6 +763,9 @@
     </Compile>
     <Compile Include="Records\Major Records\WorldspaceSubBlock.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Zoom.cs">
+      <DependentUpon>Zoom.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Fallout4.cs" />
     <Compile Include="Records\Fallout4MajorRecord.cs">
@@ -1402,18 +1411,6 @@
     </Compile>
     <Compile Include="Records\Major Records\EquipmentSlot_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\InstanceNaming_Generated.cs">
-      <DependentUpon>InstanceNaming.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRule_Generated.cs">
-      <DependentUpon>InstanceNamingRule.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RuleSet_Generated.cs">
-      <DependentUpon>InstanceNamingRule.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RuleName_Generated.cs">
-      <DependentUpon>InstanceNamingRule.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\IdleAnimation_Generated.cs">
       <DependentUpon>IdleAnimation.xml</DependentUpon>
@@ -2371,6 +2368,21 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\ObjectModEnumProperty_Generated.cs">
       <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialSubstitution_Generated.cs">
+      <DependentUpon>MaterialSwap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRule.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRule_Generated.cs">
+      <DependentUpon>InstanceNamingRule.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRuleSet_Generated.cs">
+      <DependentUpon>InstanceNamingRule.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRuleProperties_Generated.cs">
+      <DependentUpon>InstanceNamingRule.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

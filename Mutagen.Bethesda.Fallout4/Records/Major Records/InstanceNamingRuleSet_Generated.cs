@@ -38,33 +38,30 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class RuleSet :
-        IEquatable<IRuleSetGetter>,
-        ILoquiObjectSetter<RuleSet>,
-        IRuleSet
+    public partial class InstanceNamingRuleSet :
+        IEquatable<IInstanceNamingRuleSetGetter>,
+        IInstanceNamingRuleSet,
+        ILoquiObjectSetter<InstanceNamingRuleSet>
     {
         #region Ctor
-        public RuleSet()
+        public InstanceNamingRuleSet()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Count
-        public UInt32 Count { get; set; } = default;
-        #endregion
         #region Names
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RuleName> _Names = new ExtendedList<RuleName>();
-        public ExtendedList<RuleName> Names
+        private ExtendedList<InstanceNamingRule>? _Names;
+        public ExtendedList<InstanceNamingRule>? Names
         {
             get => this._Names;
-            init => this._Names = value;
+            set => this._Names = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IRuleNameGetter> IRuleSetGetter.Names => _Names;
+        IReadOnlyList<IInstanceNamingRuleGetter>? IInstanceNamingRuleSetGetter.Names => _Names;
         #endregion
 
         #endregion
@@ -75,7 +72,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RuleSetMixIn.Print(
+            InstanceNamingRuleSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -86,16 +83,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IRuleSetGetter rhs) return false;
-            return ((RuleSetCommon)((IRuleSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IInstanceNamingRuleSetGetter rhs) return false;
+            return ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IRuleSetGetter? obj)
+        public bool Equals(IInstanceNamingRuleSetGetter? obj)
         {
-            return ((RuleSetCommon)((IRuleSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((RuleSetCommon)((IRuleSetGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -105,18 +102,9 @@ namespace Mutagen.Bethesda.Fallout4
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem initialValue)
+            public Mask(TItem Names)
             {
-                this.Count = initialValue;
-                this.Names = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RuleName.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RuleName.Mask<TItem>?>>());
-            }
-
-            public Mask(
-                TItem Count,
-                TItem Names)
-            {
-                this.Count = Count;
-                this.Names = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RuleName.Mask<TItem>?>>?>(Names, Enumerable.Empty<MaskItemIndexed<TItem, RuleName.Mask<TItem>?>>());
+                this.Names = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRule.Mask<TItem>?>>?>(Names, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRule.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -128,8 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Count;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RuleName.Mask<TItem>?>>?>? Names;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRule.Mask<TItem>?>>?>? Names;
             #endregion
 
             #region Equals
@@ -142,14 +129,12 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Count, rhs.Count)) return false;
                 if (!object.Equals(this.Names, rhs.Names)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Count);
                 hash.Add(this.Names);
                 return hash.ToHashCode();
             }
@@ -159,7 +144,6 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Count)) return false;
                 if (this.Names != null)
                 {
                     if (!eval(this.Names.Overall)) return false;
@@ -179,7 +163,6 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Count)) return true;
                 if (this.Names != null)
                 {
                     if (eval(this.Names.Overall)) return true;
@@ -199,24 +182,23 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new RuleSet.Mask<R>();
+                var ret = new InstanceNamingRuleSet.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Count = eval(this.Count);
                 if (Names != null)
                 {
-                    obj.Names = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RuleName.Mask<R>?>>?>(eval(this.Names.Overall), Enumerable.Empty<MaskItemIndexed<R, RuleName.Mask<R>?>>());
+                    obj.Names = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>>?>(eval(this.Names.Overall), Enumerable.Empty<MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>>());
                     if (Names.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, RuleName.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>>();
                         obj.Names.Specific = l;
                         foreach (var item in Names.Specific)
                         {
-                            MaskItemIndexed<R, RuleName.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RuleName.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -228,22 +210,18 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(RuleSet.Mask<bool>? printMask = null)
+            public string Print(InstanceNamingRuleSet.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, RuleSet.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, InstanceNamingRuleSet.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(RuleSet.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(InstanceNamingRuleSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Count ?? true)
-                    {
-                        sb.AppendItem(Count, "Count");
-                    }
                     if ((printMask?.Names?.Overall ?? true)
                         && Names is {} NamesItem)
                     {
@@ -287,19 +265,16 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? Count;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RuleName.ErrorMask?>>?>? Names;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRule.ErrorMask?>>?>? Names;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                RuleSet_FieldIndex enu = (RuleSet_FieldIndex)index;
+                InstanceNamingRuleSet_FieldIndex enu = (InstanceNamingRuleSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case RuleSet_FieldIndex.Count:
-                        return Count;
-                    case RuleSet_FieldIndex.Names:
+                    case InstanceNamingRuleSet_FieldIndex.Names:
                         return Names;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -308,14 +283,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                RuleSet_FieldIndex enu = (RuleSet_FieldIndex)index;
+                InstanceNamingRuleSet_FieldIndex enu = (InstanceNamingRuleSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case RuleSet_FieldIndex.Count:
-                        this.Count = ex;
-                        break;
-                    case RuleSet_FieldIndex.Names:
-                        this.Names = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RuleName.ErrorMask?>>?>(ex, null);
+                    case InstanceNamingRuleSet_FieldIndex.Names:
+                        this.Names = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRule.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -324,14 +296,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                RuleSet_FieldIndex enu = (RuleSet_FieldIndex)index;
+                InstanceNamingRuleSet_FieldIndex enu = (InstanceNamingRuleSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case RuleSet_FieldIndex.Count:
-                        this.Count = (Exception?)obj;
-                        break;
-                    case RuleSet_FieldIndex.Names:
-                        this.Names = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RuleName.ErrorMask?>>?>)obj;
+                    case InstanceNamingRuleSet_FieldIndex.Names:
+                        this.Names = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRule.ErrorMask?>>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -341,7 +310,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Count != null) return true;
                 if (Names != null) return true;
                 return false;
             }
@@ -368,9 +336,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                {
-                    sb.AppendItem(Count, "Count");
-                }
                 if (Names is {} NamesItem)
                 {
                     sb.AppendLine("Names =>");
@@ -397,8 +362,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Count = this.Count.Combine(rhs.Count);
-                ret.Names = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RuleName.ErrorMask?>>?>(ExceptionExt.Combine(this.Names?.Overall, rhs.Names?.Overall), ExceptionExt.Combine(this.Names?.Specific, rhs.Names?.Specific));
+                ret.Names = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRule.ErrorMask?>>?>(ExceptionExt.Combine(this.Names?.Overall, rhs.Names?.Overall), ExceptionExt.Combine(this.Names?.Specific, rhs.Names?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -422,8 +386,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Count;
-            public RuleName.TranslationMask? Names;
+            public InstanceNamingRule.TranslationMask? Names;
             #endregion
 
             #region Ctors
@@ -433,7 +396,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Count = defaultOn;
             }
 
             #endregion
@@ -449,7 +411,6 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Count, null));
                 ret.Add((Names == null ? DefaultOn : !Names.GetCrystal().CopyNothing, Names?.GetCrystal()));
             }
 
@@ -462,31 +423,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RuleSetCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RuleSetSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleSetCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => InstanceNamingRuleSetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => RuleSetBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => InstanceNamingRuleSetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((RuleSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((InstanceNamingRuleSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static RuleSet CreateFromBinary(
+        public static InstanceNamingRuleSet CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new RuleSet();
-            ((RuleSetSetterCommon)((IRuleSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new InstanceNamingRuleSet();
+            ((InstanceNamingRuleSetSetterCommon)((IInstanceNamingRuleSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -497,7 +458,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out RuleSet item,
+            out InstanceNamingRuleSet item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -512,32 +473,31 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((RuleSetSetterCommon)((IRuleSetGetter)this).CommonSetterInstance()!).Clear(this);
+            ((InstanceNamingRuleSetSetterCommon)((IInstanceNamingRuleSetGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static RuleSet GetNew()
+        internal static InstanceNamingRuleSet GetNew()
         {
-            return new RuleSet();
+            return new InstanceNamingRuleSet();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IRuleSet :
+    public partial interface IInstanceNamingRuleSet :
         IFormLinkContainer,
-        ILoquiObjectSetter<IRuleSet>,
-        IRuleSetGetter
+        IInstanceNamingRuleSetGetter,
+        ILoquiObjectSetter<IInstanceNamingRuleSet>
     {
-        new UInt32 Count { get; set; }
-        new ExtendedList<RuleName> Names { get; }
+        new ExtendedList<InstanceNamingRule>? Names { get; set; }
     }
 
-    public partial interface IRuleSetGetter :
+    public partial interface IInstanceNamingRuleSetGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IRuleSetGetter>
+        ILoquiObject<IInstanceNamingRuleSetGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -545,51 +505,50 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => RuleSet_Registration.Instance;
-        UInt32 Count { get; }
-        IReadOnlyList<IRuleNameGetter> Names { get; }
+        static ILoquiRegistration StaticRegistration => InstanceNamingRuleSet_Registration.Instance;
+        IReadOnlyList<IInstanceNamingRuleGetter>? Names { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class RuleSetMixIn
+    public static partial class InstanceNamingRuleSetMixIn
     {
-        public static void Clear(this IRuleSet item)
+        public static void Clear(this IInstanceNamingRuleSet item)
         {
-            ((RuleSetSetterCommon)((IRuleSetGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((InstanceNamingRuleSetSetterCommon)((IInstanceNamingRuleSetGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RuleSet.Mask<bool> GetEqualsMask(
-            this IRuleSetGetter item,
-            IRuleSetGetter rhs,
+        public static InstanceNamingRuleSet.Mask<bool> GetEqualsMask(
+            this IInstanceNamingRuleSetGetter item,
+            IInstanceNamingRuleSetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RuleSetCommon)((IRuleSetGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IRuleSetGetter item,
+            this IInstanceNamingRuleSetGetter item,
             string? name = null,
-            RuleSet.Mask<bool>? printMask = null)
+            InstanceNamingRuleSet.Mask<bool>? printMask = null)
         {
-            return ((RuleSetCommon)((IRuleSetGetter)item).CommonInstance()!).Print(
+            return ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IRuleSetGetter item,
+            this IInstanceNamingRuleSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            RuleSet.Mask<bool>? printMask = null)
+            InstanceNamingRuleSet.Mask<bool>? printMask = null)
         {
-            ((RuleSetCommon)((IRuleSetGetter)item).CommonInstance()!).Print(
+            ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -597,21 +556,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IRuleSetGetter item,
-            IRuleSetGetter rhs,
-            RuleSet.TranslationMask? equalsMask = null)
+            this IInstanceNamingRuleSetGetter item,
+            IInstanceNamingRuleSetGetter rhs,
+            InstanceNamingRuleSet.TranslationMask? equalsMask = null)
         {
-            return ((RuleSetCommon)((IRuleSetGetter)item).CommonInstance()!).Equals(
+            return ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IRuleSet lhs,
-            IRuleSetGetter rhs)
+            this IInstanceNamingRuleSet lhs,
+            IInstanceNamingRuleSetGetter rhs)
         {
-            ((RuleSetSetterTranslationCommon)((IRuleSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -620,11 +579,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IRuleSet lhs,
-            IRuleSetGetter rhs,
-            RuleSet.TranslationMask? copyMask = null)
+            this IInstanceNamingRuleSet lhs,
+            IInstanceNamingRuleSetGetter rhs,
+            InstanceNamingRuleSet.TranslationMask? copyMask = null)
         {
-            ((RuleSetSetterTranslationCommon)((IRuleSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -633,28 +592,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IRuleSet lhs,
-            IRuleSetGetter rhs,
-            out RuleSet.ErrorMask errorMask,
-            RuleSet.TranslationMask? copyMask = null)
+            this IInstanceNamingRuleSet lhs,
+            IInstanceNamingRuleSetGetter rhs,
+            out InstanceNamingRuleSet.ErrorMask errorMask,
+            InstanceNamingRuleSet.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RuleSetSetterTranslationCommon)((IRuleSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = RuleSet.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = InstanceNamingRuleSet.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IRuleSet lhs,
-            IRuleSetGetter rhs,
+            this IInstanceNamingRuleSet lhs,
+            IInstanceNamingRuleSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RuleSetSetterTranslationCommon)((IRuleSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -662,32 +621,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static RuleSet DeepCopy(
-            this IRuleSetGetter item,
-            RuleSet.TranslationMask? copyMask = null)
+        public static InstanceNamingRuleSet DeepCopy(
+            this IInstanceNamingRuleSetGetter item,
+            InstanceNamingRuleSet.TranslationMask? copyMask = null)
         {
-            return ((RuleSetSetterTranslationCommon)((IRuleSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static RuleSet DeepCopy(
-            this IRuleSetGetter item,
-            out RuleSet.ErrorMask errorMask,
-            RuleSet.TranslationMask? copyMask = null)
+        public static InstanceNamingRuleSet DeepCopy(
+            this IInstanceNamingRuleSetGetter item,
+            out InstanceNamingRuleSet.ErrorMask errorMask,
+            InstanceNamingRuleSet.TranslationMask? copyMask = null)
         {
-            return ((RuleSetSetterTranslationCommon)((IRuleSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static RuleSet DeepCopy(
-            this IRuleSetGetter item,
+        public static InstanceNamingRuleSet DeepCopy(
+            this IInstanceNamingRuleSetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((RuleSetSetterTranslationCommon)((IRuleSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -695,11 +654,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IRuleSet item,
+            this IInstanceNamingRuleSet item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((RuleSetSetterCommon)((IRuleSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((InstanceNamingRuleSetSetterCommon)((IInstanceNamingRuleSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -715,17 +674,16 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum RuleSet_FieldIndex
+    internal enum InstanceNamingRuleSet_FieldIndex
     {
-        Count = 0,
-        Names = 1,
+        Names = 0,
     }
     #endregion
 
     #region Registration
-    internal partial class RuleSet_Registration : ILoquiRegistration
+    internal partial class InstanceNamingRuleSet_Registration : ILoquiRegistration
     {
-        public static readonly RuleSet_Registration Instance = new RuleSet_Registration();
+        public static readonly InstanceNamingRuleSet_Registration Instance = new InstanceNamingRuleSet_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
@@ -736,27 +694,27 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "71e89a3f-bb5c-48c0-ae13-39b4be69fd07";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(RuleSet.Mask<>);
+        public static readonly Type MaskType = typeof(InstanceNamingRuleSet.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RuleSet.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(InstanceNamingRuleSet.ErrorMask);
 
-        public static readonly Type ClassType = typeof(RuleSet);
+        public static readonly Type ClassType = typeof(InstanceNamingRuleSet);
 
-        public static readonly Type GetterType = typeof(IRuleSetGetter);
+        public static readonly Type GetterType = typeof(IInstanceNamingRuleSetGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IRuleSet);
+        public static readonly Type SetterType = typeof(IInstanceNamingRuleSet);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.RuleSet";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.InstanceNamingRuleSet";
 
-        public const string Name = "RuleSet";
+        public const string Name = "InstanceNamingRuleSet";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -764,11 +722,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.VNAM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory();
+            var triggers = RecordCollection.Factory(RecordTypes.VNAM);
             var all = RecordCollection.Factory(
+                RecordTypes.VNAM,
                 RecordTypes.WNAM,
                 RecordTypes.KSIZ,
                 RecordTypes.KWDA,
@@ -776,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.YNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(RuleSetBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(InstanceNamingRuleSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -809,30 +769,29 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class RuleSetSetterCommon
+    internal partial class InstanceNamingRuleSetSetterCommon
     {
-        public static readonly RuleSetSetterCommon Instance = new RuleSetSetterCommon();
+        public static readonly InstanceNamingRuleSetSetterCommon Instance = new InstanceNamingRuleSetSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IRuleSet item)
+        public void Clear(IInstanceNamingRuleSet item)
         {
             ClearPartial();
-            item.Count = default;
-            item.Names.Clear();
+            item.Names = null;
         }
         
         #region Mutagen
-        public void RemapLinks(IRuleSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IInstanceNamingRuleSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Names.RemapLinks(mapping);
+            obj.Names?.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IRuleSet item,
+            IInstanceNamingRuleSet item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -840,24 +799,24 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RuleSetBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: RuleSetBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: InstanceNamingRuleSetBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: InstanceNamingRuleSetBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class RuleSetCommon
+    internal partial class InstanceNamingRuleSetCommon
     {
-        public static readonly RuleSetCommon Instance = new RuleSetCommon();
+        public static readonly InstanceNamingRuleSetCommon Instance = new InstanceNamingRuleSetCommon();
 
-        public RuleSet.Mask<bool> GetEqualsMask(
-            IRuleSetGetter item,
-            IRuleSetGetter rhs,
+        public InstanceNamingRuleSet.Mask<bool> GetEqualsMask(
+            IInstanceNamingRuleSetGetter item,
+            IInstanceNamingRuleSetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RuleSet.Mask<bool>(false);
-            ((RuleSetCommon)((IRuleSetGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new InstanceNamingRuleSet.Mask<bool>(false);
+            ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -866,13 +825,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IRuleSetGetter item,
-            IRuleSetGetter rhs,
-            RuleSet.Mask<bool> ret,
+            IInstanceNamingRuleSetGetter item,
+            IInstanceNamingRuleSetGetter rhs,
+            InstanceNamingRuleSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Count = item.Count == rhs.Count;
             ret.Names = item.Names.CollectionEqualsHelper(
                 rhs.Names,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -880,9 +838,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public string Print(
-            IRuleSetGetter item,
+            IInstanceNamingRuleSetGetter item,
             string? name = null,
-            RuleSet.Mask<bool>? printMask = null)
+            InstanceNamingRuleSet.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -894,18 +852,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IRuleSetGetter item,
+            IInstanceNamingRuleSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            RuleSet.Mask<bool>? printMask = null)
+            InstanceNamingRuleSet.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"RuleSet =>");
+                sb.AppendLine($"InstanceNamingRuleSet =>");
             }
             else
             {
-                sb.AppendLine($"{name} (RuleSet) =>");
+                sb.AppendLine($"{name} (InstanceNamingRuleSet) =>");
             }
             using (sb.Brace())
             {
@@ -917,20 +875,17 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IRuleSetGetter item,
+            IInstanceNamingRuleSetGetter item,
             StructuredStringBuilder sb,
-            RuleSet.Mask<bool>? printMask = null)
+            InstanceNamingRuleSet.Mask<bool>? printMask = null)
         {
-            if (printMask?.Count ?? true)
-            {
-                sb.AppendItem(item.Count, "Count");
-            }
-            if (printMask?.Names?.Overall ?? true)
+            if ((printMask?.Names?.Overall ?? true)
+                && item.Names is {} NamesItem)
             {
                 sb.AppendLine("Names =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Names)
+                    foreach (var subItem in NamesItem)
                     {
                         using (sb.Brace())
                         {
@@ -943,26 +898,21 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRuleSetGetter? lhs,
-            IRuleSetGetter? rhs,
+            IInstanceNamingRuleSetGetter? lhs,
+            IInstanceNamingRuleSetGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)RuleSet_FieldIndex.Count) ?? true))
+            if ((crystal?.GetShouldTranslate((int)InstanceNamingRuleSet_FieldIndex.Names) ?? true))
             {
-                if (lhs.Count != rhs.Count) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)RuleSet_FieldIndex.Names) ?? true))
-            {
-                if (!lhs.Names.SequenceEqual(rhs.Names, (l, r) => ((RuleNameCommon)((IRuleNameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RuleSet_FieldIndex.Names)))) return false;
+                if (!lhs.Names.SequenceEqualNullable(rhs.Names, (l, r) => ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)InstanceNamingRuleSet_FieldIndex.Names)))) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IRuleSetGetter item)
+        public virtual int GetHashCode(IInstanceNamingRuleSetGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Count);
             hash.Add(item.Names);
             return hash.ToHashCode();
         }
@@ -972,15 +922,18 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return RuleSet.GetNew();
+            return InstanceNamingRuleSet.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRuleSetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRuleSetGetter obj)
         {
-            foreach (var item in obj.Names.SelectMany(f => f.EnumerateFormLinks()))
+            if (obj.Names is {} NamesItem)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in NamesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -988,35 +941,39 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class RuleSetSetterTranslationCommon
+    internal partial class InstanceNamingRuleSetSetterTranslationCommon
     {
-        public static readonly RuleSetSetterTranslationCommon Instance = new RuleSetSetterTranslationCommon();
+        public static readonly InstanceNamingRuleSetSetterTranslationCommon Instance = new InstanceNamingRuleSetSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IRuleSet item,
-            IRuleSetGetter rhs,
+            IInstanceNamingRuleSet item,
+            IInstanceNamingRuleSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)RuleSet_FieldIndex.Count) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRuleSet_FieldIndex.Names) ?? true))
             {
-                item.Count = rhs.Count;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RuleSet_FieldIndex.Names) ?? true))
-            {
-                errorMask?.PushIndex((int)RuleSet_FieldIndex.Names);
+                errorMask?.PushIndex((int)InstanceNamingRuleSet_FieldIndex.Names);
                 try
                 {
-                    item.Names.SetTo(
-                        rhs.Names
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((rhs.Names != null))
+                    {
+                        item.Names = 
+                            rhs.Names
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<InstanceNamingRule>();
+                    }
+                    else
+                    {
+                        item.Names = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1032,12 +989,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public RuleSet DeepCopy(
-            IRuleSetGetter item,
-            RuleSet.TranslationMask? copyMask = null)
+        public InstanceNamingRuleSet DeepCopy(
+            IInstanceNamingRuleSetGetter item,
+            InstanceNamingRuleSet.TranslationMask? copyMask = null)
         {
-            RuleSet ret = (RuleSet)((RuleSetCommon)((IRuleSetGetter)item).CommonInstance()!).GetNew();
-            ((RuleSetSetterTranslationCommon)((IRuleSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRuleSet ret = (InstanceNamingRuleSet)((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)item).CommonInstance()!).GetNew();
+            ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1046,30 +1003,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public RuleSet DeepCopy(
-            IRuleSetGetter item,
-            out RuleSet.ErrorMask errorMask,
-            RuleSet.TranslationMask? copyMask = null)
+        public InstanceNamingRuleSet DeepCopy(
+            IInstanceNamingRuleSetGetter item,
+            out InstanceNamingRuleSet.ErrorMask errorMask,
+            InstanceNamingRuleSet.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RuleSet ret = (RuleSet)((RuleSetCommon)((IRuleSetGetter)item).CommonInstance()!).GetNew();
-            ((RuleSetSetterTranslationCommon)((IRuleSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRuleSet ret = (InstanceNamingRuleSet)((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)item).CommonInstance()!).GetNew();
+            ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = RuleSet.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = InstanceNamingRuleSet.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public RuleSet DeepCopy(
-            IRuleSetGetter item,
+        public InstanceNamingRuleSet DeepCopy(
+            IInstanceNamingRuleSetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            RuleSet ret = (RuleSet)((RuleSetCommon)((IRuleSetGetter)item).CommonInstance()!).GetNew();
-            ((RuleSetSetterTranslationCommon)((IRuleSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRuleSet ret = (InstanceNamingRuleSet)((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)item).CommonInstance()!).GetNew();
+            ((InstanceNamingRuleSetSetterTranslationCommon)((IInstanceNamingRuleSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1085,27 +1042,27 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RuleSet
+    public partial class InstanceNamingRuleSet
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RuleSet_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => RuleSet_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => InstanceNamingRuleSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => InstanceNamingRuleSet_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => RuleSetCommon.Instance;
+        protected object CommonInstance() => InstanceNamingRuleSetCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return RuleSetSetterCommon.Instance;
+            return InstanceNamingRuleSetSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => RuleSetSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => InstanceNamingRuleSetSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IRuleSetGetter.CommonInstance() => this.CommonInstance();
+        object IInstanceNamingRuleSetGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IRuleSetGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IInstanceNamingRuleSetGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IRuleSetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IInstanceNamingRuleSetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1116,29 +1073,24 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RuleSetBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class InstanceNamingRuleSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RuleSetBinaryWriteTranslation Instance = new RuleSetBinaryWriteTranslation();
-
-        public static void WriteEmbedded(
-            IRuleSetGetter item,
-            MutagenWriter writer)
-        {
-            writer.Write(item.Count);
-        }
+        public readonly static InstanceNamingRuleSetBinaryWriteTranslation Instance = new InstanceNamingRuleSetBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            IRuleSetGetter item,
+            IInstanceNamingRuleSetGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRuleNameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IInstanceNamingRuleGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Names,
-                transl: (MutagenWriter subWriter, IRuleNameGetter subItem, TypedWriteParams? conv) =>
+                counterType: RecordTypes.VNAM,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IInstanceNamingRuleGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
-                    ((RuleNameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((InstanceNamingRuleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1147,12 +1099,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public void Write(
             MutagenWriter writer,
-            IRuleSetGetter item,
+            IInstanceNamingRuleSetGetter item,
             TypedWriteParams? translationParams = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1165,26 +1114,25 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IRuleSetGetter)item,
+                item: (IInstanceNamingRuleSetGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class RuleSetBinaryCreateTranslation
+    internal partial class InstanceNamingRuleSetBinaryCreateTranslation
     {
-        public readonly static RuleSetBinaryCreateTranslation Instance = new RuleSetBinaryCreateTranslation();
+        public readonly static InstanceNamingRuleSetBinaryCreateTranslation Instance = new InstanceNamingRuleSetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IRuleSet item,
+            IInstanceNamingRuleSet item,
             MutagenFrame frame)
         {
-            item.Count = frame.ReadUInt32();
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IRuleSet item,
+            IInstanceNamingRuleSet item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1195,18 +1143,19 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.WNAM:
-                case RecordTypeInts.KSIZ:
-                case RecordTypeInts.KWDA:
-                case RecordTypeInts.XNAM:
+                case RecordTypeInts.VNAM:
                 {
-                    item.Names.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RuleName>.Instance.Parse(
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRuleSet_FieldIndex.Names) return ParseResult.Stop;
+                    item.Names = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<InstanceNamingRule>.Instance.ParsePerItem(
                             reader: frame,
-                            triggeringRecord: RuleName_Registration.TriggerSpecs,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.VNAM,
+                            triggeringRecord: InstanceNamingRule_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: RuleName.TryCreateFromBinary));
-                    return (int)RuleSet_FieldIndex.Names;
+                            transl: InstanceNamingRule.TryCreateFromBinary)
+                        .CastExtendedList<InstanceNamingRule>();
+                    return (int)InstanceNamingRuleSet_FieldIndex.Names;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1219,14 +1168,14 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class RuleSetBinaryTranslationMixIn
+    public static class InstanceNamingRuleSetBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IRuleSetGetter item,
+            this IInstanceNamingRuleSetGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((RuleSetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((InstanceNamingRuleSetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1239,53 +1188,52 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class RuleSetBinaryOverlay :
+    internal partial class InstanceNamingRuleSetBinaryOverlay :
         PluginBinaryOverlay,
-        IRuleSetGetter
+        IInstanceNamingRuleSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RuleSet_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => RuleSet_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => InstanceNamingRuleSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => InstanceNamingRuleSet_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => RuleSetCommon.Instance;
+        protected object CommonInstance() => InstanceNamingRuleSetCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => RuleSetSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => InstanceNamingRuleSetSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IRuleSetGetter.CommonInstance() => this.CommonInstance();
+        object IInstanceNamingRuleSetGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IRuleSetGetter.CommonSetterInstance() => null;
+        object? IInstanceNamingRuleSetGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IRuleSetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IInstanceNamingRuleSetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RuleSetCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleSetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => RuleSetBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => InstanceNamingRuleSetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((RuleSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((InstanceNamingRuleSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IReadOnlyList<IRuleNameGetter> Names { get; private set; } = Array.Empty<IRuleNameGetter>();
+        public IReadOnlyList<IInstanceNamingRuleGetter>? Names { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected RuleSetBinaryOverlay(
+        protected InstanceNamingRuleSetBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1295,12 +1243,12 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IRuleSetGetter RuleSetFactory(
+        public static IInstanceNamingRuleSetGetter InstanceNamingRuleSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new RuleSetBinaryOverlay(
+            var ret = new InstanceNamingRuleSetBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -1313,12 +1261,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IRuleSetGetter RuleSetFactory(
+        public static IInstanceNamingRuleSetGetter InstanceNamingRuleSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return RuleSetFactory(
+            return InstanceNamingRuleSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1336,17 +1284,19 @@ namespace Mutagen.Bethesda.Fallout4
             type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.WNAM:
-                case RecordTypeInts.KSIZ:
-                case RecordTypeInts.KWDA:
-                case RecordTypeInts.XNAM:
+                case RecordTypeInts.VNAM:
                 {
-                    this.Names = this.ParseRepeatedTypelessSubrecord<IRuleNameGetter>(
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRuleSet_FieldIndex.Names) return ParseResult.Stop;
+                    this.Names = BinaryOverlayList.FactoryByCountPerItem<IInstanceNamingRuleGetter>(
                         stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: InstanceNamingRule_Registration.TriggerSpecs,
+                        countType: RecordTypes.VNAM,
                         parseParams: parseParams,
-                        trigger: RuleName_Registration.TriggerSpecs,
-                        factory: RuleNameBinaryOverlay.RuleNameFactory);
-                    return (int)RuleSet_FieldIndex.Names;
+                        getter: (s, p, recConv) => InstanceNamingRuleBinaryOverlay.InstanceNamingRuleFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)InstanceNamingRuleSet_FieldIndex.Names;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1358,7 +1308,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RuleSetMixIn.Print(
+            InstanceNamingRuleSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1369,16 +1319,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IRuleSetGetter rhs) return false;
-            return ((RuleSetCommon)((IRuleSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IInstanceNamingRuleSetGetter rhs) return false;
+            return ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IRuleSetGetter? obj)
+        public bool Equals(IInstanceNamingRuleSetGetter? obj)
         {
-            return ((RuleSetCommon)((IRuleSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((RuleSetCommon)((IRuleSetGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
