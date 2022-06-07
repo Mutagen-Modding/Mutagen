@@ -3406,8 +3406,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.FovOverride = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Scene_FieldIndex.FovOverride;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -3724,8 +3724,8 @@ namespace Mutagen.Bethesda.Fallout4
                     _FovOverrideLocation = (stream.Position - offset);
                     return (int)Scene_FieldIndex.FovOverride;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,

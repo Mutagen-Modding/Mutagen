@@ -770,8 +770,8 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory();
             var all = RecordCollection.Factory(
                 RecordTypes.WNAM,
-                RecordTypes.KWDA,
                 RecordTypes.KSIZ,
+                RecordTypes.KWDA,
                 RecordTypes.XNAM,
                 RecordTypes.YNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
@@ -1196,8 +1196,8 @@ namespace Mutagen.Bethesda.Fallout4
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.WNAM:
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 case RecordTypeInts.XNAM:
                 {
                     item.Names.SetTo(
@@ -1337,8 +1337,8 @@ namespace Mutagen.Bethesda.Fallout4
             switch (type.TypeInt)
             {
                 case RecordTypeInts.WNAM:
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 case RecordTypeInts.XNAM:
                 {
                     this.Names = this.ParseRepeatedTypelessSubrecord<IRuleNameGetter>(

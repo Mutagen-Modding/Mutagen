@@ -1802,8 +1802,8 @@ namespace Mutagen.Bethesda.Fallout4
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)CollisionLayer_FieldIndex.Name;
                 }
-                case RecordTypeInts.CNAM:
                 case RecordTypeInts.INTV:
+                case RecordTypeInts.CNAM:
                 {
                     item.CollidesWith = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICollisionLayerGetter>>.Instance.Parse(
@@ -1986,8 +1986,8 @@ namespace Mutagen.Bethesda.Fallout4
                     _NameLocation = (stream.Position - offset);
                     return (int)CollisionLayer_FieldIndex.Name;
                 }
-                case RecordTypeInts.CNAM:
                 case RecordTypeInts.INTV:
+                case RecordTypeInts.CNAM:
                 {
                     this.CollidesWith = BinaryOverlayList.FactoryByCountNullIfZero<IFormLinkGetter<ICollisionLayerGetter>>(
                         stream: stream,

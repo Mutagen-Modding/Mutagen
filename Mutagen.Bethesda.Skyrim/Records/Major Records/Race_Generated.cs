@@ -7704,8 +7704,8 @@ namespace Mutagen.Bethesda.Skyrim
                         item: item);
                     return (int)Race_FieldIndex.BodyTemplate;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -8629,8 +8629,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset);
                     return (int)Race_FieldIndex.BodyTemplate;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,

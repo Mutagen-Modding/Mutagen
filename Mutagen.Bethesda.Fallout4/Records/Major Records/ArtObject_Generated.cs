@@ -1867,8 +1867,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ArtObject_FieldIndex.PreviewTransform;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -2047,8 +2047,8 @@ namespace Mutagen.Bethesda.Fallout4
                     _PreviewTransformLocation = (stream.Position - offset);
                     return (int)ArtObject_FieldIndex.PreviewTransform;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,

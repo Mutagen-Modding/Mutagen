@@ -4656,8 +4656,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.MenuDisplayObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -5157,8 +5157,8 @@ namespace Mutagen.Bethesda.Skyrim
                     _MenuDisplayObjectLocation = (stream.Position - offset);
                     return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,

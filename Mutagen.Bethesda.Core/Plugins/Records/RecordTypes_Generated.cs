@@ -125,6 +125,7 @@ public partial class RecordTypes
     public static readonly RecordType PGRD = new(0x44524750);
     public static readonly RecordType PGRE = new(0x45524750);
     public static readonly RecordType PHZD = new(0x445A4850);
+    public static readonly RecordType PKIN = new(0x4E494B50);
     public static readonly RecordType PMIS = new(0x53494D50);
     public static readonly RecordType PNAM = new(0x4D414E50);
     public static readonly RecordType PROJ = new(0x4A4F5250);

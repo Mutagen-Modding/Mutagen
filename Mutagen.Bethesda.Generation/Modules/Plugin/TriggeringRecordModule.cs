@@ -710,7 +710,26 @@ public class TriggeringRecordModule : GenerationModule
     private async Task SetTriggeringRecordAccessors(ObjectGeneration obj, TypeGeneration field, MutagenFieldData data)
     {
         var loqui = field as LoquiType;
-        if (!data.HasTrigger)
+        bool hadExistingData = data.HasTrigger;
+        if (field is ContainerType cont)
+        {
+            if (field.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counterObj)
+                && counterObj is string counterTypeStr)
+            {
+                var allowNoCounter = (bool)field.CustomData[PluginListBinaryTranslationGeneration.AllowNoCounter];
+                if (!allowNoCounter)
+                {
+                    data.TriggeringRecordTypes.Clear();
+                }
+                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(new RecordType(counterTypeStr)));
+                data.TriggeringRecordTypes.Add(new RecordType(counterTypeStr));
+            }
+            if (cont.SubTypeGeneration is LoquiType contLoqui && contLoqui.TargetObjectGeneration != null)
+            {
+                data.TriggeringRecordSetAccessor = $"{contLoqui.TargetObjectGeneration.RegistrationName}.TriggerSpecs";
+            }
+        }
+        if (!hadExistingData)
         {
             if (data.MarkerType.HasValue)
             {
@@ -729,24 +748,6 @@ public class TriggeringRecordModule : GenerationModule
                 {
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(trigger));
                 }
-            }
-        }
-        if (field is ContainerType cont)
-        {
-            if (field.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counterObj)
-                && counterObj is string counterTypeStr)
-            {
-                var allowNoCounter = (bool)field.CustomData[PluginListBinaryTranslationGeneration.AllowNoCounter];
-                if (!allowNoCounter)
-                {
-                    data.TriggeringRecordTypes.Clear();
-                }
-                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(new RecordType(counterTypeStr)));
-                data.TriggeringRecordTypes.Add(new RecordType(counterTypeStr));
-            }
-            if (cont.SubTypeGeneration is LoquiType contLoqui && contLoqui.TargetObjectGeneration != null)
-            {
-                data.TriggeringRecordSetAccessor = $"{contLoqui.TargetObjectGeneration.RegistrationName}.TriggerSpecs";
             }
         }
         if (data.TriggeringRecordTypes.Count == 1

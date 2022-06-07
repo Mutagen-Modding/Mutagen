@@ -2601,8 +2601,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)MiscItem_FieldIndex.PutDownSound;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -2846,8 +2846,8 @@ namespace Mutagen.Bethesda.Skyrim
                     _PutDownSoundLocation = (stream.Position - offset);
                     return (int)MiscItem_FieldIndex.PutDownSound;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,

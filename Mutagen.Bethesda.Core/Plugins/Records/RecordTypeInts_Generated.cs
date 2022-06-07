@@ -123,6 +123,7 @@ public partial class RecordTypeInts
     public const int PGRD = 0x44524750;
     public const int PGRE = 0x45524750;
     public const int PHZD = 0x445A4850;
+    public const int PKIN = 0x4E494B50;
     public const int PMIS = 0x53494D50;
     public const int PNAM = 0x4D414E50;
     public const int PROJ = 0x4A4F5250;

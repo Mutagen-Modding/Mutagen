@@ -2962,8 +2962,8 @@ namespace Mutagen.Bethesda.Fallout4
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Ingredient_FieldIndex.Name;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -3253,8 +3253,8 @@ namespace Mutagen.Bethesda.Fallout4
                     _NameLocation = (stream.Position - offset);
                     return (int)Ingredient_FieldIndex.Name;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,

@@ -2673,8 +2673,8 @@ namespace Mutagen.Bethesda.Fallout4
                         translationParams: translationParams);
                     return (int)Door_FieldIndex.Destructible;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -2960,8 +2960,8 @@ namespace Mutagen.Bethesda.Fallout4
                         parseParams: parseParams);
                     return (int)Door_FieldIndex.Destructible;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,

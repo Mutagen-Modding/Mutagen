@@ -1335,8 +1335,8 @@ namespace Mutagen.Bethesda.Fallout4
                         item: item);
                     return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
-                case RecordTypeInts.IDLA:
                 case RecordTypeInts.IDLC:
+                case RecordTypeInts.IDLA:
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -1521,8 +1521,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset);
                     return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
-                case RecordTypeInts.IDLA:
                 case RecordTypeInts.IDLC:
+                case RecordTypeInts.IDLA:
                 {
                     AnimationsCustomParse(
                         stream: stream,

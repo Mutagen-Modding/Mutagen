@@ -3947,8 +3947,8 @@ namespace Mutagen.Bethesda.Fallout4
                             transl: Condition.TryCreateFromBinary));
                     return (int)QuestReferenceAlias_FieldIndex.Conditions;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -4336,8 +4336,8 @@ namespace Mutagen.Bethesda.Fallout4
                             skipHeader: false));
                     return (int)QuestReferenceAlias_FieldIndex.Conditions;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,

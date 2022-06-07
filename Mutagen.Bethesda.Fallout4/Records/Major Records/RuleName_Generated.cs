@@ -977,13 +977,13 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var triggers = RecordCollection.Factory(
                 RecordTypes.WNAM,
-                RecordTypes.KWDA,
                 RecordTypes.KSIZ,
+                RecordTypes.KWDA,
                 RecordTypes.XNAM);
             var all = RecordCollection.Factory(
                 RecordTypes.WNAM,
-                RecordTypes.KWDA,
                 RecordTypes.KSIZ,
+                RecordTypes.KWDA,
                 RecordTypes.XNAM,
                 RecordTypes.YNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
@@ -1530,8 +1530,8 @@ namespace Mutagen.Bethesda.Fallout4
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)RuleName_FieldIndex.Text;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RuleName_FieldIndex.Keywords) return ParseResult.Stop;
                     item.Keywords = 
@@ -1725,8 +1725,8 @@ namespace Mutagen.Bethesda.Fallout4
                     _TextLocation = (stream.Position - offset);
                     return (int)RuleName_FieldIndex.Text;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RuleName_FieldIndex.Keywords) return ParseResult.Stop;
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
