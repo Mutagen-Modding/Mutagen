@@ -642,7 +642,7 @@ internal abstract class BinaryOverlayList
         private readonly BinaryOverlayFactoryPackage _package;
         private readonly ReadOnlyMemorySlice<byte> _mem;
         private readonly PluginBinaryOverlay.SpanFactory<T> _getter;
-        private readonly IRecordCollection _recordTypes;
+        private readonly IReadOnlyRecordCollection _recordTypes;
         private readonly int _totalItemLength;
 
         public BinaryOverlayListByStartIndexWithRecordSet(
@@ -650,7 +650,7 @@ internal abstract class BinaryOverlayList
             BinaryOverlayFactoryPackage package,
             PluginBinaryOverlay.SpanFactory<T> getter,
             int itemLength,
-            IRecordCollection recordTypes)
+            IReadOnlyRecordCollection recordTypes)
         {
             _mem = mem;
             _package = package;

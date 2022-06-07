@@ -131,7 +131,7 @@ public class TriggeringRecordModule : GenerationModule
 
     public async IAsyncEnumerable<RecordType> GetAllRecordTypes(ObjectGeneration obj)
     {
-        HashSet<RecordType> recordTypes = new HashSet<RecordType>();
+        RecordCollection recordTypes = new();
         if (obj.TryGetRecordType(out var recType))
         {
             recordTypes.Add(recType);
@@ -604,7 +604,7 @@ public class TriggeringRecordModule : GenerationModule
             }
         }
 
-        HashSet<RecordType> recTypes = new HashSet<RecordType>();
+        RecordCollection recTypes = new();
         foreach (var field in obj.IterateFields(
             nonIntegrated: true,
             expandSets: SetMarkerType.ExpandSets.FalseAndInclude))

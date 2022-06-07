@@ -2,6 +2,7 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -12,7 +13,7 @@ public class MutagenFieldData
     public RecordType? MarkerType { get; set; }
     public RecordType? RecordType { get; set; }
     public RecordType? OverflowRecordType { get; set; }
-    public HashSet<RecordType> TriggeringRecordTypes { get; } = new();
+    public RecordCollection TriggeringRecordTypes { get; } = new();
     public HashSet<string> TriggeringRecordAccessors = new();
     public string TriggeringRecordSetAccessor { get; set; }
     public string? TriggeringRecordAccessor { get; set; }

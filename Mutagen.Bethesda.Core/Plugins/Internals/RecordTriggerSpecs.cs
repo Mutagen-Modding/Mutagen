@@ -2,18 +2,18 @@ namespace Mutagen.Bethesda.Plugins.Internals;
 
 internal class RecordTriggerSpecs
 {
-    public IRecordCollection AllRecordTypes { get; }
-    public IRecordCollection TriggeringRecordTypes { get; }
+    public IReadOnlyRecordCollection AllRecordTypes { get; }
+    public IReadOnlyRecordCollection TriggeringRecordTypes { get; }
     public bool AllAreTriggers { get; }
 
-    public RecordTriggerSpecs(IRecordCollection allRecordTypes, IRecordCollection triggeringRecordTypes)
+    public RecordTriggerSpecs(IReadOnlyRecordCollection allRecordTypes, IReadOnlyRecordCollection triggeringRecordTypes)
     {
         AllRecordTypes = allRecordTypes;
         TriggeringRecordTypes = triggeringRecordTypes;
         AllAreTriggers = false;
     }
 
-    public RecordTriggerSpecs(IRecordCollection allRecordTypes)
+    public RecordTriggerSpecs(IReadOnlyRecordCollection allRecordTypes)
     {
         AllRecordTypes = allRecordTypes;
         TriggeringRecordTypes = allRecordTypes;

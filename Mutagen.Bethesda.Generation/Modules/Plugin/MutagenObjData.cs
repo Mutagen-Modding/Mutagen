@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -15,9 +16,9 @@ public class MutagenObjData
     public bool FailOnUnknown;
     public ObjectType? ObjectType;
     public RecordType? MarkerType;
-    public HashSet<RecordType> TriggeringRecordTypes = new();
-    public HashSet<RecordType> CustomRecordTypeTriggers = new();
-    public HashSet<RecordType> AdditionalContainedRecordTypes = new();
+    public RecordCollection TriggeringRecordTypes = new();
+    public RecordCollection CustomRecordTypeTriggers = new();
+    public RecordCollection AdditionalContainedRecordTypes = new();
     public string TriggeringSource;
     public bool CustomBinary;
     public BinaryGenerationType BinaryOverlay = BinaryGenerationType.Normal;
