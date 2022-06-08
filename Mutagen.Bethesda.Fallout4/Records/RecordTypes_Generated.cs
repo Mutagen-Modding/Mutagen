@@ -320,6 +320,7 @@ public partial class RecordTypes
     public static readonly RecordType KILL = new(0x4C4C494B);
     public static readonly RecordType KNAM = new(0x4D414E4B);
     public static readonly RecordType KSIZ = new(0x5A49534B);
+    public static readonly RecordType KSSM = new(0x4D53534B);
     public static readonly RecordType KWDA = new(0x4144574B);
     public static readonly RecordType KYWD = new(0x4457594B);
     public static readonly RecordType LAND = new(0x444E414C);

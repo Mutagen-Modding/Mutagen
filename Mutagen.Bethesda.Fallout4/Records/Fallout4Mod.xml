@@ -123,6 +123,7 @@
       <Group name="MaterialSwaps" refName="MaterialSwap" />
       <Group name="Zooms" refName="Zoom" />
       <Group name="InstanceNamingRules" refName="InstanceNamingRules" />
+      <Group name="SoundKeywordMappings" refName="SoundKeywordMapping" />
     </Fields>
   </Object>
 </Loqui>

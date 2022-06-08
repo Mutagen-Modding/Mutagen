@@ -318,6 +318,7 @@ public partial class RecordTypeInts
     public const int KILL = 0x4C4C494B;
     public const int KNAM = 0x4D414E4B;
     public const int KSIZ = 0x5A49534B;
+    public const int KSSM = 0x4D53534B;
     public const int KWDA = 0x4144574B;
     public const int KYWD = 0x4457594B;
     public const int LAND = 0x444E414C;

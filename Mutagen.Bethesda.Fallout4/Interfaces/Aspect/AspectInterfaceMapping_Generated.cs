@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda.Fallout4
                 QuestReferenceAlias_Registration.Instance,
                 Race_Registration.Instance,
                 Scene_Registration.Instance,
+                SoundKeywordMapping_Registration.Instance,
                 Spell_Registration.Instance,
                 TalkingActivator_Registration.Instance,
                 Terminal_Registration.Instance,

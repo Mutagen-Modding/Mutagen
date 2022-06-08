@@ -38,6 +38,7 @@
     <Compile Include="Enums\Level.cs" />
     <Compile Include="Enums\LockLevel.cs" />
     <Compile Include="Enums\Perspective.cs" />
+    <Compile Include="Enums\ReverbClass.cs" />
     <Compile Include="Enums\Size.cs" />
     <Compile Include="Enums\Skill.cs" />
     <Compile Include="Enums\SoundLevel.cs" />
@@ -649,9 +650,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Relationship.cs">
       <DependentUpon>Relationship.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ReverbParameters.cs">
-      <DependentUpon>ReverbParameters.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Scene.cs">
       <DependentUpon>Scene.xml</DependentUpon>
@@ -2383,6 +2381,12 @@
     </Compile>
     <Compile Include="Records\Major Records\InstanceNamingRuleProperties_Generated.cs">
       <DependentUpon>InstanceNamingRule.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundKeywordMapping_Generated.cs">
+      <DependentUpon>SoundKeywordMapping.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MappingSound_Generated.cs">
+      <DependentUpon>SoundKeywordMapping.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

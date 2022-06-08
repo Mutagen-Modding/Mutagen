@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte Unknown { get; set; } = default;
         #endregion
         #region ReverbClass
-        public ReverbParameters.Class ReverbClass { get; set; } = default;
+        public ReverbClass ReverbClass { get; set; } = default;
         #endregion
         #region DATADataTypeState
         public ReverbParameters.DATADataType DATADataTypeState { get; set; } = default;
@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Percent DiffusionPercent { get; set; }
         new Percent DensityPercent { get; set; }
         new Byte Unknown { get; set; }
-        new ReverbParameters.Class ReverbClass { get; set; }
+        new ReverbClass ReverbClass { get; set; }
         new ReverbParameters.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4
         Percent DiffusionPercent { get; }
         Percent DensityPercent { get; }
         Byte Unknown { get; }
-        ReverbParameters.Class ReverbClass { get; }
+        ReverbClass ReverbClass { get; }
         ReverbParameters.DATADataType DATADataTypeState { get; }
 
     }
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Fallout4
                     integerType: FloatIntegerType.Byte);
                 writer.Write(item.Unknown);
             }
-            EnumBinaryTranslation<ReverbParameters.Class, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<ReverbClass, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ReverbClass,
                 length: 4,
@@ -2057,7 +2057,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReverbClass = EnumBinaryTranslation<ReverbParameters.Class, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.ReverbClass = EnumBinaryTranslation<ReverbClass, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)ReverbParameters_FieldIndex.ReverbClass;
@@ -2183,7 +2183,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ReverbClass
         private int? _ReverbClassLocation;
-        public ReverbParameters.Class ReverbClass => _ReverbClassLocation.HasValue ? (ReverbParameters.Class)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ReverbClassLocation!.Value, _package.MetaData.Constants)) : default(ReverbParameters.Class);
+        public ReverbClass ReverbClass => _ReverbClassLocation.HasValue ? (ReverbClass)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ReverbClassLocation!.Value, _package.MetaData.Constants)) : default(ReverbClass);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

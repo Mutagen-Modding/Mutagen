@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundKeywordMapping" recordType="KSSM" objType="Record" baseClass="Fallout4MajorRecord" GUID="8ecf1bd4-25b8-46eb-9e27-e3a238e96c0c" ID="663">
+    <Fields>
+      <FormLink name="PrimaryDescriptor" refName="SoundDescriptor" recordType="DNAM" />
+      <FormLink name="ExteriorTail" refName="SoundDescriptor" recordType="ENAM" />
+      <FormLink name="VatsDescriptor" refName="SoundDescriptor" recordType="VNAM" />
+      <Float name="VatsThreshold" recordType="TNAM" />
+      <List name="Keywords" >
+        <FormLink refName="Keyword" recordType="KNAM" />
+      </List>
+      <RefList name="Sounds" refName="MappingSound" />
+    </Fields>
+  </Object>
+  <Object name="MappingSound" objType="Subrecord" recordType="RNAM" GUID="907193d5-2f3b-46f9-ae1d-88aea8fb21b4" ID="664">
+    <Fields>
+      <Enum name="ReverbClass" enumName="ReverbClass" />
+      <FormLink name="Descriptor" refName="SoundDescriptor" />
+    </Fields>
+  </Object>
+</Loqui>

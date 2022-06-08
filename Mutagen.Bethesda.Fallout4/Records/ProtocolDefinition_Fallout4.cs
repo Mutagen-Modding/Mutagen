@@ -532,7 +532,9 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             ObjectModification_Registration.Instance,
             ObjectModEnumProperty_Registration.Instance,
             MaterialSubstitution_Registration.Instance,
-            InstanceNamingRuleProperties_Registration.Instance
+            InstanceNamingRuleProperties_Registration.Instance,
+            SoundKeywordMapping_Registration.Instance,
+            MappingSound_Registration.Instance
         );
     }
 }

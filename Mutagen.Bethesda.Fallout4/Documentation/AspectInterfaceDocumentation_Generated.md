@@ -47,6 +47,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - QuestReferenceAlias
 - Race
 - Scene
+- SoundKeywordMapping
 - Spell
 - TalkingActivator
 - Terminal
@@ -656,6 +657,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### SoundCategory
 - INamed
+### SoundKeywordMapping
+- IKeyworded
 ### SoundMarker
 - IObjectBounded
 ### Spell

@@ -18,7 +18,7 @@
           <UInt8 name="Unknown" />
         </Fields>
       </Data>
-      <Enum name="ReverbClass" enumName="ReverbParameters.Class" recordType="ANAM" nullable="False" />
+      <Enum name="ReverbClass" enumName="ReverbClass" recordType="ANAM" nullable="False" />
     </Fields>
   </Object>
 </Loqui>
