@@ -559,6 +559,7 @@ public partial class RecordTypeInts
     public const int SADD = 0x44444153;
     public const int SAKD = 0x444B4153;
     public const int SAPT = 0x54504153;
+    public const int SCCO = 0x4F434353;
     public const int SCDA = 0x41444353;
     public const int SCEN = 0x4E454353;
     public const int SCHR = 0x52484353;

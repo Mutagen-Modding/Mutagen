@@ -538,7 +538,9 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             OverdriveAudioEffect_Registration.Instance,
             AAudioEffect_Registration.Instance,
             StateVariableFilterAudioEffect_Registration.Instance,
-            DelayAudioEffect_Registration.Instance
+            DelayAudioEffect_Registration.Instance,
+            SceneCollection_Registration.Instance,
+            SceneCollectionItem_Registration.Instance
         );
     }
 }

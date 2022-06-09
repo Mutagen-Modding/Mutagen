@@ -125,6 +125,7 @@
       <Group name="InstanceNamingRules" refName="InstanceNamingRules" />
       <Group name="SoundKeywordMappings" refName="SoundKeywordMapping" />
       <Group name="AudioEffectChains" refName="AudioEffectChain" />
+      <Group name="SceneCollections" refName="SceneCollection" />
     </Fields>
   </Object>
 </Loqui>

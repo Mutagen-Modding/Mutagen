@@ -2406,6 +2406,12 @@
     <Compile Include="Records\Major Records\DelayAudioEffect_Generated.cs">
       <DependentUpon>AudioEffectChain.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SceneCollection_Generated.cs">
+      <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneCollectionItem_Generated.cs">
+      <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
