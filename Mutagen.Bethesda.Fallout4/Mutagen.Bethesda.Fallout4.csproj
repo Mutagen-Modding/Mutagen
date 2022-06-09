@@ -2412,6 +2412,15 @@
     <Compile Include="Records\Major Records\SceneCollectionItem_Generated.cs">
       <DependentUpon>SceneCollection.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AudioCategorySnapshot_Generated.cs">
+      <DependentUpon>AudioCategorySnapshot.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AudioCategoryMultiplier_Generated.cs">
+      <DependentUpon>AudioCategorySnapshot.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AnimationSoundTag_Generated.cs">
+      <DependentUpon>AnimationSoundTagSet.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

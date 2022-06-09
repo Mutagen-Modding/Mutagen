@@ -40,31 +40,36 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class AnimationSoundTagSet :
+    public partial class AudioCategorySnapshot :
         Fallout4MajorRecord,
-        IAnimationSoundTagSetInternal,
-        IEquatable<IAnimationSoundTagSetGetter>,
-        ILoquiObjectSetter<AnimationSoundTagSet>
+        IAudioCategorySnapshotInternal,
+        IEquatable<IAudioCategorySnapshotGetter>,
+        ILoquiObjectSetter<AudioCategorySnapshot>
     {
         #region Ctor
-        protected AnimationSoundTagSet()
+        protected AudioCategorySnapshot()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Tags
+        #region Priority
+        public UInt16? Priority { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AnimationSoundTag> _Tags = new ExtendedList<AnimationSoundTag>();
-        public ExtendedList<AnimationSoundTag> Tags
+        UInt16? IAudioCategorySnapshotGetter.Priority => this.Priority;
+        #endregion
+        #region Multipliers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AudioCategoryMultiplier> _Multipliers = new ExtendedList<AudioCategoryMultiplier>();
+        public ExtendedList<AudioCategoryMultiplier> Multipliers
         {
-            get => this._Tags;
-            init => this._Tags = value;
+            get => this._Multipliers;
+            init => this._Multipliers = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAnimationSoundTagGetter> IAnimationSoundTagSetGetter.Tags => _Tags;
+        IReadOnlyList<IAudioCategoryMultiplierGetter> IAudioCategorySnapshotGetter.Multipliers => _Multipliers;
         #endregion
 
         #endregion
@@ -75,7 +80,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AnimationSoundTagSetMixIn.Print(
+            AudioCategorySnapshotMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -93,7 +98,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Tags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>());
+                this.Priority = initialValue;
+                this.Multipliers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -103,7 +109,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Tags)
+                TItem Priority,
+                TItem Multipliers)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -112,7 +119,8 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.Tags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>(Tags, Enumerable.Empty<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>());
+                this.Priority = Priority;
+                this.Multipliers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>?>(Multipliers, Enumerable.Empty<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -124,7 +132,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>? Tags;
+            public TItem Priority;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>?>? Multipliers;
             #endregion
 
             #region Equals
@@ -138,13 +147,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Tags, rhs.Tags)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
+                if (!object.Equals(this.Multipliers, rhs.Multipliers)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Tags);
+                hash.Add(this.Priority);
+                hash.Add(this.Multipliers);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -155,12 +166,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (this.Tags != null)
+                if (!eval(this.Priority)) return false;
+                if (this.Multipliers != null)
                 {
-                    if (!eval(this.Tags.Overall)) return false;
-                    if (this.Tags.Specific != null)
+                    if (!eval(this.Multipliers.Overall)) return false;
+                    if (this.Multipliers.Specific != null)
                     {
-                        foreach (var item in this.Tags.Specific)
+                        foreach (var item in this.Multipliers.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -175,12 +187,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (this.Tags != null)
+                if (eval(this.Priority)) return true;
+                if (this.Multipliers != null)
                 {
-                    if (eval(this.Tags.Overall)) return true;
-                    if (this.Tags.Specific != null)
+                    if (eval(this.Multipliers.Overall)) return true;
+                    if (this.Multipliers.Specific != null)
                     {
-                        foreach (var item in this.Tags.Specific)
+                        foreach (var item in this.Multipliers.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -194,7 +207,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new AnimationSoundTagSet.Mask<R>();
+                var ret = new AudioCategorySnapshot.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -202,16 +215,17 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                if (Tags != null)
+                obj.Priority = eval(this.Priority);
+                if (Multipliers != null)
                 {
-                    obj.Tags = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>>?>(eval(this.Tags.Overall), Enumerable.Empty<MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>>());
-                    if (Tags.Specific != null)
+                    obj.Multipliers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>>?>(eval(this.Multipliers.Overall), Enumerable.Empty<MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>>());
+                    if (Multipliers.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>>();
-                        obj.Tags.Specific = l;
-                        foreach (var item in Tags.Specific)
+                        var l = new List<MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>>();
+                        obj.Multipliers.Specific = l;
+                        foreach (var item in Multipliers.Specific)
                         {
-                            MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -223,28 +237,32 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(AnimationSoundTagSet.Mask<bool>? printMask = null)
+            public string Print(AudioCategorySnapshot.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, AnimationSoundTagSet.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AudioCategorySnapshot.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(AnimationSoundTagSet.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(AudioCategorySnapshot.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if ((printMask?.Tags?.Overall ?? true)
-                        && Tags is {} TagsItem)
+                    if (printMask?.Priority ?? true)
                     {
-                        sb.AppendLine("Tags =>");
+                        sb.AppendItem(Priority, "Priority");
+                    }
+                    if ((printMask?.Multipliers?.Overall ?? true)
+                        && Multipliers is {} MultipliersItem)
+                    {
+                        sb.AppendLine("Multipliers =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(TagsItem.Overall);
-                            if (TagsItem.Specific != null)
+                            sb.AppendItem(MultipliersItem.Overall);
+                            if (MultipliersItem.Specific != null)
                             {
-                                foreach (var subItem in TagsItem.Specific)
+                                foreach (var subItem in MultipliersItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -265,17 +283,20 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSoundTag.ErrorMask?>>?>? Tags;
+            public Exception? Priority;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AudioCategoryMultiplier.ErrorMask?>>?>? Multipliers;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                AnimationSoundTagSet_FieldIndex enu = (AnimationSoundTagSet_FieldIndex)index;
+                AudioCategorySnapshot_FieldIndex enu = (AudioCategorySnapshot_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimationSoundTagSet_FieldIndex.Tags:
-                        return Tags;
+                    case AudioCategorySnapshot_FieldIndex.Priority:
+                        return Priority;
+                    case AudioCategorySnapshot_FieldIndex.Multipliers:
+                        return Multipliers;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -283,11 +304,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                AnimationSoundTagSet_FieldIndex enu = (AnimationSoundTagSet_FieldIndex)index;
+                AudioCategorySnapshot_FieldIndex enu = (AudioCategorySnapshot_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimationSoundTagSet_FieldIndex.Tags:
-                        this.Tags = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSoundTag.ErrorMask?>>?>(ex, null);
+                    case AudioCategorySnapshot_FieldIndex.Priority:
+                        this.Priority = ex;
+                        break;
+                    case AudioCategorySnapshot_FieldIndex.Multipliers:
+                        this.Multipliers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AudioCategoryMultiplier.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -297,11 +321,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                AnimationSoundTagSet_FieldIndex enu = (AnimationSoundTagSet_FieldIndex)index;
+                AudioCategorySnapshot_FieldIndex enu = (AudioCategorySnapshot_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimationSoundTagSet_FieldIndex.Tags:
-                        this.Tags = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSoundTag.ErrorMask?>>?>)obj;
+                    case AudioCategorySnapshot_FieldIndex.Priority:
+                        this.Priority = (Exception?)obj;
+                        break;
+                    case AudioCategorySnapshot_FieldIndex.Multipliers:
+                        this.Multipliers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AudioCategoryMultiplier.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -312,7 +339,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Tags != null) return true;
+                if (Priority != null) return true;
+                if (Multipliers != null) return true;
                 return false;
             }
             #endregion
@@ -339,15 +367,18 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                if (Tags is {} TagsItem)
                 {
-                    sb.AppendLine("Tags =>");
+                    sb.AppendItem(Priority, "Priority");
+                }
+                if (Multipliers is {} MultipliersItem)
+                {
+                    sb.AppendLine("Multipliers =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(TagsItem.Overall);
-                        if (TagsItem.Specific != null)
+                        sb.AppendItem(MultipliersItem.Overall);
+                        if (MultipliersItem.Specific != null)
                         {
-                            foreach (var subItem in TagsItem.Specific)
+                            foreach (var subItem in MultipliersItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -365,7 +396,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Tags = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSoundTag.ErrorMask?>>?>(ExceptionExt.Combine(this.Tags?.Overall, rhs.Tags?.Overall), ExceptionExt.Combine(this.Tags?.Specific, rhs.Tags?.Specific));
+                ret.Priority = this.Priority.Combine(rhs.Priority);
+                ret.Multipliers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AudioCategoryMultiplier.ErrorMask?>>?>(ExceptionExt.Combine(this.Multipliers?.Overall, rhs.Multipliers?.Overall), ExceptionExt.Combine(this.Multipliers?.Specific, rhs.Multipliers?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -388,7 +420,8 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public AnimationSoundTag.TranslationMask? Tags;
+            public bool Priority;
+            public AudioCategoryMultiplier.TranslationMask? Multipliers;
             #endregion
 
             #region Ctors
@@ -397,6 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Priority = defaultOn;
             }
 
             #endregion
@@ -404,7 +438,8 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Tags == null ? DefaultOn : !Tags.GetCrystal().CopyNothing, Tags?.GetCrystal()));
+                ret.Add((Priority, null));
+                ret.Add((Multipliers == null ? DefaultOn : !Multipliers.GetCrystal().CopyNothing, Multipliers?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -416,16 +451,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = AnimationSoundTagSet_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AnimationSoundTagSetCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimationSoundTagSetSetterCommon.Instance.RemapLinks(this, mapping);
-        public AnimationSoundTagSet(FormKey formKey)
+        public static readonly RecordType GrupRecordType = AudioCategorySnapshot_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AudioCategorySnapshotCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AudioCategorySnapshotSetterCommon.Instance.RemapLinks(this, mapping);
+        public AudioCategorySnapshot(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private AnimationSoundTagSet(
+        private AudioCategorySnapshot(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -434,7 +469,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal AnimationSoundTagSet(
+        internal AudioCategorySnapshot(
             FormKey formKey,
             ushort formVersion)
         {
@@ -443,12 +478,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public AnimationSoundTagSet(IFallout4Mod mod)
+        public AudioCategorySnapshot(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public AnimationSoundTagSet(IFallout4Mod mod, string editorID)
+        public AudioCategorySnapshot(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -456,10 +491,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<AnimationSoundTagSet>.ToString(this);
+            return MajorRecordPrinter<AudioCategorySnapshot>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IAnimationSoundTagSet);
+        protected override Type LinkType => typeof(IAudioCategorySnapshot);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -468,16 +503,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IAnimationSoundTagSetGetter rhs) return false;
-            return ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IAudioCategorySnapshotGetter rhs) return false;
+            return ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IAnimationSoundTagSetGetter? obj)
+        public bool Equals(IAudioCategorySnapshotGetter? obj)
         {
-            return ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -485,23 +520,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AnimationSoundTagSetBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AudioCategorySnapshotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((AnimationSoundTagSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AudioCategorySnapshotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static AnimationSoundTagSet CreateFromBinary(
+        public new static AudioCategorySnapshot CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new AnimationSoundTagSet();
-            ((AnimationSoundTagSetSetterCommon)((IAnimationSoundTagSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new AudioCategorySnapshot();
+            ((AudioCategorySnapshotSetterCommon)((IAudioCategorySnapshotGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -512,7 +547,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out AnimationSoundTagSet item,
+            out AudioCategorySnapshot item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -527,86 +562,88 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((AnimationSoundTagSetSetterCommon)((IAnimationSoundTagSetGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AudioCategorySnapshotSetterCommon)((IAudioCategorySnapshotGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new AnimationSoundTagSet GetNew()
+        internal static new AudioCategorySnapshot GetNew()
         {
-            return new AnimationSoundTagSet();
+            return new AudioCategorySnapshot();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IAnimationSoundTagSet :
-        IAnimationSoundTagSetGetter,
+    public partial interface IAudioCategorySnapshot :
+        IAudioCategorySnapshotGetter,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
-        ILoquiObjectSetter<IAnimationSoundTagSetInternal>
+        ILoquiObjectSetter<IAudioCategorySnapshotInternal>
     {
-        new ExtendedList<AnimationSoundTag> Tags { get; }
+        new UInt16? Priority { get; set; }
+        new ExtendedList<AudioCategoryMultiplier> Multipliers { get; }
     }
 
-    public partial interface IAnimationSoundTagSetInternal :
+    public partial interface IAudioCategorySnapshotInternal :
         IFallout4MajorRecordInternal,
-        IAnimationSoundTagSet,
-        IAnimationSoundTagSetGetter
+        IAudioCategorySnapshot,
+        IAudioCategorySnapshotGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.STAG)]
-    public partial interface IAnimationSoundTagSetGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.SCSN)]
+    public partial interface IAudioCategorySnapshotGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IAnimationSoundTagSetGetter>,
-        IMapsToGetter<IAnimationSoundTagSetGetter>
+        ILoquiObject<IAudioCategorySnapshotGetter>,
+        IMapsToGetter<IAudioCategorySnapshotGetter>
     {
-        static new ILoquiRegistration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
-        IReadOnlyList<IAnimationSoundTagGetter> Tags { get; }
+        static new ILoquiRegistration StaticRegistration => AudioCategorySnapshot_Registration.Instance;
+        UInt16? Priority { get; }
+        IReadOnlyList<IAudioCategoryMultiplierGetter> Multipliers { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class AnimationSoundTagSetMixIn
+    public static partial class AudioCategorySnapshotMixIn
     {
-        public static void Clear(this IAnimationSoundTagSetInternal item)
+        public static void Clear(this IAudioCategorySnapshotInternal item)
         {
-            ((AnimationSoundTagSetSetterCommon)((IAnimationSoundTagSetGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AudioCategorySnapshotSetterCommon)((IAudioCategorySnapshotGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AnimationSoundTagSet.Mask<bool> GetEqualsMask(
-            this IAnimationSoundTagSetGetter item,
-            IAnimationSoundTagSetGetter rhs,
+        public static AudioCategorySnapshot.Mask<bool> GetEqualsMask(
+            this IAudioCategorySnapshotGetter item,
+            IAudioCategorySnapshotGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IAnimationSoundTagSetGetter item,
+            this IAudioCategorySnapshotGetter item,
             string? name = null,
-            AnimationSoundTagSet.Mask<bool>? printMask = null)
+            AudioCategorySnapshot.Mask<bool>? printMask = null)
         {
-            return ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).Print(
+            return ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IAnimationSoundTagSetGetter item,
+            this IAudioCategorySnapshotGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AnimationSoundTagSet.Mask<bool>? printMask = null)
+            AudioCategorySnapshot.Mask<bool>? printMask = null)
         {
-            ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).Print(
+            ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -614,39 +651,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IAnimationSoundTagSetGetter item,
-            IAnimationSoundTagSetGetter rhs,
-            AnimationSoundTagSet.TranslationMask? equalsMask = null)
+            this IAudioCategorySnapshotGetter item,
+            IAudioCategorySnapshotGetter rhs,
+            AudioCategorySnapshot.TranslationMask? equalsMask = null)
         {
-            return ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).Equals(
+            return ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IAnimationSoundTagSetInternal lhs,
-            IAnimationSoundTagSetGetter rhs,
-            out AnimationSoundTagSet.ErrorMask errorMask,
-            AnimationSoundTagSet.TranslationMask? copyMask = null)
+            this IAudioCategorySnapshotInternal lhs,
+            IAudioCategorySnapshotGetter rhs,
+            out AudioCategorySnapshot.ErrorMask errorMask,
+            AudioCategorySnapshot.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AnimationSoundTagSetSetterTranslationCommon)((IAnimationSoundTagSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AudioCategorySnapshotSetterTranslationCommon)((IAudioCategorySnapshotGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = AnimationSoundTagSet.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AudioCategorySnapshot.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAnimationSoundTagSetInternal lhs,
-            IAnimationSoundTagSetGetter rhs,
+            this IAudioCategorySnapshotInternal lhs,
+            IAudioCategorySnapshotGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AnimationSoundTagSetSetterTranslationCommon)((IAnimationSoundTagSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AudioCategorySnapshotSetterTranslationCommon)((IAudioCategorySnapshotGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -654,44 +691,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static AnimationSoundTagSet DeepCopy(
-            this IAnimationSoundTagSetGetter item,
-            AnimationSoundTagSet.TranslationMask? copyMask = null)
+        public static AudioCategorySnapshot DeepCopy(
+            this IAudioCategorySnapshotGetter item,
+            AudioCategorySnapshot.TranslationMask? copyMask = null)
         {
-            return ((AnimationSoundTagSetSetterTranslationCommon)((IAnimationSoundTagSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AudioCategorySnapshotSetterTranslationCommon)((IAudioCategorySnapshotGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static AnimationSoundTagSet DeepCopy(
-            this IAnimationSoundTagSetGetter item,
-            out AnimationSoundTagSet.ErrorMask errorMask,
-            AnimationSoundTagSet.TranslationMask? copyMask = null)
+        public static AudioCategorySnapshot DeepCopy(
+            this IAudioCategorySnapshotGetter item,
+            out AudioCategorySnapshot.ErrorMask errorMask,
+            AudioCategorySnapshot.TranslationMask? copyMask = null)
         {
-            return ((AnimationSoundTagSetSetterTranslationCommon)((IAnimationSoundTagSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AudioCategorySnapshotSetterTranslationCommon)((IAudioCategorySnapshotGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static AnimationSoundTagSet DeepCopy(
-            this IAnimationSoundTagSetGetter item,
+        public static AudioCategorySnapshot DeepCopy(
+            this IAudioCategorySnapshotGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AnimationSoundTagSetSetterTranslationCommon)((IAnimationSoundTagSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AudioCategorySnapshotSetterTranslationCommon)((IAudioCategorySnapshotGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static AnimationSoundTagSet Duplicate(
-            this IAnimationSoundTagSetGetter item,
+        public static AudioCategorySnapshot Duplicate(
+            this IAudioCategorySnapshotGetter item,
             FormKey formKey,
-            AnimationSoundTagSet.TranslationMask? copyMask = null)
+            AudioCategorySnapshot.TranslationMask? copyMask = null)
         {
-            return ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).Duplicate(
+            return ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -701,11 +738,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IAnimationSoundTagSetInternal item,
+            this IAudioCategorySnapshotInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((AnimationSoundTagSetSetterCommon)((IAnimationSoundTagSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AudioCategorySnapshotSetterCommon)((IAudioCategorySnapshotGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -721,7 +758,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum AnimationSoundTagSet_FieldIndex
+    internal enum AudioCategorySnapshot_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -729,45 +766,46 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Tags = 6,
+        Priority = 6,
+        Multipliers = 7,
     }
     #endregion
 
     #region Registration
-    internal partial class AnimationSoundTagSet_Registration : ILoquiRegistration
+    internal partial class AudioCategorySnapshot_Registration : ILoquiRegistration
     {
-        public static readonly AnimationSoundTagSet_Registration Instance = new AnimationSoundTagSet_Registration();
+        public static readonly AudioCategorySnapshot_Registration Instance = new AudioCategorySnapshot_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 86,
+            msgID: 671,
             version: 0);
 
-        public const string GUID = "b05e1f99-79ff-4e33-a726-4f351a6ae7bf";
+        public const string GUID = "10412589-d75c-4cc4-a402-740780b35d64";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(AnimationSoundTagSet.Mask<>);
+        public static readonly Type MaskType = typeof(AudioCategorySnapshot.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AnimationSoundTagSet.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AudioCategorySnapshot.ErrorMask);
 
-        public static readonly Type ClassType = typeof(AnimationSoundTagSet);
+        public static readonly Type ClassType = typeof(AudioCategorySnapshot);
 
-        public static readonly Type GetterType = typeof(IAnimationSoundTagSetGetter);
+        public static readonly Type GetterType = typeof(IAudioCategorySnapshotGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAnimationSoundTagSet);
+        public static readonly Type SetterType = typeof(IAudioCategorySnapshot);
 
-        public static readonly Type? InternalSetterType = typeof(IAnimationSoundTagSetInternal);
+        public static readonly Type? InternalSetterType = typeof(IAudioCategorySnapshotInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.AnimationSoundTagSet";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.AudioCategorySnapshot";
 
-        public const string Name = "AnimationSoundTagSet";
+        public const string Name = "AudioCategorySnapshot";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -775,17 +813,18 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.STAG;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SCSN;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.STAG);
+            var triggers = RecordCollection.Factory(RecordTypes.SCSN);
             var all = RecordCollection.Factory(
-                RecordTypes.STAG,
-                RecordTypes.TNAM);
+                RecordTypes.SCSN,
+                RecordTypes.PNAM,
+                RecordTypes.CNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(AnimationSoundTagSetBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(AudioCategorySnapshotBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -818,50 +857,51 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class AnimationSoundTagSetSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class AudioCategorySnapshotSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly AnimationSoundTagSetSetterCommon Instance = new AnimationSoundTagSetSetterCommon();
+        public new static readonly AudioCategorySnapshotSetterCommon Instance = new AudioCategorySnapshotSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IAnimationSoundTagSetInternal item)
+        public void Clear(IAudioCategorySnapshotInternal item)
         {
             ClearPartial();
-            item.Tags.Clear();
+            item.Priority = default;
+            item.Multipliers.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IAnimationSoundTagSetInternal)item);
+            Clear(item: (IAudioCategorySnapshotInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IAnimationSoundTagSetInternal)item);
+            Clear(item: (IAudioCategorySnapshotInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IAnimationSoundTagSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IAudioCategorySnapshot obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Tags.RemapLinks(mapping);
+            obj.Multipliers.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IAnimationSoundTagSetInternal item,
+            IAudioCategorySnapshotInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<IAnimationSoundTagSetInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IAudioCategorySnapshotInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: AnimationSoundTagSetBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: AnimationSoundTagSetBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: AudioCategorySnapshotBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AudioCategorySnapshotBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -870,7 +910,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (AnimationSoundTagSet)item,
+                item: (AudioCategorySnapshot)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -881,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (AnimationSoundTagSet)item,
+                item: (AudioCategorySnapshot)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -889,17 +929,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class AnimationSoundTagSetCommon : Fallout4MajorRecordCommon
+    internal partial class AudioCategorySnapshotCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly AnimationSoundTagSetCommon Instance = new AnimationSoundTagSetCommon();
+        public new static readonly AudioCategorySnapshotCommon Instance = new AudioCategorySnapshotCommon();
 
-        public AnimationSoundTagSet.Mask<bool> GetEqualsMask(
-            IAnimationSoundTagSetGetter item,
-            IAnimationSoundTagSetGetter rhs,
+        public AudioCategorySnapshot.Mask<bool> GetEqualsMask(
+            IAudioCategorySnapshotGetter item,
+            IAudioCategorySnapshotGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AnimationSoundTagSet.Mask<bool>(false);
-            ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new AudioCategorySnapshot.Mask<bool>(false);
+            ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -908,23 +948,24 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IAnimationSoundTagSetGetter item,
-            IAnimationSoundTagSetGetter rhs,
-            AnimationSoundTagSet.Mask<bool> ret,
+            IAudioCategorySnapshotGetter item,
+            IAudioCategorySnapshotGetter rhs,
+            AudioCategorySnapshot.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Tags = item.Tags.CollectionEqualsHelper(
-                rhs.Tags,
+            ret.Priority = item.Priority == rhs.Priority;
+            ret.Multipliers = item.Multipliers.CollectionEqualsHelper(
+                rhs.Multipliers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IAnimationSoundTagSetGetter item,
+            IAudioCategorySnapshotGetter item,
             string? name = null,
-            AnimationSoundTagSet.Mask<bool>? printMask = null)
+            AudioCategorySnapshot.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -936,18 +977,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IAnimationSoundTagSetGetter item,
+            IAudioCategorySnapshotGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AnimationSoundTagSet.Mask<bool>? printMask = null)
+            AudioCategorySnapshot.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"AnimationSoundTagSet =>");
+                sb.AppendLine($"AudioCategorySnapshot =>");
             }
             else
             {
-                sb.AppendLine($"{name} (AnimationSoundTagSet) =>");
+                sb.AppendLine($"{name} (AudioCategorySnapshot) =>");
             }
             using (sb.Brace())
             {
@@ -959,20 +1000,25 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IAnimationSoundTagSetGetter item,
+            IAudioCategorySnapshotGetter item,
             StructuredStringBuilder sb,
-            AnimationSoundTagSet.Mask<bool>? printMask = null)
+            AudioCategorySnapshot.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Tags?.Overall ?? true)
+            if ((printMask?.Priority ?? true)
+                && item.Priority is {} PriorityItem)
             {
-                sb.AppendLine("Tags =>");
+                sb.AppendItem(PriorityItem, "Priority");
+            }
+            if (printMask?.Multipliers?.Overall ?? true)
+            {
+                sb.AppendLine("Multipliers =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Tags)
+                    foreach (var subItem in item.Multipliers)
                     {
                         using (sb.Brace())
                         {
@@ -983,39 +1029,39 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-        public static AnimationSoundTagSet_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static AudioCategorySnapshot_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new AnimationSoundTagSet_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new AudioCategorySnapshot_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (AnimationSoundTagSet_FieldIndex)((int)index);
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1023,15 +1069,19 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAnimationSoundTagSetGetter? lhs,
-            IAnimationSoundTagSetGetter? rhs,
+            IAudioCategorySnapshotGetter? lhs,
+            IAudioCategorySnapshotGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AnimationSoundTagSet_FieldIndex.Tags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)AudioCategorySnapshot_FieldIndex.Priority) ?? true))
             {
-                if (!lhs.Tags.SequenceEqual(rhs.Tags, (l, r) => ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AnimationSoundTagSet_FieldIndex.Tags)))) return false;
+                if (lhs.Priority != rhs.Priority) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AudioCategorySnapshot_FieldIndex.Multipliers) ?? true))
+            {
+                if (!lhs.Multipliers.SequenceEqual(rhs.Multipliers, (l, r) => ((AudioCategoryMultiplierCommon)((IAudioCategoryMultiplierGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AudioCategorySnapshot_FieldIndex.Multipliers)))) return false;
             }
             return true;
         }
@@ -1042,8 +1092,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IAnimationSoundTagSetGetter?)lhs,
-                rhs: rhs as IAnimationSoundTagSetGetter,
+                lhs: (IAudioCategorySnapshotGetter?)lhs,
+                rhs: rhs as IAudioCategorySnapshotGetter,
                 crystal: crystal);
         }
         
@@ -1053,27 +1103,31 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IAnimationSoundTagSetGetter?)lhs,
-                rhs: rhs as IAnimationSoundTagSetGetter,
+                lhs: (IAudioCategorySnapshotGetter?)lhs,
+                rhs: rhs as IAudioCategorySnapshotGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IAnimationSoundTagSetGetter item)
+        public virtual int GetHashCode(IAudioCategorySnapshotGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Tags);
+            if (item.Priority is {} Priorityitem)
+            {
+                hash.Add(Priorityitem);
+            }
+            hash.Add(item.Multipliers);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IAnimationSoundTagSetGetter)item);
+            return GetHashCode(item: (IAudioCategorySnapshotGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IAnimationSoundTagSetGetter)item);
+            return GetHashCode(item: (IAudioCategorySnapshotGetter)item);
         }
         
         #endregion
@@ -1081,17 +1135,17 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return AnimationSoundTagSet.GetNew();
+            return AudioCategorySnapshot.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAnimationSoundTagSetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAudioCategorySnapshotGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Tags.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Multipliers.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1099,12 +1153,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Duplicate
-        public AnimationSoundTagSet Duplicate(
-            IAnimationSoundTagSetGetter item,
+        public AudioCategorySnapshot Duplicate(
+            IAudioCategorySnapshotGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new AnimationSoundTagSet(formKey);
+            var newRec = new AudioCategorySnapshot(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1115,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAnimationSoundTagSetGetter)item,
+                item: (IAudioCategorySnapshotGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1126,7 +1180,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAnimationSoundTagSetGetter)item,
+                item: (IAudioCategorySnapshotGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1136,14 +1190,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class AnimationSoundTagSetSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class AudioCategorySnapshotSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly AnimationSoundTagSetSetterTranslationCommon Instance = new AnimationSoundTagSetSetterTranslationCommon();
+        public new static readonly AudioCategorySnapshotSetterTranslationCommon Instance = new AudioCategorySnapshotSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IAnimationSoundTagSetInternal item,
-            IAnimationSoundTagSetGetter rhs,
+            IAudioCategorySnapshotInternal item,
+            IAudioCategorySnapshotGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1157,8 +1211,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            IAnimationSoundTagSet item,
-            IAnimationSoundTagSetGetter rhs,
+            IAudioCategorySnapshot item,
+            IAudioCategorySnapshotGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1169,13 +1223,17 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AnimationSoundTagSet_FieldIndex.Tags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AudioCategorySnapshot_FieldIndex.Priority) ?? true))
             {
-                errorMask?.PushIndex((int)AnimationSoundTagSet_FieldIndex.Tags);
+                item.Priority = rhs.Priority;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AudioCategorySnapshot_FieldIndex.Multipliers) ?? true))
+            {
+                errorMask?.PushIndex((int)AudioCategorySnapshot_FieldIndex.Multipliers);
                 try
                 {
-                    item.Tags.SetTo(
-                        rhs.Tags
+                    item.Multipliers.SetTo(
+                        rhs.Multipliers
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -1203,8 +1261,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAnimationSoundTagSetInternal)item,
-                rhs: (IAnimationSoundTagSetGetter)rhs,
+                item: (IAudioCategorySnapshotInternal)item,
+                rhs: (IAudioCategorySnapshotGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1218,8 +1276,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAnimationSoundTagSet)item,
-                rhs: (IAnimationSoundTagSetGetter)rhs,
+                item: (IAudioCategorySnapshot)item,
+                rhs: (IAudioCategorySnapshotGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1233,8 +1291,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAnimationSoundTagSetInternal)item,
-                rhs: (IAnimationSoundTagSetGetter)rhs,
+                item: (IAudioCategorySnapshotInternal)item,
+                rhs: (IAudioCategorySnapshotGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1248,8 +1306,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAnimationSoundTagSet)item,
-                rhs: (IAnimationSoundTagSetGetter)rhs,
+                item: (IAudioCategorySnapshot)item,
+                rhs: (IAudioCategorySnapshotGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1257,12 +1315,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public AnimationSoundTagSet DeepCopy(
-            IAnimationSoundTagSetGetter item,
-            AnimationSoundTagSet.TranslationMask? copyMask = null)
+        public AudioCategorySnapshot DeepCopy(
+            IAudioCategorySnapshotGetter item,
+            AudioCategorySnapshot.TranslationMask? copyMask = null)
         {
-            AnimationSoundTagSet ret = (AnimationSoundTagSet)((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).GetNew();
-            ((AnimationSoundTagSetSetterTranslationCommon)((IAnimationSoundTagSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AudioCategorySnapshot ret = (AudioCategorySnapshot)((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).GetNew();
+            ((AudioCategorySnapshotSetterTranslationCommon)((IAudioCategorySnapshotGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1271,30 +1329,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public AnimationSoundTagSet DeepCopy(
-            IAnimationSoundTagSetGetter item,
-            out AnimationSoundTagSet.ErrorMask errorMask,
-            AnimationSoundTagSet.TranslationMask? copyMask = null)
+        public AudioCategorySnapshot DeepCopy(
+            IAudioCategorySnapshotGetter item,
+            out AudioCategorySnapshot.ErrorMask errorMask,
+            AudioCategorySnapshot.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AnimationSoundTagSet ret = (AnimationSoundTagSet)((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).GetNew();
-            ((AnimationSoundTagSetSetterTranslationCommon)((IAnimationSoundTagSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AudioCategorySnapshot ret = (AudioCategorySnapshot)((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).GetNew();
+            ((AudioCategorySnapshotSetterTranslationCommon)((IAudioCategorySnapshotGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = AnimationSoundTagSet.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AudioCategorySnapshot.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public AnimationSoundTagSet DeepCopy(
-            IAnimationSoundTagSetGetter item,
+        public AudioCategorySnapshot DeepCopy(
+            IAudioCategorySnapshotGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            AnimationSoundTagSet ret = (AnimationSoundTagSet)((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)item).CommonInstance()!).GetNew();
-            ((AnimationSoundTagSetSetterTranslationCommon)((IAnimationSoundTagSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AudioCategorySnapshot ret = (AudioCategorySnapshot)((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)item).CommonInstance()!).GetNew();
+            ((AudioCategorySnapshotSetterTranslationCommon)((IAudioCategorySnapshotGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1310,21 +1368,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class AnimationSoundTagSet
+    public partial class AudioCategorySnapshot
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AnimationSoundTagSet_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AudioCategorySnapshot_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AudioCategorySnapshot_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AnimationSoundTagSetCommon.Instance;
+        protected override object CommonInstance() => AudioCategorySnapshotCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return AnimationSoundTagSetSetterCommon.Instance;
+            return AudioCategorySnapshotSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AnimationSoundTagSetSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AudioCategorySnapshotSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1335,14 +1393,14 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class AnimationSoundTagSetBinaryWriteTranslation :
+    public partial class AudioCategorySnapshotBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AnimationSoundTagSetBinaryWriteTranslation Instance = new AnimationSoundTagSetBinaryWriteTranslation();
+        public new readonly static AudioCategorySnapshotBinaryWriteTranslation Instance = new AudioCategorySnapshotBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            IAnimationSoundTagSetGetter item,
+            IAudioCategorySnapshotGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
@@ -1350,13 +1408,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAnimationSoundTagGetter>.Instance.Write(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                items: item.Tags,
-                transl: (MutagenWriter subWriter, IAnimationSoundTagGetter subItem, TypedWriteParams? conv) =>
+                item: item.Priority,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAudioCategoryMultiplierGetter>.Instance.Write(
+                writer: writer,
+                items: item.Multipliers,
+                transl: (MutagenWriter subWriter, IAudioCategoryMultiplierGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
-                    ((AnimationSoundTagBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((AudioCategoryMultiplierBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1365,12 +1427,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         public void Write(
             MutagenWriter writer,
-            IAnimationSoundTagSetGetter item,
+            IAudioCategorySnapshotGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.STAG)))
+                record: translationParams.ConvertToCustom(RecordTypes.SCSN)))
             {
                 try
                 {
@@ -1397,7 +1459,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IAnimationSoundTagSetGetter)item,
+                item: (IAudioCategorySnapshotGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1408,7 +1470,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IAnimationSoundTagSetGetter)item,
+                item: (IAudioCategorySnapshotGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1419,20 +1481,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IAnimationSoundTagSetGetter)item,
+                item: (IAudioCategorySnapshotGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class AnimationSoundTagSetBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class AudioCategorySnapshotBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static AnimationSoundTagSetBinaryCreateTranslation Instance = new AnimationSoundTagSetBinaryCreateTranslation();
+        public new readonly static AudioCategorySnapshotBinaryCreateTranslation Instance = new AudioCategorySnapshotBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.STAG;
+        public override RecordType RecordType => RecordTypes.SCSN;
         public static void FillBinaryStructs(
-            IAnimationSoundTagSetInternal item,
+            IAudioCategorySnapshotInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1441,7 +1503,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IAnimationSoundTagSetInternal item,
+            IAudioCategorySnapshotInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1452,15 +1514,21 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.TNAM:
+                case RecordTypeInts.PNAM:
                 {
-                    item.Tags.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AnimationSoundTag>.Instance.Parse(
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Priority = frame.ReadUInt16();
+                    return (int)AudioCategorySnapshot_FieldIndex.Priority;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    item.Multipliers.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AudioCategoryMultiplier>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: AnimationSoundTag_Registration.TriggerSpecs,
+                            triggeringRecord: AudioCategoryMultiplier_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: AnimationSoundTag.TryCreateFromBinary));
-                    return (int)AnimationSoundTagSet_FieldIndex.Tags;
+                            transl: AudioCategoryMultiplier.TryCreateFromBinary));
+                    return (int)AudioCategorySnapshot_FieldIndex.Multipliers;
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1479,7 +1547,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class AnimationSoundTagSetBinaryTranslationMixIn
+    public static class AudioCategorySnapshotBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1488,46 +1556,50 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class AnimationSoundTagSetBinaryOverlay :
+    internal partial class AudioCategorySnapshotBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        IAnimationSoundTagSetGetter
+        IAudioCategorySnapshotGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AnimationSoundTagSet_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AudioCategorySnapshot_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AudioCategorySnapshot_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AnimationSoundTagSetCommon.Instance;
+        protected override object CommonInstance() => AudioCategorySnapshotCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AnimationSoundTagSetSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AudioCategorySnapshotSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AnimationSoundTagSetCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AudioCategorySnapshotCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AnimationSoundTagSetBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AudioCategorySnapshotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((AnimationSoundTagSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AudioCategorySnapshotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAnimationSoundTagSet);
+        protected override Type LinkType => typeof(IAudioCategorySnapshot);
 
 
-        public IReadOnlyList<IAnimationSoundTagGetter> Tags { get; private set; } = Array.Empty<IAnimationSoundTagGetter>();
+        #region Priority
+        private int? _PriorityLocation;
+        public UInt16? Priority => _PriorityLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PriorityLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        public IReadOnlyList<IAudioCategoryMultiplierGetter> Multipliers { get; private set; } = Array.Empty<IAudioCategoryMultiplierGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected AnimationSoundTagSetBinaryOverlay(
+        protected AudioCategorySnapshotBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1537,13 +1609,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IAnimationSoundTagSetGetter AnimationSoundTagSetFactory(
+        public static IAudioCategorySnapshotGetter AudioCategorySnapshotFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new AnimationSoundTagSetBinaryOverlay(
+            var ret = new AudioCategorySnapshotBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
@@ -1564,12 +1636,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IAnimationSoundTagSetGetter AnimationSoundTagSetFactory(
+        public static IAudioCategorySnapshotGetter AudioCategorySnapshotFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return AnimationSoundTagSetFactory(
+            return AudioCategorySnapshotFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1587,20 +1659,25 @@ namespace Mutagen.Bethesda.Fallout4
             type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.TNAM:
+                case RecordTypeInts.PNAM:
                 {
-                    this.Tags = BinaryOverlayList.FactoryByArray<IAnimationSoundTagGetter>(
+                    _PriorityLocation = (stream.Position - offset);
+                    return (int)AudioCategorySnapshot_FieldIndex.Priority;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    this.Multipliers = BinaryOverlayList.FactoryByArray<IAudioCategoryMultiplierGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
-                        getter: (s, p, recConv) => AnimationSoundTagBinaryOverlay.AnimationSoundTagFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p, recConv) => AudioCategoryMultiplierBinaryOverlay.AudioCategoryMultiplierFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: AnimationSoundTag_Registration.TriggerSpecs,
+                            trigger: AudioCategoryMultiplier_Registration.TriggerSpecs,
                             triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return (int)AnimationSoundTagSet_FieldIndex.Tags;
+                    return (int)AudioCategorySnapshot_FieldIndex.Multipliers;
                 }
                 default:
                     return base.FillRecordType(
@@ -1618,7 +1695,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AnimationSoundTagSetMixIn.Print(
+            AudioCategorySnapshotMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1628,7 +1705,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<AnimationSoundTagSet>.ToString(this);
+            return MajorRecordPrinter<AudioCategorySnapshot>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1638,16 +1715,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IAnimationSoundTagSetGetter rhs) return false;
-            return ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IAudioCategorySnapshotGetter rhs) return false;
+            return ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IAnimationSoundTagSetGetter? obj)
+        public bool Equals(IAudioCategorySnapshotGetter? obj)
         {
-            return ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((AnimationSoundTagSetCommon)((IAnimationSoundTagSetGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AudioCategorySnapshotCommon)((IAudioCategorySnapshotGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

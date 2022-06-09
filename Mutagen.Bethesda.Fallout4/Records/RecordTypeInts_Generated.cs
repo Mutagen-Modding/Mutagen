@@ -569,6 +569,7 @@ public partial class RecordTypeInts
     public const int SCQS = 0x53514353;
     public const int SCRN = 0x4E524353;
     public const int SCRO = 0x4F524353;
+    public const int SCSN = 0x4E534353;
     public const int SCTX = 0x58544353;
     public const int SDSC = 0x43534453;
     public const int SGNM = 0x4D4E4753;

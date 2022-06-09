@@ -540,7 +540,10 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             StateVariableFilterAudioEffect_Registration.Instance,
             DelayAudioEffect_Registration.Instance,
             SceneCollection_Registration.Instance,
-            SceneCollectionItem_Registration.Instance
+            SceneCollectionItem_Registration.Instance,
+            AudioCategorySnapshot_Registration.Instance,
+            AudioCategoryMultiplier_Registration.Instance,
+            AnimationSoundTag_Registration.Instance
         );
     }
 }

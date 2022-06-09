@@ -571,6 +571,7 @@ public partial class RecordTypes
     public static readonly RecordType SCQS = new(0x53514353);
     public static readonly RecordType SCRN = new(0x4E524353);
     public static readonly RecordType SCRO = new(0x4F524353);
+    public static readonly RecordType SCSN = new(0x4E534353);
     public static readonly RecordType SCTX = new(0x58544353);
     public static readonly RecordType SDSC = new(0x43534453);
     public static readonly RecordType SGNM = new(0x4D4E4753);

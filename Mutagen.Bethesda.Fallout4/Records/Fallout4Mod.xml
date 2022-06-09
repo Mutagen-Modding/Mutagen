@@ -127,6 +127,8 @@
       <Group name="AudioEffectChains" refName="AudioEffectChain" />
       <Group name="SceneCollections" refName="SceneCollection" />
       <Group name="AttractionRules" refName="AttractionRule" />
+      <Group name="AudioCategorySnapshots" refName="AudioCategorySnapshot" />
+      <Group name="AnimationSoundTagSets" refName="AnimationSoundTagSet" />
     </Fields>
   </Object>
 </Loqui>
