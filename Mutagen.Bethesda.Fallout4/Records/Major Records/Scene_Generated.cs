@@ -65,6 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISceneAdapterGetter? ISceneGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
         public Scene.Flag? Flags { get; set; }
@@ -1578,12 +1579,18 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISceneGetter>,
         IMapsToGetter<ISceneGetter>
     {
         static new ILoquiRegistration StaticRegistration => Scene_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         ISceneAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         Scene.Flag? Flags { get; }
         IReadOnlyList<IScenePhaseGetter> Phases { get; }
         IReadOnlyList<ISceneActorGetter> Actors { get; }
@@ -3515,6 +3522,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public ISceneAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? SceneAdapterBinaryOverlay.SceneAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
         private int? _FlagsLocation;

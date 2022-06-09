@@ -66,6 +66,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IQuestAdapterGetter? IQuestGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
         /// <summary>
@@ -2152,6 +2153,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IQuestGetter>,
         IMajorRecordGetterEnumerable,
         IMapsToGetter<IQuestGetter>,
@@ -2161,7 +2163,12 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Quest_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         IQuestAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -5206,6 +5213,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IQuestAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? QuestAdapterBinaryOverlay.QuestAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
         private int? _NameLocation;

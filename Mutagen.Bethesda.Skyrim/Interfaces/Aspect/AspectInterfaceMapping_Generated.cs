@@ -49,6 +49,43 @@ namespace Mutagen.Bethesda.Skyrim
                 Weapon_Registration.Instance,
             });
             dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
+            dict[typeof(IHaveVirtualMachineAdapterGetter)] = new InterfaceMappingResult(false, new ILoquiRegistration[]
+            {
+                Activator_Registration.Instance,
+                AlchemicalApparatus_Registration.Instance,
+                APlacedTrap_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Container_Registration.Instance,
+                DialogResponses_Registration.Instance,
+                Door_Registration.Instance,
+                Explosion_Registration.Instance,
+                Flora_Registration.Instance,
+                Furniture_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                MagicEffect_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Npc_Registration.Instance,
+                Package_Registration.Instance,
+                Perk_Registration.Instance,
+                PlacedArrow_Registration.Instance,
+                PlacedBarrier_Registration.Instance,
+                PlacedBeam_Registration.Instance,
+                PlacedCone_Registration.Instance,
+                PlacedFlame_Registration.Instance,
+                PlacedHazard_Registration.Instance,
+                PlacedMissile_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+                PlacedTrap_Registration.Instance,
+                Quest_Registration.Instance,
+                Scene_Registration.Instance,
+                TalkingActivator_Registration.Instance,
+                Tree_Registration.Instance,
+                Weapon_Registration.Instance,
+            });
             dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Keyword_Registration.Instance,

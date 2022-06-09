@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -65,6 +66,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDialogResponsesAdapterGetter? IDialogResponsesGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1443,11 +1445,17 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IDialogResponsesGetter>,
         IMapsToGetter<IDialogResponsesGetter>
     {
         static new ILoquiRegistration StaticRegistration => DialogResponses_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         IDialogResponsesAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IDialogResponseFlagsGetter? Flags { get; }
         IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
         IFormLinkNullableGetter<IDialogResponsesGetter> PreviousDialog { get; }
@@ -3245,6 +3253,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IDialogResponsesAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? DialogResponsesAdapterBinaryOverlay.DialogResponsesAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
         private RangeInt32? _FlagsLocation;

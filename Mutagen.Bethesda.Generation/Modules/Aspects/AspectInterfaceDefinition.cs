@@ -18,7 +18,7 @@ public abstract class AspectFieldInterfaceDefinition : AspectInterfaceDefinition
 
     public virtual IEnumerable<TypeGeneration> IdentifyFields(ObjectGeneration o) =>
         from field in o.Fields
-        join f in FieldActions.Select(x => x.Name).Distinct()
+        join f in FieldActions.Select(x => x.Name(o)).Distinct()
             on field.Name equals f
         select field;
 }

@@ -536,6 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IPlacedConeGetter>,
         IMapsToGetter<IPlacedConeGetter>,
         IScriptedGetter

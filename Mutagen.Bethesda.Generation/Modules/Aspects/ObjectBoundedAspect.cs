@@ -17,7 +17,7 @@ public class ObjectBoundedAspect : AspectFieldInterfaceDefinition
     {
         FieldActions = new()
         {
-            new (LoquiInterfaceType.Direct, "ObjectBounds", (o, tg, sb) =>
+            new (LoquiInterfaceType.Direct, _ => "ObjectBounds", (o, tg, sb) =>
             {
                 if (tg is not LoquiType field) throw new ArgumentException("ObjectBounds is not LoquiType", nameof(tg));
 

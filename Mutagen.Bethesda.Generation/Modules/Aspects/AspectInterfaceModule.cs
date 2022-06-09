@@ -20,6 +20,7 @@ public class AspectInterfaceModule : GenerationModule
         Definitions.Add(new KeywordAspect());
         Definitions.Add(new NamedAspect());
         Definitions.Add(new ObjectBoundedAspect());
+        Definitions.Add(new VirtualMachineAdapterAspect());
         Definitions.Add(new RefAspect("IScripted", "VirtualMachineAdapter", "VirtualMachineAdapter"));
         Definitions.Add(new RefAspect("IModeled", "Model", "Model"));
         Definitions.Add(new RefAspect("IHasIcons", "Icons", "Icons"));
@@ -60,7 +61,7 @@ public class AspectInterfaceModule : GenerationModule
             {
                 if (!def.Test(obj, allFields)) continue;
                 def.FieldActions
-                    .Where(x => x.Type == type && tg.Name == x.Name)
+                    .Where(x => x.Type == type && tg.Name == x.Name(obj))
                     .ForEach(x => x.Actions(obj, tg, sb));
             }
         }

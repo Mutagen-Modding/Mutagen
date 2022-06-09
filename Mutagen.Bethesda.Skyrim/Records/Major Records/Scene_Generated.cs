@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -64,6 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISceneAdapterGetter? ISceneGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
         public Scene.Flag? Flags { get; set; }
@@ -1193,11 +1195,17 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<ISceneGetter>,
         IMapsToGetter<ISceneGetter>
     {
         static new ILoquiRegistration StaticRegistration => Scene_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         ISceneAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         Scene.Flag? Flags { get; }
         IReadOnlyList<IScenePhaseGetter> Phases { get; }
         IReadOnlyList<ISceneActorGetter> Actors { get; }
@@ -2751,6 +2759,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public ISceneAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? SceneAdapterBinaryOverlay.SceneAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
         private int? _FlagsLocation;

@@ -66,6 +66,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterIndexedGetter? ITerminalGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
         /// <summary>
@@ -1729,6 +1730,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ITerminalGetter>,
         IMapsToGetter<ITerminalGetter>,
@@ -1742,7 +1744,12 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Terminal_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         IVirtualMachineAdapterIndexedGetter? VirtualMachineAdapter { get; }
+        #endregion
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter
@@ -3814,6 +3821,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterIndexedGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterIndexedBinaryOverlay.VirtualMachineAdapterIndexedFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

@@ -16,7 +16,7 @@ public class KeywordedAspect : AspectFieldInterfaceDefinition
     {
         FieldActions = new()
         {
-            new(LoquiInterfaceType.Direct, "Keywords", (o, tg, sb) =>
+            new(LoquiInterfaceType.Direct, _ => "Keywords", (o, tg, sb) =>
             {
                 sb.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
                 sb.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
@@ -30,7 +30,7 @@ public class KeywordedAspect : AspectFieldInterfaceDefinition
                     }
                 }
             }),
-            new(LoquiInterfaceType.IGetter, "Keywords", (o, tg, sb) =>
+            new(LoquiInterfaceType.IGetter, _ => "Keywords", (o, tg, sb) =>
             {
                 sb.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
             })

@@ -83,6 +83,7 @@ public partial class RecordTypes
     public static readonly RecordType IPCT = new(0x54435049);
     public static readonly RecordType IPDS = new(0x53445049);
     public static readonly RecordType KEYM = new(0x4D59454B);
+    public static readonly RecordType KSSM = new(0x4D53534B);
     public static readonly RecordType KYWD = new(0x4457594B);
     public static readonly RecordType LAND = new(0x444E414C);
     public static readonly RecordType LAYR = new(0x5259414C);
@@ -139,10 +140,12 @@ public partial class RecordTypes
     public static readonly RecordType RFGP = new(0x50474652);
     public static readonly RecordType ROAD = new(0x44414F52);
     public static readonly RecordType SBSP = new(0x50534253);
+    public static readonly RecordType SCCO = new(0x4F434353);
     public static readonly RecordType SCEN = new(0x4E454353);
     public static readonly RecordType SCOL = new(0x4C4F4353);
     public static readonly RecordType SCPT = new(0x54504353);
     public static readonly RecordType SCRL = new(0x4C524353);
+    public static readonly RecordType SCSN = new(0x4E534353);
     public static readonly RecordType SGST = new(0x54534753);
     public static readonly RecordType SHOU = new(0x554F4853);
     public static readonly RecordType SKIL = new(0x4C494B53);

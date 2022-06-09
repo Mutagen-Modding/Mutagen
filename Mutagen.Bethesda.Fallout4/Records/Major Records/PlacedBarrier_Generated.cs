@@ -552,6 +552,7 @@ namespace Mutagen.Bethesda.Fallout4
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IPlacedBarrierGetter>,
         IMapsToGetter<IPlacedBarrierGetter>,
         IPositionRotationGetter,

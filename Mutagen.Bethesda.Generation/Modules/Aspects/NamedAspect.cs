@@ -26,7 +26,7 @@ public class NamedAspect : AspectFieldInterfaceDefinition
     {
         FieldActions = new()
         {
-            new(LoquiInterfaceType.Direct, "Name", (o, tg, sb) =>
+            new(LoquiInterfaceType.Direct, _ => "Name", (o, tg, sb) =>
             {
                 if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
                 var isTransl = nameField.Translated.HasValue;
@@ -100,7 +100,7 @@ public class NamedAspect : AspectFieldInterfaceDefinition
                     }
                 }
             }),
-            new(LoquiInterfaceType.IGetter, "Name", (o, tg, sb) =>
+            new(LoquiInterfaceType.IGetter, _ => "Name", (o, tg, sb) =>
             {
                 if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
                 var isTransl = nameField.Translated.HasValue;

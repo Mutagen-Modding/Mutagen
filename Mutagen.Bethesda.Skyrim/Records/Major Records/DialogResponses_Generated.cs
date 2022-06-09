@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -65,6 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDialogResponsesAdapterGetter? IDialogResponsesGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region DATA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1365,11 +1367,17 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IDialogGetter,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IDialogResponsesGetter>,
         IMapsToGetter<IDialogResponsesGetter>
     {
         static new ILoquiRegistration StaticRegistration => DialogResponses_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         IDialogResponsesAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         IDialogResponseFlagsGetter? Flags { get; }
         IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
@@ -3014,6 +3022,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IDialogResponsesAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? DialogResponsesAdapterBinaryOverlay.DialogResponsesAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region DATA
         private int? _DATALocation;

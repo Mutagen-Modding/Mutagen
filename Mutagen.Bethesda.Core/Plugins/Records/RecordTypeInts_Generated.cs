@@ -81,6 +81,7 @@ public partial class RecordTypeInts
     public const int IPCT = 0x54435049;
     public const int IPDS = 0x53445049;
     public const int KEYM = 0x4D59454B;
+    public const int KSSM = 0x4D53534B;
     public const int KYWD = 0x4457594B;
     public const int LAND = 0x444E414C;
     public const int LAYR = 0x5259414C;
@@ -137,10 +138,12 @@ public partial class RecordTypeInts
     public const int RFGP = 0x50474652;
     public const int ROAD = 0x44414F52;
     public const int SBSP = 0x50534253;
+    public const int SCCO = 0x4F434353;
     public const int SCEN = 0x4E454353;
     public const int SCOL = 0x4C4F4353;
     public const int SCPT = 0x54504353;
     public const int SCRL = 0x4C524353;
+    public const int SCSN = 0x4E534353;
     public const int SGST = 0x54534753;
     public const int SHOU = 0x554F4853;
     public const int SKIL = 0x4C494B53;

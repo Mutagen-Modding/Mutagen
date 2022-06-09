@@ -66,6 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPerkAdapterGetter? IPerkGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
         /// <summary>
@@ -1152,6 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasIconsGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IPerkGetter>,
         IMapsToGetter<IPerkGetter>,
         INamedGetter,
@@ -1160,7 +1162,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Perk_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         IPerkAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -2595,6 +2602,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
         private int? _NameLocation;

@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -64,6 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPackageAdapterGetter? IPackageGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
         public Package.Flag Flags { get; set; } = default;
@@ -1810,11 +1812,17 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IPackageGetter>,
         IMapsToGetter<IPackageGetter>
     {
         static new ILoquiRegistration StaticRegistration => Package_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         IPackageAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         Package.Flag Flags { get; }
         Package.Types Type { get; }
         Package.Interrupt InterruptOverride { get; }
@@ -3797,6 +3805,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IPackageAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PackageAdapterBinaryOverlay.PackageAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         private RangeInt32? _PKDTLocation;
         public Package.PKDTDataType PKDTDataTypeState { get; private set; }
