@@ -66,6 +66,7 @@ public partial class RecordTypeInts
     public const int ANAM = 0x4D414E41;
     public const int ANIO = 0x4F494E41;
     public const int AOBJ = 0x4A424F41;
+    public const int AOR2 = 0x32524F41;
     public const int AORU = 0x55524F41;
     public const int APPR = 0x52505041;
     public const int ARMA = 0x414D5241;

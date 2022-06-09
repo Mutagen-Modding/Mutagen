@@ -176,6 +176,7 @@ namespace Mutagen.Bethesda.Fallout4
             _SoundKeywordMappings_Object = new Fallout4Group<SoundKeywordMapping>(this);
             _AudioEffectChains_Object = new Fallout4Group<AudioEffectChain>(this);
             _SceneCollections_Object = new Fallout4Group<SceneCollection>(this);
+            _AttractionRules_Object = new Fallout4Group<AttractionRule>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -1021,6 +1022,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ISceneCollectionGetter> IFallout4ModGetter.SceneCollections => _SceneCollections_Object;
         #endregion
+        #region AttractionRules
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<AttractionRule> _AttractionRules_Object;
+        public Fallout4Group<AttractionRule> AttractionRules => _AttractionRules_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAttractionRuleGetter> IFallout4ModGetter.AttractionRules => _AttractionRules_Object;
+        #endregion
 
         #region To String
 
@@ -1180,6 +1188,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SoundKeywordMappings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.AudioEffectChains = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.SceneCollections = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.AttractionRules = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1302,7 +1311,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem InstanceNamingRules,
                 TItem SoundKeywordMappings,
                 TItem AudioEffectChains,
-                TItem SceneCollections)
+                TItem SceneCollections,
+                TItem AttractionRules)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1424,6 +1434,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SoundKeywordMappings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundKeywordMappings, new Fallout4Group.Mask<TItem>(SoundKeywordMappings));
                 this.AudioEffectChains = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AudioEffectChains, new Fallout4Group.Mask<TItem>(AudioEffectChains));
                 this.SceneCollections = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SceneCollections, new Fallout4Group.Mask<TItem>(SceneCollections));
+                this.AttractionRules = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AttractionRules, new Fallout4Group.Mask<TItem>(AttractionRules));
             }
 
             #pragma warning disable CS8618
@@ -1555,6 +1566,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundKeywordMappings { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AudioEffectChains { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SceneCollections { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AttractionRules { get; set; }
             #endregion
 
             #region Equals
@@ -1687,6 +1699,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.SoundKeywordMappings, rhs.SoundKeywordMappings)) return false;
                 if (!object.Equals(this.AudioEffectChains, rhs.AudioEffectChains)) return false;
                 if (!object.Equals(this.SceneCollections, rhs.SceneCollections)) return false;
+                if (!object.Equals(this.AttractionRules, rhs.AttractionRules)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1812,6 +1825,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.SoundKeywordMappings);
                 hash.Add(this.AudioEffectChains);
                 hash.Add(this.SceneCollections);
+                hash.Add(this.AttractionRules);
                 return hash.ToHashCode();
             }
 
@@ -2420,6 +2434,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.SceneCollections.Overall)) return false;
                     if (this.SceneCollections.Specific != null && !this.SceneCollections.Specific.All(eval)) return false;
                 }
+                if (AttractionRules != null)
+                {
+                    if (!eval(this.AttractionRules.Overall)) return false;
+                    if (this.AttractionRules.Specific != null && !this.AttractionRules.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -3027,6 +3046,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.SceneCollections.Overall)) return true;
                     if (this.SceneCollections.Specific != null && this.SceneCollections.Specific.Any(eval)) return true;
                 }
+                if (AttractionRules != null)
+                {
+                    if (eval(this.AttractionRules.Overall)) return true;
+                    if (this.AttractionRules.Specific != null && this.AttractionRules.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -3161,6 +3185,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.SoundKeywordMappings = this.SoundKeywordMappings == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundKeywordMappings.Overall), this.SoundKeywordMappings.Specific?.Translate(eval));
                 obj.AudioEffectChains = this.AudioEffectChains == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AudioEffectChains.Overall), this.AudioEffectChains.Specific?.Translate(eval));
                 obj.SceneCollections = this.SceneCollections == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SceneCollections.Overall), this.SceneCollections.Specific?.Translate(eval));
+                obj.AttractionRules = this.AttractionRules == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AttractionRules.Overall), this.AttractionRules.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3659,6 +3684,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         SceneCollections?.Print(sb);
                     }
+                    if (printMask?.AttractionRules?.Overall ?? true)
+                    {
+                        AttractionRules?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3803,6 +3832,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundKeywordMapping.ErrorMask>?>? SoundKeywordMappings;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AudioEffectChain.ErrorMask>?>? AudioEffectChains;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<SceneCollection.ErrorMask>?>? SceneCollections;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<AttractionRule.ErrorMask>?>? AttractionRules;
             #endregion
 
             #region IErrorMask
@@ -4051,6 +4081,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return AudioEffectChains;
                     case Fallout4Mod_FieldIndex.SceneCollections:
                         return SceneCollections;
+                    case Fallout4Mod_FieldIndex.AttractionRules:
+                        return AttractionRules;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4420,6 +4452,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.SceneCollections:
                         this.SceneCollections = new MaskItem<Exception?, Fallout4Group.ErrorMask<SceneCollection.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.AttractionRules:
+                        this.AttractionRules = new MaskItem<Exception?, Fallout4Group.ErrorMask<AttractionRule.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4791,6 +4826,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.SceneCollections:
                         this.SceneCollections = (MaskItem<Exception?, Fallout4Group.ErrorMask<SceneCollection.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.AttractionRules:
+                        this.AttractionRules = (MaskItem<Exception?, Fallout4Group.ErrorMask<AttractionRule.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4919,6 +4957,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (SoundKeywordMappings != null) return true;
                 if (AudioEffectChains != null) return true;
                 if (SceneCollections != null) return true;
+                if (AttractionRules != null) return true;
                 return false;
             }
             #endregion
@@ -5064,6 +5103,7 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundKeywordMappings?.Print(sb);
                 AudioEffectChains?.Print(sb);
                 SceneCollections?.Print(sb);
+                AttractionRules?.Print(sb);
             }
             #endregion
 
@@ -5192,6 +5232,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.SoundKeywordMappings = this.SoundKeywordMappings.Combine(rhs.SoundKeywordMappings, (l, r) => l.Combine(r));
                 ret.AudioEffectChains = this.AudioEffectChains.Combine(rhs.AudioEffectChains, (l, r) => l.Combine(r));
                 ret.SceneCollections = this.SceneCollections.Combine(rhs.SceneCollections, (l, r) => l.Combine(r));
+                ret.AttractionRules = this.AttractionRules.Combine(rhs.AttractionRules, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -5335,6 +5376,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<SoundKeywordMapping.TranslationMask>? SoundKeywordMappings;
             public Fallout4Group.TranslationMask<AudioEffectChain.TranslationMask>? AudioEffectChains;
             public Fallout4Group.TranslationMask<SceneCollection.TranslationMask>? SceneCollections;
+            public Fallout4Group.TranslationMask<AttractionRule.TranslationMask>? AttractionRules;
             #endregion
 
             #region Ctors
@@ -5479,6 +5521,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((SoundKeywordMappings != null ? SoundKeywordMappings.OnOverall : DefaultOn, SoundKeywordMappings?.GetCrystal()));
                 ret.Add((AudioEffectChains != null ? AudioEffectChains.OnOverall : DefaultOn, AudioEffectChains?.GetCrystal()));
                 ret.Add((SceneCollections != null ? SceneCollections.OnOverall : DefaultOn, SceneCollections?.GetCrystal()));
+                ret.Add((AttractionRules != null ? AttractionRules.OnOverall : DefaultOn, AttractionRules?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -5638,6 +5681,7 @@ namespace Mutagen.Bethesda.Fallout4
             _SoundKeywordMappings_Object = new Fallout4Group<SoundKeywordMapping>(this);
             _AudioEffectChains_Object = new Fallout4Group<AudioEffectChain>(this);
             _SceneCollections_Object = new Fallout4Group<SceneCollection>(this);
+            _AttractionRules_Object = new Fallout4Group<AttractionRule>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -6123,6 +6167,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.SceneCollections.RecordCache.Set(rhsMod.SceneCollections.RecordCache.Items);
             }
+            if (mask?.AttractionRules ?? true)
+            {
+                this.AttractionRules.RecordCache.Set(rhsMod.AttractionRules.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -6252,6 +6300,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += SoundKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
             count += AudioEffectChains.RecordCache.Count > 0 ? 1 : default(uint);
             count += SceneCollections.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6622,6 +6671,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<SoundKeywordMapping> SoundKeywordMappings { get; }
         new Fallout4Group<AudioEffectChain> AudioEffectChains { get; }
         new Fallout4Group<SceneCollection> SceneCollections { get; }
+        new Fallout4Group<AttractionRule> AttractionRules { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -6760,6 +6810,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings { get; }
         IFallout4GroupGetter<IAudioEffectChainGetter> AudioEffectChains { get; }
         IFallout4GroupGetter<ISceneCollectionGetter> SceneCollections { get; }
+        IFallout4GroupGetter<IAttractionRuleGetter> AttractionRules { get; }
 
     }
 
@@ -7450,6 +7501,7 @@ namespace Mutagen.Bethesda.Fallout4
         SoundKeywordMappings = 117,
         AudioEffectChains = 118,
         SceneCollections = 119,
+        AttractionRules = 120,
     }
     #endregion
 
@@ -7467,9 +7519,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 120;
+        public const ushort AdditionalFieldCount = 121;
 
-        public const ushort FieldCount = 120;
+        public const ushort FieldCount = 121;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -7656,6 +7708,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.SoundKeywordMappings.Clear();
             item.AudioEffectChains.Clear();
             item.SceneCollections.Clear();
+            item.AttractionRules.Clear();
         }
         
         #region Mutagen
@@ -7916,6 +7969,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.SoundKeywordMappings.Remove(keys);
             obj.AudioEffectChains.Remove(keys);
             obj.SceneCollections.Remove(keys);
+            obj.AttractionRules.Remove(keys);
         }
         
         public void Remove(
@@ -8939,6 +8993,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "AttractionRule":
+                case "IAttractionRuleGetter":
+                case "IAttractionRule":
+                case "IAttractionRuleInternal":
+                    obj.AttractionRules.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -9556,6 +9618,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.SoundKeywordMappings = MaskItemExt.Factory(item.SoundKeywordMappings.GetEqualsMask(rhs.SoundKeywordMappings, include), include);
             ret.AudioEffectChains = MaskItemExt.Factory(item.AudioEffectChains.GetEqualsMask(rhs.AudioEffectChains, include), include);
             ret.SceneCollections = MaskItemExt.Factory(item.SceneCollections.GetEqualsMask(rhs.SceneCollections, include), include);
+            ret.AttractionRules = MaskItemExt.Factory(item.AttractionRules.GetEqualsMask(rhs.AttractionRules, include), include);
         }
         
         public string Print(
@@ -10079,6 +10142,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.SceneCollections?.Overall ?? true)
             {
                 item.SceneCollections?.Print(sb, "SceneCollections");
+            }
+            if (printMask?.AttractionRules?.Overall ?? true)
+            {
+                item.AttractionRules?.Print(sb, "AttractionRules");
             }
         }
         
@@ -11049,6 +11116,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSceneCollectionsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AttractionRules) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AttractionRules, rhs.AttractionRules, out var lhsAttractionRules, out var rhsAttractionRules, out var isAttractionRulesEqual))
+                {
+                    if (!object.Equals(lhsAttractionRules, rhsAttractionRules)) return false;
+                }
+                else if (!isAttractionRulesEqual) return false;
+            }
             return true;
         }
         
@@ -11175,6 +11250,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.SoundKeywordMappings);
             hash.Add(item.AudioEffectChains);
             hash.Add(item.SceneCollections);
+            hash.Add(item.AttractionRules);
             return hash.ToHashCode();
         }
         
@@ -11787,6 +11863,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ISceneCollection":
                 case "ISceneCollectionInternal":
                     return obj.SceneCollections;
+                case "AttractionRule":
+                case "IAttractionRuleGetter":
+                case "IAttractionRule":
+                case "IAttractionRuleInternal":
+                    return obj.AttractionRules;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -11811,7 +11892,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[119];
+            Stream[] outputStreams = new Stream[120];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -11932,6 +12013,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.SoundKeywordMappings, 116, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AudioEffectChains, 117, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SceneCollections, 118, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 119, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -12868,6 +12950,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.SceneCollections.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AttractionRules.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13964,6 +14050,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ISceneCollection":
                 case "ISceneCollectionInternal":
                     foreach (var item in obj.SceneCollections.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AttractionRule":
+                case "IAttractionRuleGetter":
+                case "IAttractionRule":
+                case "IAttractionRuleInternal":
+                    foreach (var item in obj.AttractionRules.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -15198,6 +15293,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.SceneCollections,
                 groupGetter: (m) => m.SceneCollections))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AttractionRule, IAttractionRuleGetter>(
+                srcGroup: obj.AttractionRules,
+                type: typeof(IAttractionRuleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AttractionRules,
+                groupGetter: (m) => m.AttractionRules))
             {
                 yield return item;
             }
@@ -16880,6 +16984,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.SceneCollections,
                         groupGetter: (m) => m.SceneCollections))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AttractionRule":
+                case "IAttractionRuleGetter":
+                case "IAttractionRule":
+                case "IAttractionRuleInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AttractionRule, IAttractionRuleGetter>(
+                        srcGroup: obj.AttractionRules,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AttractionRules,
+                        groupGetter: (m) => m.AttractionRules))
                     {
                         yield return item;
                     }
@@ -19578,6 +19696,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AttractionRules) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.AttractionRules);
+                try
+                {
+                    item.AttractionRules.DeepCopyIn(
+                        rhs: rhs.AttractionRules,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.AttractionRules));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -19787,6 +19925,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool SoundKeywordMappings;
         public bool AudioEffectChains;
         public bool SceneCollections;
+        public bool AttractionRules;
         public GroupMask()
         {
         }
@@ -19911,6 +20050,7 @@ namespace Mutagen.Bethesda.Fallout4
             SoundKeywordMappings = defaultValue;
             AudioEffectChains = defaultValue;
             SceneCollections = defaultValue;
+            AttractionRules = defaultValue;
         }
     }
 
@@ -21247,6 +21387,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)SceneCollectionsItem).BinaryWriteTranslator).Write<ISceneCollectionGetter>(
                         item: SceneCollectionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AttractionRules ?? true)
+            {
+                var AttractionRulesItem = item.AttractionRules;
+                if (AttractionRulesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AttractionRulesItem).BinaryWriteTranslator).Write<IAttractionRuleGetter>(
+                        item: AttractionRulesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -22983,6 +23134,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.SceneCollections;
                 }
+                case RecordTypeInts.AORU:
+                {
+                    if (importMask?.AttractionRules ?? true)
+                    {
+                        item.AttractionRules.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.AttractionRules;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -23740,6 +23905,11 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _SceneCollectionsLocations;
         private IFallout4GroupGetter<ISceneCollectionGetter>? _SceneCollections => _SceneCollectionsLocations != null ? Fallout4GroupBinaryOverlay<ISceneCollectionGetter>.Fallout4GroupFactory(_data, _SceneCollectionsLocations, _package) : default;
         public IFallout4GroupGetter<ISceneCollectionGetter> SceneCollections => _SceneCollections ?? new Fallout4Group<SceneCollection>(this);
+        #endregion
+        #region AttractionRules
+        private List<RangeInt64>? _AttractionRulesLocations;
+        private IFallout4GroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? Fallout4GroupBinaryOverlay<IAttractionRuleGetter>.Fallout4GroupFactory(_data, _AttractionRulesLocations, _package) : default;
+        public IFallout4GroupGetter<IAttractionRuleGetter> AttractionRules => _AttractionRules ?? new Fallout4Group<AttractionRule>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -24541,6 +24711,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _SceneCollectionsLocations ??= new();
                     _SceneCollectionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.SceneCollections;
+                }
+                case RecordTypeInts.AORU:
+                {
+                    _AttractionRulesLocations ??= new();
+                    _AttractionRulesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.AttractionRules;
                 }
                 default:
                     return default(int?);

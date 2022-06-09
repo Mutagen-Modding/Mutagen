@@ -126,6 +126,7 @@
       <Group name="SoundKeywordMappings" refName="SoundKeywordMapping" />
       <Group name="AudioEffectChains" refName="AudioEffectChain" />
       <Group name="SceneCollections" refName="SceneCollection" />
+      <Group name="AttractionRules" refName="AttractionRule" />
     </Fields>
   </Object>
 </Loqui>
