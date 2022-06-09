@@ -506,6 +506,16 @@ public abstract class Processor
         }
     }
 
+    public void ProcessColorFloats(SubrecordPinFrame pin, long offsetLoc, ref int loc, bool alpha, int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+            ProcessColorFloat(pin.Content.Slice(loc), longLoc, alpha: alpha);
+            loc += alpha ? 16 : 12;
+        }
+    }
+
     public void ProcessBool(ReadOnlySpan<byte> span, long offsetLoc, byte importantBytes)
     {
         if (importantBytes != 1) throw new NotImplementedException();

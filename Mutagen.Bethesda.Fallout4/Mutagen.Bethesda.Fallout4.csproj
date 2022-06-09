@@ -400,6 +400,9 @@
     <Compile Include="Records\Major Records\Keyword.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LensFlareSpriteData.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LeveledItem.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
@@ -1690,9 +1693,6 @@
     <Compile Include="Records\Common Subrecords\AmbientColors_Generated.cs">
       <DependentUpon>AmbientColors.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GodRay_Generated.cs">
-      <DependentUpon>GodRay.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ShaderParticleGeometry_Generated.cs">
       <DependentUpon>ShaderParticleGeometry.xml</DependentUpon>
     </Compile>
@@ -2421,6 +2421,27 @@
     </Compile>
     <Compile Include="Records\Major Records\AnimationSoundTag_Generated.cs">
       <DependentUpon>AnimationSoundTagSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMeshObstacleManager_Generated.cs">
+      <DependentUpon>NavigationMeshObstacleManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMeshObstacleManagerSubObject_Generated.cs">
+      <DependentUpon>NavigationMeshObstacleManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LensFlareSprite_Generated.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LensFlareSpriteData_Generated.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectBoundsFloat_Generated.cs">
+      <DependentUpon>ObjectBounds.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectVisibilityManager_Generated.cs">
+      <DependentUpon>ObjectVisibilityManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectVisibilityManagerItem_Generated.cs">
+      <DependentUpon>ObjectVisibilityManager.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -336,6 +336,8 @@ public partial class RecordTypeInts
     public const int LCUN = 0x4E55434C;
     public const int LENS = 0x534E454C;
     public const int LEVL = 0x4C56454C;
+    public const int LFSD = 0x4453464C;
+    public const int LFSP = 0x5053464C;
     public const int LGTM = 0x4D54474C;
     public const int LIAD = 0x4441494C;
     public const int LIGH = 0x4847494C;
@@ -444,6 +446,7 @@ public partial class RecordTypeInts
     public const int NNGT = 0x54474E4E;
     public const int NNUS = 0x53554E4E;
     public const int NNUT = 0x54554E4E;
+    public const int NOCM = 0x4D434F4E;
     public const int NONE = 0x454E4F4E;
     public const int NOTE = 0x45544F4E;
     public const int NPC_ = 0x5F43504E;
@@ -470,6 +473,7 @@ public partial class RecordTypeInts
     public const int OMOD = 0x444F4D4F;
     public const int ONAM = 0x4D414E4F;
     public const int OTFT = 0x5446544F;
+    public const int OVIS = 0x5349564F;
     public const int PACK = 0x4B434150;
     public const int PARW = 0x57524150;
     public const int PBAR = 0x52414250;

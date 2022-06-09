@@ -61,6 +61,8 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.DFOB, ProcessDefaultObjects);
         AddDynamicProcessing(RecordTypes.SMQN, ProcessStoryManagerQuestNodes);
         AddDynamicProcessing(RecordTypes.EQUP, ProcessEquipTypes);
+        AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
+        AddDynamicProcessing(RecordTypes.GDRY, ProcessGodRays);
     }
 
     private void ProcessGameSettings(
@@ -572,7 +574,6 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-
         if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var data))
         {
             ProcessFormIDOverflow(data, fileOffset);
@@ -608,6 +609,32 @@ public class Fallout4Processor : Processor
             {
                 _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, new byte[4]);
             }
+        }
+    }
+
+    private void ProcessLenses(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LFSD))
+        {
+            int loc = 0;
+            ProcessColorFloat(subRec, fileOffset, ref loc, alpha: false);
+            ProcessZeroFloats(subRec, fileOffset, ref loc, 5);
+        }
+    }
+
+    private void ProcessGodRays(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))
+        {
+            int loc = 0;
+            ProcessColorFloats(subRec, fileOffset, ref loc, alpha: false, amount: 2);
+            ProcessZeroFloats(subRec, fileOffset, ref loc, 5);
+            ProcessColorFloats(subRec, fileOffset, ref loc, alpha: false, amount: 1);
+            ProcessZeroFloats(subRec, fileOffset, ref loc, 1);
         }
     }
 

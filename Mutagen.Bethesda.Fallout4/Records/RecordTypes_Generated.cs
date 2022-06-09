@@ -338,6 +338,8 @@ public partial class RecordTypes
     public static readonly RecordType LCUN = new(0x4E55434C);
     public static readonly RecordType LENS = new(0x534E454C);
     public static readonly RecordType LEVL = new(0x4C56454C);
+    public static readonly RecordType LFSD = new(0x4453464C);
+    public static readonly RecordType LFSP = new(0x5053464C);
     public static readonly RecordType LGTM = new(0x4D54474C);
     public static readonly RecordType LIAD = new(0x4441494C);
     public static readonly RecordType LIGH = new(0x4847494C);
@@ -446,6 +448,7 @@ public partial class RecordTypes
     public static readonly RecordType NNGT = new(0x54474E4E);
     public static readonly RecordType NNUS = new(0x53554E4E);
     public static readonly RecordType NNUT = new(0x54554E4E);
+    public static readonly RecordType NOCM = new(0x4D434F4E);
     public static readonly RecordType NONE = new(0x454E4F4E);
     public static readonly RecordType NOTE = new(0x45544F4E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
@@ -472,6 +475,7 @@ public partial class RecordTypes
     public static readonly RecordType OMOD = new(0x444F4D4F);
     public static readonly RecordType ONAM = new(0x4D414E4F);
     public static readonly RecordType OTFT = new(0x5446544F);
+    public static readonly RecordType OVIS = new(0x5349564F);
     public static readonly RecordType PACK = new(0x4B434150);
     public static readonly RecordType PARW = new(0x57524150);
     public static readonly RecordType PBAR = new(0x52414250);

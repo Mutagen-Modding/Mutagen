@@ -179,6 +179,10 @@ namespace Mutagen.Bethesda.Fallout4
             _AttractionRules_Object = new Fallout4Group<AttractionRule>(this);
             _AudioCategorySnapshots_Object = new Fallout4Group<AudioCategorySnapshot>(this);
             _AnimationSoundTagSets_Object = new Fallout4Group<AnimationSoundTagSet>(this);
+            _NavigationMeshObstacleManagers_Object = new Fallout4Group<NavigationMeshObstacleManager>(this);
+            _LensFlares_Object = new Fallout4Group<LensFlare>(this);
+            _GodRays_Object = new Fallout4Group<GodRays>(this);
+            _ObjectVisibilityManagers_Object = new Fallout4Group<ObjectVisibilityManager>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -1045,6 +1049,34 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IAnimationSoundTagSetGetter> IFallout4ModGetter.AnimationSoundTagSets => _AnimationSoundTagSets_Object;
         #endregion
+        #region NavigationMeshObstacleManagers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<NavigationMeshObstacleManager> _NavigationMeshObstacleManagers_Object;
+        public Fallout4Group<NavigationMeshObstacleManager> NavigationMeshObstacleManagers => _NavigationMeshObstacleManagers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<INavigationMeshObstacleManagerGetter> IFallout4ModGetter.NavigationMeshObstacleManagers => _NavigationMeshObstacleManagers_Object;
+        #endregion
+        #region LensFlares
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<LensFlare> _LensFlares_Object;
+        public Fallout4Group<LensFlare> LensFlares => _LensFlares_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ILensFlareGetter> IFallout4ModGetter.LensFlares => _LensFlares_Object;
+        #endregion
+        #region GodRays
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<GodRays> _GodRays_Object;
+        public Fallout4Group<GodRays> GodRays => _GodRays_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IGodRaysGetter> IFallout4ModGetter.GodRays => _GodRays_Object;
+        #endregion
+        #region ObjectVisibilityManagers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ObjectVisibilityManager> _ObjectVisibilityManagers_Object;
+        public Fallout4Group<ObjectVisibilityManager> ObjectVisibilityManagers => _ObjectVisibilityManagers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IObjectVisibilityManagerGetter> IFallout4ModGetter.ObjectVisibilityManagers => _ObjectVisibilityManagers_Object;
+        #endregion
 
         #region To String
 
@@ -1207,6 +1239,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AttractionRules = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.AudioCategorySnapshots = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.AnimationSoundTagSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.NavigationMeshObstacleManagers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.LensFlares = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.GodRays = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ObjectVisibilityManagers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1332,7 +1368,11 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem SceneCollections,
                 TItem AttractionRules,
                 TItem AudioCategorySnapshots,
-                TItem AnimationSoundTagSets)
+                TItem AnimationSoundTagSets,
+                TItem NavigationMeshObstacleManagers,
+                TItem LensFlares,
+                TItem GodRays,
+                TItem ObjectVisibilityManagers)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1457,6 +1497,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AttractionRules = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AttractionRules, new Fallout4Group.Mask<TItem>(AttractionRules));
                 this.AudioCategorySnapshots = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AudioCategorySnapshots, new Fallout4Group.Mask<TItem>(AudioCategorySnapshots));
                 this.AnimationSoundTagSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AnimationSoundTagSets, new Fallout4Group.Mask<TItem>(AnimationSoundTagSets));
+                this.NavigationMeshObstacleManagers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(NavigationMeshObstacleManagers, new Fallout4Group.Mask<TItem>(NavigationMeshObstacleManagers));
+                this.LensFlares = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LensFlares, new Fallout4Group.Mask<TItem>(LensFlares));
+                this.GodRays = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GodRays, new Fallout4Group.Mask<TItem>(GodRays));
+                this.ObjectVisibilityManagers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ObjectVisibilityManagers, new Fallout4Group.Mask<TItem>(ObjectVisibilityManagers));
             }
 
             #pragma warning disable CS8618
@@ -1591,6 +1635,10 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AttractionRules { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AudioCategorySnapshots { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AnimationSoundTagSets { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? NavigationMeshObstacleManagers { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LensFlares { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? GodRays { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ObjectVisibilityManagers { get; set; }
             #endregion
 
             #region Equals
@@ -1726,6 +1774,10 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.AttractionRules, rhs.AttractionRules)) return false;
                 if (!object.Equals(this.AudioCategorySnapshots, rhs.AudioCategorySnapshots)) return false;
                 if (!object.Equals(this.AnimationSoundTagSets, rhs.AnimationSoundTagSets)) return false;
+                if (!object.Equals(this.NavigationMeshObstacleManagers, rhs.NavigationMeshObstacleManagers)) return false;
+                if (!object.Equals(this.LensFlares, rhs.LensFlares)) return false;
+                if (!object.Equals(this.GodRays, rhs.GodRays)) return false;
+                if (!object.Equals(this.ObjectVisibilityManagers, rhs.ObjectVisibilityManagers)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1854,6 +1906,10 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.AttractionRules);
                 hash.Add(this.AudioCategorySnapshots);
                 hash.Add(this.AnimationSoundTagSets);
+                hash.Add(this.NavigationMeshObstacleManagers);
+                hash.Add(this.LensFlares);
+                hash.Add(this.GodRays);
+                hash.Add(this.ObjectVisibilityManagers);
                 return hash.ToHashCode();
             }
 
@@ -2477,6 +2533,26 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.AnimationSoundTagSets.Overall)) return false;
                     if (this.AnimationSoundTagSets.Specific != null && !this.AnimationSoundTagSets.Specific.All(eval)) return false;
                 }
+                if (NavigationMeshObstacleManagers != null)
+                {
+                    if (!eval(this.NavigationMeshObstacleManagers.Overall)) return false;
+                    if (this.NavigationMeshObstacleManagers.Specific != null && !this.NavigationMeshObstacleManagers.Specific.All(eval)) return false;
+                }
+                if (LensFlares != null)
+                {
+                    if (!eval(this.LensFlares.Overall)) return false;
+                    if (this.LensFlares.Specific != null && !this.LensFlares.Specific.All(eval)) return false;
+                }
+                if (GodRays != null)
+                {
+                    if (!eval(this.GodRays.Overall)) return false;
+                    if (this.GodRays.Specific != null && !this.GodRays.Specific.All(eval)) return false;
+                }
+                if (ObjectVisibilityManagers != null)
+                {
+                    if (!eval(this.ObjectVisibilityManagers.Overall)) return false;
+                    if (this.ObjectVisibilityManagers.Specific != null && !this.ObjectVisibilityManagers.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -3099,6 +3175,26 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.AnimationSoundTagSets.Overall)) return true;
                     if (this.AnimationSoundTagSets.Specific != null && this.AnimationSoundTagSets.Specific.Any(eval)) return true;
                 }
+                if (NavigationMeshObstacleManagers != null)
+                {
+                    if (eval(this.NavigationMeshObstacleManagers.Overall)) return true;
+                    if (this.NavigationMeshObstacleManagers.Specific != null && this.NavigationMeshObstacleManagers.Specific.Any(eval)) return true;
+                }
+                if (LensFlares != null)
+                {
+                    if (eval(this.LensFlares.Overall)) return true;
+                    if (this.LensFlares.Specific != null && this.LensFlares.Specific.Any(eval)) return true;
+                }
+                if (GodRays != null)
+                {
+                    if (eval(this.GodRays.Overall)) return true;
+                    if (this.GodRays.Specific != null && this.GodRays.Specific.Any(eval)) return true;
+                }
+                if (ObjectVisibilityManagers != null)
+                {
+                    if (eval(this.ObjectVisibilityManagers.Overall)) return true;
+                    if (this.ObjectVisibilityManagers.Specific != null && this.ObjectVisibilityManagers.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -3236,6 +3332,10 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AttractionRules = this.AttractionRules == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AttractionRules.Overall), this.AttractionRules.Specific?.Translate(eval));
                 obj.AudioCategorySnapshots = this.AudioCategorySnapshots == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AudioCategorySnapshots.Overall), this.AudioCategorySnapshots.Specific?.Translate(eval));
                 obj.AnimationSoundTagSets = this.AnimationSoundTagSets == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AnimationSoundTagSets.Overall), this.AnimationSoundTagSets.Specific?.Translate(eval));
+                obj.NavigationMeshObstacleManagers = this.NavigationMeshObstacleManagers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.NavigationMeshObstacleManagers.Overall), this.NavigationMeshObstacleManagers.Specific?.Translate(eval));
+                obj.LensFlares = this.LensFlares == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LensFlares.Overall), this.LensFlares.Specific?.Translate(eval));
+                obj.GodRays = this.GodRays == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.GodRays.Overall), this.GodRays.Specific?.Translate(eval));
+                obj.ObjectVisibilityManagers = this.ObjectVisibilityManagers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ObjectVisibilityManagers.Overall), this.ObjectVisibilityManagers.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3746,6 +3846,22 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         AnimationSoundTagSets?.Print(sb);
                     }
+                    if (printMask?.NavigationMeshObstacleManagers?.Overall ?? true)
+                    {
+                        NavigationMeshObstacleManagers?.Print(sb);
+                    }
+                    if (printMask?.LensFlares?.Overall ?? true)
+                    {
+                        LensFlares?.Print(sb);
+                    }
+                    if (printMask?.GodRays?.Overall ?? true)
+                    {
+                        GodRays?.Print(sb);
+                    }
+                    if (printMask?.ObjectVisibilityManagers?.Overall ?? true)
+                    {
+                        ObjectVisibilityManagers?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3893,6 +4009,10 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AttractionRule.ErrorMask>?>? AttractionRules;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AudioCategorySnapshot.ErrorMask>?>? AudioCategorySnapshots;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AnimationSoundTagSet.ErrorMask>?>? AnimationSoundTagSets;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshObstacleManager.ErrorMask>?>? NavigationMeshObstacleManagers;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<LensFlare.ErrorMask>?>? LensFlares;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<GodRays.ErrorMask>?>? GodRays;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ObjectVisibilityManager.ErrorMask>?>? ObjectVisibilityManagers;
             #endregion
 
             #region IErrorMask
@@ -4147,6 +4267,14 @@ namespace Mutagen.Bethesda.Fallout4
                         return AudioCategorySnapshots;
                     case Fallout4Mod_FieldIndex.AnimationSoundTagSets:
                         return AnimationSoundTagSets;
+                    case Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers:
+                        return NavigationMeshObstacleManagers;
+                    case Fallout4Mod_FieldIndex.LensFlares:
+                        return LensFlares;
+                    case Fallout4Mod_FieldIndex.GodRays:
+                        return GodRays;
+                    case Fallout4Mod_FieldIndex.ObjectVisibilityManagers:
+                        return ObjectVisibilityManagers;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4525,6 +4653,18 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.AnimationSoundTagSets:
                         this.AnimationSoundTagSets = new MaskItem<Exception?, Fallout4Group.ErrorMask<AnimationSoundTagSet.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers:
+                        this.NavigationMeshObstacleManagers = new MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshObstacleManager.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.LensFlares:
+                        this.LensFlares = new MaskItem<Exception?, Fallout4Group.ErrorMask<LensFlare.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.GodRays:
+                        this.GodRays = new MaskItem<Exception?, Fallout4Group.ErrorMask<GodRays.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ObjectVisibilityManagers:
+                        this.ObjectVisibilityManagers = new MaskItem<Exception?, Fallout4Group.ErrorMask<ObjectVisibilityManager.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4905,6 +5045,18 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.AnimationSoundTagSets:
                         this.AnimationSoundTagSets = (MaskItem<Exception?, Fallout4Group.ErrorMask<AnimationSoundTagSet.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers:
+                        this.NavigationMeshObstacleManagers = (MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshObstacleManager.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.LensFlares:
+                        this.LensFlares = (MaskItem<Exception?, Fallout4Group.ErrorMask<LensFlare.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.GodRays:
+                        this.GodRays = (MaskItem<Exception?, Fallout4Group.ErrorMask<GodRays.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.ObjectVisibilityManagers:
+                        this.ObjectVisibilityManagers = (MaskItem<Exception?, Fallout4Group.ErrorMask<ObjectVisibilityManager.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -5036,6 +5188,10 @@ namespace Mutagen.Bethesda.Fallout4
                 if (AttractionRules != null) return true;
                 if (AudioCategorySnapshots != null) return true;
                 if (AnimationSoundTagSets != null) return true;
+                if (NavigationMeshObstacleManagers != null) return true;
+                if (LensFlares != null) return true;
+                if (GodRays != null) return true;
+                if (ObjectVisibilityManagers != null) return true;
                 return false;
             }
             #endregion
@@ -5184,6 +5340,10 @@ namespace Mutagen.Bethesda.Fallout4
                 AttractionRules?.Print(sb);
                 AudioCategorySnapshots?.Print(sb);
                 AnimationSoundTagSets?.Print(sb);
+                NavigationMeshObstacleManagers?.Print(sb);
+                LensFlares?.Print(sb);
+                GodRays?.Print(sb);
+                ObjectVisibilityManagers?.Print(sb);
             }
             #endregion
 
@@ -5315,6 +5475,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AttractionRules = this.AttractionRules.Combine(rhs.AttractionRules, (l, r) => l.Combine(r));
                 ret.AudioCategorySnapshots = this.AudioCategorySnapshots.Combine(rhs.AudioCategorySnapshots, (l, r) => l.Combine(r));
                 ret.AnimationSoundTagSets = this.AnimationSoundTagSets.Combine(rhs.AnimationSoundTagSets, (l, r) => l.Combine(r));
+                ret.NavigationMeshObstacleManagers = this.NavigationMeshObstacleManagers.Combine(rhs.NavigationMeshObstacleManagers, (l, r) => l.Combine(r));
+                ret.LensFlares = this.LensFlares.Combine(rhs.LensFlares, (l, r) => l.Combine(r));
+                ret.GodRays = this.GodRays.Combine(rhs.GodRays, (l, r) => l.Combine(r));
+                ret.ObjectVisibilityManagers = this.ObjectVisibilityManagers.Combine(rhs.ObjectVisibilityManagers, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -5461,6 +5625,10 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<AttractionRule.TranslationMask>? AttractionRules;
             public Fallout4Group.TranslationMask<AudioCategorySnapshot.TranslationMask>? AudioCategorySnapshots;
             public Fallout4Group.TranslationMask<AnimationSoundTagSet.TranslationMask>? AnimationSoundTagSets;
+            public Fallout4Group.TranslationMask<NavigationMeshObstacleManager.TranslationMask>? NavigationMeshObstacleManagers;
+            public Fallout4Group.TranslationMask<LensFlare.TranslationMask>? LensFlares;
+            public Fallout4Group.TranslationMask<GodRays.TranslationMask>? GodRays;
+            public Fallout4Group.TranslationMask<ObjectVisibilityManager.TranslationMask>? ObjectVisibilityManagers;
             #endregion
 
             #region Ctors
@@ -5608,6 +5776,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((AttractionRules != null ? AttractionRules.OnOverall : DefaultOn, AttractionRules?.GetCrystal()));
                 ret.Add((AudioCategorySnapshots != null ? AudioCategorySnapshots.OnOverall : DefaultOn, AudioCategorySnapshots?.GetCrystal()));
                 ret.Add((AnimationSoundTagSets != null ? AnimationSoundTagSets.OnOverall : DefaultOn, AnimationSoundTagSets?.GetCrystal()));
+                ret.Add((NavigationMeshObstacleManagers != null ? NavigationMeshObstacleManagers.OnOverall : DefaultOn, NavigationMeshObstacleManagers?.GetCrystal()));
+                ret.Add((LensFlares != null ? LensFlares.OnOverall : DefaultOn, LensFlares?.GetCrystal()));
+                ret.Add((GodRays != null ? GodRays.OnOverall : DefaultOn, GodRays?.GetCrystal()));
+                ret.Add((ObjectVisibilityManagers != null ? ObjectVisibilityManagers.OnOverall : DefaultOn, ObjectVisibilityManagers?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -5770,6 +5942,10 @@ namespace Mutagen.Bethesda.Fallout4
             _AttractionRules_Object = new Fallout4Group<AttractionRule>(this);
             _AudioCategorySnapshots_Object = new Fallout4Group<AudioCategorySnapshot>(this);
             _AnimationSoundTagSets_Object = new Fallout4Group<AnimationSoundTagSet>(this);
+            _NavigationMeshObstacleManagers_Object = new Fallout4Group<NavigationMeshObstacleManager>(this);
+            _LensFlares_Object = new Fallout4Group<LensFlare>(this);
+            _GodRays_Object = new Fallout4Group<GodRays>(this);
+            _ObjectVisibilityManagers_Object = new Fallout4Group<ObjectVisibilityManager>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -6267,6 +6443,22 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.AnimationSoundTagSets.RecordCache.Set(rhsMod.AnimationSoundTagSets.RecordCache.Items);
             }
+            if (mask?.NavigationMeshObstacleManagers ?? true)
+            {
+                this.NavigationMeshObstacleManagers.RecordCache.Set(rhsMod.NavigationMeshObstacleManagers.RecordCache.Items);
+            }
+            if (mask?.LensFlares ?? true)
+            {
+                this.LensFlares.RecordCache.Set(rhsMod.LensFlares.RecordCache.Items);
+            }
+            if (mask?.GodRays ?? true)
+            {
+                this.GodRays.RecordCache.Set(rhsMod.GodRays.RecordCache.Items);
+            }
+            if (mask?.ObjectVisibilityManagers ?? true)
+            {
+                this.ObjectVisibilityManagers.RecordCache.Set(rhsMod.ObjectVisibilityManagers.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -6399,6 +6591,10 @@ namespace Mutagen.Bethesda.Fallout4
             count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
             count += AudioCategorySnapshots.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimationSoundTagSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += NavigationMeshObstacleManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
+            count += GodRays.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ObjectVisibilityManagers.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6772,6 +6968,10 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<AttractionRule> AttractionRules { get; }
         new Fallout4Group<AudioCategorySnapshot> AudioCategorySnapshots { get; }
         new Fallout4Group<AnimationSoundTagSet> AnimationSoundTagSets { get; }
+        new Fallout4Group<NavigationMeshObstacleManager> NavigationMeshObstacleManagers { get; }
+        new Fallout4Group<LensFlare> LensFlares { get; }
+        new Fallout4Group<GodRays> GodRays { get; }
+        new Fallout4Group<ObjectVisibilityManager> ObjectVisibilityManagers { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -6913,6 +7113,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IAttractionRuleGetter> AttractionRules { get; }
         IFallout4GroupGetter<IAudioCategorySnapshotGetter> AudioCategorySnapshots { get; }
         IFallout4GroupGetter<IAnimationSoundTagSetGetter> AnimationSoundTagSets { get; }
+        IFallout4GroupGetter<INavigationMeshObstacleManagerGetter> NavigationMeshObstacleManagers { get; }
+        IFallout4GroupGetter<ILensFlareGetter> LensFlares { get; }
+        IFallout4GroupGetter<IGodRaysGetter> GodRays { get; }
+        IFallout4GroupGetter<IObjectVisibilityManagerGetter> ObjectVisibilityManagers { get; }
 
     }
 
@@ -7606,6 +7810,10 @@ namespace Mutagen.Bethesda.Fallout4
         AttractionRules = 120,
         AudioCategorySnapshots = 121,
         AnimationSoundTagSets = 122,
+        NavigationMeshObstacleManagers = 123,
+        LensFlares = 124,
+        GodRays = 125,
+        ObjectVisibilityManagers = 126,
     }
     #endregion
 
@@ -7623,9 +7831,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 123;
+        public const ushort AdditionalFieldCount = 127;
 
-        public const ushort FieldCount = 123;
+        public const ushort FieldCount = 127;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -7815,6 +8023,10 @@ namespace Mutagen.Bethesda.Fallout4
             item.AttractionRules.Clear();
             item.AudioCategorySnapshots.Clear();
             item.AnimationSoundTagSets.Clear();
+            item.NavigationMeshObstacleManagers.Clear();
+            item.LensFlares.Clear();
+            item.GodRays.Clear();
+            item.ObjectVisibilityManagers.Clear();
         }
         
         #region Mutagen
@@ -7924,6 +8136,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.SceneCollections.RemapLinks(mapping);
             obj.AudioCategorySnapshots.RemapLinks(mapping);
             obj.AnimationSoundTagSets.RemapLinks(mapping);
+            obj.ObjectVisibilityManagers.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -8080,6 +8293,10 @@ namespace Mutagen.Bethesda.Fallout4
             obj.AttractionRules.Remove(keys);
             obj.AudioCategorySnapshots.Remove(keys);
             obj.AnimationSoundTagSets.Remove(keys);
+            obj.NavigationMeshObstacleManagers.Remove(keys);
+            obj.LensFlares.Remove(keys);
+            obj.GodRays.Remove(keys);
+            obj.ObjectVisibilityManagers.Remove(keys);
         }
         
         public void Remove(
@@ -9127,6 +9344,38 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "NavigationMeshObstacleManager":
+                case "INavigationMeshObstacleManagerGetter":
+                case "INavigationMeshObstacleManager":
+                case "INavigationMeshObstacleManagerInternal":
+                    obj.NavigationMeshObstacleManagers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LensFlare":
+                case "ILensFlareGetter":
+                case "ILensFlare":
+                case "ILensFlareInternal":
+                    obj.LensFlares.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "GodRays":
+                case "IGodRaysGetter":
+                case "IGodRays":
+                case "IGodRaysInternal":
+                    obj.GodRays.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ObjectVisibilityManager":
+                case "IObjectVisibilityManagerGetter":
+                case "IObjectVisibilityManager":
+                case "IObjectVisibilityManagerInternal":
+                    obj.ObjectVisibilityManagers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -9747,6 +9996,10 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AttractionRules = MaskItemExt.Factory(item.AttractionRules.GetEqualsMask(rhs.AttractionRules, include), include);
             ret.AudioCategorySnapshots = MaskItemExt.Factory(item.AudioCategorySnapshots.GetEqualsMask(rhs.AudioCategorySnapshots, include), include);
             ret.AnimationSoundTagSets = MaskItemExt.Factory(item.AnimationSoundTagSets.GetEqualsMask(rhs.AnimationSoundTagSets, include), include);
+            ret.NavigationMeshObstacleManagers = MaskItemExt.Factory(item.NavigationMeshObstacleManagers.GetEqualsMask(rhs.NavigationMeshObstacleManagers, include), include);
+            ret.LensFlares = MaskItemExt.Factory(item.LensFlares.GetEqualsMask(rhs.LensFlares, include), include);
+            ret.GodRays = MaskItemExt.Factory(item.GodRays.GetEqualsMask(rhs.GodRays, include), include);
+            ret.ObjectVisibilityManagers = MaskItemExt.Factory(item.ObjectVisibilityManagers.GetEqualsMask(rhs.ObjectVisibilityManagers, include), include);
         }
         
         public string Print(
@@ -10282,6 +10535,22 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.AnimationSoundTagSets?.Overall ?? true)
             {
                 item.AnimationSoundTagSets?.Print(sb, "AnimationSoundTagSets");
+            }
+            if (printMask?.NavigationMeshObstacleManagers?.Overall ?? true)
+            {
+                item.NavigationMeshObstacleManagers?.Print(sb, "NavigationMeshObstacleManagers");
+            }
+            if (printMask?.LensFlares?.Overall ?? true)
+            {
+                item.LensFlares?.Print(sb, "LensFlares");
+            }
+            if (printMask?.GodRays?.Overall ?? true)
+            {
+                item.GodRays?.Print(sb, "GodRays");
+            }
+            if (printMask?.ObjectVisibilityManagers?.Overall ?? true)
+            {
+                item.ObjectVisibilityManagers?.Print(sb, "ObjectVisibilityManagers");
             }
         }
         
@@ -11276,6 +11545,38 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAnimationSoundTagSetsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavigationMeshObstacleManagers, rhs.NavigationMeshObstacleManagers, out var lhsNavigationMeshObstacleManagers, out var rhsNavigationMeshObstacleManagers, out var isNavigationMeshObstacleManagersEqual))
+                {
+                    if (!object.Equals(lhsNavigationMeshObstacleManagers, rhsNavigationMeshObstacleManagers)) return false;
+                }
+                else if (!isNavigationMeshObstacleManagersEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LensFlares) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LensFlares, rhs.LensFlares, out var lhsLensFlares, out var rhsLensFlares, out var isLensFlaresEqual))
+                {
+                    if (!object.Equals(lhsLensFlares, rhsLensFlares)) return false;
+                }
+                else if (!isLensFlaresEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.GodRays) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.GodRays, rhs.GodRays, out var lhsGodRays, out var rhsGodRays, out var isGodRaysEqual))
+                {
+                    if (!object.Equals(lhsGodRays, rhsGodRays)) return false;
+                }
+                else if (!isGodRaysEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectVisibilityManagers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectVisibilityManagers, rhs.ObjectVisibilityManagers, out var lhsObjectVisibilityManagers, out var rhsObjectVisibilityManagers, out var isObjectVisibilityManagersEqual))
+                {
+                    if (!object.Equals(lhsObjectVisibilityManagers, rhsObjectVisibilityManagers)) return false;
+                }
+                else if (!isObjectVisibilityManagersEqual) return false;
+            }
             return true;
         }
         
@@ -11405,6 +11706,10 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.AttractionRules);
             hash.Add(item.AudioCategorySnapshots);
             hash.Add(item.AnimationSoundTagSets);
+            hash.Add(item.NavigationMeshObstacleManagers);
+            hash.Add(item.LensFlares);
+            hash.Add(item.GodRays);
+            hash.Add(item.ObjectVisibilityManagers);
             return hash.ToHashCode();
         }
         
@@ -12032,6 +12337,26 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAnimationSoundTagSet":
                 case "IAnimationSoundTagSetInternal":
                     return obj.AnimationSoundTagSets;
+                case "NavigationMeshObstacleManager":
+                case "INavigationMeshObstacleManagerGetter":
+                case "INavigationMeshObstacleManager":
+                case "INavigationMeshObstacleManagerInternal":
+                    return obj.NavigationMeshObstacleManagers;
+                case "LensFlare":
+                case "ILensFlareGetter":
+                case "ILensFlare":
+                case "ILensFlareInternal":
+                    return obj.LensFlares;
+                case "GodRays":
+                case "IGodRaysGetter":
+                case "IGodRays":
+                case "IGodRaysInternal":
+                    return obj.GodRays;
+                case "ObjectVisibilityManager":
+                case "IObjectVisibilityManagerGetter":
+                case "IObjectVisibilityManager":
+                case "IObjectVisibilityManagerInternal":
+                    return obj.ObjectVisibilityManagers;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -12056,7 +12381,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[122];
+            Stream[] outputStreams = new Stream[126];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -12180,6 +12505,10 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.AttractionRules, 119, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AudioCategorySnapshots, 120, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AnimationSoundTagSets, 121, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshObstacleManagers, 122, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LensFlares, 123, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.GodRays, 124, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectVisibilityManagers, 125, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -12643,6 +12972,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.AnimationSoundTagSets.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectVisibilityManagers.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -13136,6 +13469,22 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.AnimationSoundTagSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.NavigationMeshObstacleManagers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LensFlares.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.GodRays.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectVisibilityManagers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -14259,6 +14608,42 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAnimationSoundTagSet":
                 case "IAnimationSoundTagSetInternal":
                     foreach (var item in obj.AnimationSoundTagSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMeshObstacleManager":
+                case "INavigationMeshObstacleManagerGetter":
+                case "INavigationMeshObstacleManager":
+                case "INavigationMeshObstacleManagerInternal":
+                    foreach (var item in obj.NavigationMeshObstacleManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LensFlare":
+                case "ILensFlareGetter":
+                case "ILensFlare":
+                case "ILensFlareInternal":
+                    foreach (var item in obj.LensFlares.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "GodRays":
+                case "IGodRaysGetter":
+                case "IGodRays":
+                case "IGodRaysInternal":
+                    foreach (var item in obj.GodRays.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ObjectVisibilityManager":
+                case "IObjectVisibilityManagerGetter":
+                case "IObjectVisibilityManager":
+                case "IObjectVisibilityManagerInternal":
+                    foreach (var item in obj.ObjectVisibilityManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -15520,6 +15905,42 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.AnimationSoundTagSets,
                 groupGetter: (m) => m.AnimationSoundTagSets))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, NavigationMeshObstacleManager, INavigationMeshObstacleManagerGetter>(
+                srcGroup: obj.NavigationMeshObstacleManagers,
+                type: typeof(INavigationMeshObstacleManagerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.NavigationMeshObstacleManagers,
+                groupGetter: (m) => m.NavigationMeshObstacleManagers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LensFlare, ILensFlareGetter>(
+                srcGroup: obj.LensFlares,
+                type: typeof(ILensFlareGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LensFlares,
+                groupGetter: (m) => m.LensFlares))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, GodRays, IGodRaysGetter>(
+                srcGroup: obj.GodRays,
+                type: typeof(IGodRaysGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GodRays,
+                groupGetter: (m) => m.GodRays))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ObjectVisibilityManager, IObjectVisibilityManagerGetter>(
+                srcGroup: obj.ObjectVisibilityManagers,
+                type: typeof(IObjectVisibilityManagerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ObjectVisibilityManagers,
+                groupGetter: (m) => m.ObjectVisibilityManagers))
             {
                 yield return item;
             }
@@ -17244,6 +17665,62 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.AnimationSoundTagSets,
                         groupGetter: (m) => m.AnimationSoundTagSets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMeshObstacleManager":
+                case "INavigationMeshObstacleManagerGetter":
+                case "INavigationMeshObstacleManager":
+                case "INavigationMeshObstacleManagerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, NavigationMeshObstacleManager, INavigationMeshObstacleManagerGetter>(
+                        srcGroup: obj.NavigationMeshObstacleManagers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.NavigationMeshObstacleManagers,
+                        groupGetter: (m) => m.NavigationMeshObstacleManagers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LensFlare":
+                case "ILensFlareGetter":
+                case "ILensFlare":
+                case "ILensFlareInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LensFlare, ILensFlareGetter>(
+                        srcGroup: obj.LensFlares,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LensFlares,
+                        groupGetter: (m) => m.LensFlares))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "GodRays":
+                case "IGodRaysGetter":
+                case "IGodRays":
+                case "IGodRaysInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, GodRays, IGodRaysGetter>(
+                        srcGroup: obj.GodRays,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GodRays,
+                        groupGetter: (m) => m.GodRays))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ObjectVisibilityManager":
+                case "IObjectVisibilityManagerGetter":
+                case "IObjectVisibilityManager":
+                case "IObjectVisibilityManagerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ObjectVisibilityManager, IObjectVisibilityManagerGetter>(
+                        srcGroup: obj.ObjectVisibilityManagers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ObjectVisibilityManagers,
+                        groupGetter: (m) => m.ObjectVisibilityManagers))
                     {
                         yield return item;
                     }
@@ -20002,6 +20479,86 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers);
+                try
+                {
+                    item.NavigationMeshObstacleManagers.DeepCopyIn(
+                        rhs: rhs.NavigationMeshObstacleManagers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LensFlares) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.LensFlares);
+                try
+                {
+                    item.LensFlares.DeepCopyIn(
+                        rhs: rhs.LensFlares,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.LensFlares));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.GodRays) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.GodRays);
+                try
+                {
+                    item.GodRays.DeepCopyIn(
+                        rhs: rhs.GodRays,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.GodRays));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectVisibilityManagers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ObjectVisibilityManagers);
+                try
+                {
+                    item.ObjectVisibilityManagers.DeepCopyIn(
+                        rhs: rhs.ObjectVisibilityManagers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ObjectVisibilityManagers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -20214,6 +20771,10 @@ namespace Mutagen.Bethesda.Fallout4
         public bool AttractionRules;
         public bool AudioCategorySnapshots;
         public bool AnimationSoundTagSets;
+        public bool NavigationMeshObstacleManagers;
+        public bool LensFlares;
+        public bool GodRays;
+        public bool ObjectVisibilityManagers;
         public GroupMask()
         {
         }
@@ -20341,6 +20902,10 @@ namespace Mutagen.Bethesda.Fallout4
             AttractionRules = defaultValue;
             AudioCategorySnapshots = defaultValue;
             AnimationSoundTagSets = defaultValue;
+            NavigationMeshObstacleManagers = defaultValue;
+            LensFlares = defaultValue;
+            GodRays = defaultValue;
+            ObjectVisibilityManagers = defaultValue;
         }
     }
 
@@ -21710,6 +22275,50 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AnimationSoundTagSetsItem).BinaryWriteTranslator).Write<IAnimationSoundTagSetGetter>(
                         item: AnimationSoundTagSetsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.NavigationMeshObstacleManagers ?? true)
+            {
+                var NavigationMeshObstacleManagersItem = item.NavigationMeshObstacleManagers;
+                if (NavigationMeshObstacleManagersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)NavigationMeshObstacleManagersItem).BinaryWriteTranslator).Write<INavigationMeshObstacleManagerGetter>(
+                        item: NavigationMeshObstacleManagersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LensFlares ?? true)
+            {
+                var LensFlaresItem = item.LensFlares;
+                if (LensFlaresItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LensFlaresItem).BinaryWriteTranslator).Write<ILensFlareGetter>(
+                        item: LensFlaresItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.GodRays ?? true)
+            {
+                var GodRaysItem = item.GodRays;
+                if (GodRaysItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)GodRaysItem).BinaryWriteTranslator).Write<IGodRaysGetter>(
+                        item: GodRaysItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ObjectVisibilityManagers ?? true)
+            {
+                var ObjectVisibilityManagersItem = item.ObjectVisibilityManagers;
+                if (ObjectVisibilityManagersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ObjectVisibilityManagersItem).BinaryWriteTranslator).Write<IObjectVisibilityManagerGetter>(
+                        item: ObjectVisibilityManagersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -23488,6 +24097,62 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.AnimationSoundTagSets;
                 }
+                case RecordTypeInts.NOCM:
+                {
+                    if (importMask?.NavigationMeshObstacleManagers ?? true)
+                    {
+                        item.NavigationMeshObstacleManagers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers;
+                }
+                case RecordTypeInts.LENS:
+                {
+                    if (importMask?.LensFlares ?? true)
+                    {
+                        item.LensFlares.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.LensFlares;
+                }
+                case RecordTypeInts.GDRY:
+                {
+                    if (importMask?.GodRays ?? true)
+                    {
+                        item.GodRays.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.GodRays;
+                }
+                case RecordTypeInts.OVIS:
+                {
+                    if (importMask?.ObjectVisibilityManagers ?? true)
+                    {
+                        item.ObjectVisibilityManagers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ObjectVisibilityManagers;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -24260,6 +24925,26 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _AnimationSoundTagSetsLocations;
         private IFallout4GroupGetter<IAnimationSoundTagSetGetter>? _AnimationSoundTagSets => _AnimationSoundTagSetsLocations != null ? Fallout4GroupBinaryOverlay<IAnimationSoundTagSetGetter>.Fallout4GroupFactory(_data, _AnimationSoundTagSetsLocations, _package) : default;
         public IFallout4GroupGetter<IAnimationSoundTagSetGetter> AnimationSoundTagSets => _AnimationSoundTagSets ?? new Fallout4Group<AnimationSoundTagSet>(this);
+        #endregion
+        #region NavigationMeshObstacleManagers
+        private List<RangeInt64>? _NavigationMeshObstacleManagersLocations;
+        private IFallout4GroupGetter<INavigationMeshObstacleManagerGetter>? _NavigationMeshObstacleManagers => _NavigationMeshObstacleManagersLocations != null ? Fallout4GroupBinaryOverlay<INavigationMeshObstacleManagerGetter>.Fallout4GroupFactory(_data, _NavigationMeshObstacleManagersLocations, _package) : default;
+        public IFallout4GroupGetter<INavigationMeshObstacleManagerGetter> NavigationMeshObstacleManagers => _NavigationMeshObstacleManagers ?? new Fallout4Group<NavigationMeshObstacleManager>(this);
+        #endregion
+        #region LensFlares
+        private List<RangeInt64>? _LensFlaresLocations;
+        private IFallout4GroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? Fallout4GroupBinaryOverlay<ILensFlareGetter>.Fallout4GroupFactory(_data, _LensFlaresLocations, _package) : default;
+        public IFallout4GroupGetter<ILensFlareGetter> LensFlares => _LensFlares ?? new Fallout4Group<LensFlare>(this);
+        #endregion
+        #region GodRays
+        private List<RangeInt64>? _GodRaysLocations;
+        private IFallout4GroupGetter<IGodRaysGetter>? _GodRays => _GodRaysLocations != null ? Fallout4GroupBinaryOverlay<IGodRaysGetter>.Fallout4GroupFactory(_data, _GodRaysLocations, _package) : default;
+        public IFallout4GroupGetter<IGodRaysGetter> GodRays => _GodRays ?? new Fallout4Group<GodRays>(this);
+        #endregion
+        #region ObjectVisibilityManagers
+        private List<RangeInt64>? _ObjectVisibilityManagersLocations;
+        private IFallout4GroupGetter<IObjectVisibilityManagerGetter>? _ObjectVisibilityManagers => _ObjectVisibilityManagersLocations != null ? Fallout4GroupBinaryOverlay<IObjectVisibilityManagerGetter>.Fallout4GroupFactory(_data, _ObjectVisibilityManagersLocations, _package) : default;
+        public IFallout4GroupGetter<IObjectVisibilityManagerGetter> ObjectVisibilityManagers => _ObjectVisibilityManagers ?? new Fallout4Group<ObjectVisibilityManager>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -25079,6 +25764,30 @@ namespace Mutagen.Bethesda.Fallout4
                     _AnimationSoundTagSetsLocations ??= new();
                     _AnimationSoundTagSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.AnimationSoundTagSets;
+                }
+                case RecordTypeInts.NOCM:
+                {
+                    _NavigationMeshObstacleManagersLocations ??= new();
+                    _NavigationMeshObstacleManagersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers;
+                }
+                case RecordTypeInts.LENS:
+                {
+                    _LensFlaresLocations ??= new();
+                    _LensFlaresLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.LensFlares;
+                }
+                case RecordTypeInts.GDRY:
+                {
+                    _GodRaysLocations ??= new();
+                    _GodRaysLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.GodRays;
+                }
+                case RecordTypeInts.OVIS:
+                {
+                    _ObjectVisibilityManagersLocations ??= new();
+                    _ObjectVisibilityManagersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ObjectVisibilityManagers;
                 }
                 default:
                     return default(int?);

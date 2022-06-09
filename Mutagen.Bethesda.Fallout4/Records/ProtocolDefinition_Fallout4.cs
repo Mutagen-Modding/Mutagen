@@ -309,7 +309,6 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             TerminalBodyText_Registration.Instance,
             TerminalMenuItem_Registration.Instance,
             AmbientColors_Registration.Instance,
-            GodRay_Registration.Instance,
             ShaderParticleGeometry_Registration.Instance,
             CloudLayer_Registration.Instance,
             WeatherColor_Registration.Instance,
@@ -543,7 +542,14 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             SceneCollectionItem_Registration.Instance,
             AudioCategorySnapshot_Registration.Instance,
             AudioCategoryMultiplier_Registration.Instance,
-            AnimationSoundTag_Registration.Instance
+            AnimationSoundTag_Registration.Instance,
+            NavigationMeshObstacleManager_Registration.Instance,
+            NavigationMeshObstacleManagerSubObject_Registration.Instance,
+            LensFlareSprite_Registration.Instance,
+            LensFlareSpriteData_Registration.Instance,
+            ObjectBoundsFloat_Registration.Instance,
+            ObjectVisibilityManager_Registration.Instance,
+            ObjectVisibilityManagerItem_Registration.Instance
         );
     }
 }

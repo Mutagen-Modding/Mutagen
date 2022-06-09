@@ -31,6 +31,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -53,6 +54,36 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region BackColor
+        public Color BackColor { get; set; } = default;
+        #endregion
+        #region ForwardColor
+        public Color ForwardColor { get; set; } = default;
+        #endregion
+        #region Intensity
+        public Single Intensity { get; set; } = default;
+        #endregion
+        #region AirColorScale
+        public Single AirColorScale { get; set; } = default;
+        #endregion
+        #region BackColorScale
+        public Single BackColorScale { get; set; } = default;
+        #endregion
+        #region ForwardColorScale
+        public Single ForwardColorScale { get; set; } = default;
+        #endregion
+        #region BackPhase
+        public Single BackPhase { get; set; } = default;
+        #endregion
+        #region AirColor
+        public Color AirColor { get; set; } = default;
+        #endregion
+        #region ForwardPhase
+        public Single ForwardPhase { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public GodRays.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +109,16 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.BackColor = initialValue;
+                this.ForwardColor = initialValue;
+                this.Intensity = initialValue;
+                this.AirColorScale = initialValue;
+                this.BackColorScale = initialValue;
+                this.ForwardColorScale = initialValue;
+                this.BackPhase = initialValue;
+                this.AirColor = initialValue;
+                this.ForwardPhase = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +127,17 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem BackColor,
+                TItem ForwardColor,
+                TItem Intensity,
+                TItem AirColorScale,
+                TItem BackColorScale,
+                TItem ForwardColorScale,
+                TItem BackPhase,
+                TItem AirColor,
+                TItem ForwardPhase,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +146,16 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.BackColor = BackColor;
+                this.ForwardColor = ForwardColor;
+                this.Intensity = Intensity;
+                this.AirColorScale = AirColorScale;
+                this.BackColorScale = BackColorScale;
+                this.ForwardColorScale = ForwardColorScale;
+                this.BackPhase = BackPhase;
+                this.AirColor = AirColor;
+                this.ForwardPhase = ForwardPhase;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +164,19 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem BackColor;
+            public TItem ForwardColor;
+            public TItem Intensity;
+            public TItem AirColorScale;
+            public TItem BackColorScale;
+            public TItem ForwardColorScale;
+            public TItem BackPhase;
+            public TItem AirColor;
+            public TItem ForwardPhase;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +190,31 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.BackColor, rhs.BackColor)) return false;
+                if (!object.Equals(this.ForwardColor, rhs.ForwardColor)) return false;
+                if (!object.Equals(this.Intensity, rhs.Intensity)) return false;
+                if (!object.Equals(this.AirColorScale, rhs.AirColorScale)) return false;
+                if (!object.Equals(this.BackColorScale, rhs.BackColorScale)) return false;
+                if (!object.Equals(this.ForwardColorScale, rhs.ForwardColorScale)) return false;
+                if (!object.Equals(this.BackPhase, rhs.BackPhase)) return false;
+                if (!object.Equals(this.AirColor, rhs.AirColor)) return false;
+                if (!object.Equals(this.ForwardPhase, rhs.ForwardPhase)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.BackColor);
+                hash.Add(this.ForwardColor);
+                hash.Add(this.Intensity);
+                hash.Add(this.AirColorScale);
+                hash.Add(this.BackColorScale);
+                hash.Add(this.ForwardColorScale);
+                hash.Add(this.BackPhase);
+                hash.Add(this.AirColor);
+                hash.Add(this.ForwardPhase);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +225,16 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.BackColor)) return false;
+                if (!eval(this.ForwardColor)) return false;
+                if (!eval(this.Intensity)) return false;
+                if (!eval(this.AirColorScale)) return false;
+                if (!eval(this.BackColorScale)) return false;
+                if (!eval(this.ForwardColorScale)) return false;
+                if (!eval(this.BackPhase)) return false;
+                if (!eval(this.AirColor)) return false;
+                if (!eval(this.ForwardPhase)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +243,16 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.BackColor)) return true;
+                if (eval(this.ForwardColor)) return true;
+                if (eval(this.Intensity)) return true;
+                if (eval(this.AirColorScale)) return true;
+                if (eval(this.BackColorScale)) return true;
+                if (eval(this.ForwardColorScale)) return true;
+                if (eval(this.BackPhase)) return true;
+                if (eval(this.AirColor)) return true;
+                if (eval(this.ForwardPhase)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +268,16 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.BackColor = eval(this.BackColor);
+                obj.ForwardColor = eval(this.ForwardColor);
+                obj.Intensity = eval(this.Intensity);
+                obj.AirColorScale = eval(this.AirColorScale);
+                obj.BackColorScale = eval(this.BackColorScale);
+                obj.ForwardColorScale = eval(this.ForwardColorScale);
+                obj.BackPhase = eval(this.BackPhase);
+                obj.AirColor = eval(this.AirColor);
+                obj.ForwardPhase = eval(this.ForwardPhase);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -172,6 +296,46 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(GodRays.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.BackColor ?? true)
+                    {
+                        sb.AppendItem(BackColor, "BackColor");
+                    }
+                    if (printMask?.ForwardColor ?? true)
+                    {
+                        sb.AppendItem(ForwardColor, "ForwardColor");
+                    }
+                    if (printMask?.Intensity ?? true)
+                    {
+                        sb.AppendItem(Intensity, "Intensity");
+                    }
+                    if (printMask?.AirColorScale ?? true)
+                    {
+                        sb.AppendItem(AirColorScale, "AirColorScale");
+                    }
+                    if (printMask?.BackColorScale ?? true)
+                    {
+                        sb.AppendItem(BackColorScale, "BackColorScale");
+                    }
+                    if (printMask?.ForwardColorScale ?? true)
+                    {
+                        sb.AppendItem(ForwardColorScale, "ForwardColorScale");
+                    }
+                    if (printMask?.BackPhase ?? true)
+                    {
+                        sb.AppendItem(BackPhase, "BackPhase");
+                    }
+                    if (printMask?.AirColor ?? true)
+                    {
+                        sb.AppendItem(AirColor, "AirColor");
+                    }
+                    if (printMask?.ForwardPhase ?? true)
+                    {
+                        sb.AppendItem(ForwardPhase, "ForwardPhase");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +346,45 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? BackColor;
+            public Exception? ForwardColor;
+            public Exception? Intensity;
+            public Exception? AirColorScale;
+            public Exception? BackColorScale;
+            public Exception? ForwardColorScale;
+            public Exception? BackPhase;
+            public Exception? AirColor;
+            public Exception? ForwardPhase;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 GodRays_FieldIndex enu = (GodRays_FieldIndex)index;
                 switch (enu)
                 {
+                    case GodRays_FieldIndex.BackColor:
+                        return BackColor;
+                    case GodRays_FieldIndex.ForwardColor:
+                        return ForwardColor;
+                    case GodRays_FieldIndex.Intensity:
+                        return Intensity;
+                    case GodRays_FieldIndex.AirColorScale:
+                        return AirColorScale;
+                    case GodRays_FieldIndex.BackColorScale:
+                        return BackColorScale;
+                    case GodRays_FieldIndex.ForwardColorScale:
+                        return ForwardColorScale;
+                    case GodRays_FieldIndex.BackPhase:
+                        return BackPhase;
+                    case GodRays_FieldIndex.AirColor:
+                        return AirColor;
+                    case GodRays_FieldIndex.ForwardPhase:
+                        return ForwardPhase;
+                    case GodRays_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +395,36 @@ namespace Mutagen.Bethesda.Fallout4
                 GodRays_FieldIndex enu = (GodRays_FieldIndex)index;
                 switch (enu)
                 {
+                    case GodRays_FieldIndex.BackColor:
+                        this.BackColor = ex;
+                        break;
+                    case GodRays_FieldIndex.ForwardColor:
+                        this.ForwardColor = ex;
+                        break;
+                    case GodRays_FieldIndex.Intensity:
+                        this.Intensity = ex;
+                        break;
+                    case GodRays_FieldIndex.AirColorScale:
+                        this.AirColorScale = ex;
+                        break;
+                    case GodRays_FieldIndex.BackColorScale:
+                        this.BackColorScale = ex;
+                        break;
+                    case GodRays_FieldIndex.ForwardColorScale:
+                        this.ForwardColorScale = ex;
+                        break;
+                    case GodRays_FieldIndex.BackPhase:
+                        this.BackPhase = ex;
+                        break;
+                    case GodRays_FieldIndex.AirColor:
+                        this.AirColor = ex;
+                        break;
+                    case GodRays_FieldIndex.ForwardPhase:
+                        this.ForwardPhase = ex;
+                        break;
+                    case GodRays_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +436,36 @@ namespace Mutagen.Bethesda.Fallout4
                 GodRays_FieldIndex enu = (GodRays_FieldIndex)index;
                 switch (enu)
                 {
+                    case GodRays_FieldIndex.BackColor:
+                        this.BackColor = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.ForwardColor:
+                        this.ForwardColor = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.Intensity:
+                        this.Intensity = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.AirColorScale:
+                        this.AirColorScale = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.BackColorScale:
+                        this.BackColorScale = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.ForwardColorScale:
+                        this.ForwardColorScale = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.BackPhase:
+                        this.BackPhase = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.AirColor:
+                        this.AirColor = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.ForwardPhase:
+                        this.ForwardPhase = (Exception?)obj;
+                        break;
+                    case GodRays_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +475,16 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (BackColor != null) return true;
+                if (ForwardColor != null) return true;
+                if (Intensity != null) return true;
+                if (AirColorScale != null) return true;
+                if (BackColorScale != null) return true;
+                if (ForwardColorScale != null) return true;
+                if (BackPhase != null) return true;
+                if (AirColor != null) return true;
+                if (ForwardPhase != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +511,36 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(BackColor, "BackColor");
+                }
+                {
+                    sb.AppendItem(ForwardColor, "ForwardColor");
+                }
+                {
+                    sb.AppendItem(Intensity, "Intensity");
+                }
+                {
+                    sb.AppendItem(AirColorScale, "AirColorScale");
+                }
+                {
+                    sb.AppendItem(BackColorScale, "BackColorScale");
+                }
+                {
+                    sb.AppendItem(ForwardColorScale, "ForwardColorScale");
+                }
+                {
+                    sb.AppendItem(BackPhase, "BackPhase");
+                }
+                {
+                    sb.AppendItem(AirColor, "AirColor");
+                }
+                {
+                    sb.AppendItem(ForwardPhase, "ForwardPhase");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +549,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.BackColor = this.BackColor.Combine(rhs.BackColor);
+                ret.ForwardColor = this.ForwardColor.Combine(rhs.ForwardColor);
+                ret.Intensity = this.Intensity.Combine(rhs.Intensity);
+                ret.AirColorScale = this.AirColorScale.Combine(rhs.AirColorScale);
+                ret.BackColorScale = this.BackColorScale.Combine(rhs.BackColorScale);
+                ret.ForwardColorScale = this.ForwardColorScale.Combine(rhs.ForwardColorScale);
+                ret.BackPhase = this.BackPhase.Combine(rhs.BackPhase);
+                ret.AirColor = this.AirColor.Combine(rhs.AirColor);
+                ret.ForwardPhase = this.ForwardPhase.Combine(rhs.ForwardPhase);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +580,53 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool BackColor;
+            public bool ForwardColor;
+            public bool Intensity;
+            public bool AirColorScale;
+            public bool BackColorScale;
+            public bool ForwardColorScale;
+            public bool BackPhase;
+            public bool AirColor;
+            public bool ForwardPhase;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.BackColor = defaultOn;
+                this.ForwardColor = defaultOn;
+                this.Intensity = defaultOn;
+                this.AirColorScale = defaultOn;
+                this.BackColorScale = defaultOn;
+                this.ForwardColorScale = defaultOn;
+                this.BackPhase = defaultOn;
+                this.AirColor = defaultOn;
+                this.ForwardPhase = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((BackColor, null));
+                ret.Add((ForwardColor, null));
+                ret.Add((Intensity, null));
+                ret.Add((AirColorScale, null));
+                ret.Add((BackColorScale, null));
+                ret.Add((ForwardColorScale, null));
+                ret.Add((BackPhase, null));
+                ret.Add((AirColor, null));
+                ret.Add((ForwardPhase, null));
+                ret.Add((DATADataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -335,6 +680,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IGodRays);
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -418,6 +767,16 @@ namespace Mutagen.Bethesda.Fallout4
         IGodRaysGetter,
         ILoquiObjectSetter<IGodRaysInternal>
     {
+        new Color BackColor { get; set; }
+        new Color ForwardColor { get; set; }
+        new Single Intensity { get; set; }
+        new Single AirColorScale { get; set; }
+        new Single BackColorScale { get; set; }
+        new Single ForwardColorScale { get; set; }
+        new Single BackPhase { get; set; }
+        new Color AirColor { get; set; }
+        new Single ForwardPhase { get; set; }
+        new GodRays.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IGodRaysInternal :
@@ -435,6 +794,16 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IGodRaysGetter>
     {
         static new ILoquiRegistration StaticRegistration => GodRays_Registration.Instance;
+        Color BackColor { get; }
+        Color ForwardColor { get; }
+        Single Intensity { get; }
+        Single AirColorScale { get; }
+        Single BackColorScale { get; }
+        Single ForwardColorScale { get; }
+        Single BackPhase { get; }
+        Color AirColor { get; }
+        Single ForwardPhase { get; }
+        GodRays.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -599,6 +968,16 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        BackColor = 6,
+        ForwardColor = 7,
+        Intensity = 8,
+        AirColorScale = 9,
+        BackColorScale = 10,
+        ForwardColorScale = 11,
+        BackPhase = 12,
+        AirColor = 13,
+        ForwardPhase = 14,
+        DATADataTypeState = 15,
     }
     #endregion
 
@@ -616,9 +995,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "92693d71-3760-4363-a089-ad858e092a57";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(GodRays.Mask<>);
 
@@ -648,8 +1027,11 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.GDRY);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.GDRY);
+            var all = RecordCollection.Factory(
+                RecordTypes.GDRY,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GodRaysBinaryWriteTranslation);
         #region Interface
@@ -693,6 +1075,16 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IGodRaysInternal item)
         {
             ClearPartial();
+            item.BackColor = default;
+            item.ForwardColor = default;
+            item.Intensity = default;
+            item.AirColorScale = default;
+            item.BackColorScale = default;
+            item.ForwardColorScale = default;
+            item.BackPhase = default;
+            item.AirColor = default;
+            item.ForwardPhase = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -778,6 +1170,16 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.BackColor = item.BackColor.ColorOnlyEquals(rhs.BackColor);
+            ret.ForwardColor = item.ForwardColor.ColorOnlyEquals(rhs.ForwardColor);
+            ret.Intensity = item.Intensity.EqualsWithin(rhs.Intensity);
+            ret.AirColorScale = item.AirColorScale.EqualsWithin(rhs.AirColorScale);
+            ret.BackColorScale = item.BackColorScale.EqualsWithin(rhs.BackColorScale);
+            ret.ForwardColorScale = item.ForwardColorScale.EqualsWithin(rhs.ForwardColorScale);
+            ret.BackPhase = item.BackPhase.EqualsWithin(rhs.BackPhase);
+            ret.AirColor = item.AirColor.ColorOnlyEquals(rhs.AirColor);
+            ret.ForwardPhase = item.ForwardPhase.EqualsWithin(rhs.ForwardPhase);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1229,46 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.BackColor ?? true)
+            {
+                sb.AppendItem(item.BackColor, "BackColor");
+            }
+            if (printMask?.ForwardColor ?? true)
+            {
+                sb.AppendItem(item.ForwardColor, "ForwardColor");
+            }
+            if (printMask?.Intensity ?? true)
+            {
+                sb.AppendItem(item.Intensity, "Intensity");
+            }
+            if (printMask?.AirColorScale ?? true)
+            {
+                sb.AppendItem(item.AirColorScale, "AirColorScale");
+            }
+            if (printMask?.BackColorScale ?? true)
+            {
+                sb.AppendItem(item.BackColorScale, "BackColorScale");
+            }
+            if (printMask?.ForwardColorScale ?? true)
+            {
+                sb.AppendItem(item.ForwardColorScale, "ForwardColorScale");
+            }
+            if (printMask?.BackPhase ?? true)
+            {
+                sb.AppendItem(item.BackPhase, "BackPhase");
+            }
+            if (printMask?.AirColor ?? true)
+            {
+                sb.AppendItem(item.AirColor, "AirColor");
+            }
+            if (printMask?.ForwardPhase ?? true)
+            {
+                sb.AppendItem(item.ForwardPhase, "ForwardPhase");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public static GodRays_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1317,46 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.BackColor) ?? true))
+            {
+                if (!lhs.BackColor.ColorOnlyEquals(rhs.BackColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardColor) ?? true))
+            {
+                if (!lhs.ForwardColor.ColorOnlyEquals(rhs.ForwardColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.Intensity) ?? true))
+            {
+                if (!lhs.Intensity.EqualsWithin(rhs.Intensity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.AirColorScale) ?? true))
+            {
+                if (!lhs.AirColorScale.EqualsWithin(rhs.AirColorScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.BackColorScale) ?? true))
+            {
+                if (!lhs.BackColorScale.EqualsWithin(rhs.BackColorScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardColorScale) ?? true))
+            {
+                if (!lhs.ForwardColorScale.EqualsWithin(rhs.ForwardColorScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.BackPhase) ?? true))
+            {
+                if (!lhs.BackPhase.EqualsWithin(rhs.BackPhase)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.AirColor) ?? true))
+            {
+                if (!lhs.AirColor.ColorOnlyEquals(rhs.AirColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardPhase) ?? true))
+            {
+                if (!lhs.ForwardPhase.EqualsWithin(rhs.ForwardPhase)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -903,6 +1385,16 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IGodRaysGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.BackColor);
+            hash.Add(item.ForwardColor);
+            hash.Add(item.Intensity);
+            hash.Add(item.AirColorScale);
+            hash.Add(item.BackColorScale);
+            hash.Add(item.ForwardColorScale);
+            hash.Add(item.BackPhase);
+            hash.Add(item.AirColor);
+            hash.Add(item.ForwardPhase);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1006,6 +1498,46 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.BackColor) ?? true))
+            {
+                item.BackColor = rhs.BackColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardColor) ?? true))
+            {
+                item.ForwardColor = rhs.ForwardColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.Intensity) ?? true))
+            {
+                item.Intensity = rhs.Intensity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.AirColorScale) ?? true))
+            {
+                item.AirColorScale = rhs.AirColorScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.BackColorScale) ?? true))
+            {
+                item.BackColorScale = rhs.BackColorScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardColorScale) ?? true))
+            {
+                item.ForwardColorScale = rhs.ForwardColorScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.BackPhase) ?? true))
+            {
+                item.BackPhase = rhs.BackPhase;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.AirColor) ?? true))
+            {
+                item.AirColor = rhs.AirColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardPhase) ?? true))
+            {
+                item.ForwardPhase = rhs.ForwardPhase;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1686,59 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static GodRaysBinaryWriteTranslation Instance = new GodRaysBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IGodRaysGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IGodRaysGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BackColor,
+                    binaryType: ColorBinaryType.NoAlphaFloat);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ForwardColor,
+                    binaryType: ColorBinaryType.NoAlphaFloat);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Intensity);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.AirColorScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.BackColorScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ForwardColorScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.BackPhase);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AirColor,
+                    binaryType: ColorBinaryType.NoAlphaFloat);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ForwardPhase);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IGodRaysGetter item,
@@ -1165,13 +1750,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1816,44 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IGodRaysInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.BackColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    item.ForwardColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    item.Intensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AirColorScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BackColorScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ForwardColorScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BackPhase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AirColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    item.ForwardPhase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)GodRays_FieldIndex.ForwardPhase;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1275,6 +1900,53 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IGodRays);
 
 
+        private RangeInt32? _DATALocation;
+        public GodRays.DATADataType DATADataTypeState { get; private set; }
+        #region BackColor
+        private int _BackColorLocation => _DATALocation!.Value.Min;
+        private bool _BackColor_IsSet => _DATALocation.HasValue;
+        public Color BackColor => _BackColor_IsSet ? _data.Slice(_BackColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        #endregion
+        #region ForwardColor
+        private int _ForwardColorLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _ForwardColor_IsSet => _DATALocation.HasValue;
+        public Color ForwardColor => _ForwardColor_IsSet ? _data.Slice(_ForwardColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        #endregion
+        #region Intensity
+        private int _IntensityLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _Intensity_IsSet => _DATALocation.HasValue;
+        public Single Intensity => _Intensity_IsSet ? _data.Slice(_IntensityLocation, 4).Float() : default;
+        #endregion
+        #region AirColorScale
+        private int _AirColorScaleLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _AirColorScale_IsSet => _DATALocation.HasValue;
+        public Single AirColorScale => _AirColorScale_IsSet ? _data.Slice(_AirColorScaleLocation, 4).Float() : default;
+        #endregion
+        #region BackColorScale
+        private int _BackColorScaleLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _BackColorScale_IsSet => _DATALocation.HasValue;
+        public Single BackColorScale => _BackColorScale_IsSet ? _data.Slice(_BackColorScaleLocation, 4).Float() : default;
+        #endregion
+        #region ForwardColorScale
+        private int _ForwardColorScaleLocation => _DATALocation!.Value.Min + 0x24;
+        private bool _ForwardColorScale_IsSet => _DATALocation.HasValue;
+        public Single ForwardColorScale => _ForwardColorScale_IsSet ? _data.Slice(_ForwardColorScaleLocation, 4).Float() : default;
+        #endregion
+        #region BackPhase
+        private int _BackPhaseLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _BackPhase_IsSet => _DATALocation.HasValue;
+        public Single BackPhase => _BackPhase_IsSet ? _data.Slice(_BackPhaseLocation, 4).Float() : default;
+        #endregion
+        #region AirColor
+        private int _AirColorLocation => _DATALocation!.Value.Min + 0x2C;
+        private bool _AirColor_IsSet => _DATALocation.HasValue;
+        public Color AirColor => _AirColor_IsSet ? _data.Slice(_AirColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        #endregion
+        #region ForwardPhase
+        private int _ForwardPhaseLocation => _DATALocation!.Value.Min + 0x38;
+        private bool _ForwardPhase_IsSet => _DATALocation.HasValue;
+        public Single ForwardPhase => _ForwardPhase_IsSet ? _data.Slice(_ForwardPhaseLocation, 4).Float() : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +2001,33 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)GodRays_FieldIndex.ForwardPhase;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

@@ -141,14 +141,14 @@
   </Object>
   <Object name="WeatherGodRays" objType="Subrecord" recordType="WGDR" GUID="26265bbf-8a5f-4362-a51c-fdd5828d4642" ID="443">
     <Fields>
-      <FormLink name="GodRaySunrise" refName="GodRay" />
-      <FormLink name="GodRayDay" refName="GodRay" />
-      <FormLink name="GodRaySunset" refName="GodRay" />
-      <FormLink name="GodRayNight" refName="GodRay" />
-      <FormLink name="GodRayEarlySunrise" refName="GodRay" />
-      <FormLink name="GodRayLateSunrise" refName="GodRay" />
-      <FormLink name="GodRayEarlySunset" refName="GodRay" />
-      <FormLink name="GodRayLateSunset" refName="GodRay" />
+      <FormLink name="GodRaySunrise" refName="GodRays" />
+      <FormLink name="GodRayDay" refName="GodRays" />
+      <FormLink name="GodRaySunset" refName="GodRays" />
+      <FormLink name="GodRayNight" refName="GodRays" />
+      <FormLink name="GodRayEarlySunrise" refName="GodRays" />
+      <FormLink name="GodRayLateSunrise" refName="GodRays" />
+      <FormLink name="GodRayEarlySunset" refName="GodRays" />
+      <FormLink name="GodRayLateSunset" refName="GodRays" />
     </Fields>
   </Object>
   <Object name="WeatherAlpha" objType="Subrecord" GUID="75106865-2fb6-4dd5-af2a-29d661b0b014" ID="439">

@@ -36,7 +36,7 @@
         </Fields>
       </Data>
       <RefDirect name="DirectionalAmbientColors" refName="AmbientColors" recordType="DALC" />
-      <FormLink name="GodRays" recordType="WGDR" refName="GodRay" />
+      <FormLink name="GodRays" recordType="WGDR" refName="GodRays" />
     </Fields>
   </Object>
 </Loqui>

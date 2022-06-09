@@ -268,14 +268,14 @@ namespace Mutagen.Bethesda.Fallout4
         IAmbientColorsGetter? ILightingTemplateGetter.DirectionalAmbientColors => this.DirectionalAmbientColors;
         #endregion
         #region GodRays
-        private readonly IFormLinkNullable<IGodRayGetter> _GodRays = new FormLinkNullable<IGodRayGetter>();
-        public IFormLinkNullable<IGodRayGetter> GodRays
+        private readonly IFormLinkNullable<IGodRaysGetter> _GodRays = new FormLinkNullable<IGodRaysGetter>();
+        public IFormLinkNullable<IGodRaysGetter> GodRays
         {
             get => _GodRays;
             set => _GodRays.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGodRayGetter> ILightingTemplateGetter.GodRays => this.GodRays;
+        IFormLinkNullableGetter<IGodRaysGetter> ILightingTemplateGetter.GodRays => this.GodRays;
         #endregion
         #region DATADataTypeState
         public LightingTemplate.DATADataType DATADataTypeState { get; set; } = default;
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Single FogHeightMid { get; set; }
         new Single FogHeightRange { get; set; }
         new AmbientColors? DirectionalAmbientColors { get; set; }
-        new IFormLinkNullable<IGodRayGetter> GodRays { get; set; }
+        new IFormLinkNullable<IGodRaysGetter> GodRays { get; set; }
         new LightingTemplate.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1649,7 +1649,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single FogHeightMid { get; }
         Single FogHeightRange { get; }
         IAmbientColorsGetter? DirectionalAmbientColors { get; }
-        IFormLinkNullableGetter<IGodRayGetter> GodRays { get; }
+        IFormLinkNullableGetter<IGodRaysGetter> GodRays { get; }
         LightingTemplate.DATADataType DATADataTypeState { get; }
 
     }
@@ -3354,7 +3354,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IAmbientColorsGetter? DirectionalAmbientColors { get; private set; }
         #region GodRays
         private int? _GodRaysLocation;
-        public IFormLinkNullableGetter<IGodRayGetter> GodRays => _GodRaysLocation.HasValue ? new FormLinkNullable<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GodRaysLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGodRayGetter>.Null;
+        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => _GodRaysLocation.HasValue ? new FormLinkNullable<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GodRaysLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGodRaysGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

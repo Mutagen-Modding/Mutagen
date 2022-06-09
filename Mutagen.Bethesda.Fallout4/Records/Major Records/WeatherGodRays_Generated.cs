@@ -51,84 +51,84 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region GodRaySunrise
-        private readonly IFormLink<IGodRayGetter> _GodRaySunrise = new FormLink<IGodRayGetter>();
-        public IFormLink<IGodRayGetter> GodRaySunrise
+        private readonly IFormLink<IGodRaysGetter> _GodRaySunrise = new FormLink<IGodRaysGetter>();
+        public IFormLink<IGodRaysGetter> GodRaySunrise
         {
             get => _GodRaySunrise;
             set => _GodRaySunrise.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGodRayGetter> IWeatherGodRaysGetter.GodRaySunrise => this.GodRaySunrise;
+        IFormLinkGetter<IGodRaysGetter> IWeatherGodRaysGetter.GodRaySunrise => this.GodRaySunrise;
         #endregion
         #region GodRayDay
-        private readonly IFormLink<IGodRayGetter> _GodRayDay = new FormLink<IGodRayGetter>();
-        public IFormLink<IGodRayGetter> GodRayDay
+        private readonly IFormLink<IGodRaysGetter> _GodRayDay = new FormLink<IGodRaysGetter>();
+        public IFormLink<IGodRaysGetter> GodRayDay
         {
             get => _GodRayDay;
             set => _GodRayDay.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGodRayGetter> IWeatherGodRaysGetter.GodRayDay => this.GodRayDay;
+        IFormLinkGetter<IGodRaysGetter> IWeatherGodRaysGetter.GodRayDay => this.GodRayDay;
         #endregion
         #region GodRaySunset
-        private readonly IFormLink<IGodRayGetter> _GodRaySunset = new FormLink<IGodRayGetter>();
-        public IFormLink<IGodRayGetter> GodRaySunset
+        private readonly IFormLink<IGodRaysGetter> _GodRaySunset = new FormLink<IGodRaysGetter>();
+        public IFormLink<IGodRaysGetter> GodRaySunset
         {
             get => _GodRaySunset;
             set => _GodRaySunset.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGodRayGetter> IWeatherGodRaysGetter.GodRaySunset => this.GodRaySunset;
+        IFormLinkGetter<IGodRaysGetter> IWeatherGodRaysGetter.GodRaySunset => this.GodRaySunset;
         #endregion
         #region GodRayNight
-        private readonly IFormLink<IGodRayGetter> _GodRayNight = new FormLink<IGodRayGetter>();
-        public IFormLink<IGodRayGetter> GodRayNight
+        private readonly IFormLink<IGodRaysGetter> _GodRayNight = new FormLink<IGodRaysGetter>();
+        public IFormLink<IGodRaysGetter> GodRayNight
         {
             get => _GodRayNight;
             set => _GodRayNight.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGodRayGetter> IWeatherGodRaysGetter.GodRayNight => this.GodRayNight;
+        IFormLinkGetter<IGodRaysGetter> IWeatherGodRaysGetter.GodRayNight => this.GodRayNight;
         #endregion
         #region GodRayEarlySunrise
-        private readonly IFormLink<IGodRayGetter> _GodRayEarlySunrise = new FormLink<IGodRayGetter>();
-        public IFormLink<IGodRayGetter> GodRayEarlySunrise
+        private readonly IFormLink<IGodRaysGetter> _GodRayEarlySunrise = new FormLink<IGodRaysGetter>();
+        public IFormLink<IGodRaysGetter> GodRayEarlySunrise
         {
             get => _GodRayEarlySunrise;
             set => _GodRayEarlySunrise.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGodRayGetter> IWeatherGodRaysGetter.GodRayEarlySunrise => this.GodRayEarlySunrise;
+        IFormLinkGetter<IGodRaysGetter> IWeatherGodRaysGetter.GodRayEarlySunrise => this.GodRayEarlySunrise;
         #endregion
         #region GodRayLateSunrise
-        private readonly IFormLink<IGodRayGetter> _GodRayLateSunrise = new FormLink<IGodRayGetter>();
-        public IFormLink<IGodRayGetter> GodRayLateSunrise
+        private readonly IFormLink<IGodRaysGetter> _GodRayLateSunrise = new FormLink<IGodRaysGetter>();
+        public IFormLink<IGodRaysGetter> GodRayLateSunrise
         {
             get => _GodRayLateSunrise;
             set => _GodRayLateSunrise.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGodRayGetter> IWeatherGodRaysGetter.GodRayLateSunrise => this.GodRayLateSunrise;
+        IFormLinkGetter<IGodRaysGetter> IWeatherGodRaysGetter.GodRayLateSunrise => this.GodRayLateSunrise;
         #endregion
         #region GodRayEarlySunset
-        private readonly IFormLink<IGodRayGetter> _GodRayEarlySunset = new FormLink<IGodRayGetter>();
-        public IFormLink<IGodRayGetter> GodRayEarlySunset
+        private readonly IFormLink<IGodRaysGetter> _GodRayEarlySunset = new FormLink<IGodRaysGetter>();
+        public IFormLink<IGodRaysGetter> GodRayEarlySunset
         {
             get => _GodRayEarlySunset;
             set => _GodRayEarlySunset.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGodRayGetter> IWeatherGodRaysGetter.GodRayEarlySunset => this.GodRayEarlySunset;
+        IFormLinkGetter<IGodRaysGetter> IWeatherGodRaysGetter.GodRayEarlySunset => this.GodRayEarlySunset;
         #endregion
         #region GodRayLateSunset
-        private readonly IFormLink<IGodRayGetter> _GodRayLateSunset = new FormLink<IGodRayGetter>();
-        public IFormLink<IGodRayGetter> GodRayLateSunset
+        private readonly IFormLink<IGodRaysGetter> _GodRayLateSunset = new FormLink<IGodRaysGetter>();
+        public IFormLink<IGodRaysGetter> GodRayLateSunset
         {
             get => _GodRayLateSunset;
             set => _GodRayLateSunset.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGodRayGetter> IWeatherGodRaysGetter.GodRayLateSunset => this.GodRayLateSunset;
+        IFormLinkGetter<IGodRaysGetter> IWeatherGodRaysGetter.GodRayLateSunset => this.GodRayLateSunset;
         #endregion
 
         #region To String
@@ -706,14 +706,14 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IWeatherGodRays>,
         IWeatherGodRaysGetter
     {
-        new IFormLink<IGodRayGetter> GodRaySunrise { get; set; }
-        new IFormLink<IGodRayGetter> GodRayDay { get; set; }
-        new IFormLink<IGodRayGetter> GodRaySunset { get; set; }
-        new IFormLink<IGodRayGetter> GodRayNight { get; set; }
-        new IFormLink<IGodRayGetter> GodRayEarlySunrise { get; set; }
-        new IFormLink<IGodRayGetter> GodRayLateSunrise { get; set; }
-        new IFormLink<IGodRayGetter> GodRayEarlySunset { get; set; }
-        new IFormLink<IGodRayGetter> GodRayLateSunset { get; set; }
+        new IFormLink<IGodRaysGetter> GodRaySunrise { get; set; }
+        new IFormLink<IGodRaysGetter> GodRayDay { get; set; }
+        new IFormLink<IGodRaysGetter> GodRaySunset { get; set; }
+        new IFormLink<IGodRaysGetter> GodRayNight { get; set; }
+        new IFormLink<IGodRaysGetter> GodRayEarlySunrise { get; set; }
+        new IFormLink<IGodRaysGetter> GodRayLateSunrise { get; set; }
+        new IFormLink<IGodRaysGetter> GodRayEarlySunset { get; set; }
+        new IFormLink<IGodRaysGetter> GodRayLateSunset { get; set; }
     }
 
     public partial interface IWeatherGodRaysGetter :
@@ -729,14 +729,14 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WeatherGodRays_Registration.Instance;
-        IFormLinkGetter<IGodRayGetter> GodRaySunrise { get; }
-        IFormLinkGetter<IGodRayGetter> GodRayDay { get; }
-        IFormLinkGetter<IGodRayGetter> GodRaySunset { get; }
-        IFormLinkGetter<IGodRayGetter> GodRayNight { get; }
-        IFormLinkGetter<IGodRayGetter> GodRayEarlySunrise { get; }
-        IFormLinkGetter<IGodRayGetter> GodRayLateSunrise { get; }
-        IFormLinkGetter<IGodRayGetter> GodRayEarlySunset { get; }
-        IFormLinkGetter<IGodRayGetter> GodRayLateSunset { get; }
+        IFormLinkGetter<IGodRaysGetter> GodRaySunrise { get; }
+        IFormLinkGetter<IGodRaysGetter> GodRayDay { get; }
+        IFormLinkGetter<IGodRaysGetter> GodRaySunset { get; }
+        IFormLinkGetter<IGodRaysGetter> GodRayNight { get; }
+        IFormLinkGetter<IGodRaysGetter> GodRayEarlySunrise { get; }
+        IFormLinkGetter<IGodRaysGetter> GodRayLateSunrise { get; }
+        IFormLinkGetter<IGodRaysGetter> GodRayEarlySunset { get; }
+        IFormLinkGetter<IGodRaysGetter> GodRayLateSunset { get; }
 
     }
 
@@ -1523,14 +1523,14 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IGodRayGetter> GodRaySunrise => new FormLink<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IGodRayGetter> GodRayDay => new FormLink<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IGodRayGetter> GodRaySunset => new FormLink<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IGodRayGetter> GodRayNight => new FormLink<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
-        public IFormLinkGetter<IGodRayGetter> GodRayEarlySunrise => new FormLink<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x10, 0x4))));
-        public IFormLinkGetter<IGodRayGetter> GodRayLateSunrise => new FormLink<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x14, 0x4))));
-        public IFormLinkGetter<IGodRayGetter> GodRayEarlySunset => new FormLink<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x18, 0x4))));
-        public IFormLinkGetter<IGodRayGetter> GodRayLateSunset => new FormLink<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRaySunrise => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRayDay => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRaySunset => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRayNight => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRayEarlySunrise => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x10, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRayLateSunrise => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x14, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRayEarlySunset => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x18, 0x4))));
+        public IFormLinkGetter<IGodRaysGetter> GodRayLateSunset => new FormLink<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

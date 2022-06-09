@@ -129,6 +129,10 @@
       <Group name="AttractionRules" refName="AttractionRule" />
       <Group name="AudioCategorySnapshots" refName="AudioCategorySnapshot" />
       <Group name="AnimationSoundTagSets" refName="AnimationSoundTagSet" />
+      <Group name="NavigationMeshObstacleManagers" refName="NavigationMeshObstacleManager" />
+      <Group name="LensFlares" refName="LensFlare" />
+      <Group name="GodRays" refName="GodRays" />
+      <Group name="ObjectVisibilityManagers" refName="ObjectVisibilityManager" />
     </Fields>
   </Object>
 </Loqui>

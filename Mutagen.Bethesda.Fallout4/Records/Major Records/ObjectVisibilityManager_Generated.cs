@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -39,41 +40,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class LensFlare :
+    public partial class ObjectVisibilityManager :
         Fallout4MajorRecord,
-        IEquatable<ILensFlareGetter>,
-        ILensFlareInternal,
-        ILoquiObjectSetter<LensFlare>
+        IEquatable<IObjectVisibilityManagerGetter>,
+        ILoquiObjectSetter<ObjectVisibilityManager>,
+        IObjectVisibilityManagerInternal
     {
         #region Ctor
-        protected LensFlare()
+        protected ObjectVisibilityManager()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region ColorInfluence
-        public Single? ColorInfluence { get; set; }
+        #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.ColorInfluence => this.ColorInfluence;
-        #endregion
-        #region FadeDistanceRadiusScale
-        public Single? FadeDistanceRadiusScale { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.FadeDistanceRadiusScale => this.FadeDistanceRadiusScale;
-        #endregion
-        #region Sprites
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LensFlareSprite>? _Sprites;
-        public ExtendedList<LensFlareSprite>? Sprites
+        private ExtendedList<ObjectVisibilityManagerItem> _Objects = new ExtendedList<ObjectVisibilityManagerItem>();
+        public ExtendedList<ObjectVisibilityManagerItem> Objects
         {
-            get => this._Sprites;
-            set => this._Sprites = value;
+            get => this._Objects;
+            init => this._Objects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILensFlareSpriteGetter>? ILensFlareGetter.Sprites => _Sprites;
+        IReadOnlyList<IObjectVisibilityManagerItemGetter> IObjectVisibilityManagerGetter.Objects => _Objects;
         #endregion
 
         #endregion
@@ -84,7 +75,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LensFlareMixIn.Print(
+            ObjectVisibilityManagerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -102,9 +93,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.ColorInfluence = initialValue;
-                this.FadeDistanceRadiusScale = initialValue;
-                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -114,9 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem ColorInfluence,
-                TItem FadeDistanceRadiusScale,
-                TItem Sprites)
+                TItem Objects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -125,9 +112,7 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.ColorInfluence = ColorInfluence;
-                this.FadeDistanceRadiusScale = FadeDistanceRadiusScale;
-                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(Sprites, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -139,9 +124,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem ColorInfluence;
-            public TItem FadeDistanceRadiusScale;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>? Sprites;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>?>? Objects;
             #endregion
 
             #region Equals
@@ -155,17 +138,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.ColorInfluence, rhs.ColorInfluence)) return false;
-                if (!object.Equals(this.FadeDistanceRadiusScale, rhs.FadeDistanceRadiusScale)) return false;
-                if (!object.Equals(this.Sprites, rhs.Sprites)) return false;
+                if (!object.Equals(this.Objects, rhs.Objects)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ColorInfluence);
-                hash.Add(this.FadeDistanceRadiusScale);
-                hash.Add(this.Sprites);
+                hash.Add(this.Objects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -176,14 +155,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.ColorInfluence)) return false;
-                if (!eval(this.FadeDistanceRadiusScale)) return false;
-                if (this.Sprites != null)
+                if (this.Objects != null)
                 {
-                    if (!eval(this.Sprites.Overall)) return false;
-                    if (this.Sprites.Specific != null)
+                    if (!eval(this.Objects.Overall)) return false;
+                    if (this.Objects.Specific != null)
                     {
-                        foreach (var item in this.Sprites.Specific)
+                        foreach (var item in this.Objects.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -198,14 +175,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.ColorInfluence)) return true;
-                if (eval(this.FadeDistanceRadiusScale)) return true;
-                if (this.Sprites != null)
+                if (this.Objects != null)
                 {
-                    if (eval(this.Sprites.Overall)) return true;
-                    if (this.Sprites.Specific != null)
+                    if (eval(this.Objects.Overall)) return true;
+                    if (this.Objects.Specific != null)
                     {
-                        foreach (var item in this.Sprites.Specific)
+                        foreach (var item in this.Objects.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -219,7 +194,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LensFlare.Mask<R>();
+                var ret = new ObjectVisibilityManager.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -227,18 +202,16 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.ColorInfluence = eval(this.ColorInfluence);
-                obj.FadeDistanceRadiusScale = eval(this.FadeDistanceRadiusScale);
-                if (Sprites != null)
+                if (Objects != null)
                 {
-                    obj.Sprites = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>?>(eval(this.Sprites.Overall), Enumerable.Empty<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>());
-                    if (Sprites.Specific != null)
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>>());
+                    if (Objects.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>();
-                        obj.Sprites.Specific = l;
-                        foreach (var item in Sprites.Specific)
+                        var l = new List<MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>>();
+                        obj.Objects.Specific = l;
+                        foreach (var item in Objects.Specific)
                         {
-                            MaskItemIndexed<R, LensFlareSprite.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LensFlareSprite.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -250,36 +223,28 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(LensFlare.Mask<bool>? printMask = null)
+            public string Print(ObjectVisibilityManager.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, LensFlare.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ObjectVisibilityManager.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(LensFlare.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ObjectVisibilityManager.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.ColorInfluence ?? true)
+                    if ((printMask?.Objects?.Overall ?? true)
+                        && Objects is {} ObjectsItem)
                     {
-                        sb.AppendItem(ColorInfluence, "ColorInfluence");
-                    }
-                    if (printMask?.FadeDistanceRadiusScale ?? true)
-                    {
-                        sb.AppendItem(FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
-                    }
-                    if ((printMask?.Sprites?.Overall ?? true)
-                        && Sprites is {} SpritesItem)
-                    {
-                        sb.AppendLine("Sprites =>");
+                        sb.AppendLine("Objects =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(SpritesItem.Overall);
-                            if (SpritesItem.Specific != null)
+                            sb.AppendItem(ObjectsItem.Overall);
+                            if (ObjectsItem.Specific != null)
                             {
-                                foreach (var subItem in SpritesItem.Specific)
+                                foreach (var subItem in ObjectsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -300,23 +265,17 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? ColorInfluence;
-            public Exception? FadeDistanceRadiusScale;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>? Sprites;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectVisibilityManagerItem.ErrorMask?>>?>? Objects;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
+                ObjectVisibilityManager_FieldIndex enu = (ObjectVisibilityManager_FieldIndex)index;
                 switch (enu)
                 {
-                    case LensFlare_FieldIndex.ColorInfluence:
-                        return ColorInfluence;
-                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
-                        return FadeDistanceRadiusScale;
-                    case LensFlare_FieldIndex.Sprites:
-                        return Sprites;
+                    case ObjectVisibilityManager_FieldIndex.Objects:
+                        return Objects;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -324,17 +283,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
+                ObjectVisibilityManager_FieldIndex enu = (ObjectVisibilityManager_FieldIndex)index;
                 switch (enu)
                 {
-                    case LensFlare_FieldIndex.ColorInfluence:
-                        this.ColorInfluence = ex;
-                        break;
-                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
-                        this.FadeDistanceRadiusScale = ex;
-                        break;
-                    case LensFlare_FieldIndex.Sprites:
-                        this.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(ex, null);
+                    case ObjectVisibilityManager_FieldIndex.Objects:
+                        this.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectVisibilityManagerItem.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -344,17 +297,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
+                ObjectVisibilityManager_FieldIndex enu = (ObjectVisibilityManager_FieldIndex)index;
                 switch (enu)
                 {
-                    case LensFlare_FieldIndex.ColorInfluence:
-                        this.ColorInfluence = (Exception?)obj;
-                        break;
-                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
-                        this.FadeDistanceRadiusScale = (Exception?)obj;
-                        break;
-                    case LensFlare_FieldIndex.Sprites:
-                        this.Sprites = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>)obj;
+                    case ObjectVisibilityManager_FieldIndex.Objects:
+                        this.Objects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectVisibilityManagerItem.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -365,9 +312,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ColorInfluence != null) return true;
-                if (FadeDistanceRadiusScale != null) return true;
-                if (Sprites != null) return true;
+                if (Objects != null) return true;
                 return false;
             }
             #endregion
@@ -394,21 +339,15 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Objects is {} ObjectsItem)
                 {
-                    sb.AppendItem(ColorInfluence, "ColorInfluence");
-                }
-                {
-                    sb.AppendItem(FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
-                }
-                if (Sprites is {} SpritesItem)
-                {
-                    sb.AppendLine("Sprites =>");
+                    sb.AppendLine("Objects =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(SpritesItem.Overall);
-                        if (SpritesItem.Specific != null)
+                        sb.AppendItem(ObjectsItem.Overall);
+                        if (ObjectsItem.Specific != null)
                         {
-                            foreach (var subItem in SpritesItem.Specific)
+                            foreach (var subItem in ObjectsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -426,9 +365,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ColorInfluence = this.ColorInfluence.Combine(rhs.ColorInfluence);
-                ret.FadeDistanceRadiusScale = this.FadeDistanceRadiusScale.Combine(rhs.FadeDistanceRadiusScale);
-                ret.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(ExceptionExt.Combine(this.Sprites?.Overall, rhs.Sprites?.Overall), ExceptionExt.Combine(this.Sprites?.Specific, rhs.Sprites?.Specific));
+                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectVisibilityManagerItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -451,9 +388,7 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool ColorInfluence;
-            public bool FadeDistanceRadiusScale;
-            public LensFlareSprite.TranslationMask? Sprites;
+            public ObjectVisibilityManagerItem.TranslationMask? Objects;
             #endregion
 
             #region Ctors
@@ -462,8 +397,6 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ColorInfluence = defaultOn;
-                this.FadeDistanceRadiusScale = defaultOn;
             }
 
             #endregion
@@ -471,9 +404,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ColorInfluence, null));
-                ret.Add((FadeDistanceRadiusScale, null));
-                ret.Add((Sprites == null ? DefaultOn : !Sprites.GetCrystal().CopyNothing, Sprites?.GetCrystal()));
+                ret.Add((Objects == null ? DefaultOn : !Objects.GetCrystal().CopyNothing, Objects?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -485,14 +416,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LensFlare_Registration.TriggeringRecordType;
-        public LensFlare(FormKey formKey)
+        public static readonly RecordType GrupRecordType = ObjectVisibilityManager_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectVisibilityManagerCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectVisibilityManagerSetterCommon.Instance.RemapLinks(this, mapping);
+        public ObjectVisibilityManager(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private LensFlare(
+        private ObjectVisibilityManager(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -501,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal LensFlare(
+        internal ObjectVisibilityManager(
             FormKey formKey,
             ushort formVersion)
         {
@@ -510,12 +443,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public LensFlare(IFallout4Mod mod)
+        public ObjectVisibilityManager(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LensFlare(IFallout4Mod mod, string editorID)
+        public ObjectVisibilityManager(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -523,10 +456,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<LensFlare>.ToString(this);
+            return MajorRecordPrinter<ObjectVisibilityManager>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(ILensFlare);
+        protected override Type LinkType => typeof(IObjectVisibilityManager);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -535,16 +468,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ILensFlareGetter rhs) return false;
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IObjectVisibilityManagerGetter rhs) return false;
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ILensFlareGetter? obj)
+        public bool Equals(IObjectVisibilityManagerGetter? obj)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -552,23 +485,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LensFlareBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ObjectVisibilityManagerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((LensFlareBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ObjectVisibilityManagerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static LensFlare CreateFromBinary(
+        public new static ObjectVisibilityManager CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new LensFlare();
-            ((LensFlareSetterCommon)((ILensFlareGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ObjectVisibilityManager();
+            ((ObjectVisibilityManagerSetterCommon)((IObjectVisibilityManagerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -579,7 +512,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LensFlare item,
+            out ObjectVisibilityManager item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -594,88 +527,86 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((LensFlareSetterCommon)((ILensFlareGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ObjectVisibilityManagerSetterCommon)((IObjectVisibilityManagerGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new LensFlare GetNew()
+        internal static new ObjectVisibilityManager GetNew()
         {
-            return new LensFlare();
+            return new ObjectVisibilityManager();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILensFlare :
+    public partial interface IObjectVisibilityManager :
         IFallout4MajorRecordInternal,
-        ILensFlareGetter,
-        ILoquiObjectSetter<ILensFlareInternal>
+        IFormLinkContainer,
+        ILoquiObjectSetter<IObjectVisibilityManagerInternal>,
+        IObjectVisibilityManagerGetter
     {
-        new Single? ColorInfluence { get; set; }
-        new Single? FadeDistanceRadiusScale { get; set; }
-        new ExtendedList<LensFlareSprite>? Sprites { get; set; }
+        new ExtendedList<ObjectVisibilityManagerItem> Objects { get; }
     }
 
-    public partial interface ILensFlareInternal :
+    public partial interface IObjectVisibilityManagerInternal :
         IFallout4MajorRecordInternal,
-        ILensFlare,
-        ILensFlareGetter
+        IObjectVisibilityManager,
+        IObjectVisibilityManagerGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.LENS)]
-    public partial interface ILensFlareGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.OVIS)]
+    public partial interface IObjectVisibilityManagerGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ILensFlareGetter>,
-        IMapsToGetter<ILensFlareGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IObjectVisibilityManagerGetter>,
+        IMapsToGetter<IObjectVisibilityManagerGetter>
     {
-        static new ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
-        Single? ColorInfluence { get; }
-        Single? FadeDistanceRadiusScale { get; }
-        IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; }
+        static new ILoquiRegistration StaticRegistration => ObjectVisibilityManager_Registration.Instance;
+        IReadOnlyList<IObjectVisibilityManagerItemGetter> Objects { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LensFlareMixIn
+    public static partial class ObjectVisibilityManagerMixIn
     {
-        public static void Clear(this ILensFlareInternal item)
+        public static void Clear(this IObjectVisibilityManagerInternal item)
         {
-            ((LensFlareSetterCommon)((ILensFlareGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ObjectVisibilityManagerSetterCommon)((IObjectVisibilityManagerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LensFlare.Mask<bool> GetEqualsMask(
-            this ILensFlareGetter item,
-            ILensFlareGetter rhs,
+        public static ObjectVisibilityManager.Mask<bool> GetEqualsMask(
+            this IObjectVisibilityManagerGetter item,
+            IObjectVisibilityManagerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILensFlareGetter item,
+            this IObjectVisibilityManagerGetter item,
             string? name = null,
-            LensFlare.Mask<bool>? printMask = null)
+            ObjectVisibilityManager.Mask<bool>? printMask = null)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Print(
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILensFlareGetter item,
+            this IObjectVisibilityManagerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LensFlare.Mask<bool>? printMask = null)
+            ObjectVisibilityManager.Mask<bool>? printMask = null)
         {
-            ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Print(
+            ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -683,39 +614,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this ILensFlareGetter item,
-            ILensFlareGetter rhs,
-            LensFlare.TranslationMask? equalsMask = null)
+            this IObjectVisibilityManagerGetter item,
+            IObjectVisibilityManagerGetter rhs,
+            ObjectVisibilityManager.TranslationMask? equalsMask = null)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Equals(
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILensFlareInternal lhs,
-            ILensFlareGetter rhs,
-            out LensFlare.ErrorMask errorMask,
-            LensFlare.TranslationMask? copyMask = null)
+            this IObjectVisibilityManagerInternal lhs,
+            IObjectVisibilityManagerGetter rhs,
+            out ObjectVisibilityManager.ErrorMask errorMask,
+            ObjectVisibilityManager.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ObjectVisibilityManagerSetterTranslationCommon)((IObjectVisibilityManagerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = LensFlare.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectVisibilityManager.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILensFlareInternal lhs,
-            ILensFlareGetter rhs,
+            this IObjectVisibilityManagerInternal lhs,
+            IObjectVisibilityManagerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ObjectVisibilityManagerSetterTranslationCommon)((IObjectVisibilityManagerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -723,44 +654,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static LensFlare DeepCopy(
-            this ILensFlareGetter item,
-            LensFlare.TranslationMask? copyMask = null)
+        public static ObjectVisibilityManager DeepCopy(
+            this IObjectVisibilityManagerGetter item,
+            ObjectVisibilityManager.TranslationMask? copyMask = null)
         {
-            return ((LensFlareSetterTranslationCommon)((ILensFlareGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectVisibilityManagerSetterTranslationCommon)((IObjectVisibilityManagerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LensFlare DeepCopy(
-            this ILensFlareGetter item,
-            out LensFlare.ErrorMask errorMask,
-            LensFlare.TranslationMask? copyMask = null)
+        public static ObjectVisibilityManager DeepCopy(
+            this IObjectVisibilityManagerGetter item,
+            out ObjectVisibilityManager.ErrorMask errorMask,
+            ObjectVisibilityManager.TranslationMask? copyMask = null)
         {
-            return ((LensFlareSetterTranslationCommon)((ILensFlareGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectVisibilityManagerSetterTranslationCommon)((IObjectVisibilityManagerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LensFlare DeepCopy(
-            this ILensFlareGetter item,
+        public static ObjectVisibilityManager DeepCopy(
+            this IObjectVisibilityManagerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LensFlareSetterTranslationCommon)((ILensFlareGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectVisibilityManagerSetterTranslationCommon)((IObjectVisibilityManagerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static LensFlare Duplicate(
-            this ILensFlareGetter item,
+        public static ObjectVisibilityManager Duplicate(
+            this IObjectVisibilityManagerGetter item,
             FormKey formKey,
-            LensFlare.TranslationMask? copyMask = null)
+            ObjectVisibilityManager.TranslationMask? copyMask = null)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Duplicate(
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -770,11 +701,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILensFlareInternal item,
+            this IObjectVisibilityManagerInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((LensFlareSetterCommon)((ILensFlareGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ObjectVisibilityManagerSetterCommon)((IObjectVisibilityManagerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -790,7 +721,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum LensFlare_FieldIndex
+    internal enum ObjectVisibilityManager_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -798,47 +729,45 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ColorInfluence = 6,
-        FadeDistanceRadiusScale = 7,
-        Sprites = 8,
+        Objects = 6,
     }
     #endregion
 
     #region Registration
-    internal partial class LensFlare_Registration : ILoquiRegistration
+    internal partial class ObjectVisibilityManager_Registration : ILoquiRegistration
     {
-        public static readonly LensFlare_Registration Instance = new LensFlare_Registration();
+        public static readonly ObjectVisibilityManager_Registration Instance = new ObjectVisibilityManager_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 195,
+            msgID: 679,
             version: 0);
 
-        public const string GUID = "86dffb98-5938-4df0-81e8-640e64783482";
+        public const string GUID = "36b411ea-5290-414d-9cf5-8f29811d68a1";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(LensFlare.Mask<>);
+        public static readonly Type MaskType = typeof(ObjectVisibilityManager.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LensFlare.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ObjectVisibilityManager.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LensFlare);
+        public static readonly Type ClassType = typeof(ObjectVisibilityManager);
 
-        public static readonly Type GetterType = typeof(ILensFlareGetter);
+        public static readonly Type GetterType = typeof(IObjectVisibilityManagerGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILensFlare);
+        public static readonly Type SetterType = typeof(IObjectVisibilityManager);
 
-        public static readonly Type? InternalSetterType = typeof(ILensFlareInternal);
+        public static readonly Type? InternalSetterType = typeof(IObjectVisibilityManagerInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.LensFlare";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.ObjectVisibilityManager";
 
-        public const string Name = "LensFlare";
+        public const string Name = "ObjectVisibilityManager";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -846,21 +775,18 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.LENS;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.OVIS;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.LENS);
+            var triggers = RecordCollection.Factory(RecordTypes.OVIS);
             var all = RecordCollection.Factory(
-                RecordTypes.LENS,
-                RecordTypes.CNAM,
-                RecordTypes.DNAM,
-                RecordTypes.LFSP,
-                RecordTypes.FNAM,
-                RecordTypes.LFSD);
+                RecordTypes.OVIS,
+                RecordTypes.INDX,
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(LensFlareBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ObjectVisibilityManagerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -893,51 +819,50 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class LensFlareSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ObjectVisibilityManagerSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly LensFlareSetterCommon Instance = new LensFlareSetterCommon();
+        public new static readonly ObjectVisibilityManagerSetterCommon Instance = new ObjectVisibilityManagerSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILensFlareInternal item)
+        public void Clear(IObjectVisibilityManagerInternal item)
         {
             ClearPartial();
-            item.ColorInfluence = default;
-            item.FadeDistanceRadiusScale = default;
-            item.Sprites = null;
+            item.Objects.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (ILensFlareInternal)item);
+            Clear(item: (IObjectVisibilityManagerInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ILensFlareInternal)item);
+            Clear(item: (IObjectVisibilityManagerInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(ILensFlare obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IObjectVisibilityManager obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Objects.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILensFlareInternal item,
+            IObjectVisibilityManagerInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<ILensFlareInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IObjectVisibilityManagerInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LensFlareBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: LensFlareBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ObjectVisibilityManagerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ObjectVisibilityManagerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -946,7 +871,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (LensFlare)item,
+                item: (ObjectVisibilityManager)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -957,7 +882,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (LensFlare)item,
+                item: (ObjectVisibilityManager)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -965,17 +890,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class LensFlareCommon : Fallout4MajorRecordCommon
+    internal partial class ObjectVisibilityManagerCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly LensFlareCommon Instance = new LensFlareCommon();
+        public new static readonly ObjectVisibilityManagerCommon Instance = new ObjectVisibilityManagerCommon();
 
-        public LensFlare.Mask<bool> GetEqualsMask(
-            ILensFlareGetter item,
-            ILensFlareGetter rhs,
+        public ObjectVisibilityManager.Mask<bool> GetEqualsMask(
+            IObjectVisibilityManagerGetter item,
+            IObjectVisibilityManagerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LensFlare.Mask<bool>(false);
-            ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ObjectVisibilityManager.Mask<bool>(false);
+            ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -984,25 +909,23 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            ILensFlareGetter item,
-            ILensFlareGetter rhs,
-            LensFlare.Mask<bool> ret,
+            IObjectVisibilityManagerGetter item,
+            IObjectVisibilityManagerGetter rhs,
+            ObjectVisibilityManager.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ColorInfluence = item.ColorInfluence.EqualsWithin(rhs.ColorInfluence);
-            ret.FadeDistanceRadiusScale = item.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale);
-            ret.Sprites = item.Sprites.CollectionEqualsHelper(
-                rhs.Sprites,
+            ret.Objects = item.Objects.CollectionEqualsHelper(
+                rhs.Objects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            ILensFlareGetter item,
+            IObjectVisibilityManagerGetter item,
             string? name = null,
-            LensFlare.Mask<bool>? printMask = null)
+            ObjectVisibilityManager.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1014,18 +937,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            ILensFlareGetter item,
+            IObjectVisibilityManagerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LensFlare.Mask<bool>? printMask = null)
+            ObjectVisibilityManager.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"LensFlare =>");
+                sb.AppendLine($"ObjectVisibilityManager =>");
             }
             else
             {
-                sb.AppendLine($"{name} (LensFlare) =>");
+                sb.AppendLine($"{name} (ObjectVisibilityManager) =>");
             }
             using (sb.Brace())
             {
@@ -1037,31 +960,20 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            ILensFlareGetter item,
+            IObjectVisibilityManagerGetter item,
             StructuredStringBuilder sb,
-            LensFlare.Mask<bool>? printMask = null)
+            ObjectVisibilityManager.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.ColorInfluence ?? true)
-                && item.ColorInfluence is {} ColorInfluenceItem)
+            if (printMask?.Objects?.Overall ?? true)
             {
-                sb.AppendItem(ColorInfluenceItem, "ColorInfluence");
-            }
-            if ((printMask?.FadeDistanceRadiusScale ?? true)
-                && item.FadeDistanceRadiusScale is {} FadeDistanceRadiusScaleItem)
-            {
-                sb.AppendItem(FadeDistanceRadiusScaleItem, "FadeDistanceRadiusScale");
-            }
-            if ((printMask?.Sprites?.Overall ?? true)
-                && item.Sprites is {} SpritesItem)
-            {
-                sb.AppendLine("Sprites =>");
+                sb.AppendLine("Objects =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in SpritesItem)
+                    foreach (var subItem in item.Objects)
                     {
                         using (sb.Brace())
                         {
@@ -1072,39 +984,39 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-        public static LensFlare_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static ObjectVisibilityManager_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new LensFlare_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new ObjectVisibilityManager_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1112,23 +1024,15 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILensFlareGetter? lhs,
-            ILensFlareGetter? rhs,
+            IObjectVisibilityManagerGetter? lhs,
+            IObjectVisibilityManagerGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ObjectVisibilityManager_FieldIndex.Objects) ?? true))
             {
-                if (!lhs.ColorInfluence.EqualsWithin(rhs.ColorInfluence)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.FadeDistanceRadiusScale) ?? true))
-            {
-                if (!lhs.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
-            {
-                if (!lhs.Sprites.SequenceEqualNullable(rhs.Sprites, (l, r) => ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LensFlare_FieldIndex.Sprites)))) return false;
+                if (!lhs.Objects.SequenceEqual(rhs.Objects, (l, r) => ((ObjectVisibilityManagerItemCommon)((IObjectVisibilityManagerItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectVisibilityManager_FieldIndex.Objects)))) return false;
             }
             return true;
         }
@@ -1139,8 +1043,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ILensFlareGetter?)lhs,
-                rhs: rhs as ILensFlareGetter,
+                lhs: (IObjectVisibilityManagerGetter?)lhs,
+                rhs: rhs as IObjectVisibilityManagerGetter,
                 crystal: crystal);
         }
         
@@ -1150,35 +1054,27 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ILensFlareGetter?)lhs,
-                rhs: rhs as ILensFlareGetter,
+                lhs: (IObjectVisibilityManagerGetter?)lhs,
+                rhs: rhs as IObjectVisibilityManagerGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(ILensFlareGetter item)
+        public virtual int GetHashCode(IObjectVisibilityManagerGetter item)
         {
             var hash = new HashCode();
-            if (item.ColorInfluence is {} ColorInfluenceitem)
-            {
-                hash.Add(ColorInfluenceitem);
-            }
-            if (item.FadeDistanceRadiusScale is {} FadeDistanceRadiusScaleitem)
-            {
-                hash.Add(FadeDistanceRadiusScaleitem);
-            }
-            hash.Add(item.Sprites);
+            hash.Add(item.Objects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (ILensFlareGetter)item);
+            return GetHashCode(item: (IObjectVisibilityManagerGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ILensFlareGetter)item);
+            return GetHashCode(item: (IObjectVisibilityManagerGetter)item);
         }
         
         #endregion
@@ -1186,26 +1082,30 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return LensFlare.GetNew();
+            return ObjectVisibilityManager.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILensFlareGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectVisibilityManagerGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
+            foreach (var item in obj.Objects.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             yield break;
         }
         
         #region Duplicate
-        public LensFlare Duplicate(
-            ILensFlareGetter item,
+        public ObjectVisibilityManager Duplicate(
+            IObjectVisibilityManagerGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new LensFlare(formKey);
+            var newRec = new ObjectVisibilityManager(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1216,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILensFlareGetter)item,
+                item: (IObjectVisibilityManagerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1227,7 +1127,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILensFlareGetter)item,
+                item: (IObjectVisibilityManagerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1237,14 +1137,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class LensFlareSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ObjectVisibilityManagerSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly LensFlareSetterTranslationCommon Instance = new LensFlareSetterTranslationCommon();
+        public new static readonly ObjectVisibilityManagerSetterTranslationCommon Instance = new ObjectVisibilityManagerSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILensFlareInternal item,
-            ILensFlareGetter rhs,
+            IObjectVisibilityManagerInternal item,
+            IObjectVisibilityManagerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1258,8 +1158,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            ILensFlare item,
-            ILensFlareGetter rhs,
+            IObjectVisibilityManager item,
+            IObjectVisibilityManagerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1270,35 +1170,19 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ObjectVisibilityManager_FieldIndex.Objects) ?? true))
             {
-                item.ColorInfluence = rhs.ColorInfluence;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.FadeDistanceRadiusScale) ?? true))
-            {
-                item.FadeDistanceRadiusScale = rhs.FadeDistanceRadiusScale;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
-            {
-                errorMask?.PushIndex((int)LensFlare_FieldIndex.Sprites);
+                errorMask?.PushIndex((int)ObjectVisibilityManager_FieldIndex.Objects);
                 try
                 {
-                    if ((rhs.Sprites != null))
-                    {
-                        item.Sprites = 
-                            rhs.Sprites
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<LensFlareSprite>();
-                    }
-                    else
-                    {
-                        item.Sprites = null;
-                    }
+                    item.Objects.SetTo(
+                        rhs.Objects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1320,8 +1204,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILensFlareInternal)item,
-                rhs: (ILensFlareGetter)rhs,
+                item: (IObjectVisibilityManagerInternal)item,
+                rhs: (IObjectVisibilityManagerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1335,8 +1219,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILensFlare)item,
-                rhs: (ILensFlareGetter)rhs,
+                item: (IObjectVisibilityManager)item,
+                rhs: (IObjectVisibilityManagerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1350,8 +1234,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILensFlareInternal)item,
-                rhs: (ILensFlareGetter)rhs,
+                item: (IObjectVisibilityManagerInternal)item,
+                rhs: (IObjectVisibilityManagerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1365,8 +1249,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILensFlare)item,
-                rhs: (ILensFlareGetter)rhs,
+                item: (IObjectVisibilityManager)item,
+                rhs: (IObjectVisibilityManagerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1374,12 +1258,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public LensFlare DeepCopy(
-            ILensFlareGetter item,
-            LensFlare.TranslationMask? copyMask = null)
+        public ObjectVisibilityManager DeepCopy(
+            IObjectVisibilityManagerGetter item,
+            ObjectVisibilityManager.TranslationMask? copyMask = null)
         {
-            LensFlare ret = (LensFlare)((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).GetNew();
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectVisibilityManager ret = (ObjectVisibilityManager)((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).GetNew();
+            ((ObjectVisibilityManagerSetterTranslationCommon)((IObjectVisibilityManagerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1388,30 +1272,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public LensFlare DeepCopy(
-            ILensFlareGetter item,
-            out LensFlare.ErrorMask errorMask,
-            LensFlare.TranslationMask? copyMask = null)
+        public ObjectVisibilityManager DeepCopy(
+            IObjectVisibilityManagerGetter item,
+            out ObjectVisibilityManager.ErrorMask errorMask,
+            ObjectVisibilityManager.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LensFlare ret = (LensFlare)((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).GetNew();
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectVisibilityManager ret = (ObjectVisibilityManager)((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).GetNew();
+            ((ObjectVisibilityManagerSetterTranslationCommon)((IObjectVisibilityManagerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = LensFlare.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectVisibilityManager.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public LensFlare DeepCopy(
-            ILensFlareGetter item,
+        public ObjectVisibilityManager DeepCopy(
+            IObjectVisibilityManagerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LensFlare ret = (LensFlare)((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).GetNew();
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectVisibilityManager ret = (ObjectVisibilityManager)((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).GetNew();
+            ((ObjectVisibilityManagerSetterTranslationCommon)((IObjectVisibilityManagerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1427,21 +1311,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LensFlare
+    public partial class ObjectVisibilityManager
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ObjectVisibilityManager_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectVisibilityManager_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LensFlareCommon.Instance;
+        protected override object CommonInstance() => ObjectVisibilityManagerCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return LensFlareSetterCommon.Instance;
+            return ObjectVisibilityManagerSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LensFlareSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ObjectVisibilityManagerSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1452,14 +1336,14 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LensFlareBinaryWriteTranslation :
+    public partial class ObjectVisibilityManagerBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LensFlareBinaryWriteTranslation Instance = new LensFlareBinaryWriteTranslation();
+        public new readonly static ObjectVisibilityManagerBinaryWriteTranslation Instance = new ObjectVisibilityManagerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            ILensFlareGetter item,
+            IObjectVisibilityManagerGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
@@ -1467,23 +1351,13 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectVisibilityManagerItemGetter>.Instance.Write(
                 writer: writer,
-                item: item.ColorInfluence,
-                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.FadeDistanceRadiusScale,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILensFlareSpriteGetter>.Instance.WriteWithCounter(
-                writer: writer,
-                items: item.Sprites,
-                counterType: RecordTypes.LFSP,
-                counterLength: 4,
-                transl: (MutagenWriter subWriter, ILensFlareSpriteGetter subItem, TypedWriteParams? conv) =>
+                items: item.Objects,
+                transl: (MutagenWriter subWriter, IObjectVisibilityManagerItemGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
-                    ((LensFlareSpriteBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((ObjectVisibilityManagerItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1492,12 +1366,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         public void Write(
             MutagenWriter writer,
-            ILensFlareGetter item,
+            IObjectVisibilityManagerGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LENS)))
+                record: translationParams.ConvertToCustom(RecordTypes.OVIS)))
             {
                 try
                 {
@@ -1524,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILensFlareGetter)item,
+                item: (IObjectVisibilityManagerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1535,7 +1409,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILensFlareGetter)item,
+                item: (IObjectVisibilityManagerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1546,20 +1420,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILensFlareGetter)item,
+                item: (IObjectVisibilityManagerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LensFlareBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ObjectVisibilityManagerBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
+        public new readonly static ObjectVisibilityManagerBinaryCreateTranslation Instance = new ObjectVisibilityManagerBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.LENS;
+        public override RecordType RecordType => RecordTypes.OVIS;
         public static void FillBinaryStructs(
-            ILensFlareInternal item,
+            IObjectVisibilityManagerInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1568,7 +1442,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            ILensFlareInternal item,
+            IObjectVisibilityManagerInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1579,30 +1453,16 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.CNAM:
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.DATA:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ColorInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LensFlare_FieldIndex.ColorInfluence;
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FadeDistanceRadiusScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
-                }
-                case RecordTypeInts.LFSP:
-                {
-                    item.Sprites = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LensFlareSprite>.Instance.ParsePerItem(
+                    item.Objects.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectVisibilityManagerItem>.Instance.Parse(
                             reader: frame,
-                            countLengthLength: 4,
-                            countRecord: RecordTypes.LFSP,
-                            triggeringRecord: LensFlareSprite_Registration.TriggerSpecs,
+                            triggeringRecord: ObjectVisibilityManagerItem_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: LensFlareSprite.TryCreateFromBinary)
-                        .CastExtendedList<LensFlareSprite>();
-                    return (int)LensFlare_FieldIndex.Sprites;
+                            transl: ObjectVisibilityManagerItem.TryCreateFromBinary));
+                    return (int)ObjectVisibilityManager_FieldIndex.Objects;
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1621,7 +1481,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class LensFlareBinaryTranslationMixIn
+    public static class ObjectVisibilityManagerBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1630,53 +1490,46 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class LensFlareBinaryOverlay :
+    internal partial class ObjectVisibilityManagerBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        ILensFlareGetter
+        IObjectVisibilityManagerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ObjectVisibilityManager_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectVisibilityManager_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LensFlareCommon.Instance;
+        protected override object CommonInstance() => ObjectVisibilityManagerCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LensFlareSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ObjectVisibilityManagerSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectVisibilityManagerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LensFlareBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ObjectVisibilityManagerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((LensFlareBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ObjectVisibilityManagerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILensFlare);
+        protected override Type LinkType => typeof(IObjectVisibilityManager);
 
 
-        #region ColorInfluence
-        private int? _ColorInfluenceLocation;
-        public Single? ColorInfluence => _ColorInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region FadeDistanceRadiusScale
-        private int? _FadeDistanceRadiusScaleLocation;
-        public Single? FadeDistanceRadiusScale => _FadeDistanceRadiusScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FadeDistanceRadiusScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        public IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; private set; }
+        public IReadOnlyList<IObjectVisibilityManagerItemGetter> Objects { get; private set; } = Array.Empty<IObjectVisibilityManagerItemGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected LensFlareBinaryOverlay(
+        protected ObjectVisibilityManagerBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1686,13 +1539,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ILensFlareGetter LensFlareFactory(
+        public static IObjectVisibilityManagerGetter ObjectVisibilityManagerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new LensFlareBinaryOverlay(
+            var ret = new ObjectVisibilityManagerBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
@@ -1713,12 +1566,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ILensFlareGetter LensFlareFactory(
+        public static IObjectVisibilityManagerGetter ObjectVisibilityManagerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return LensFlareFactory(
+            return ObjectVisibilityManagerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1736,28 +1589,15 @@ namespace Mutagen.Bethesda.Fallout4
             type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.CNAM:
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.DATA:
                 {
-                    _ColorInfluenceLocation = (stream.Position - offset);
-                    return (int)LensFlare_FieldIndex.ColorInfluence;
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    _FadeDistanceRadiusScaleLocation = (stream.Position - offset);
-                    return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
-                }
-                case RecordTypeInts.LFSP:
-                {
-                    this.Sprites = BinaryOverlayList.FactoryByCountPerItem<ILensFlareSpriteGetter>(
+                    this.Objects = this.ParseRepeatedTypelessSubrecord<IObjectVisibilityManagerItemGetter>(
                         stream: stream,
-                        package: _package,
-                        countLength: 4,
-                        trigger: LensFlareSprite_Registration.TriggerSpecs,
-                        countType: RecordTypes.LFSP,
                         parseParams: parseParams,
-                        getter: (s, p, recConv) => LensFlareSpriteBinaryOverlay.LensFlareSpriteFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
-                    return (int)LensFlare_FieldIndex.Sprites;
+                        trigger: ObjectVisibilityManagerItem_Registration.TriggerSpecs,
+                        factory: ObjectVisibilityManagerItemBinaryOverlay.ObjectVisibilityManagerItemFactory);
+                    return (int)ObjectVisibilityManager_FieldIndex.Objects;
                 }
                 default:
                     return base.FillRecordType(
@@ -1775,7 +1615,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LensFlareMixIn.Print(
+            ObjectVisibilityManagerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1785,7 +1625,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<LensFlare>.ToString(this);
+            return MajorRecordPrinter<ObjectVisibilityManager>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1795,16 +1635,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ILensFlareGetter rhs) return false;
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IObjectVisibilityManagerGetter rhs) return false;
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ILensFlareGetter? obj)
+        public bool Equals(IObjectVisibilityManagerGetter? obj)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

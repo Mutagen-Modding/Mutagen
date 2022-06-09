@@ -333,14 +333,14 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IImageSpaceGetter> ICellGetter.ImageSpace => this.ImageSpace;
         #endregion
         #region GodRays
-        private readonly IFormLinkNullable<IGodRayGetter> _GodRays = new FormLinkNullable<IGodRayGetter>();
-        public IFormLinkNullable<IGodRayGetter> GodRays
+        private readonly IFormLinkNullable<IGodRaysGetter> _GodRays = new FormLinkNullable<IGodRaysGetter>();
+        public IFormLinkNullable<IGodRaysGetter> GodRays
         {
             get => _GodRays;
             set => _GodRays.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGodRayGetter> ICellGetter.GodRays => this.GodRays;
+        IFormLinkNullableGetter<IGodRaysGetter> ICellGetter.GodRays => this.GodRays;
         #endregion
         #region PhysicsReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
-        new IFormLinkNullable<IGodRayGetter> GodRays { get; set; }
+        new IFormLinkNullable<IGodRaysGetter> GodRays { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; set; }
         new ExtendedList<UInt32> CombinedMeshes { get; }
         new ExtendedList<CellCombinedMeshReference> CombinedMeshReferences { get; }
@@ -2748,7 +2748,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
         IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
-        IFormLinkNullableGetter<IGodRayGetter> GodRays { get; }
+        IFormLinkNullableGetter<IGodRaysGetter> GodRays { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; }
         IReadOnlyList<UInt32> CombinedMeshes { get; }
         IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences { get; }
@@ -6557,7 +6557,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region GodRays
         private int? _GodRaysLocation;
-        public IFormLinkNullableGetter<IGodRayGetter> GodRays => _GodRaysLocation.HasValue ? new FormLinkNullable<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GodRaysLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGodRayGetter>.Null;
+        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => _GodRaysLocation.HasValue ? new FormLinkNullable<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GodRaysLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGodRaysGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; private set; }
         #region CombinedMeshLogic

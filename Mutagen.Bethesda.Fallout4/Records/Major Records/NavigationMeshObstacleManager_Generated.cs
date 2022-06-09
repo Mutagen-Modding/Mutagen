@@ -39,41 +39,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class LensFlare :
+    public partial class NavigationMeshObstacleManager :
         Fallout4MajorRecord,
-        IEquatable<ILensFlareGetter>,
-        ILensFlareInternal,
-        ILoquiObjectSetter<LensFlare>
+        IEquatable<INavigationMeshObstacleManagerGetter>,
+        ILoquiObjectSetter<NavigationMeshObstacleManager>,
+        INavigationMeshObstacleManagerInternal
     {
         #region Ctor
-        protected LensFlare()
+        protected NavigationMeshObstacleManager()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region ColorInfluence
-        public Single? ColorInfluence { get; set; }
+        #region SubObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.ColorInfluence => this.ColorInfluence;
-        #endregion
-        #region FadeDistanceRadiusScale
-        public Single? FadeDistanceRadiusScale { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.FadeDistanceRadiusScale => this.FadeDistanceRadiusScale;
-        #endregion
-        #region Sprites
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LensFlareSprite>? _Sprites;
-        public ExtendedList<LensFlareSprite>? Sprites
+        private ExtendedList<NavigationMeshObstacleManagerSubObject> _SubObjects = new ExtendedList<NavigationMeshObstacleManagerSubObject>();
+        public ExtendedList<NavigationMeshObstacleManagerSubObject> SubObjects
         {
-            get => this._Sprites;
-            set => this._Sprites = value;
+            get => this._SubObjects;
+            init => this._SubObjects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILensFlareSpriteGetter>? ILensFlareGetter.Sprites => _Sprites;
+        IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> INavigationMeshObstacleManagerGetter.SubObjects => _SubObjects;
         #endregion
 
         #endregion
@@ -84,7 +74,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LensFlareMixIn.Print(
+            NavigationMeshObstacleManagerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -102,9 +92,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.ColorInfluence = initialValue;
-                this.FadeDistanceRadiusScale = initialValue;
-                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
+                this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -114,9 +102,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem ColorInfluence,
-                TItem FadeDistanceRadiusScale,
-                TItem Sprites)
+                TItem SubObjects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -125,9 +111,7 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.ColorInfluence = ColorInfluence;
-                this.FadeDistanceRadiusScale = FadeDistanceRadiusScale;
-                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(Sprites, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
+                this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(SubObjects, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -139,9 +123,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem ColorInfluence;
-            public TItem FadeDistanceRadiusScale;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>? Sprites;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>? SubObjects;
             #endregion
 
             #region Equals
@@ -155,17 +137,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.ColorInfluence, rhs.ColorInfluence)) return false;
-                if (!object.Equals(this.FadeDistanceRadiusScale, rhs.FadeDistanceRadiusScale)) return false;
-                if (!object.Equals(this.Sprites, rhs.Sprites)) return false;
+                if (!object.Equals(this.SubObjects, rhs.SubObjects)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ColorInfluence);
-                hash.Add(this.FadeDistanceRadiusScale);
-                hash.Add(this.Sprites);
+                hash.Add(this.SubObjects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -176,14 +154,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.ColorInfluence)) return false;
-                if (!eval(this.FadeDistanceRadiusScale)) return false;
-                if (this.Sprites != null)
+                if (this.SubObjects != null)
                 {
-                    if (!eval(this.Sprites.Overall)) return false;
-                    if (this.Sprites.Specific != null)
+                    if (!eval(this.SubObjects.Overall)) return false;
+                    if (this.SubObjects.Specific != null)
                     {
-                        foreach (var item in this.Sprites.Specific)
+                        foreach (var item in this.SubObjects.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -198,14 +174,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.ColorInfluence)) return true;
-                if (eval(this.FadeDistanceRadiusScale)) return true;
-                if (this.Sprites != null)
+                if (this.SubObjects != null)
                 {
-                    if (eval(this.Sprites.Overall)) return true;
-                    if (this.Sprites.Specific != null)
+                    if (eval(this.SubObjects.Overall)) return true;
+                    if (this.SubObjects.Specific != null)
                     {
-                        foreach (var item in this.Sprites.Specific)
+                        foreach (var item in this.SubObjects.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -219,7 +193,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LensFlare.Mask<R>();
+                var ret = new NavigationMeshObstacleManager.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -227,18 +201,16 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.ColorInfluence = eval(this.ColorInfluence);
-                obj.FadeDistanceRadiusScale = eval(this.FadeDistanceRadiusScale);
-                if (Sprites != null)
+                if (SubObjects != null)
                 {
-                    obj.Sprites = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>?>(eval(this.Sprites.Overall), Enumerable.Empty<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>());
-                    if (Sprites.Specific != null)
+                    obj.SubObjects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>?>(eval(this.SubObjects.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>());
+                    if (SubObjects.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>();
-                        obj.Sprites.Specific = l;
-                        foreach (var item in Sprites.Specific)
+                        var l = new List<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>();
+                        obj.SubObjects.Specific = l;
+                        foreach (var item in SubObjects.Specific)
                         {
-                            MaskItemIndexed<R, LensFlareSprite.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LensFlareSprite.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -250,36 +222,28 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(LensFlare.Mask<bool>? printMask = null)
+            public string Print(NavigationMeshObstacleManager.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, LensFlare.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavigationMeshObstacleManager.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(LensFlare.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(NavigationMeshObstacleManager.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.ColorInfluence ?? true)
+                    if ((printMask?.SubObjects?.Overall ?? true)
+                        && SubObjects is {} SubObjectsItem)
                     {
-                        sb.AppendItem(ColorInfluence, "ColorInfluence");
-                    }
-                    if (printMask?.FadeDistanceRadiusScale ?? true)
-                    {
-                        sb.AppendItem(FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
-                    }
-                    if ((printMask?.Sprites?.Overall ?? true)
-                        && Sprites is {} SpritesItem)
-                    {
-                        sb.AppendLine("Sprites =>");
+                        sb.AppendLine("SubObjects =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(SpritesItem.Overall);
-                            if (SpritesItem.Specific != null)
+                            sb.AppendItem(SubObjectsItem.Overall);
+                            if (SubObjectsItem.Specific != null)
                             {
-                                foreach (var subItem in SpritesItem.Specific)
+                                foreach (var subItem in SubObjectsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -300,23 +264,17 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? ColorInfluence;
-            public Exception? FadeDistanceRadiusScale;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>? Sprites;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>? SubObjects;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
+                NavigationMeshObstacleManager_FieldIndex enu = (NavigationMeshObstacleManager_FieldIndex)index;
                 switch (enu)
                 {
-                    case LensFlare_FieldIndex.ColorInfluence:
-                        return ColorInfluence;
-                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
-                        return FadeDistanceRadiusScale;
-                    case LensFlare_FieldIndex.Sprites:
-                        return Sprites;
+                    case NavigationMeshObstacleManager_FieldIndex.SubObjects:
+                        return SubObjects;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -324,17 +282,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
+                NavigationMeshObstacleManager_FieldIndex enu = (NavigationMeshObstacleManager_FieldIndex)index;
                 switch (enu)
                 {
-                    case LensFlare_FieldIndex.ColorInfluence:
-                        this.ColorInfluence = ex;
-                        break;
-                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
-                        this.FadeDistanceRadiusScale = ex;
-                        break;
-                    case LensFlare_FieldIndex.Sprites:
-                        this.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(ex, null);
+                    case NavigationMeshObstacleManager_FieldIndex.SubObjects:
+                        this.SubObjects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -344,17 +296,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
+                NavigationMeshObstacleManager_FieldIndex enu = (NavigationMeshObstacleManager_FieldIndex)index;
                 switch (enu)
                 {
-                    case LensFlare_FieldIndex.ColorInfluence:
-                        this.ColorInfluence = (Exception?)obj;
-                        break;
-                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
-                        this.FadeDistanceRadiusScale = (Exception?)obj;
-                        break;
-                    case LensFlare_FieldIndex.Sprites:
-                        this.Sprites = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>)obj;
+                    case NavigationMeshObstacleManager_FieldIndex.SubObjects:
+                        this.SubObjects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -365,9 +311,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ColorInfluence != null) return true;
-                if (FadeDistanceRadiusScale != null) return true;
-                if (Sprites != null) return true;
+                if (SubObjects != null) return true;
                 return false;
             }
             #endregion
@@ -394,21 +338,15 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (SubObjects is {} SubObjectsItem)
                 {
-                    sb.AppendItem(ColorInfluence, "ColorInfluence");
-                }
-                {
-                    sb.AppendItem(FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
-                }
-                if (Sprites is {} SpritesItem)
-                {
-                    sb.AppendLine("Sprites =>");
+                    sb.AppendLine("SubObjects =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(SpritesItem.Overall);
-                        if (SpritesItem.Specific != null)
+                        sb.AppendItem(SubObjectsItem.Overall);
+                        if (SubObjectsItem.Specific != null)
                         {
-                            foreach (var subItem in SpritesItem.Specific)
+                            foreach (var subItem in SubObjectsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -426,9 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ColorInfluence = this.ColorInfluence.Combine(rhs.ColorInfluence);
-                ret.FadeDistanceRadiusScale = this.FadeDistanceRadiusScale.Combine(rhs.FadeDistanceRadiusScale);
-                ret.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(ExceptionExt.Combine(this.Sprites?.Overall, rhs.Sprites?.Overall), ExceptionExt.Combine(this.Sprites?.Specific, rhs.Sprites?.Specific));
+                ret.SubObjects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>(ExceptionExt.Combine(this.SubObjects?.Overall, rhs.SubObjects?.Overall), ExceptionExt.Combine(this.SubObjects?.Specific, rhs.SubObjects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -451,9 +387,7 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool ColorInfluence;
-            public bool FadeDistanceRadiusScale;
-            public LensFlareSprite.TranslationMask? Sprites;
+            public NavigationMeshObstacleManagerSubObject.TranslationMask? SubObjects;
             #endregion
 
             #region Ctors
@@ -462,8 +396,6 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ColorInfluence = defaultOn;
-                this.FadeDistanceRadiusScale = defaultOn;
             }
 
             #endregion
@@ -471,9 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ColorInfluence, null));
-                ret.Add((FadeDistanceRadiusScale, null));
-                ret.Add((Sprites == null ? DefaultOn : !Sprites.GetCrystal().CopyNothing, Sprites?.GetCrystal()));
+                ret.Add((SubObjects == null ? DefaultOn : !SubObjects.GetCrystal().CopyNothing, SubObjects?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -485,14 +415,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LensFlare_Registration.TriggeringRecordType;
-        public LensFlare(FormKey formKey)
+        public static readonly RecordType GrupRecordType = NavigationMeshObstacleManager_Registration.TriggeringRecordType;
+        public NavigationMeshObstacleManager(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private LensFlare(
+        private NavigationMeshObstacleManager(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -501,7 +431,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal LensFlare(
+        internal NavigationMeshObstacleManager(
             FormKey formKey,
             ushort formVersion)
         {
@@ -510,12 +440,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public LensFlare(IFallout4Mod mod)
+        public NavigationMeshObstacleManager(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LensFlare(IFallout4Mod mod, string editorID)
+        public NavigationMeshObstacleManager(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -523,10 +453,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<LensFlare>.ToString(this);
+            return MajorRecordPrinter<NavigationMeshObstacleManager>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(ILensFlare);
+        protected override Type LinkType => typeof(INavigationMeshObstacleManager);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -535,16 +465,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ILensFlareGetter rhs) return false;
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INavigationMeshObstacleManagerGetter rhs) return false;
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ILensFlareGetter? obj)
+        public bool Equals(INavigationMeshObstacleManagerGetter? obj)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -552,23 +482,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LensFlareBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NavigationMeshObstacleManagerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((LensFlareBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NavigationMeshObstacleManagerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static LensFlare CreateFromBinary(
+        public new static NavigationMeshObstacleManager CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new LensFlare();
-            ((LensFlareSetterCommon)((ILensFlareGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new NavigationMeshObstacleManager();
+            ((NavigationMeshObstacleManagerSetterCommon)((INavigationMeshObstacleManagerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -579,7 +509,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LensFlare item,
+            out NavigationMeshObstacleManager item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -594,88 +524,84 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((LensFlareSetterCommon)((ILensFlareGetter)this).CommonSetterInstance()!).Clear(this);
+            ((NavigationMeshObstacleManagerSetterCommon)((INavigationMeshObstacleManagerGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new LensFlare GetNew()
+        internal static new NavigationMeshObstacleManager GetNew()
         {
-            return new LensFlare();
+            return new NavigationMeshObstacleManager();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILensFlare :
+    public partial interface INavigationMeshObstacleManager :
         IFallout4MajorRecordInternal,
-        ILensFlareGetter,
-        ILoquiObjectSetter<ILensFlareInternal>
+        ILoquiObjectSetter<INavigationMeshObstacleManagerInternal>,
+        INavigationMeshObstacleManagerGetter
     {
-        new Single? ColorInfluence { get; set; }
-        new Single? FadeDistanceRadiusScale { get; set; }
-        new ExtendedList<LensFlareSprite>? Sprites { get; set; }
+        new ExtendedList<NavigationMeshObstacleManagerSubObject> SubObjects { get; }
     }
 
-    public partial interface ILensFlareInternal :
+    public partial interface INavigationMeshObstacleManagerInternal :
         IFallout4MajorRecordInternal,
-        ILensFlare,
-        ILensFlareGetter
+        INavigationMeshObstacleManager,
+        INavigationMeshObstacleManagerGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.LENS)]
-    public partial interface ILensFlareGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.NOCM)]
+    public partial interface INavigationMeshObstacleManagerGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ILensFlareGetter>,
-        IMapsToGetter<ILensFlareGetter>
+        ILoquiObject<INavigationMeshObstacleManagerGetter>,
+        IMapsToGetter<INavigationMeshObstacleManagerGetter>
     {
-        static new ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
-        Single? ColorInfluence { get; }
-        Single? FadeDistanceRadiusScale { get; }
-        IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; }
+        static new ILoquiRegistration StaticRegistration => NavigationMeshObstacleManager_Registration.Instance;
+        IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LensFlareMixIn
+    public static partial class NavigationMeshObstacleManagerMixIn
     {
-        public static void Clear(this ILensFlareInternal item)
+        public static void Clear(this INavigationMeshObstacleManagerInternal item)
         {
-            ((LensFlareSetterCommon)((ILensFlareGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((NavigationMeshObstacleManagerSetterCommon)((INavigationMeshObstacleManagerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LensFlare.Mask<bool> GetEqualsMask(
-            this ILensFlareGetter item,
-            ILensFlareGetter rhs,
+        public static NavigationMeshObstacleManager.Mask<bool> GetEqualsMask(
+            this INavigationMeshObstacleManagerGetter item,
+            INavigationMeshObstacleManagerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILensFlareGetter item,
+            this INavigationMeshObstacleManagerGetter item,
             string? name = null,
-            LensFlare.Mask<bool>? printMask = null)
+            NavigationMeshObstacleManager.Mask<bool>? printMask = null)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Print(
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILensFlareGetter item,
+            this INavigationMeshObstacleManagerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LensFlare.Mask<bool>? printMask = null)
+            NavigationMeshObstacleManager.Mask<bool>? printMask = null)
         {
-            ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Print(
+            ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -683,39 +609,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this ILensFlareGetter item,
-            ILensFlareGetter rhs,
-            LensFlare.TranslationMask? equalsMask = null)
+            this INavigationMeshObstacleManagerGetter item,
+            INavigationMeshObstacleManagerGetter rhs,
+            NavigationMeshObstacleManager.TranslationMask? equalsMask = null)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Equals(
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILensFlareInternal lhs,
-            ILensFlareGetter rhs,
-            out LensFlare.ErrorMask errorMask,
-            LensFlare.TranslationMask? copyMask = null)
+            this INavigationMeshObstacleManagerInternal lhs,
+            INavigationMeshObstacleManagerGetter rhs,
+            out NavigationMeshObstacleManager.ErrorMask errorMask,
+            NavigationMeshObstacleManager.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavigationMeshObstacleManagerSetterTranslationCommon)((INavigationMeshObstacleManagerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = LensFlare.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NavigationMeshObstacleManager.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILensFlareInternal lhs,
-            ILensFlareGetter rhs,
+            this INavigationMeshObstacleManagerInternal lhs,
+            INavigationMeshObstacleManagerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavigationMeshObstacleManagerSetterTranslationCommon)((INavigationMeshObstacleManagerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -723,44 +649,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static LensFlare DeepCopy(
-            this ILensFlareGetter item,
-            LensFlare.TranslationMask? copyMask = null)
+        public static NavigationMeshObstacleManager DeepCopy(
+            this INavigationMeshObstacleManagerGetter item,
+            NavigationMeshObstacleManager.TranslationMask? copyMask = null)
         {
-            return ((LensFlareSetterTranslationCommon)((ILensFlareGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavigationMeshObstacleManagerSetterTranslationCommon)((INavigationMeshObstacleManagerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LensFlare DeepCopy(
-            this ILensFlareGetter item,
-            out LensFlare.ErrorMask errorMask,
-            LensFlare.TranslationMask? copyMask = null)
+        public static NavigationMeshObstacleManager DeepCopy(
+            this INavigationMeshObstacleManagerGetter item,
+            out NavigationMeshObstacleManager.ErrorMask errorMask,
+            NavigationMeshObstacleManager.TranslationMask? copyMask = null)
         {
-            return ((LensFlareSetterTranslationCommon)((ILensFlareGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavigationMeshObstacleManagerSetterTranslationCommon)((INavigationMeshObstacleManagerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LensFlare DeepCopy(
-            this ILensFlareGetter item,
+        public static NavigationMeshObstacleManager DeepCopy(
+            this INavigationMeshObstacleManagerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LensFlareSetterTranslationCommon)((ILensFlareGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavigationMeshObstacleManagerSetterTranslationCommon)((INavigationMeshObstacleManagerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static LensFlare Duplicate(
-            this ILensFlareGetter item,
+        public static NavigationMeshObstacleManager Duplicate(
+            this INavigationMeshObstacleManagerGetter item,
             FormKey formKey,
-            LensFlare.TranslationMask? copyMask = null)
+            NavigationMeshObstacleManager.TranslationMask? copyMask = null)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Duplicate(
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -770,11 +696,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILensFlareInternal item,
+            this INavigationMeshObstacleManagerInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((LensFlareSetterCommon)((ILensFlareGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((NavigationMeshObstacleManagerSetterCommon)((INavigationMeshObstacleManagerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -790,7 +716,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum LensFlare_FieldIndex
+    internal enum NavigationMeshObstacleManager_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -798,47 +724,45 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ColorInfluence = 6,
-        FadeDistanceRadiusScale = 7,
-        Sprites = 8,
+        SubObjects = 6,
     }
     #endregion
 
     #region Registration
-    internal partial class LensFlare_Registration : ILoquiRegistration
+    internal partial class NavigationMeshObstacleManager_Registration : ILoquiRegistration
     {
-        public static readonly LensFlare_Registration Instance = new LensFlare_Registration();
+        public static readonly NavigationMeshObstacleManager_Registration Instance = new NavigationMeshObstacleManager_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 195,
+            msgID: 674,
             version: 0);
 
-        public const string GUID = "86dffb98-5938-4df0-81e8-640e64783482";
+        public const string GUID = "b8242a3d-f932-4171-95a4-0c268ded1067";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(LensFlare.Mask<>);
+        public static readonly Type MaskType = typeof(NavigationMeshObstacleManager.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LensFlare.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NavigationMeshObstacleManager.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LensFlare);
+        public static readonly Type ClassType = typeof(NavigationMeshObstacleManager);
 
-        public static readonly Type GetterType = typeof(ILensFlareGetter);
+        public static readonly Type GetterType = typeof(INavigationMeshObstacleManagerGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILensFlare);
+        public static readonly Type SetterType = typeof(INavigationMeshObstacleManager);
 
-        public static readonly Type? InternalSetterType = typeof(ILensFlareInternal);
+        public static readonly Type? InternalSetterType = typeof(INavigationMeshObstacleManagerInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.LensFlare";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.NavigationMeshObstacleManager";
 
-        public const string Name = "LensFlare";
+        public const string Name = "NavigationMeshObstacleManager";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -846,21 +770,20 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.LENS;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NOCM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.LENS);
+            var triggers = RecordCollection.Factory(RecordTypes.NOCM);
             var all = RecordCollection.Factory(
-                RecordTypes.LENS,
-                RecordTypes.CNAM,
-                RecordTypes.DNAM,
-                RecordTypes.LFSP,
-                RecordTypes.FNAM,
-                RecordTypes.LFSD);
+                RecordTypes.NOCM,
+                RecordTypes.INDX,
+                RecordTypes.DATA,
+                RecordTypes.INTV,
+                RecordTypes.NAM1);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(LensFlareBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshObstacleManagerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -893,33 +816,31 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class LensFlareSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class NavigationMeshObstacleManagerSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly LensFlareSetterCommon Instance = new LensFlareSetterCommon();
+        public new static readonly NavigationMeshObstacleManagerSetterCommon Instance = new NavigationMeshObstacleManagerSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILensFlareInternal item)
+        public void Clear(INavigationMeshObstacleManagerInternal item)
         {
             ClearPartial();
-            item.ColorInfluence = default;
-            item.FadeDistanceRadiusScale = default;
-            item.Sprites = null;
+            item.SubObjects.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (ILensFlareInternal)item);
+            Clear(item: (INavigationMeshObstacleManagerInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ILensFlareInternal)item);
+            Clear(item: (INavigationMeshObstacleManagerInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(ILensFlare obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(INavigationMeshObstacleManager obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -928,16 +849,16 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILensFlareInternal item,
+            INavigationMeshObstacleManagerInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<ILensFlareInternal>(
+            PluginUtilityTranslation.MajorRecordParse<INavigationMeshObstacleManagerInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LensFlareBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: LensFlareBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: NavigationMeshObstacleManagerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: NavigationMeshObstacleManagerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -946,7 +867,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (LensFlare)item,
+                item: (NavigationMeshObstacleManager)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -957,7 +878,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (LensFlare)item,
+                item: (NavigationMeshObstacleManager)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -965,17 +886,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class LensFlareCommon : Fallout4MajorRecordCommon
+    internal partial class NavigationMeshObstacleManagerCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly LensFlareCommon Instance = new LensFlareCommon();
+        public new static readonly NavigationMeshObstacleManagerCommon Instance = new NavigationMeshObstacleManagerCommon();
 
-        public LensFlare.Mask<bool> GetEqualsMask(
-            ILensFlareGetter item,
-            ILensFlareGetter rhs,
+        public NavigationMeshObstacleManager.Mask<bool> GetEqualsMask(
+            INavigationMeshObstacleManagerGetter item,
+            INavigationMeshObstacleManagerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LensFlare.Mask<bool>(false);
-            ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new NavigationMeshObstacleManager.Mask<bool>(false);
+            ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -984,25 +905,23 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            ILensFlareGetter item,
-            ILensFlareGetter rhs,
-            LensFlare.Mask<bool> ret,
+            INavigationMeshObstacleManagerGetter item,
+            INavigationMeshObstacleManagerGetter rhs,
+            NavigationMeshObstacleManager.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ColorInfluence = item.ColorInfluence.EqualsWithin(rhs.ColorInfluence);
-            ret.FadeDistanceRadiusScale = item.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale);
-            ret.Sprites = item.Sprites.CollectionEqualsHelper(
-                rhs.Sprites,
+            ret.SubObjects = item.SubObjects.CollectionEqualsHelper(
+                rhs.SubObjects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            ILensFlareGetter item,
+            INavigationMeshObstacleManagerGetter item,
             string? name = null,
-            LensFlare.Mask<bool>? printMask = null)
+            NavigationMeshObstacleManager.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1014,18 +933,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            ILensFlareGetter item,
+            INavigationMeshObstacleManagerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LensFlare.Mask<bool>? printMask = null)
+            NavigationMeshObstacleManager.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"LensFlare =>");
+                sb.AppendLine($"NavigationMeshObstacleManager =>");
             }
             else
             {
-                sb.AppendLine($"{name} (LensFlare) =>");
+                sb.AppendLine($"{name} (NavigationMeshObstacleManager) =>");
             }
             using (sb.Brace())
             {
@@ -1037,31 +956,20 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            ILensFlareGetter item,
+            INavigationMeshObstacleManagerGetter item,
             StructuredStringBuilder sb,
-            LensFlare.Mask<bool>? printMask = null)
+            NavigationMeshObstacleManager.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.ColorInfluence ?? true)
-                && item.ColorInfluence is {} ColorInfluenceItem)
+            if (printMask?.SubObjects?.Overall ?? true)
             {
-                sb.AppendItem(ColorInfluenceItem, "ColorInfluence");
-            }
-            if ((printMask?.FadeDistanceRadiusScale ?? true)
-                && item.FadeDistanceRadiusScale is {} FadeDistanceRadiusScaleItem)
-            {
-                sb.AppendItem(FadeDistanceRadiusScaleItem, "FadeDistanceRadiusScale");
-            }
-            if ((printMask?.Sprites?.Overall ?? true)
-                && item.Sprites is {} SpritesItem)
-            {
-                sb.AppendLine("Sprites =>");
+                sb.AppendLine("SubObjects =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in SpritesItem)
+                    foreach (var subItem in item.SubObjects)
                     {
                         using (sb.Brace())
                         {
@@ -1072,39 +980,39 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-        public static LensFlare_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static NavigationMeshObstacleManager_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new LensFlare_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new NavigationMeshObstacleManager_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (LensFlare_FieldIndex)((int)index);
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1112,23 +1020,15 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILensFlareGetter? lhs,
-            ILensFlareGetter? rhs,
+            INavigationMeshObstacleManagerGetter? lhs,
+            INavigationMeshObstacleManagerGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
+            if ((crystal?.GetShouldTranslate((int)NavigationMeshObstacleManager_FieldIndex.SubObjects) ?? true))
             {
-                if (!lhs.ColorInfluence.EqualsWithin(rhs.ColorInfluence)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.FadeDistanceRadiusScale) ?? true))
-            {
-                if (!lhs.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
-            {
-                if (!lhs.Sprites.SequenceEqualNullable(rhs.Sprites, (l, r) => ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LensFlare_FieldIndex.Sprites)))) return false;
+                if (!lhs.SubObjects.SequenceEqual(rhs.SubObjects, (l, r) => ((NavigationMeshObstacleManagerSubObjectCommon)((INavigationMeshObstacleManagerSubObjectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMeshObstacleManager_FieldIndex.SubObjects)))) return false;
             }
             return true;
         }
@@ -1139,8 +1039,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ILensFlareGetter?)lhs,
-                rhs: rhs as ILensFlareGetter,
+                lhs: (INavigationMeshObstacleManagerGetter?)lhs,
+                rhs: rhs as INavigationMeshObstacleManagerGetter,
                 crystal: crystal);
         }
         
@@ -1150,35 +1050,27 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ILensFlareGetter?)lhs,
-                rhs: rhs as ILensFlareGetter,
+                lhs: (INavigationMeshObstacleManagerGetter?)lhs,
+                rhs: rhs as INavigationMeshObstacleManagerGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(ILensFlareGetter item)
+        public virtual int GetHashCode(INavigationMeshObstacleManagerGetter item)
         {
             var hash = new HashCode();
-            if (item.ColorInfluence is {} ColorInfluenceitem)
-            {
-                hash.Add(ColorInfluenceitem);
-            }
-            if (item.FadeDistanceRadiusScale is {} FadeDistanceRadiusScaleitem)
-            {
-                hash.Add(FadeDistanceRadiusScaleitem);
-            }
-            hash.Add(item.Sprites);
+            hash.Add(item.SubObjects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (ILensFlareGetter)item);
+            return GetHashCode(item: (INavigationMeshObstacleManagerGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ILensFlareGetter)item);
+            return GetHashCode(item: (INavigationMeshObstacleManagerGetter)item);
         }
         
         #endregion
@@ -1186,11 +1078,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return LensFlare.GetNew();
+            return NavigationMeshObstacleManager.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILensFlareGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationMeshObstacleManagerGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -1200,12 +1092,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Duplicate
-        public LensFlare Duplicate(
-            ILensFlareGetter item,
+        public NavigationMeshObstacleManager Duplicate(
+            INavigationMeshObstacleManagerGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new LensFlare(formKey);
+            var newRec = new NavigationMeshObstacleManager(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1216,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILensFlareGetter)item,
+                item: (INavigationMeshObstacleManagerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1227,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILensFlareGetter)item,
+                item: (INavigationMeshObstacleManagerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1237,14 +1129,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class LensFlareSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class NavigationMeshObstacleManagerSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly LensFlareSetterTranslationCommon Instance = new LensFlareSetterTranslationCommon();
+        public new static readonly NavigationMeshObstacleManagerSetterTranslationCommon Instance = new NavigationMeshObstacleManagerSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILensFlareInternal item,
-            ILensFlareGetter rhs,
+            INavigationMeshObstacleManagerInternal item,
+            INavigationMeshObstacleManagerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1258,8 +1150,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            ILensFlare item,
-            ILensFlareGetter rhs,
+            INavigationMeshObstacleManager item,
+            INavigationMeshObstacleManagerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1270,35 +1162,19 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshObstacleManager_FieldIndex.SubObjects) ?? true))
             {
-                item.ColorInfluence = rhs.ColorInfluence;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.FadeDistanceRadiusScale) ?? true))
-            {
-                item.FadeDistanceRadiusScale = rhs.FadeDistanceRadiusScale;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
-            {
-                errorMask?.PushIndex((int)LensFlare_FieldIndex.Sprites);
+                errorMask?.PushIndex((int)NavigationMeshObstacleManager_FieldIndex.SubObjects);
                 try
                 {
-                    if ((rhs.Sprites != null))
-                    {
-                        item.Sprites = 
-                            rhs.Sprites
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<LensFlareSprite>();
-                    }
-                    else
-                    {
-                        item.Sprites = null;
-                    }
+                    item.SubObjects.SetTo(
+                        rhs.SubObjects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1320,8 +1196,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILensFlareInternal)item,
-                rhs: (ILensFlareGetter)rhs,
+                item: (INavigationMeshObstacleManagerInternal)item,
+                rhs: (INavigationMeshObstacleManagerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1335,8 +1211,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILensFlare)item,
-                rhs: (ILensFlareGetter)rhs,
+                item: (INavigationMeshObstacleManager)item,
+                rhs: (INavigationMeshObstacleManagerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1350,8 +1226,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILensFlareInternal)item,
-                rhs: (ILensFlareGetter)rhs,
+                item: (INavigationMeshObstacleManagerInternal)item,
+                rhs: (INavigationMeshObstacleManagerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1365,8 +1241,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILensFlare)item,
-                rhs: (ILensFlareGetter)rhs,
+                item: (INavigationMeshObstacleManager)item,
+                rhs: (INavigationMeshObstacleManagerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1374,12 +1250,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public LensFlare DeepCopy(
-            ILensFlareGetter item,
-            LensFlare.TranslationMask? copyMask = null)
+        public NavigationMeshObstacleManager DeepCopy(
+            INavigationMeshObstacleManagerGetter item,
+            NavigationMeshObstacleManager.TranslationMask? copyMask = null)
         {
-            LensFlare ret = (LensFlare)((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).GetNew();
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavigationMeshObstacleManager ret = (NavigationMeshObstacleManager)((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).GetNew();
+            ((NavigationMeshObstacleManagerSetterTranslationCommon)((INavigationMeshObstacleManagerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1388,30 +1264,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public LensFlare DeepCopy(
-            ILensFlareGetter item,
-            out LensFlare.ErrorMask errorMask,
-            LensFlare.TranslationMask? copyMask = null)
+        public NavigationMeshObstacleManager DeepCopy(
+            INavigationMeshObstacleManagerGetter item,
+            out NavigationMeshObstacleManager.ErrorMask errorMask,
+            NavigationMeshObstacleManager.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LensFlare ret = (LensFlare)((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).GetNew();
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavigationMeshObstacleManager ret = (NavigationMeshObstacleManager)((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).GetNew();
+            ((NavigationMeshObstacleManagerSetterTranslationCommon)((INavigationMeshObstacleManagerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = LensFlare.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NavigationMeshObstacleManager.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public LensFlare DeepCopy(
-            ILensFlareGetter item,
+        public NavigationMeshObstacleManager DeepCopy(
+            INavigationMeshObstacleManagerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LensFlare ret = (LensFlare)((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).GetNew();
-            ((LensFlareSetterTranslationCommon)((ILensFlareGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavigationMeshObstacleManager ret = (NavigationMeshObstacleManager)((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).GetNew();
+            ((NavigationMeshObstacleManagerSetterTranslationCommon)((INavigationMeshObstacleManagerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1427,21 +1303,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LensFlare
+    public partial class NavigationMeshObstacleManager
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NavigationMeshObstacleManager_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NavigationMeshObstacleManager_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LensFlareCommon.Instance;
+        protected override object CommonInstance() => NavigationMeshObstacleManagerCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return LensFlareSetterCommon.Instance;
+            return NavigationMeshObstacleManagerSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LensFlareSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NavigationMeshObstacleManagerSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1452,14 +1328,14 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LensFlareBinaryWriteTranslation :
+    public partial class NavigationMeshObstacleManagerBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LensFlareBinaryWriteTranslation Instance = new LensFlareBinaryWriteTranslation();
+        public new readonly static NavigationMeshObstacleManagerBinaryWriteTranslation Instance = new NavigationMeshObstacleManagerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            ILensFlareGetter item,
+            INavigationMeshObstacleManagerGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
@@ -1467,23 +1343,13 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationMeshObstacleManagerSubObjectGetter>.Instance.Write(
                 writer: writer,
-                item: item.ColorInfluence,
-                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.FadeDistanceRadiusScale,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILensFlareSpriteGetter>.Instance.WriteWithCounter(
-                writer: writer,
-                items: item.Sprites,
-                counterType: RecordTypes.LFSP,
-                counterLength: 4,
-                transl: (MutagenWriter subWriter, ILensFlareSpriteGetter subItem, TypedWriteParams? conv) =>
+                items: item.SubObjects,
+                transl: (MutagenWriter subWriter, INavigationMeshObstacleManagerSubObjectGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
-                    ((LensFlareSpriteBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1492,12 +1358,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         public void Write(
             MutagenWriter writer,
-            ILensFlareGetter item,
+            INavigationMeshObstacleManagerGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LENS)))
+                record: translationParams.ConvertToCustom(RecordTypes.NOCM)))
             {
                 try
                 {
@@ -1524,7 +1390,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILensFlareGetter)item,
+                item: (INavigationMeshObstacleManagerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1535,7 +1401,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILensFlareGetter)item,
+                item: (INavigationMeshObstacleManagerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1546,20 +1412,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILensFlareGetter)item,
+                item: (INavigationMeshObstacleManagerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LensFlareBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class NavigationMeshObstacleManagerBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
+        public new readonly static NavigationMeshObstacleManagerBinaryCreateTranslation Instance = new NavigationMeshObstacleManagerBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.LENS;
+        public override RecordType RecordType => RecordTypes.NOCM;
         public static void FillBinaryStructs(
-            ILensFlareInternal item,
+            INavigationMeshObstacleManagerInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1568,7 +1434,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            ILensFlareInternal item,
+            INavigationMeshObstacleManagerInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1579,30 +1445,18 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.CNAM:
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.DATA:
+                case RecordTypeInts.INTV:
+                case RecordTypeInts.NAM1:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ColorInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LensFlare_FieldIndex.ColorInfluence;
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FadeDistanceRadiusScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
-                }
-                case RecordTypeInts.LFSP:
-                {
-                    item.Sprites = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LensFlareSprite>.Instance.ParsePerItem(
+                    item.SubObjects.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavigationMeshObstacleManagerSubObject>.Instance.Parse(
                             reader: frame,
-                            countLengthLength: 4,
-                            countRecord: RecordTypes.LFSP,
-                            triggeringRecord: LensFlareSprite_Registration.TriggerSpecs,
+                            triggeringRecord: NavigationMeshObstacleManagerSubObject_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: LensFlareSprite.TryCreateFromBinary)
-                        .CastExtendedList<LensFlareSprite>();
-                    return (int)LensFlare_FieldIndex.Sprites;
+                            transl: NavigationMeshObstacleManagerSubObject.TryCreateFromBinary));
+                    return (int)NavigationMeshObstacleManager_FieldIndex.SubObjects;
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1621,7 +1475,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class LensFlareBinaryTranslationMixIn
+    public static class NavigationMeshObstacleManagerBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1630,53 +1484,45 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class LensFlareBinaryOverlay :
+    internal partial class NavigationMeshObstacleManagerBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        ILensFlareGetter
+        INavigationMeshObstacleManagerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NavigationMeshObstacleManager_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NavigationMeshObstacleManager_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LensFlareCommon.Instance;
+        protected override object CommonInstance() => NavigationMeshObstacleManagerCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LensFlareSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NavigationMeshObstacleManagerSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LensFlareBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NavigationMeshObstacleManagerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((LensFlareBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NavigationMeshObstacleManagerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILensFlare);
+        protected override Type LinkType => typeof(INavigationMeshObstacleManager);
 
 
-        #region ColorInfluence
-        private int? _ColorInfluenceLocation;
-        public Single? ColorInfluence => _ColorInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region FadeDistanceRadiusScale
-        private int? _FadeDistanceRadiusScaleLocation;
-        public Single? FadeDistanceRadiusScale => _FadeDistanceRadiusScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FadeDistanceRadiusScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        public IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; private set; }
+        public IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; private set; } = Array.Empty<INavigationMeshObstacleManagerSubObjectGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected LensFlareBinaryOverlay(
+        protected NavigationMeshObstacleManagerBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1686,13 +1532,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ILensFlareGetter LensFlareFactory(
+        public static INavigationMeshObstacleManagerGetter NavigationMeshObstacleManagerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new LensFlareBinaryOverlay(
+            var ret = new NavigationMeshObstacleManagerBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
@@ -1713,12 +1559,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ILensFlareGetter LensFlareFactory(
+        public static INavigationMeshObstacleManagerGetter NavigationMeshObstacleManagerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return LensFlareFactory(
+            return NavigationMeshObstacleManagerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1736,28 +1582,17 @@ namespace Mutagen.Bethesda.Fallout4
             type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.CNAM:
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.DATA:
+                case RecordTypeInts.INTV:
+                case RecordTypeInts.NAM1:
                 {
-                    _ColorInfluenceLocation = (stream.Position - offset);
-                    return (int)LensFlare_FieldIndex.ColorInfluence;
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    _FadeDistanceRadiusScaleLocation = (stream.Position - offset);
-                    return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
-                }
-                case RecordTypeInts.LFSP:
-                {
-                    this.Sprites = BinaryOverlayList.FactoryByCountPerItem<ILensFlareSpriteGetter>(
+                    this.SubObjects = this.ParseRepeatedTypelessSubrecord<INavigationMeshObstacleManagerSubObjectGetter>(
                         stream: stream,
-                        package: _package,
-                        countLength: 4,
-                        trigger: LensFlareSprite_Registration.TriggerSpecs,
-                        countType: RecordTypes.LFSP,
                         parseParams: parseParams,
-                        getter: (s, p, recConv) => LensFlareSpriteBinaryOverlay.LensFlareSpriteFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
-                    return (int)LensFlare_FieldIndex.Sprites;
+                        trigger: NavigationMeshObstacleManagerSubObject_Registration.TriggerSpecs,
+                        factory: NavigationMeshObstacleManagerSubObjectBinaryOverlay.NavigationMeshObstacleManagerSubObjectFactory);
+                    return (int)NavigationMeshObstacleManager_FieldIndex.SubObjects;
                 }
                 default:
                     return base.FillRecordType(
@@ -1775,7 +1610,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LensFlareMixIn.Print(
+            NavigationMeshObstacleManagerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1785,7 +1620,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<LensFlare>.ToString(this);
+            return MajorRecordPrinter<NavigationMeshObstacleManager>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1795,16 +1630,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ILensFlareGetter rhs) return false;
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INavigationMeshObstacleManagerGetter rhs) return false;
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ILensFlareGetter? obj)
+        public bool Equals(INavigationMeshObstacleManagerGetter? obj)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

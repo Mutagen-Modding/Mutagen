@@ -52,7 +52,7 @@
       <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
       <FormLink name="Music" refName="MusicType" recordType="XCMO" />
       <FormLink name="ImageSpace" refName="ImageSpace" recordType="XCIM" />
-      <FormLink name="GodRays" refName="GodRay" recordType="XGDR" />
+      <FormLink name="GodRays" refName="GodRays" recordType="XGDR" />
       <List name="PhysicsReferences" recordType="XPRI">
         <FormLink>
           <Interface>IPlacedThing</Interface>
