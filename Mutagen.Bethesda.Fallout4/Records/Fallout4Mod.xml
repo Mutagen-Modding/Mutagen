@@ -124,6 +124,7 @@
       <Group name="Zooms" refName="Zoom" />
       <Group name="InstanceNamingRules" refName="InstanceNamingRules" />
       <Group name="SoundKeywordMappings" refName="SoundKeywordMapping" />
+      <Group name="AudioEffectChains" refName="AudioEffectChain" />
     </Fields>
   </Object>
 </Loqui>

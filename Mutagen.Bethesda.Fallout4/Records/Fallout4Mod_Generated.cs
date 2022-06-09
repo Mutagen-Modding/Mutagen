@@ -174,6 +174,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Zooms_Object = new Fallout4Group<Zoom>(this);
             _InstanceNamingRules_Object = new Fallout4Group<InstanceNamingRules>(this);
             _SoundKeywordMappings_Object = new Fallout4Group<SoundKeywordMapping>(this);
+            _AudioEffectChains_Object = new Fallout4Group<AudioEffectChain>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -1005,6 +1006,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ISoundKeywordMappingGetter> IFallout4ModGetter.SoundKeywordMappings => _SoundKeywordMappings_Object;
         #endregion
+        #region AudioEffectChains
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<AudioEffectChain> _AudioEffectChains_Object;
+        public Fallout4Group<AudioEffectChain> AudioEffectChains => _AudioEffectChains_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAudioEffectChainGetter> IFallout4ModGetter.AudioEffectChains => _AudioEffectChains_Object;
+        #endregion
 
         #region To String
 
@@ -1162,6 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Zooms = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.InstanceNamingRules = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.SoundKeywordMappings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.AudioEffectChains = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1282,7 +1291,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem MaterialSwaps,
                 TItem Zooms,
                 TItem InstanceNamingRules,
-                TItem SoundKeywordMappings)
+                TItem SoundKeywordMappings,
+                TItem AudioEffectChains)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1402,6 +1412,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Zooms = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Zooms, new Fallout4Group.Mask<TItem>(Zooms));
                 this.InstanceNamingRules = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(InstanceNamingRules, new Fallout4Group.Mask<TItem>(InstanceNamingRules));
                 this.SoundKeywordMappings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundKeywordMappings, new Fallout4Group.Mask<TItem>(SoundKeywordMappings));
+                this.AudioEffectChains = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AudioEffectChains, new Fallout4Group.Mask<TItem>(AudioEffectChains));
             }
 
             #pragma warning disable CS8618
@@ -1531,6 +1542,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Zooms { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? InstanceNamingRules { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundKeywordMappings { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AudioEffectChains { get; set; }
             #endregion
 
             #region Equals
@@ -1661,6 +1673,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Zooms, rhs.Zooms)) return false;
                 if (!object.Equals(this.InstanceNamingRules, rhs.InstanceNamingRules)) return false;
                 if (!object.Equals(this.SoundKeywordMappings, rhs.SoundKeywordMappings)) return false;
+                if (!object.Equals(this.AudioEffectChains, rhs.AudioEffectChains)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1784,6 +1797,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Zooms);
                 hash.Add(this.InstanceNamingRules);
                 hash.Add(this.SoundKeywordMappings);
+                hash.Add(this.AudioEffectChains);
                 return hash.ToHashCode();
             }
 
@@ -2382,6 +2396,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.SoundKeywordMappings.Overall)) return false;
                     if (this.SoundKeywordMappings.Specific != null && !this.SoundKeywordMappings.Specific.All(eval)) return false;
                 }
+                if (AudioEffectChains != null)
+                {
+                    if (!eval(this.AudioEffectChains.Overall)) return false;
+                    if (this.AudioEffectChains.Specific != null && !this.AudioEffectChains.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2979,6 +2998,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.SoundKeywordMappings.Overall)) return true;
                     if (this.SoundKeywordMappings.Specific != null && this.SoundKeywordMappings.Specific.Any(eval)) return true;
                 }
+                if (AudioEffectChains != null)
+                {
+                    if (eval(this.AudioEffectChains.Overall)) return true;
+                    if (this.AudioEffectChains.Specific != null && this.AudioEffectChains.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -3111,6 +3135,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Zooms = this.Zooms == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Zooms.Overall), this.Zooms.Specific?.Translate(eval));
                 obj.InstanceNamingRules = this.InstanceNamingRules == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.InstanceNamingRules.Overall), this.InstanceNamingRules.Specific?.Translate(eval));
                 obj.SoundKeywordMappings = this.SoundKeywordMappings == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundKeywordMappings.Overall), this.SoundKeywordMappings.Specific?.Translate(eval));
+                obj.AudioEffectChains = this.AudioEffectChains == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AudioEffectChains.Overall), this.AudioEffectChains.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3601,6 +3626,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         SoundKeywordMappings?.Print(sb);
                     }
+                    if (printMask?.AudioEffectChains?.Overall ?? true)
+                    {
+                        AudioEffectChains?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3743,6 +3772,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Zoom.ErrorMask>?>? Zooms;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<InstanceNamingRules.ErrorMask>?>? InstanceNamingRules;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundKeywordMapping.ErrorMask>?>? SoundKeywordMappings;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<AudioEffectChain.ErrorMask>?>? AudioEffectChains;
             #endregion
 
             #region IErrorMask
@@ -3987,6 +4017,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return InstanceNamingRules;
                     case Fallout4Mod_FieldIndex.SoundKeywordMappings:
                         return SoundKeywordMappings;
+                    case Fallout4Mod_FieldIndex.AudioEffectChains:
+                        return AudioEffectChains;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4350,6 +4382,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.SoundKeywordMappings:
                         this.SoundKeywordMappings = new MaskItem<Exception?, Fallout4Group.ErrorMask<SoundKeywordMapping.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.AudioEffectChains:
+                        this.AudioEffectChains = new MaskItem<Exception?, Fallout4Group.ErrorMask<AudioEffectChain.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4715,6 +4750,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.SoundKeywordMappings:
                         this.SoundKeywordMappings = (MaskItem<Exception?, Fallout4Group.ErrorMask<SoundKeywordMapping.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.AudioEffectChains:
+                        this.AudioEffectChains = (MaskItem<Exception?, Fallout4Group.ErrorMask<AudioEffectChain.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4841,6 +4879,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Zooms != null) return true;
                 if (InstanceNamingRules != null) return true;
                 if (SoundKeywordMappings != null) return true;
+                if (AudioEffectChains != null) return true;
                 return false;
             }
             #endregion
@@ -4984,6 +5023,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Zooms?.Print(sb);
                 InstanceNamingRules?.Print(sb);
                 SoundKeywordMappings?.Print(sb);
+                AudioEffectChains?.Print(sb);
             }
             #endregion
 
@@ -5110,6 +5150,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Zooms = this.Zooms.Combine(rhs.Zooms, (l, r) => l.Combine(r));
                 ret.InstanceNamingRules = this.InstanceNamingRules.Combine(rhs.InstanceNamingRules, (l, r) => l.Combine(r));
                 ret.SoundKeywordMappings = this.SoundKeywordMappings.Combine(rhs.SoundKeywordMappings, (l, r) => l.Combine(r));
+                ret.AudioEffectChains = this.AudioEffectChains.Combine(rhs.AudioEffectChains, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -5251,6 +5292,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Zoom.TranslationMask>? Zooms;
             public Fallout4Group.TranslationMask<InstanceNamingRules.TranslationMask>? InstanceNamingRules;
             public Fallout4Group.TranslationMask<SoundKeywordMapping.TranslationMask>? SoundKeywordMappings;
+            public Fallout4Group.TranslationMask<AudioEffectChain.TranslationMask>? AudioEffectChains;
             #endregion
 
             #region Ctors
@@ -5393,6 +5435,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Zooms != null ? Zooms.OnOverall : DefaultOn, Zooms?.GetCrystal()));
                 ret.Add((InstanceNamingRules != null ? InstanceNamingRules.OnOverall : DefaultOn, InstanceNamingRules?.GetCrystal()));
                 ret.Add((SoundKeywordMappings != null ? SoundKeywordMappings.OnOverall : DefaultOn, SoundKeywordMappings?.GetCrystal()));
+                ret.Add((AudioEffectChains != null ? AudioEffectChains.OnOverall : DefaultOn, AudioEffectChains?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -5550,6 +5593,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Zooms_Object = new Fallout4Group<Zoom>(this);
             _InstanceNamingRules_Object = new Fallout4Group<InstanceNamingRules>(this);
             _SoundKeywordMappings_Object = new Fallout4Group<SoundKeywordMapping>(this);
+            _AudioEffectChains_Object = new Fallout4Group<AudioEffectChain>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -6027,6 +6071,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.SoundKeywordMappings.RecordCache.Set(rhsMod.SoundKeywordMappings.RecordCache.Items);
             }
+            if (mask?.AudioEffectChains ?? true)
+            {
+                this.AudioEffectChains.RecordCache.Set(rhsMod.AudioEffectChains.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -6154,6 +6202,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Zooms.RecordCache.Count > 0 ? 1 : default(uint);
             count += InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
             count += SoundKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AudioEffectChains.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6522,6 +6571,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Zoom> Zooms { get; }
         new Fallout4Group<InstanceNamingRules> InstanceNamingRules { get; }
         new Fallout4Group<SoundKeywordMapping> SoundKeywordMappings { get; }
+        new Fallout4Group<AudioEffectChain> AudioEffectChains { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -6658,6 +6708,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IZoomGetter> Zooms { get; }
         IFallout4GroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules { get; }
         IFallout4GroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings { get; }
+        IFallout4GroupGetter<IAudioEffectChainGetter> AudioEffectChains { get; }
 
     }
 
@@ -7346,6 +7397,7 @@ namespace Mutagen.Bethesda.Fallout4
         Zooms = 115,
         InstanceNamingRules = 116,
         SoundKeywordMappings = 117,
+        AudioEffectChains = 118,
     }
     #endregion
 
@@ -7363,9 +7415,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 118;
+        public const ushort AdditionalFieldCount = 119;
 
-        public const ushort FieldCount = 118;
+        public const ushort FieldCount = 119;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -7550,6 +7602,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Zooms.Clear();
             item.InstanceNamingRules.Clear();
             item.SoundKeywordMappings.Clear();
+            item.AudioEffectChains.Clear();
         }
         
         #region Mutagen
@@ -7807,6 +7860,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Zooms.Remove(keys);
             obj.InstanceNamingRules.Remove(keys);
             obj.SoundKeywordMappings.Remove(keys);
+            obj.AudioEffectChains.Remove(keys);
         }
         
         public void Remove(
@@ -8814,6 +8868,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "AudioEffectChain":
+                case "IAudioEffectChainGetter":
+                case "IAudioEffectChain":
+                case "IAudioEffectChainInternal":
+                    obj.AudioEffectChains.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -9429,6 +9491,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Zooms = MaskItemExt.Factory(item.Zooms.GetEqualsMask(rhs.Zooms, include), include);
             ret.InstanceNamingRules = MaskItemExt.Factory(item.InstanceNamingRules.GetEqualsMask(rhs.InstanceNamingRules, include), include);
             ret.SoundKeywordMappings = MaskItemExt.Factory(item.SoundKeywordMappings.GetEqualsMask(rhs.SoundKeywordMappings, include), include);
+            ret.AudioEffectChains = MaskItemExt.Factory(item.AudioEffectChains.GetEqualsMask(rhs.AudioEffectChains, include), include);
         }
         
         public string Print(
@@ -9944,6 +10007,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.SoundKeywordMappings?.Overall ?? true)
             {
                 item.SoundKeywordMappings?.Print(sb, "SoundKeywordMappings");
+            }
+            if (printMask?.AudioEffectChains?.Overall ?? true)
+            {
+                item.AudioEffectChains?.Print(sb, "AudioEffectChains");
             }
         }
         
@@ -10898,6 +10965,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSoundKeywordMappingsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AudioEffectChains) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AudioEffectChains, rhs.AudioEffectChains, out var lhsAudioEffectChains, out var rhsAudioEffectChains, out var isAudioEffectChainsEqual))
+                {
+                    if (!object.Equals(lhsAudioEffectChains, rhsAudioEffectChains)) return false;
+                }
+                else if (!isAudioEffectChainsEqual) return false;
+            }
             return true;
         }
         
@@ -11022,6 +11097,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Zooms);
             hash.Add(item.InstanceNamingRules);
             hash.Add(item.SoundKeywordMappings);
+            hash.Add(item.AudioEffectChains);
             return hash.ToHashCode();
         }
         
@@ -11624,6 +11700,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ISoundKeywordMapping":
                 case "ISoundKeywordMappingInternal":
                     return obj.SoundKeywordMappings;
+                case "AudioEffectChain":
+                case "IAudioEffectChainGetter":
+                case "IAudioEffectChain":
+                case "IAudioEffectChainInternal":
+                    return obj.AudioEffectChains;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -11648,7 +11729,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[117];
+            Stream[] outputStreams = new Stream[118];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -11767,6 +11848,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.Zooms, 114, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 115, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SoundKeywordMappings, 116, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AudioEffectChains, 117, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -12691,6 +12773,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.SoundKeywordMappings.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AudioEffectChains.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13769,6 +13855,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ISoundKeywordMapping":
                 case "ISoundKeywordMappingInternal":
                     foreach (var item in obj.SoundKeywordMappings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AudioEffectChain":
+                case "IAudioEffectChainGetter":
+                case "IAudioEffectChain":
+                case "IAudioEffectChainInternal":
+                    foreach (var item in obj.AudioEffectChains.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -14985,6 +15080,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.SoundKeywordMappings,
                 groupGetter: (m) => m.SoundKeywordMappings))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AudioEffectChain, IAudioEffectChainGetter>(
+                srcGroup: obj.AudioEffectChains,
+                type: typeof(IAudioEffectChainGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AudioEffectChains,
+                groupGetter: (m) => m.AudioEffectChains))
             {
                 yield return item;
             }
@@ -16639,6 +16743,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.SoundKeywordMappings,
                         groupGetter: (m) => m.SoundKeywordMappings))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AudioEffectChain":
+                case "IAudioEffectChainGetter":
+                case "IAudioEffectChain":
+                case "IAudioEffectChainInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AudioEffectChain, IAudioEffectChainGetter>(
+                        srcGroup: obj.AudioEffectChains,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AudioEffectChains,
+                        groupGetter: (m) => m.AudioEffectChains))
                     {
                         yield return item;
                     }
@@ -19297,6 +19415,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AudioEffectChains) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.AudioEffectChains);
+                try
+                {
+                    item.AudioEffectChains.DeepCopyIn(
+                        rhs: rhs.AudioEffectChains,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.AudioEffectChains));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -19504,6 +19642,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Zooms;
         public bool InstanceNamingRules;
         public bool SoundKeywordMappings;
+        public bool AudioEffectChains;
         public GroupMask()
         {
         }
@@ -19626,6 +19765,7 @@ namespace Mutagen.Bethesda.Fallout4
             Zooms = defaultValue;
             InstanceNamingRules = defaultValue;
             SoundKeywordMappings = defaultValue;
+            AudioEffectChains = defaultValue;
         }
     }
 
@@ -20940,6 +21080,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)SoundKeywordMappingsItem).BinaryWriteTranslator).Write<ISoundKeywordMappingGetter>(
                         item: SoundKeywordMappingsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AudioEffectChains ?? true)
+            {
+                var AudioEffectChainsItem = item.AudioEffectChains;
+                if (AudioEffectChainsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AudioEffectChainsItem).BinaryWriteTranslator).Write<IAudioEffectChainGetter>(
+                        item: AudioEffectChainsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -22648,6 +22799,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.SoundKeywordMappings;
                 }
+                case RecordTypeInts.AECH:
+                {
+                    if (importMask?.AudioEffectChains ?? true)
+                    {
+                        item.AudioEffectChains.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.AudioEffectChains;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -23395,6 +23560,11 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _SoundKeywordMappingsLocations;
         private IFallout4GroupGetter<ISoundKeywordMappingGetter>? _SoundKeywordMappings => _SoundKeywordMappingsLocations != null ? Fallout4GroupBinaryOverlay<ISoundKeywordMappingGetter>.Fallout4GroupFactory(_data, _SoundKeywordMappingsLocations, _package) : default;
         public IFallout4GroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings => _SoundKeywordMappings ?? new Fallout4Group<SoundKeywordMapping>(this);
+        #endregion
+        #region AudioEffectChains
+        private List<RangeInt64>? _AudioEffectChainsLocations;
+        private IFallout4GroupGetter<IAudioEffectChainGetter>? _AudioEffectChains => _AudioEffectChainsLocations != null ? Fallout4GroupBinaryOverlay<IAudioEffectChainGetter>.Fallout4GroupFactory(_data, _AudioEffectChainsLocations, _package) : default;
+        public IFallout4GroupGetter<IAudioEffectChainGetter> AudioEffectChains => _AudioEffectChains ?? new Fallout4Group<AudioEffectChain>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -24184,6 +24354,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _SoundKeywordMappingsLocations ??= new();
                     _SoundKeywordMappingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.SoundKeywordMappings;
+                }
+                case RecordTypeInts.AECH:
+                {
+                    _AudioEffectChainsLocations ??= new();
+                    _AudioEffectChainsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.AudioEffectChains;
                 }
                 default:
                     return default(int?);

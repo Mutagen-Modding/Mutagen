@@ -53,6 +53,20 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Effects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AAudioEffect> _Effects = new ExtendedList<AAudioEffect>();
+        public ExtendedList<AAudioEffect> Effects
+        {
+            get => this._Effects;
+            init => this._Effects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAAudioEffectGetter> IAudioEffectChainGetter.Effects => _Effects;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +92,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -86,7 +101,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +111,7 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -103,6 +120,10 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>?>? Effects;
             #endregion
 
             #region Equals
@@ -116,11 +137,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Effects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +154,18 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -139,6 +174,18 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Effects != null)
+                {
+                    if (eval(this.Effects.Overall)) return true;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -154,6 +201,21 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AAudioEffect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, AAudioEffect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AAudioEffect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific)
+                        {
+                            MaskItemIndexed<R, AAudioEffect.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AAudioEffect.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -172,6 +234,25 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(AudioEffectChain.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Effects?.Overall ?? true)
+                        && Effects is {} EffectsItem)
+                    {
+                        sb.AppendLine("Effects =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(EffectsItem.Overall);
+                            if (EffectsItem.Specific != null)
+                            {
+                                foreach (var subItem in EffectsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -182,12 +263,18 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AAudioEffect.ErrorMask?>>?>? Effects;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AudioEffectChain_FieldIndex enu = (AudioEffectChain_FieldIndex)index;
                 switch (enu)
                 {
+                    case AudioEffectChain_FieldIndex.Effects:
+                        return Effects;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +285,9 @@ namespace Mutagen.Bethesda.Fallout4
                 AudioEffectChain_FieldIndex enu = (AudioEffectChain_FieldIndex)index;
                 switch (enu)
                 {
+                    case AudioEffectChain_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AAudioEffect.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +299,9 @@ namespace Mutagen.Bethesda.Fallout4
                 AudioEffectChain_FieldIndex enu = (AudioEffectChain_FieldIndex)index;
                 switch (enu)
                 {
+                    case AudioEffectChain_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AAudioEffect.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +311,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Effects != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +338,24 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Effects is {} EffectsItem)
+                {
+                    sb.AppendLine("Effects =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(EffectsItem.Overall);
+                        if (EffectsItem.Specific != null)
+                        {
+                            foreach (var subItem in EffectsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -252,6 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AAudioEffect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,6 +386,10 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AAudioEffect.TranslationMask? Effects;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -282,6 +399,12 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -418,6 +541,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IAudioEffectChainInternal>
     {
+        new ExtendedList<AAudioEffect> Effects { get; }
     }
 
     public partial interface IAudioEffectChainInternal :
@@ -435,6 +559,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IAudioEffectChainGetter>
     {
         static new ILoquiRegistration StaticRegistration => AudioEffectChain_Registration.Instance;
+        IReadOnlyList<IAAudioEffectGetter> Effects { get; }
 
     }
 
@@ -599,6 +724,7 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Effects = 6,
     }
     #endregion
 
@@ -616,9 +742,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "b63b922c-506b-494f-b73d-737e67fc553e";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(AudioEffectChain.Mask<>);
 
@@ -648,8 +774,11 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.AECH);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.AECH);
+            var all = RecordCollection.Factory(
+                RecordTypes.AECH,
+                RecordTypes.KNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AudioEffectChainBinaryWriteTranslation);
         #region Interface
@@ -693,6 +822,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAudioEffectChainInternal item)
         {
             ClearPartial();
+            item.Effects.Clear();
             base.Clear(item);
         }
         
@@ -778,6 +908,10 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +961,20 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                sb.AppendLine("Effects =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static AudioEffectChain_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1023,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AudioEffectChain_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((AAudioEffectCommon)((IAAudioEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AudioEffectChain_FieldIndex.Effects)))) return false;
+            }
             return true;
         }
         
@@ -903,6 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IAudioEffectChainGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1006,6 +1159,30 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)AudioEffectChain_FieldIndex.Effects) ?? true))
+            {
+                errorMask?.PushIndex((int)AudioEffectChain_FieldIndex.Effects);
+                try
+                {
+                    item.Effects.SetTo(
+                        rhs.Effects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1331,33 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static AudioEffectChainBinaryWriteTranslation Instance = new AudioEffectChainBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IAudioEffectChainGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            AudioEffectChainBinaryWriteTranslation.WriteBinaryEffects(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryEffectsCustom(
+            MutagenWriter writer,
+            IAudioEffectChainGetter item);
+
+        public static void WriteBinaryEffects(
+            MutagenWriter writer,
+            IAudioEffectChainGetter item)
+        {
+            WriteBinaryEffectsCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IAudioEffectChainGetter item,
@@ -1168,10 +1372,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1435,40 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IAudioEffectChainInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.KNAM:
+                {
+                    AudioEffectChainBinaryCreateTranslation.FillBinaryEffectsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)AudioEffectChain_FieldIndex.Effects;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        public static partial void FillBinaryEffectsCustom(
+            MutagenFrame frame,
+            IAudioEffectChainInternal item);
+
     }
 
 }
@@ -1275,6 +1515,14 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IAudioEffectChain);
 
 
+        #region Effects
+        partial void EffectsCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +1577,38 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.KNAM:
+                {
+                    EffectsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return (int)AudioEffectChain_FieldIndex.Effects;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

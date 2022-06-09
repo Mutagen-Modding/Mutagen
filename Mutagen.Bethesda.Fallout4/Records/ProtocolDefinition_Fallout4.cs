@@ -534,7 +534,11 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             MaterialSubstitution_Registration.Instance,
             InstanceNamingRuleProperties_Registration.Instance,
             SoundKeywordMapping_Registration.Instance,
-            MappingSound_Registration.Instance
+            MappingSound_Registration.Instance,
+            OverdriveAudioEffect_Registration.Instance,
+            AAudioEffect_Registration.Instance,
+            StateVariableFilterAudioEffect_Registration.Instance,
+            DelayAudioEffect_Registration.Instance
         );
     }
 }

@@ -213,6 +213,9 @@
     <Compile Include="Records\Major Records\AStoryManagerNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AudioEffectChain.cs">
+      <DependentUpon>AudioEffectChain.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\BipedObjectData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -689,6 +692,9 @@
     </Compile>
     <Compile Include="Records\Major Records\SoundOutputModel.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StateVariableFilterAudioEffect.cs">
+      <DependentUpon>AudioEffectChain.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Static.cs">
       <DependentUpon>Static.xml</DependentUpon>
@@ -2387,6 +2393,18 @@
     </Compile>
     <Compile Include="Records\Major Records\MappingSound_Generated.cs">
       <DependentUpon>SoundKeywordMapping.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AAudioEffect_Generated.cs">
+      <DependentUpon>AudioEffectChain.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\OverdriveAudioEffect_Generated.cs">
+      <DependentUpon>AudioEffectChain.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StateVariableFilterAudioEffect_Generated.cs">
+      <DependentUpon>AudioEffectChain.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DelayAudioEffect_Generated.cs">
+      <DependentUpon>AudioEffectChain.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
