@@ -906,6 +906,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DMDL,
                 RecordTypes.DSTF,
                 RecordTypes.DMDT,
+                RecordTypes.DMDC,
                 RecordTypes.DMDS);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });

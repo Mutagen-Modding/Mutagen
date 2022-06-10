@@ -174,6 +174,7 @@ public partial class RecordTypeInts
     public const int DLBR = 0x52424C44;
     public const int DLVW = 0x57564C44;
     public const int DMAX = 0x58414D44;
+    public const int DMDC = 0x43444D44;
     public const int DMDL = 0x4C444D44;
     public const int DMDS = 0x53444D44;
     public const int DMDT = 0x54444D44;

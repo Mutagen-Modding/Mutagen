@@ -30,6 +30,7 @@
         <RecordTypeOverrides>
           <Mapping From="MODL" To="DMDL" />
           <Mapping From="MODT" To="DMDT" />
+          <Mapping From="MODC" To="DMDC" />
           <Mapping From="MODS" To="DMDS" />
         </RecordTypeOverrides>
       </RefDirect>

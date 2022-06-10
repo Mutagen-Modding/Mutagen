@@ -783,6 +783,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DMDL,
                 RecordTypes.DSTF,
                 RecordTypes.DMDT,
+                RecordTypes.DMDC,
                 RecordTypes.DMDS);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
@@ -793,6 +794,9 @@ namespace Mutagen.Bethesda.Fallout4
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODT,
                 RecordTypes.DMDT),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODC,
+                RecordTypes.DMDC),
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODS,
                 RecordTypes.DMDS));
