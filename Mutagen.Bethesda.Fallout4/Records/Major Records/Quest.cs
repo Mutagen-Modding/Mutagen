@@ -422,7 +422,7 @@ partial class QuestBinaryOverlay
                     case RecordTypeInts.ALLS:
                         {
                             var id = subRec.AsUInt32();
-                            var ret = (QuestReferenceAliasBinaryOverlay)QuestLocationAliasBinaryOverlay.QuestLocationAliasFactory(s.Slice(subRec.TotalLength), p);
+                            var ret = (QuestLocationAliasBinaryOverlay)QuestLocationAliasBinaryOverlay.QuestLocationAliasFactory(s.Slice(subRec.TotalLength), p);
                             ret.ID = id;
                             return ret;
                         }
