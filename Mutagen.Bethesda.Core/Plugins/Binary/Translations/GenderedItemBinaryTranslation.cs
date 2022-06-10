@@ -563,19 +563,16 @@ internal class GenderedItemBinaryTranslation
         try
         {
             var male = item.Male;
-            if (male != null)
+            using (HeaderExport.Subrecord(writer, maleMarker))
             {
-                using (HeaderExport.Subrecord(writer, maleMarker))
-                {
-                    if (markerWrap)
-                    {
-                        transl(writer, male, recordTypeConverter);
-                    }
-                }
-                if (!markerWrap)
+                if (male != null && markerWrap)
                 {
                     transl(writer, male, recordTypeConverter);
                 }
+            }
+            if (male != null && !markerWrap)
+            {
+                transl(writer, male, recordTypeConverter);
             }
         }
         catch (Exception ex)
@@ -585,19 +582,16 @@ internal class GenderedItemBinaryTranslation
         try
         {
             var female = item.Female;
-            if (female != null)
+            using (HeaderExport.Subrecord(writer, femaleMarker))
             {
-                using (HeaderExport.Subrecord(writer, femaleMarker))
-                {
-                    if (markerWrap)
-                    {
-                        transl(writer, female, recordTypeConverter);
-                    }
-                }
-                if (!markerWrap)
+                if (female != null && markerWrap)
                 {
                     transl(writer, female, recordTypeConverter);
                 }
+            }
+            if (female != null && !markerWrap)
+            {
+                transl(writer, female, recordTypeConverter);
             }
         }
         catch (Exception ex)
