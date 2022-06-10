@@ -39,10 +39,10 @@
         <RecordTypeOverrides>
           <Mapping From="MODL" To="MOD4" />
           <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MODC" To="MO4C" />
           <Mapping From="MODS" To="MO4S" />
         </RecordTypeOverrides>
       </RefDirect>
-      <Float name="FirstPersonColorRemappingIndex" recordType="MO4C" />
       <Int32 name="MO4F" recordType="MO4F" />
       <Data recordType="DNAM">
         <Fields>

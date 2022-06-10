@@ -348,11 +348,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IWeaponGetter.FirstPersonModel => this.FirstPersonModel;
         #endregion
-        #region FirstPersonColorRemappingIndex
-        public Single? FirstPersonColorRemappingIndex { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IWeaponGetter.FirstPersonColorRemappingIndex => this.FirstPersonColorRemappingIndex;
-        #endregion
         #region MO4F
         public Int32? MO4F { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -694,7 +689,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
                 this.EmbeddedWeaponMod = initialValue;
                 this.FirstPersonModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.FirstPersonColorRemappingIndex = initialValue;
                 this.MO4F = initialValue;
                 this.Ammo = initialValue;
                 this.Speed = initialValue;
@@ -777,7 +771,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ObjectTemplates,
                 TItem EmbeddedWeaponMod,
                 TItem FirstPersonModel,
-                TItem FirstPersonColorRemappingIndex,
                 TItem MO4F,
                 TItem Ammo,
                 TItem Speed,
@@ -859,7 +852,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
                 this.EmbeddedWeaponMod = EmbeddedWeaponMod;
                 this.FirstPersonModel = new MaskItem<TItem, Model.Mask<TItem>?>(FirstPersonModel, new Model.Mask<TItem>(FirstPersonModel));
-                this.FirstPersonColorRemappingIndex = FirstPersonColorRemappingIndex;
                 this.MO4F = MO4F;
                 this.Ammo = Ammo;
                 this.Speed = Speed;
@@ -944,7 +936,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
             public TItem EmbeddedWeaponMod;
             public MaskItem<TItem, Model.Mask<TItem>?>? FirstPersonModel { get; set; }
-            public TItem FirstPersonColorRemappingIndex;
             public TItem MO4F;
             public TItem Ammo;
             public TItem Speed;
@@ -1031,7 +1022,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
                 if (!object.Equals(this.EmbeddedWeaponMod, rhs.EmbeddedWeaponMod)) return false;
                 if (!object.Equals(this.FirstPersonModel, rhs.FirstPersonModel)) return false;
-                if (!object.Equals(this.FirstPersonColorRemappingIndex, rhs.FirstPersonColorRemappingIndex)) return false;
                 if (!object.Equals(this.MO4F, rhs.MO4F)) return false;
                 if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
                 if (!object.Equals(this.Speed, rhs.Speed)) return false;
@@ -1110,7 +1100,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ObjectTemplates);
                 hash.Add(this.EmbeddedWeaponMod);
                 hash.Add(this.FirstPersonModel);
-                hash.Add(this.FirstPersonColorRemappingIndex);
                 hash.Add(this.MO4F);
                 hash.Add(this.Ammo);
                 hash.Add(this.Speed);
@@ -1249,7 +1238,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.FirstPersonModel.Overall)) return false;
                     if (this.FirstPersonModel.Specific != null && !this.FirstPersonModel.Specific.All(eval)) return false;
                 }
-                if (!eval(this.FirstPersonColorRemappingIndex)) return false;
                 if (!eval(this.MO4F)) return false;
                 if (!eval(this.Ammo)) return false;
                 if (!eval(this.Speed)) return false;
@@ -1394,7 +1382,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.FirstPersonModel.Overall)) return true;
                     if (this.FirstPersonModel.Specific != null && this.FirstPersonModel.Specific.Any(eval)) return true;
                 }
-                if (eval(this.FirstPersonColorRemappingIndex)) return true;
                 if (eval(this.MO4F)) return true;
                 if (eval(this.Ammo)) return true;
                 if (eval(this.Speed)) return true;
@@ -1531,7 +1518,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 obj.EmbeddedWeaponMod = eval(this.EmbeddedWeaponMod);
                 obj.FirstPersonModel = this.FirstPersonModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.FirstPersonModel.Overall), this.FirstPersonModel.Specific?.Translate(eval));
-                obj.FirstPersonColorRemappingIndex = eval(this.FirstPersonColorRemappingIndex);
                 obj.MO4F = eval(this.MO4F);
                 obj.Ammo = eval(this.Ammo);
                 obj.Speed = eval(this.Speed);
@@ -1737,10 +1723,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.FirstPersonModel?.Overall ?? true)
                     {
                         FirstPersonModel?.Print(sb);
-                    }
-                    if (printMask?.FirstPersonColorRemappingIndex ?? true)
-                    {
-                        sb.AppendItem(FirstPersonColorRemappingIndex, "FirstPersonColorRemappingIndex");
                     }
                     if (printMask?.MO4F ?? true)
                     {
@@ -1979,7 +1961,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
             public Exception? EmbeddedWeaponMod;
             public MaskItem<Exception?, Model.ErrorMask?>? FirstPersonModel;
-            public Exception? FirstPersonColorRemappingIndex;
             public Exception? MO4F;
             public Exception? Ammo;
             public Exception? Speed;
@@ -2083,8 +2064,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return EmbeddedWeaponMod;
                     case Weapon_FieldIndex.FirstPersonModel:
                         return FirstPersonModel;
-                    case Weapon_FieldIndex.FirstPersonColorRemappingIndex:
-                        return FirstPersonColorRemappingIndex;
                     case Weapon_FieldIndex.MO4F:
                         return MO4F;
                     case Weapon_FieldIndex.Ammo:
@@ -2262,9 +2241,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Weapon_FieldIndex.FirstPersonModel:
                         this.FirstPersonModel = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
-                        break;
-                    case Weapon_FieldIndex.FirstPersonColorRemappingIndex:
-                        this.FirstPersonColorRemappingIndex = ex;
                         break;
                     case Weapon_FieldIndex.MO4F:
                         this.MO4F = ex;
@@ -2496,9 +2472,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Weapon_FieldIndex.FirstPersonModel:
                         this.FirstPersonModel = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Weapon_FieldIndex.FirstPersonColorRemappingIndex:
-                        this.FirstPersonColorRemappingIndex = (Exception?)obj;
-                        break;
                     case Weapon_FieldIndex.MO4F:
                         this.MO4F = (Exception?)obj;
                         break;
@@ -2683,7 +2656,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ObjectTemplates != null) return true;
                 if (EmbeddedWeaponMod != null) return true;
                 if (FirstPersonModel != null) return true;
-                if (FirstPersonColorRemappingIndex != null) return true;
                 if (MO4F != null) return true;
                 if (Ammo != null) return true;
                 if (Speed != null) return true;
@@ -2865,9 +2837,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 FirstPersonModel?.Print(sb);
                 {
-                    sb.AppendItem(FirstPersonColorRemappingIndex, "FirstPersonColorRemappingIndex");
-                }
-                {
                     sb.AppendItem(MO4F, "MO4F");
                 }
                 {
@@ -3046,7 +3015,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.EmbeddedWeaponMod = this.EmbeddedWeaponMod.Combine(rhs.EmbeddedWeaponMod);
                 ret.FirstPersonModel = this.FirstPersonModel.Combine(rhs.FirstPersonModel, (l, r) => l.Combine(r));
-                ret.FirstPersonColorRemappingIndex = this.FirstPersonColorRemappingIndex.Combine(rhs.FirstPersonColorRemappingIndex);
                 ret.MO4F = this.MO4F.Combine(rhs.MO4F);
                 ret.Ammo = this.Ammo.Combine(rhs.Ammo);
                 ret.Speed = this.Speed.Combine(rhs.Speed);
@@ -3142,7 +3110,6 @@ namespace Mutagen.Bethesda.Fallout4
             public ObjectTemplate.TranslationMask? ObjectTemplates;
             public bool EmbeddedWeaponMod;
             public Model.TranslationMask? FirstPersonModel;
-            public bool FirstPersonColorRemappingIndex;
             public bool MO4F;
             public bool Ammo;
             public bool Speed;
@@ -3217,7 +3184,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.InstanceNaming = defaultOn;
                 this.AttachParentSlots = defaultOn;
                 this.EmbeddedWeaponMod = defaultOn;
-                this.FirstPersonColorRemappingIndex = defaultOn;
                 this.MO4F = defaultOn;
                 this.Ammo = defaultOn;
                 this.Speed = defaultOn;
@@ -3296,7 +3262,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
                 ret.Add((EmbeddedWeaponMod, null));
                 ret.Add((FirstPersonModel != null ? FirstPersonModel.OnOverall : DefaultOn, FirstPersonModel?.GetCrystal()));
-                ret.Add((FirstPersonColorRemappingIndex, null));
                 ret.Add((MO4F, null));
                 ret.Add((Ammo, null));
                 ret.Add((Speed, null));
@@ -3558,7 +3523,6 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<ObjectTemplate<Weapon.Property>>? ObjectTemplates { get; set; }
         new IFormLinkNullable<IAObjectModificationGetter> EmbeddedWeaponMod { get; set; }
         new Model? FirstPersonModel { get; set; }
-        new Single? FirstPersonColorRemappingIndex { get; set; }
         new Int32? MO4F { get; set; }
         new IFormLink<IAmmunitionGetter> Ammo { get; set; }
         new Single Speed { get; set; }
@@ -3702,7 +3666,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IObjectTemplateGetter<Weapon.Property>>? ObjectTemplates { get; }
         IFormLinkNullableGetter<IAObjectModificationGetter> EmbeddedWeaponMod { get; }
         IModelGetter? FirstPersonModel { get; }
-        Single? FirstPersonColorRemappingIndex { get; }
         Int32? MO4F { get; }
         IFormLinkGetter<IAmmunitionGetter> Ammo { get; }
         Single Speed { get; }
@@ -3944,58 +3907,57 @@ namespace Mutagen.Bethesda.Fallout4
         ObjectTemplates = 25,
         EmbeddedWeaponMod = 26,
         FirstPersonModel = 27,
-        FirstPersonColorRemappingIndex = 28,
-        MO4F = 29,
-        Ammo = 30,
-        Speed = 31,
-        ReloadSpeed = 32,
-        Reach = 33,
-        MinRange = 34,
-        MaxRange = 35,
-        AttackDelay = 36,
-        Unknown = 37,
-        DamageOutOfRangeMult = 38,
-        OnHit = 39,
-        Skill = 40,
-        Resist = 41,
-        Flags = 42,
-        Capacity = 43,
-        AnimationType = 44,
-        SecondaryDamage = 45,
-        Weight = 46,
-        Value = 47,
-        BaseDamage = 48,
-        SoundLevel = 49,
-        AttackSound = 50,
-        Attack2dSound = 51,
-        AttackLoopSound = 52,
-        AttackFailSound = 53,
-        IdleSound = 54,
-        EquipSound = 55,
-        UnequipSound = 56,
-        FastEquipSound = 57,
-        AccuracyBonus = 58,
-        AnimationAttackSeconds = 59,
-        Unknown2 = 60,
-        ActionPointCost = 61,
-        FullPowerSeconds = 62,
-        MinPowerPerShot = 63,
-        Stagger = 64,
-        Unknown3 = 65,
-        ExtraData = 66,
-        CritDamageMult = 67,
-        CritChargeBonus = 68,
-        CritEffect = 69,
-        ImpactDataSet = 70,
-        NpcAddAmmoList = 71,
-        AimModel = 72,
-        Zoom = 73,
-        Template = 74,
-        DamageType = 75,
-        Filter = 76,
-        MeleeSpeed = 77,
-        DNAMDataTypeState = 78,
-        CRDTDataTypeState = 79,
+        MO4F = 28,
+        Ammo = 29,
+        Speed = 30,
+        ReloadSpeed = 31,
+        Reach = 32,
+        MinRange = 33,
+        MaxRange = 34,
+        AttackDelay = 35,
+        Unknown = 36,
+        DamageOutOfRangeMult = 37,
+        OnHit = 38,
+        Skill = 39,
+        Resist = 40,
+        Flags = 41,
+        Capacity = 42,
+        AnimationType = 43,
+        SecondaryDamage = 44,
+        Weight = 45,
+        Value = 46,
+        BaseDamage = 47,
+        SoundLevel = 48,
+        AttackSound = 49,
+        Attack2dSound = 50,
+        AttackLoopSound = 51,
+        AttackFailSound = 52,
+        IdleSound = 53,
+        EquipSound = 54,
+        UnequipSound = 55,
+        FastEquipSound = 56,
+        AccuracyBonus = 57,
+        AnimationAttackSeconds = 58,
+        Unknown2 = 59,
+        ActionPointCost = 60,
+        FullPowerSeconds = 61,
+        MinPowerPerShot = 62,
+        Stagger = 63,
+        Unknown3 = 64,
+        ExtraData = 65,
+        CritDamageMult = 66,
+        CritChargeBonus = 67,
+        CritEffect = 68,
+        ImpactDataSet = 69,
+        NpcAddAmmoList = 70,
+        AimModel = 71,
+        Zoom = 72,
+        Template = 73,
+        DamageType = 74,
+        Filter = 75,
+        MeleeSpeed = 76,
+        DNAMDataTypeState = 77,
+        CRDTDataTypeState = 78,
     }
     #endregion
 
@@ -4013,9 +3975,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "ea1189a0-716d-4099-ad06-721ccd313caa";
 
-        public const ushort AdditionalFieldCount = 74;
+        public const ushort AdditionalFieldCount = 73;
 
-        public const ushort FieldCount = 80;
+        public const ushort FieldCount = 79;
 
         public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
@@ -4080,8 +4042,8 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.NNAM,
                 RecordTypes.MOD4,
                 RecordTypes.MO4T,
-                RecordTypes.MO4S,
                 RecordTypes.MO4C,
+                RecordTypes.MO4S,
                 RecordTypes.MO4F,
                 RecordTypes.DNAM,
                 RecordTypes.FNAM,
@@ -4103,6 +4065,9 @@ namespace Mutagen.Bethesda.Fallout4
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODT,
                 RecordTypes.MO4T),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODC,
+                RecordTypes.MO4C),
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODS,
                 RecordTypes.MO4S));
@@ -4170,7 +4135,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.ObjectTemplates = null;
             item.EmbeddedWeaponMod.Clear();
             item.FirstPersonModel = null;
-            item.FirstPersonColorRemappingIndex = default;
             item.MO4F = default;
             item.Ammo.Clear();
             item.Speed = default;
@@ -4394,7 +4358,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.FirstPersonModel,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.FirstPersonColorRemappingIndex = item.FirstPersonColorRemappingIndex.EqualsWithin(rhs.FirstPersonColorRemappingIndex);
             ret.MO4F = item.MO4F == rhs.MO4F;
             ret.Ammo = item.Ammo.Equals(rhs.Ammo);
             ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
@@ -4631,11 +4594,6 @@ namespace Mutagen.Bethesda.Fallout4
                 && item.FirstPersonModel is {} FirstPersonModelItem)
             {
                 FirstPersonModelItem?.Print(sb, "FirstPersonModel");
-            }
-            if ((printMask?.FirstPersonColorRemappingIndex ?? true)
-                && item.FirstPersonColorRemappingIndex is {} FirstPersonColorRemappingIndexItem)
-            {
-                sb.AppendItem(FirstPersonColorRemappingIndexItem, "FirstPersonColorRemappingIndex");
             }
             if ((printMask?.MO4F ?? true)
                 && item.MO4F is {} MO4FItem)
@@ -5006,10 +4964,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isFirstPersonModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonColorRemappingIndex) ?? true))
-            {
-                if (!lhs.FirstPersonColorRemappingIndex.EqualsWithin(rhs.FirstPersonColorRemappingIndex)) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.MO4F) ?? true))
             {
                 if (lhs.MO4F != rhs.MO4F) return false;
@@ -5295,10 +5249,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (item.FirstPersonModel is {} FirstPersonModelitem)
             {
                 hash.Add(FirstPersonModelitem);
-            }
-            if (item.FirstPersonColorRemappingIndex is {} FirstPersonColorRemappingIndexitem)
-            {
-                hash.Add(FirstPersonColorRemappingIndexitem);
             }
             if (item.MO4F is {} MO4Fitem)
             {
@@ -5894,10 +5844,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonColorRemappingIndex) ?? true))
-            {
-                item.FirstPersonColorRemappingIndex = rhs.FirstPersonColorRemappingIndex;
-            }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.MO4F) ?? true))
             {
                 item.MO4F = rhs.MO4F;
@@ -6444,10 +6390,6 @@ namespace Mutagen.Bethesda.Fallout4
                     writer: writer,
                     translationParams: translationParams.With(Weapon_Registration.FirstPersonModelConverter));
             }
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.FirstPersonColorRemappingIndex,
-                header: translationParams.ConvertToCustom(RecordTypes.MO4C));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.MO4F,
@@ -6866,12 +6808,6 @@ namespace Mutagen.Bethesda.Fallout4
                         translationParams: translationParams.With(Weapon_Registration.FirstPersonModelConverter));
                     return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
-                case RecordTypeInts.MO4C:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FirstPersonColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Weapon_FieldIndex.FirstPersonColorRemappingIndex;
-                }
                 case RecordTypeInts.MO4F:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -7134,10 +7070,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IAObjectModificationGetter> EmbeddedWeaponMod => _EmbeddedWeaponModLocation.HasValue ? new FormLinkNullable<IAObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmbeddedWeaponModLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAObjectModificationGetter>.Null;
         #endregion
         public IModelGetter? FirstPersonModel { get; private set; }
-        #region FirstPersonColorRemappingIndex
-        private int? _FirstPersonColorRemappingIndexLocation;
-        public Single? FirstPersonColorRemappingIndex => _FirstPersonColorRemappingIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FirstPersonColorRemappingIndexLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
         #region MO4F
         private int? _MO4FLocation;
         public Int32? MO4F => _MO4FLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MO4FLocation.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -7592,11 +7524,6 @@ namespace Mutagen.Bethesda.Fallout4
                         package: _package,
                         parseParams: Weapon_Registration.FirstPersonModelConverter);
                     return (int)Weapon_FieldIndex.FirstPersonModel;
-                }
-                case RecordTypeInts.MO4C:
-                {
-                    _FirstPersonColorRemappingIndexLocation = (stream.Position - offset);
-                    return (int)Weapon_FieldIndex.FirstPersonColorRemappingIndex;
                 }
                 case RecordTypeInts.MO4F:
                 {
