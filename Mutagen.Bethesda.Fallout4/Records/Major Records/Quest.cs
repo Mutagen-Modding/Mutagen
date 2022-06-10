@@ -89,12 +89,20 @@ partial class QuestBinaryCreateTranslation
         return null;
     }
 
+    private static readonly HashSet<RecordType> _expectedAliasRecords = new()
+    {
+        RecordTypes.ALST,
+        RecordTypes.ALLS,
+        RecordTypes.ALCS,
+        RecordTypes.ALMI,
+    };
+
     public static partial ParseResult FillBinaryAliasParseCustom(MutagenFrame frame, IQuestInternal item)
     {
         frame = frame.SpawnAll();
         frame.TryReadSubrecord(RecordTypes.ANAM, out _);
         item.Aliases.Clear();
-        while (frame.TryReadSubrecord(out var subRec))
+        while (frame.TryReadSubrecord(_expectedAliasRecords, out var subRec))
         {
             switch (subRec.RecordTypeInt)
             {
