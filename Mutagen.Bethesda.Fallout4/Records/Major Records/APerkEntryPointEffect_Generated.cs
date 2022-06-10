@@ -62,7 +62,9 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte PerkConditionTabCount { get; set; } = default;
         #endregion
         #region PerkEntryID
-        public UInt16 PerkEntryID { get; set; } = default;
+        public UInt16? PerkEntryID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IAPerkEntryPointEffectGetter.PerkEntryID => this.PerkEntryID;
         #endregion
 
         #region To String
@@ -464,7 +466,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new APerkEntryPointEffect.EntryType EntryPoint { get; set; }
         new Byte PerkConditionTabCount { get; set; }
-        new UInt16 PerkEntryID { get; set; }
+        new UInt16? PerkEntryID { get; set; }
     }
 
     /// <summary>
@@ -479,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         APerkEntryPointEffect.EntryType EntryPoint { get; }
         Byte PerkConditionTabCount { get; }
-        UInt16 PerkEntryID { get; }
+        UInt16? PerkEntryID { get; }
 
     }
 
@@ -855,9 +857,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.PerkConditionTabCount, "PerkConditionTabCount");
             }
-            if (printMask?.PerkEntryID ?? true)
+            if ((printMask?.PerkEntryID ?? true)
+                && item.PerkEntryID is {} PerkEntryIDItem)
             {
-                sb.AppendItem(item.PerkEntryID, "PerkEntryID");
+                sb.AppendItem(PerkEntryIDItem, "PerkEntryID");
             }
         }
         
@@ -917,7 +920,10 @@ namespace Mutagen.Bethesda.Fallout4
             var hash = new HashCode();
             hash.Add(item.EntryPoint);
             hash.Add(item.PerkConditionTabCount);
-            hash.Add(item.PerkEntryID);
+            if (item.PerkEntryID is {} PerkEntryIDitem)
+            {
+                hash.Add(PerkEntryIDitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1105,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.PerkEntryID,
                 header: translationParams.ConvertToCustom(RecordTypes.EPFB));
@@ -1272,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte PerkConditionTabCount => _data.Span[0x1];
         #region PerkEntryID
         private int? _PerkEntryIDLocation;
-        public UInt16 PerkEntryID => _PerkEntryIDLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkEntryIDLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16? PerkEntryID => _PerkEntryIDLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkEntryIDLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region FunctionParameters
         public partial ParseResult FunctionParametersCustomParse(

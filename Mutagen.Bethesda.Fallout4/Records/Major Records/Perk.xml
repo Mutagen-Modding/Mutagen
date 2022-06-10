@@ -70,7 +70,7 @@
     <Fields>
       <Enum name="EntryPoint" enumName="APerkEntryPointEffect.EntryType" byteLength="1" />
       <UInt8 name="PerkConditionTabCount" />
-      <UInt16 name="PerkEntryID" recordType="EPFB" nullable="False" />
+      <UInt16 name="PerkEntryID" recordType="EPFB" />
       <CustomLogic name="FunctionParameters" recordType="EPFT" />
     </Fields>
   </Object>

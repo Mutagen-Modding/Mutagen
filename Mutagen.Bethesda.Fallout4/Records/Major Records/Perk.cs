@@ -280,11 +280,14 @@ partial class PerkBinaryCreateTranslation
                         entryPointEffect.EntryPoint = entryPt;
                         entryPointEffect.PerkConditionTabCount = tabCount;
                         entryPointEffect.Conditions.SetTo(conditions);
-                        if (!epfb.HasValue)
+                        if (epfb.HasValue)
                         {
-                            throw new MalformedDataException($"Did not have expected EPFB record");
+                            entryPointEffect.PerkEntryID = epfb.Value.AsUInt16();
                         }
-                        entryPointEffect.PerkEntryID = epfb.Value.AsUInt16();
+                        else if (epft.HasValue)
+                        {
+                            throw new MalformedDataException($"Did not have expected EPFB record to go with the EPFT record");
+                        }
                         effect = entryPointEffect;
                         break;
                     default:
