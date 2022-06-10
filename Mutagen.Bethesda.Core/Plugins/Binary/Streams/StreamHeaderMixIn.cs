@@ -459,6 +459,32 @@ public static class StreamHeaderMixIn
     }
 
     /// <summary>
+    /// Attempts to retrieve a MajorRecordHeader struct from the stream, without progressing its position.
+    /// </summary>
+    /// <param name="stream">Source stream</param>
+    /// <param name="constants">Constants to use for alignment and measurements</param>
+    /// <param name="targetRecords">RecordTypes to require for a successful query</param>
+    /// <param name="header">MajorRecordHeader struct if successfully retrieved</param>
+    /// <param name="offset">Offset to the current position in the stream to read from</param>
+    /// <param name="readSafe">
+    /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+    /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+    /// If true, extra data copies may occur depending on the underling stream type.
+    /// </param>
+    /// <returns>True if SubrecordHeader was retrieved</returns>
+    public static bool TryGetMajorRecordHeader<TStream>(this TStream stream, GameConstants constants, IReadOnlyCollection<RecordType> targetRecords, out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        where TStream : IBinaryReadStream
+    {
+        if (stream.Remaining < constants.MajorConstants.HeaderLength + offset)
+        {
+            header = default;
+            return false;
+        }
+        header = GetMajorRecordHeader(stream, constants, offset: offset, readSafe: readSafe);
+        return targetRecords.Contains(header.RecordType);
+    }
+
+    /// <summary>
     /// Attempts to retrieve a MajorRecordHeader struct from the stream progressing its position.
     /// </summary>
     /// <param name="stream">Source stream</param>
@@ -497,7 +523,7 @@ public static class StreamHeaderMixIn
     /// If true, extra data copies may occur depending on the underling stream type.
     /// </param>
     /// <returns>True if SubrecordHeader was retrieved</returns>
-    public static bool TryReadMajorRecordHeader<TStream>(this TStream stream, GameConstants constants,RecordType targetType,  out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+    public static bool TryReadMajorRecordHeader<TStream>(this TStream stream, GameConstants constants, RecordType targetType,  out MajorRecordHeader header, int offset = 0, bool readSafe = true)
         where TStream : IBinaryReadStream
     {
         if (stream.Remaining < constants.MajorConstants.HeaderLength + offset)
@@ -507,6 +533,37 @@ public static class StreamHeaderMixIn
         }
         header = ReadMajorRecordHeader(stream, constants, offset: offset, readSafe: readSafe);
         if (header.RecordType != targetType)
+        {
+            stream.Position -= header.HeaderLength;
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a MajorRecordHeader struct from the stream progressing its position.
+    /// </summary>
+    /// <param name="stream">Source stream</param>
+    /// <param name="constants">Constants to use for alignment and measurements</param>
+    /// <param name="targetRecords">RecordTypes to require for a successful query</param>
+    /// <param name="header">MajorRecordHeader struct if successfully retrieved</param>
+    /// <param name="offset">Offset to the current position in the stream to read from</param>
+    /// <param name="readSafe">
+    /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+    /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+    /// If true, extra data copies may occur depending on the underling stream type.
+    /// </param>
+    /// <returns>True if SubrecordHeader was retrieved</returns>
+    public static bool TryReadMajorRecordHeader<TStream>(this TStream stream, GameConstants constants, IReadOnlyCollection<RecordType> targetRecords,  out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        where TStream : IBinaryReadStream
+    {
+        if (stream.Remaining < constants.MajorConstants.HeaderLength + offset)
+        {
+            header = default;
+            return false;
+        }
+        header = ReadMajorRecordHeader(stream, constants, offset: offset, readSafe: readSafe);
+        if (!targetRecords.Contains(header.RecordType))
         {
             stream.Position -= header.HeaderLength;
             return false;
@@ -659,6 +716,32 @@ public static class StreamHeaderMixIn
         }
         header = GetSubrecordHeader(stream, constants, offset: offset, readSafe: readSafe);
         return targetType == header.RecordType;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a SubrecordHeader struct of a specific type from the stream, without progressing its position.
+    /// </summary>
+    /// <param name="stream">Source stream</param>
+    /// <param name="constants">Constants to use for alignment and measurements</param>
+    /// <param name="targetRecords">RecordTypes to require for a successful query</param>
+    /// <param name="header">SubrecordHeader struct if successfully retrieved</param>
+    /// <param name="offset">Offset to the current position in the stream to read from</param>
+    /// <param name="readSafe">
+    /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+    /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+    /// If true, extra data copies may occur depending on the underling stream type.
+    /// </param>
+    /// <returns>True if SubrecordHeader was retrieved, and is of target type</returns>
+    public static bool TryGetSubrecordHeader<TStream>(this TStream stream, GameConstants constants, IReadOnlyCollection<RecordType> targetRecords, out SubrecordHeader header, int offset = 0, bool readSafe = true)
+        where TStream : IBinaryReadStream
+    {
+        if (stream.Remaining < constants.SubConstants.HeaderLength)
+        {
+            header = default;
+            return false;
+        }
+        header = GetSubrecordHeader(stream, constants, offset: offset, readSafe: readSafe);
+        return targetRecords.Contains(header.RecordType);
     }
 
     /// <summary>
@@ -829,6 +912,36 @@ public static class StreamHeaderMixIn
     }
 
     /// <summary>
+    /// Attempts to retrieve a SubrecordHeader struct of a specific type from the stream, progressing its position if successful.
+    /// </summary>
+    /// <param name="stream">Source stream</param>
+    /// <param name="constants">Constants to use for alignment and measurements</param>
+    /// <param name="targetRecords">RecordTypes to require for a successful query</param>
+    /// <param name="header">SubrecordHeader struct if successfully retrieved</param>
+    /// <param name="readSafe">
+    /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+    /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+    /// If true, extra data copies may occur depending on the underling stream type.
+    /// </param>
+    /// <returns>True if SubrecordHeader was retrieved, and is of target type</returns>
+    public static bool TryReadSubrecordHeader<TStream>(this TStream stream, GameConstants constants, IReadOnlyCollection<RecordType> targetRecords, out SubrecordHeader header, bool readSafe = true)
+        where TStream : IBinaryReadStream
+    {
+        if (stream.Remaining < constants.SubConstants.HeaderLength)
+        {
+            header = default;
+            return false;
+        }
+        header = ReadSubrecordHeader(stream, constants, readSafe: readSafe);
+        if (!targetRecords.Contains(header.RecordType))
+        {
+            stream.Position -= header.HeaderLength;
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
     /// Retrieves a SubrecordFrame struct, progressing its position.
     /// </summary>
     /// <param name="stream">Source stream</param>
@@ -912,6 +1025,31 @@ public static class StreamHeaderMixIn
         where TStream : IBinaryReadStream
     {
         if (!TryGetSubrecordHeader(stream, constants, targetType, out var meta, readSafe: readSafe, offset: 0))
+        {
+            frame = default;
+            return false;
+        }
+        frame = SubrecordFrame.FactoryNoTrim(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a SubrecordFrame struct of a specific type from the stream, progressing its position if successful.
+    /// </summary>
+    /// <param name="stream">Source stream</param>
+    /// <param name="constants">Constants to use for alignment and measurements</param>
+    /// <param name="targetRecords">RecordTypes to require for a successful query</param>
+    /// <param name="frame">SubrecordFrame struct if successfully retrieved</param>
+    /// <param name="readSafe">
+    /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+    /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+    /// If true, extra data copies may occur depending on the underling stream type.
+    /// </param>
+    /// <returns>True if SubrecordFrame was retrieved, and is of target type</returns>
+    public static bool TryReadSubrecord<TStream>(this TStream stream, GameConstants constants, IReadOnlyCollection<RecordType> targetRecords, out SubrecordFrame frame, bool readSafe = true)
+        where TStream : IBinaryReadStream
+    {
+        if (!TryGetSubrecordHeader(stream, constants, targetRecords, out var meta, readSafe: readSafe, offset: 0))
         {
             frame = default;
             return false;
@@ -1377,6 +1515,24 @@ public static class StreamHeaderMixIn
     }
 
     /// <summary>
+    /// Attempts to retrieve a SubrecordHeader struct, progressing its position if successful.
+    /// </summary>
+    /// <param name="stream">Source stream</param>
+    /// <param name="targetRecords">RecordTypes to require for a successful query</param>
+    /// <param name="header">SubrecordHeader struct if successfully retrieved</param>
+    /// <param name="readSafe">
+    /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+    /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+    /// If true, extra data copies may occur depending on the underling stream type.
+    /// </param>
+    /// <returns>True if SubrecordHeader was retrieved</returns>
+    public static bool TryReadMajorRecordHeader<TStream>(this TStream stream, IReadOnlyCollection<RecordType> targetRecords, out MajorRecordHeader header, bool readSafe = true)
+        where TStream : IMutagenReadStream
+    {
+        return TryReadMajorRecordHeader(stream, stream.MetaData.Constants, targetRecords, out header, readSafe: readSafe);
+    }
+
+    /// <summary>
     /// Retrieves a MajorRecordFrame struct from the stream, without progressing its position.
     /// </summary>
     /// <param name="stream">Source stream</param>
@@ -1665,6 +1821,24 @@ public static class StreamHeaderMixIn
         where TStream : IMutagenReadStream
     {
         return TryReadSubrecord(stream, stream.MetaData.Constants, targetType, out frame, readSafe: readSafe);
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a SubrecordFrame struct of a specific type from the stream, progressing its position if successful.
+    /// </summary>
+    /// <param name="stream">Source stream</param>
+    /// <param name="targetRecords">RecordTypes to require for a successful query</param>
+    /// <param name="frame">SubrecordFrame struct if successfully retrieved</param>
+    /// <param name="readSafe">
+    /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+    /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+    /// If true, extra data copies may occur depending on the underling stream type.
+    /// </param>
+    /// <returns>True if SubrecordFrame was retrieved, and is of target type</returns>
+    public static bool TryReadSubrecord<TStream>(this TStream stream, IReadOnlyCollection<RecordType> targetRecords, out SubrecordFrame frame, bool readSafe = true)
+        where TStream : IMutagenReadStream
+    {
+        return TryReadSubrecord(stream, stream.MetaData.Constants, targetRecords, out frame, readSafe: readSafe);
     }
 
     /// <summary>
