@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptFragmentIndexedGetter ScriptFragmentIndexedFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ScriptFragmentIndexedBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1308,12 +1308,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptFragmentIndexedGetter ScriptFragmentIndexedFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ScriptFragmentIndexedFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

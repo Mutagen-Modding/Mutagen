@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IInstanceNamingRuleSetGetter InstanceNamingRuleSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new InstanceNamingRuleSetBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1264,12 +1264,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IInstanceNamingRuleSetGetter InstanceNamingRuleSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return InstanceNamingRuleSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1279,9 +1279,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VNAM:
@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         trigger: InstanceNamingRule_Registration.TriggerSpecs,
                         countType: RecordTypes.VNAM,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => InstanceNamingRuleBinaryOverlay.InstanceNamingRuleFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)InstanceNamingRuleSet_FieldIndex.Names;

@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IMagicEffectSubDataGetter MagicEffectSubDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MagicEffectSubDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x1C),
@@ -1466,12 +1466,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IMagicEffectSubDataGetter MagicEffectSubDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MagicEffectSubDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

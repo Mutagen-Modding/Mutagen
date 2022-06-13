@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMorphGetter MorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MorphBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x20),
@@ -1078,12 +1078,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMorphGetter MorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MorphFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

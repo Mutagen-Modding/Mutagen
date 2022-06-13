@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICellCombinedMeshReferenceGetter CellCombinedMeshReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new CellCombinedMeshReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1148,12 +1148,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICellCombinedMeshReferenceGetter CellCombinedMeshReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return CellCombinedMeshReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

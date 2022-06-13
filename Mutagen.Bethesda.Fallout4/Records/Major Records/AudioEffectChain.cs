@@ -101,7 +101,7 @@ partial class AudioEffectChainBinaryOverlay
     {
         this.Effects = this.ParseRepeatedTypelessSubrecord<IAAudioEffectGetter>(
             stream: stream,
-            parseParams: null,
+            translationParams: null,
             trigger: RecordTypes.KNAM,
             factory: AudioEffectFactory);
     }

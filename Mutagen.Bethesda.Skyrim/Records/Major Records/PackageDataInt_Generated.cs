@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageDataIntGetter PackageDataIntFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new PackageDataIntBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1122,12 +1122,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageDataIntGetter PackageDataIntFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PackageDataIntFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

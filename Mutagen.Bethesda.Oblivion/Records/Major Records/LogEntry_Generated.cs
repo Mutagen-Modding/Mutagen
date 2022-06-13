@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILogEntryGetter LogEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new LogEntryBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1520,12 +1520,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILogEntryGetter LogEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LogEntryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1535,9 +1535,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.QSDT:
@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.ResultScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)LogEntry_FieldIndex.ResultScript;
                 }
                 default:

@@ -636,7 +636,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 {
                     args.AddPassArg($"finalPos");
                 }
-                args.Add($"parseParams: {converterAccessor}");
+                args.Add($"translationParams: {converterAccessor}");
             }
         }
     }

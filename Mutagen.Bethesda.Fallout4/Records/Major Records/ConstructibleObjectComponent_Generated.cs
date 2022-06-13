@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IConstructibleObjectComponentGetter ConstructibleObjectComponentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ConstructibleObjectComponentBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1148,12 +1148,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IConstructibleObjectComponentGetter ConstructibleObjectComponentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ConstructibleObjectComponentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

@@ -1149,10 +1149,10 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITerminalHolotapeEntryGetter TerminalHolotapeEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new TerminalHolotapeEntryBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
@@ -1167,12 +1167,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITerminalHolotapeEntryGetter TerminalHolotapeEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return TerminalHolotapeEntryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

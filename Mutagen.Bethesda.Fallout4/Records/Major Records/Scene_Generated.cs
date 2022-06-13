@@ -3597,7 +3597,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneGetter SceneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new SceneBinaryOverlay(
@@ -3616,7 +3616,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3624,12 +3624,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneGetter SceneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return SceneFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3639,9 +3639,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -3658,7 +3658,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.Phases = this.ParseRepeatedTypelessSubrecord<IScenePhaseGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: ScenePhase_Registration.TriggerSpecs,
                         factory: ScenePhaseBinaryOverlay.ScenePhaseFactory);
                     return (int)Scene_FieldIndex.Phases;
@@ -3667,7 +3667,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.Actors = this.ParseRepeatedTypelessSubrecord<ISceneActorGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: SceneActor_Registration.TriggerSpecs,
                         factory: SceneActorBinaryOverlay.SceneActorFactory);
                     return (int)Scene_FieldIndex.Actors;
@@ -3676,7 +3676,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.Actions = this.ParseRepeatedTypelessSubrecord<ISceneActionGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: SceneAction_Registration.TriggerSpecs,
                         factory: SceneActionBinaryOverlay.SceneActionFactory);
                     return (int)Scene_FieldIndex.Actions;
@@ -3690,7 +3690,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Unused = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Scene_FieldIndex.Unused;
                 }
                 case RecordTypeInts.NEXT:
@@ -3699,7 +3699,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Scene_FieldIndex.Unused2;
                 }
                 case RecordTypeInts.PNAM:
@@ -3750,7 +3750,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

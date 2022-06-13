@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageTargetAliasGetter PackageTargetAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new PackageTargetAliasBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1106,12 +1106,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageTargetAliasGetter PackageTargetAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PackageTargetAliasFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

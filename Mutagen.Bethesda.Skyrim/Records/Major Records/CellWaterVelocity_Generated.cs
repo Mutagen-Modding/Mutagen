@@ -1254,10 +1254,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICellWaterVelocityGetter CellWaterVelocityFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new CellWaterVelocityBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
@@ -1271,12 +1271,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICellWaterVelocityGetter CellWaterVelocityFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return CellWaterVelocityFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

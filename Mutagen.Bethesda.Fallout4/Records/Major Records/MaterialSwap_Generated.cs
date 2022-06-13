@@ -1670,7 +1670,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMaterialSwapGetter MaterialSwapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new MaterialSwapBinaryOverlay(
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1697,12 +1697,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMaterialSwapGetter MaterialSwapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MaterialSwapFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1712,9 +1712,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FNAM:
@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.Substitutions = this.ParseRepeatedTypelessSubrecord<IMaterialSubstitutionGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: MaterialSubstitution_Registration.TriggerSpecs,
                         factory: MaterialSubstitutionBinaryOverlay.MaterialSubstitutionFactory);
                     return (int)MaterialSwap_FieldIndex.Substitutions;

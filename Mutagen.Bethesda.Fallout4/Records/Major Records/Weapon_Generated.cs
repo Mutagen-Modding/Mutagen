@@ -7328,7 +7328,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeaponGetter WeaponFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new WeaponBinaryOverlay(
@@ -7347,7 +7347,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -7355,12 +7355,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeaponGetter WeaponFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return WeaponFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -7370,9 +7370,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -7405,7 +7405,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Weapon_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -7414,7 +7414,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Weapon_FieldIndex.Icons;
                 }
                 case RecordTypeInts.EITM:
@@ -7436,7 +7436,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Weapon_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ETYP:
@@ -7507,7 +7507,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         trigger: ObjectTemplate_Registration.TriggerSpecs,
                         countType: RecordTypes.OBTE,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Weapon.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Weapon_FieldIndex.ObjectTemplates;
@@ -7522,7 +7522,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.FirstPersonModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: Weapon_Registration.FirstPersonModelConverter);
+                        translationParams: Weapon_Registration.FirstPersonModelConverter);
                     return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.MO4F:

@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectPeakValueModArchetypeGetter MagicEffectPeakValueModArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MagicEffectPeakValueModArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1063,12 +1063,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectPeakValueModArchetypeGetter MagicEffectPeakValueModArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MagicEffectPeakValueModArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

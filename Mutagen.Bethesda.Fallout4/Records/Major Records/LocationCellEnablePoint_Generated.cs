@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationCellEnablePointGetter LocationCellEnablePointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new LocationCellEnablePointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1218,12 +1218,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationCellEnablePointGetter LocationCellEnablePointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LocationCellEnablePointFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

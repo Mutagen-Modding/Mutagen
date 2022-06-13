@@ -2544,7 +2544,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IArmorGetter ArmorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new ArmorBinaryOverlay(
@@ -2563,7 +2563,7 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2571,12 +2571,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IArmorGetter ArmorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ArmorFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2586,9 +2586,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2621,7 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Armor_FieldIndex.MaleBipedModel;
                 }
                 case RecordTypeInts.MOD2:
@@ -2629,7 +2629,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: Armor_Registration.MaleWorldModelConverter);
+                        translationParams: Armor_Registration.MaleWorldModelConverter);
                     return (int)Armor_FieldIndex.MaleWorldModel;
                 }
                 case RecordTypeInts.ICON:
@@ -2642,7 +2642,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.FemaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: Armor_Registration.FemaleBipedModelConverter);
+                        translationParams: Armor_Registration.FemaleBipedModelConverter);
                     return (int)Armor_FieldIndex.FemaleBipedModel;
                 }
                 case RecordTypeInts.MOD4:
@@ -2650,7 +2650,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.FemaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: Armor_Registration.FemaleWorldModelConverter);
+                        translationParams: Armor_Registration.FemaleWorldModelConverter);
                     return (int)Armor_FieldIndex.FemaleWorldModel;
                 }
                 case RecordTypeInts.ICO2:

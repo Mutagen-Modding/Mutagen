@@ -3183,7 +3183,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IAmmunitionGetter AmmunitionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new AmmunitionBinaryOverlay(
@@ -3202,7 +3202,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3210,12 +3210,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IAmmunitionGetter AmmunitionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return AmmunitionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3225,9 +3225,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -3250,7 +3250,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Ammunition_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
@@ -3262,7 +3262,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Ammunition_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:

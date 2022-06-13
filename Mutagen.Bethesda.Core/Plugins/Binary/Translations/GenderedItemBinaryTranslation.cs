@@ -182,7 +182,7 @@ internal class GenderedItemBinaryTranslation
         RecordType maleMarker,
         RecordType femaleMarker,
         BinaryMasterParseDelegate<TItem> transl,
-        TypedParseParams? parseParams = null)
+        TypedParseParams? translationParams = null)
         where TItem : class
     {
         TItem? male = default, female = default;
@@ -194,7 +194,7 @@ internal class GenderedItemBinaryTranslation
             if (type == maleMarker)
             {
                 frame.Position += subHeader.TotalLength;
-                if (!transl(frame, out male, parseParams))
+                if (!transl(frame, out male, translationParams))
                 {
                     male = null;
                 }
@@ -202,7 +202,7 @@ internal class GenderedItemBinaryTranslation
             else if (type == femaleMarker)
             {
                 frame.Position += subHeader.TotalLength;
-                if (!transl(frame, out female, parseParams))
+                if (!transl(frame, out female, translationParams))
                 {
                     female = null;
                 }

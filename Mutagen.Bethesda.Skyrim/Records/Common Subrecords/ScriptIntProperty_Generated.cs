@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScriptIntPropertyGetter ScriptIntPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ScriptIntPropertyBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1115,12 +1115,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScriptIntPropertyGetter ScriptIntPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ScriptIntPropertyFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

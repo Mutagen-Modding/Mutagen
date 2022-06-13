@@ -723,7 +723,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                    $"{target} = this.{nameof(PluginBinaryOverlay.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
                         {
                             args.AddPassArg("stream");
-                            args.Add($"parseParams: {converterAccessor}");
+                            args.Add($"translationParams: {converterAccessor}");
                             args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                             if (subGenTypes.Count <= 1)
                             {
@@ -775,7 +775,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         {
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
-                            args.Add($"parseParams: {converterAccessor}");
+                            args.Add($"translationParams: {converterAccessor}");
                             args.Add($"getter: (s, p, recConv) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                             args.Add(subFg =>
                             {
@@ -823,7 +823,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                 subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                 subArgs.Add("trigger: type");
                                 subArgs.Add("skipHeader: true");
-                                subArgs.Add($"parseParams: {converterAccessor}");
+                                subArgs.Add($"translationParams: {converterAccessor}");
                             }
                         });
                     }
@@ -845,7 +845,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                 subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                 subArgs.Add("trigger: type");
                                 subArgs.Add("skipHeader: false");
-                                subArgs.Add($"parseParams: {converterAccessor}");
+                                subArgs.Add($"translationParams: {converterAccessor}");
                             }
                         });
                     }
@@ -990,7 +990,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.Add($"countLength: {counterLen}");
                         args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                         args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
-                        args.Add($"parseParams: {converterAccessor}");
+                        args.Add($"translationParams: {converterAccessor}");
                         args.Add($"getter: (s, p, recConv) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                         args.Add("skipHeader: false");
                     }

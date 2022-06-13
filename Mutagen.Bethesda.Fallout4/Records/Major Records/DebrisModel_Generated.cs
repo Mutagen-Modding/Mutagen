@@ -1399,7 +1399,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDebrisModelGetter DebrisModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new DebrisModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
             ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.Length + 1;
@@ -1419,12 +1419,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDebrisModelGetter DebrisModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return DebrisModelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1434,9 +1434,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:

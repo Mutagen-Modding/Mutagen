@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationObjectIdGetter LocationObjectIdFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new LocationObjectIdBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1109,12 +1109,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationObjectIdGetter LocationObjectIdFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LocationObjectIdFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

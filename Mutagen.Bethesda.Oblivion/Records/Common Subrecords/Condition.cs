@@ -75,7 +75,7 @@ partial class ConditionBinaryOverlay
         OverlayStream stream,
         RecordType recordType,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? parseParams)
+        TypedParseParams? translationParams)
     {
         var rawBytes = stream.ReadSpan(0x1A);
         byte[] newBytes = new byte[rawBytes.Length + 4];
@@ -85,6 +85,6 @@ partial class ConditionBinaryOverlay
         return ConditionBinaryOverlay.ConditionFactory(
             stream: new OverlayStream(newBytes, package),
             package: package,
-            parseParams: parseParams);
+            translationParams: translationParams);
     }
 }

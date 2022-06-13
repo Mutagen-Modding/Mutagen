@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherAlphaGetter WeatherAlphaFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new WeatherAlphaBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1244,12 +1244,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherAlphaGetter WeatherAlphaFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return WeatherAlphaFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

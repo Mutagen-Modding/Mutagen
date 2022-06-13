@@ -1644,7 +1644,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeatherAmbientColorSetGetter WeatherAmbientColorSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new WeatherAmbientColorSetBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1660,12 +1660,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeatherAmbientColorSetGetter WeatherAmbientColorSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return WeatherAmbientColorSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

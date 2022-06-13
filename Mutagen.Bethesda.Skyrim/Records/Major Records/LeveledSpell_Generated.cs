@@ -1836,7 +1836,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILeveledSpellGetter LeveledSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LeveledSpellBinaryOverlay(
@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1863,12 +1863,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILeveledSpellGetter LeveledSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LeveledSpellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1878,9 +1878,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -1908,7 +1908,7 @@ namespace Mutagen.Bethesda.Skyrim
                         countLength: 1,
                         trigger: LeveledSpellEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.LLCT,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => LeveledSpellEntryBinaryOverlay.LeveledSpellEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)LeveledSpell_FieldIndex.Entries;

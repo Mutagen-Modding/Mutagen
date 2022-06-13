@@ -1200,10 +1200,10 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldspaceMaxHeightGetter WorldspaceMaxHeightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new WorldspaceMaxHeightBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
@@ -1217,12 +1217,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldspaceMaxHeightGetter WorldspaceMaxHeightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return WorldspaceMaxHeightFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

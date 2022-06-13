@@ -1436,7 +1436,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavigationMeshObstacleManagerSubObjectGetter NavigationMeshObstacleManagerSubObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new NavigationMeshObstacleManagerSubObjectBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1454,12 +1454,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavigationMeshObstacleManagerSubObjectGetter NavigationMeshObstacleManagerSubObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return NavigationMeshObstacleManagerSubObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1469,9 +1469,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.INDX:
@@ -1492,7 +1492,7 @@ namespace Mutagen.Bethesda.Fallout4
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.DATAs;
                 }
                 case RecordTypeInts.INTV:

@@ -2701,7 +2701,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundDescriptorGetter SoundDescriptorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new SoundDescriptorBinaryOverlay(
@@ -2720,7 +2720,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2728,12 +2728,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundDescriptorGetter SoundDescriptorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return SoundDescriptorFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2743,9 +2743,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.NNAM:
@@ -2782,7 +2782,7 @@ namespace Mutagen.Bethesda.Fallout4
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)SoundDescriptor_FieldIndex.SoundFiles;
                 }
                 case RecordTypeInts.ONAM:
@@ -2795,7 +2795,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -2827,7 +2827,7 @@ namespace Mutagen.Bethesda.Fallout4
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)SoundDescriptor_FieldIndex.Descriptors;
                 }
                 case RecordTypeInts.ITMS:
@@ -2841,7 +2841,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         trigger: SoundRateOfFire_Registration.TriggerSpecs,
                         countType: RecordTypes.ITMC,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => SoundRateOfFireBinaryOverlay.SoundRateOfFireFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)SoundDescriptor_FieldIndex.RatesOfFire;

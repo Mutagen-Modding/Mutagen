@@ -1371,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICloudLayerGetter CloudLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new CloudLayerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1387,12 +1387,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICloudLayerGetter CloudLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return CloudLayerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

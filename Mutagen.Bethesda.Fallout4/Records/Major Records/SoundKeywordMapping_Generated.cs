@@ -2055,7 +2055,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundKeywordMappingGetter SoundKeywordMappingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new SoundKeywordMappingBinaryOverlay(
@@ -2074,7 +2074,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2082,12 +2082,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundKeywordMappingGetter SoundKeywordMappingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return SoundKeywordMappingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2097,9 +2097,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DNAM:
@@ -2133,7 +2133,7 @@ namespace Mutagen.Bethesda.Fallout4
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)SoundKeywordMapping_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.RNAM:
@@ -2141,7 +2141,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Sounds = BinaryOverlayList.FactoryByArray<IMappingSoundGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => MappingSoundBinaryOverlay.MappingSoundFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

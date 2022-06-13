@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IOverdriveAudioEffectGetter OverdriveAudioEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new OverdriveAudioEffectBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x14),
@@ -1271,12 +1271,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IOverdriveAudioEffectGetter OverdriveAudioEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return OverdriveAudioEffectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

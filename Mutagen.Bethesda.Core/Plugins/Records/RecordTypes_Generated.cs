@@ -112,10 +112,12 @@ public partial class RecordTypes
     public static readonly RecordType NAME = new(0x454D414E);
     public static readonly RecordType NAVI = new(0x4956414E);
     public static readonly RecordType NAVM = new(0x4D56414E);
+    public static readonly RecordType NOCM = new(0x4D434F4E);
     public static readonly RecordType NOTE = new(0x45544F4E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType OMOD = new(0x444F4D4F);
     public static readonly RecordType OTFT = new(0x5446544F);
+    public static readonly RecordType OVIS = new(0x5349564F);
     public static readonly RecordType PACK = new(0x4B434150);
     public static readonly RecordType PARW = new(0x57524150);
     public static readonly RecordType PBAR = new(0x52414250);

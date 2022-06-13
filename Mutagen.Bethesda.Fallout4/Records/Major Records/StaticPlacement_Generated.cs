@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStaticPlacementGetter StaticPlacementFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new StaticPlacementBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x1C),
@@ -1191,12 +1191,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStaticPlacementGetter StaticPlacementFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return StaticPlacementFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

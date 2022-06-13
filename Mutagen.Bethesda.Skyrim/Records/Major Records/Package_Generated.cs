@@ -4008,7 +4008,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageGetter PackageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new PackageBinaryOverlay(
@@ -4027,7 +4027,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -4035,12 +4035,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageGetter PackageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PackageFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -4050,9 +4050,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -4075,7 +4075,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -4095,7 +4095,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.IdleAnimations = PackageIdlesBinaryOverlay.PackageIdlesFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Package_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.CNAM:
@@ -4130,7 +4130,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.OnBegin = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Package_FieldIndex.OnBegin;
                 }
                 case RecordTypeInts.POEA:
@@ -4139,7 +4139,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.OnEnd = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Package_FieldIndex.OnEnd;
                 }
                 case RecordTypeInts.POCA:
@@ -4148,7 +4148,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.OnChange = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Package_FieldIndex.OnChange;
                 }
                 default:

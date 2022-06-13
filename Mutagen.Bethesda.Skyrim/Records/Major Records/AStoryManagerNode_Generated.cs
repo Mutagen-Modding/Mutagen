@@ -1679,9 +1679,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.PNAM:
@@ -1703,7 +1703,7 @@ namespace Mutagen.Bethesda.Skyrim
                         countLength: 4,
                         trigger: Condition_Registration.TriggerSpecs,
                         countType: RecordTypes.CITC,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)AStoryManagerNode_FieldIndex.Conditions;

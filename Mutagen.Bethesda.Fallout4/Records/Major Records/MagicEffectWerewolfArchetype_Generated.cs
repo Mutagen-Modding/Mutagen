@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectWerewolfArchetypeGetter MagicEffectWerewolfArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MagicEffectWerewolfArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1063,12 +1063,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectWerewolfArchetypeGetter MagicEffectWerewolfArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MagicEffectWerewolfArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

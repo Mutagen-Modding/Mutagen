@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDestructionStageGetter DestructionStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new DestructionStageBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1425,12 +1425,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDestructionStageGetter DestructionStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return DestructionStageFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1440,9 +1440,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DSTD:
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: DestructionStage_Registration.ModelConverter);
+                        translationParams: DestructionStage_Registration.ModelConverter);
                     return (int)DestructionStage_FieldIndex.Model;
                 }
                 case RecordTypeInts.DSTF: // End Marker

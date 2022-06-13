@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScenePhaseFragmentGetter ScenePhaseFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ScenePhaseFragmentBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1313,12 +1313,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScenePhaseFragmentGetter ScenePhaseFragmentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ScenePhaseFragmentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

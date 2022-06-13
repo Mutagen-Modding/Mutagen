@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IQuestObjectiveGetter QuestObjectiveFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new QuestObjectiveBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1470,12 +1470,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IQuestObjectiveGetter QuestObjectiveFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return QuestObjectiveFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1485,9 +1485,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.QOBJ:
@@ -1510,7 +1510,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.Targets = this.ParseRepeatedTypelessSubrecord<IQuestObjectiveTargetGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: QuestObjectiveTarget_Registration.TriggerSpecs,
                         factory: QuestObjectiveTargetBinaryOverlay.QuestObjectiveTargetFactory);
                     return (int)QuestObjective_FieldIndex.Targets;

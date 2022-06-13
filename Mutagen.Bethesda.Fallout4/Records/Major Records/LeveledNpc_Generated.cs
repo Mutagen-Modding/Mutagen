@@ -2307,7 +2307,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILeveledNpcGetter LeveledNpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LeveledNpcBinaryOverlay(
@@ -2326,7 +2326,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2334,12 +2334,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILeveledNpcGetter LeveledNpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LeveledNpcFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2349,9 +2349,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -2389,7 +2389,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 1,
                         trigger: LeveledNpcEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.LLCT,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => LeveledNpcEntryBinaryOverlay.LeveledNpcEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)LeveledNpc_FieldIndex.Entries;
@@ -2410,7 +2410,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)LeveledNpc_FieldIndex.Model;
                 }
                 default:

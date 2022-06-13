@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMagicEffectSummonCreatureArchetypeGetter MagicEffectSummonCreatureArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MagicEffectSummonCreatureArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1053,12 +1053,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMagicEffectSummonCreatureArchetypeGetter MagicEffectSummonCreatureArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MagicEffectSummonCreatureArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

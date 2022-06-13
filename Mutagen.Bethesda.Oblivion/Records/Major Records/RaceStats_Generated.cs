@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRaceStatsGetter RaceStatsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new RaceStatsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1452,12 +1452,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRaceStatsGetter RaceStatsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return RaceStatsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

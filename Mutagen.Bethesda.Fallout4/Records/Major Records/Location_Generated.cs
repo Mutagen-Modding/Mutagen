@@ -5417,7 +5417,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationGetter LocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LocationBinaryOverlay(
@@ -5436,7 +5436,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -5444,12 +5444,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationGetter LocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LocationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -5459,9 +5459,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ACPR:
@@ -5576,7 +5576,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.ActorCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: RecordTypes.ACEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
@@ -5586,7 +5586,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.LocationCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: RecordTypes.LCEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
@@ -5596,7 +5596,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.ReferenceCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: RecordTypes.RCEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);

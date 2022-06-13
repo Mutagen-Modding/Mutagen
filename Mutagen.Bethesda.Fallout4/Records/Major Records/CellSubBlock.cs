@@ -13,7 +13,7 @@ partial class CellSubBlockBinaryOverlay
         this.Cells = BinaryOverlayList.FactoryByArray<ICellGetter>(
             mem: stream.RemainingMemory,
             package: _package,
-            parseParams: null,
+            translationParams: null,
             getter: (s, p, recConv) => CellBinaryOverlay.CellFactory(new OverlayStream(s, p), p, recConv),
             locs: CellBinaryOverlay.ParseRecordLocations(
                 stream: stream,

@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IQuestStageGetter QuestStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new QuestStageBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1513,12 +1513,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IQuestStageGetter QuestStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return QuestStageFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1528,9 +1528,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.INDX:
@@ -1547,7 +1547,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.LogEntries = this.ParseRepeatedTypelessSubrecord<IQuestLogEntryGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: QuestLogEntry_Registration.TriggerSpecs,
                         factory: QuestLogEntryBinaryOverlay.QuestLogEntryFactory);
                     return (int)QuestStage_FieldIndex.LogEntries;

@@ -3261,7 +3261,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPhonemeGetter PhonemeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new PhonemeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -3277,12 +3277,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPhonemeGetter PhonemeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PhonemeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IInterCellPointGetter InterCellPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new InterCellPointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1130,12 +1130,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IInterCellPointGetter InterCellPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return InterCellPointFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

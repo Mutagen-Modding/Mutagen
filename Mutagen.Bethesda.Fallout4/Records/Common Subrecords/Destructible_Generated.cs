@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDestructibleGetter DestructibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new DestructibleBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1570,7 +1570,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1578,12 +1578,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDestructibleGetter DestructibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return DestructibleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1593,9 +1593,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DEST:
@@ -1624,7 +1624,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
                     this.Stages = this.ParseRepeatedTypelessSubrecord<IDestructionStageGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: DestructionStage_Registration.TriggerSpecs,
                         factory: DestructionStageBinaryOverlay.DestructionStageFactory);
                     return (int)Destructible_FieldIndex.Stages;

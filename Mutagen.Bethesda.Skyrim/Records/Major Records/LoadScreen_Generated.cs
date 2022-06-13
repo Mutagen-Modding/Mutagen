@@ -2251,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILoadScreenGetter LoadScreenFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LoadScreenBinaryOverlay(
@@ -2270,7 +2270,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2278,12 +2278,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILoadScreenGetter LoadScreenFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LoadScreenFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2293,9 +2293,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ICON:
@@ -2303,7 +2303,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)LoadScreen_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
@@ -2316,7 +2316,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -2347,7 +2347,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.RotationOffsetConstraints = Int16MinMaxBinaryOverlay.Int16MinMaxFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)LoadScreen_FieldIndex.RotationOffsetConstraints;
                 }
                 case RecordTypeInts.XNAM:

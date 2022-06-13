@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INpcSoundTypesGetter NpcSoundTypesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new NpcSoundTypesBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1264,12 +1264,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static INpcSoundTypesGetter NpcSoundTypesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return NpcSoundTypesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1279,9 +1279,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CSDT:
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundTypes_FieldIndex.Types) return ParseResult.Stop;
                     this.Types = this.ParseRepeatedTypelessSubrecord<INpcSoundTypeGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: NpcSoundType_Registration.TriggerSpecs,
                         factory: NpcSoundTypeBinaryOverlay.NpcSoundTypeFactory);
                     return (int)NpcSoundTypes_FieldIndex.Types;

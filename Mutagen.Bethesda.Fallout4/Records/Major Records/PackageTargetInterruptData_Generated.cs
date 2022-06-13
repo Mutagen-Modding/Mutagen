@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageTargetInterruptDataGetter PackageTargetInterruptDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new PackageTargetInterruptDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1106,12 +1106,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageTargetInterruptDataGetter PackageTargetInterruptDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PackageTargetInterruptDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

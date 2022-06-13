@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModFormLinkFloatPropertyGetter<T> ObjectModFormLinkFloatPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ObjectModFormLinkFloatPropertyBinaryOverlay<T>(
                 bytes: stream.RemainingMemory.Slice(0, 0x11),
@@ -967,12 +967,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModFormLinkFloatPropertyGetter<T> ObjectModFormLinkFloatPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ObjectModFormLinkFloatPropertyFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

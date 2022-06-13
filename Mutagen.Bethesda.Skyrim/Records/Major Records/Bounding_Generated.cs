@@ -1395,7 +1395,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IBoundingGetter BoundingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new BoundingBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x24),
@@ -1412,12 +1412,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IBoundingGetter BoundingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return BoundingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

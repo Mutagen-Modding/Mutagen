@@ -1484,7 +1484,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStartSceneGetter StartSceneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new StartSceneBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1502,12 +1502,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStartSceneGetter StartSceneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return StartSceneFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1517,9 +1517,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.LCEP:
@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         trigger: Condition_Registration.TriggerSpecs,
                         countType: RecordTypes.CITC,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)StartScene_FieldIndex.Conditions;

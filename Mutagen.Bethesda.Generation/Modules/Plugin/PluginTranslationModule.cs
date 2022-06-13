@@ -1423,11 +1423,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     args.Add("Dictionary<RecordType, int>? recordParseCount");
                 }
-                args.Add($"{nameof(TypedParseParams)}? parseParams = null");
+                args.Add($"{nameof(TypedParseParams)}? translationParams = null");
             }
             using (sb.CurlyBrace())
             {
-                sb.AppendLine($"type = parseParams.ConvertToStandard(type);");
+                sb.AppendLine($"type = translationParams.ConvertToStandard(type);");
                 sb.AppendLine("switch (type.TypeInt)");
                 using (sb.CurlyBrace())
                 {
@@ -1492,7 +1492,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         nextRecAccessor: "type",
                                         toDo: async () =>
                                         {
-                                            string recConverter = "parseParams";
+                                            string recConverter = "translationParams";
                                             if (fieldData?.RecordTypeConverter != null
                                                 && fieldData.RecordTypeConverter.FromConversions.Count > 0)
                                             {
@@ -1569,7 +1569,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 nextRecAccessor: "type",
                                                 toDo: async () =>
                                                 {
-                                                    string recConverter = "parseParams";
+                                                    string recConverter = "translationParams";
                                                     if (doublesFieldData.RecordTypeConverter != null
                                                         && doublesFieldData.RecordTypeConverter.FromConversions
                                                             .Count > 0)
@@ -1620,7 +1620,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                         nextRecAccessor: "type",
                                                         toDo: async () =>
                                                         {
-                                                            string recConverter = "parseParams";
+                                                            string recConverter = "translationParams";
                                                             if (doublesFieldData.RecordTypeConverter != null
                                                                 && doublesFieldData.RecordTypeConverter.FromConversions
                                                                     .Count > 0)
@@ -1707,7 +1707,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.AddPassArg("lastParsed");
                                 if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                 {
-                                    args.Add($"parseParams: {obj.RegistrationName}.BaseConverter");
+                                    args.Add($"translationParams: {obj.RegistrationName}.BaseConverter");
                                 }
                             }
                         }
@@ -1724,7 +1724,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.AddPassArg("recordParseCount");
                                 if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                 {
-                                    args.Add($"parseParams: {obj.RegistrationName}.BaseConverter");
+                                    args.Add($"translationParams: {obj.RegistrationName}.BaseConverter");
                                 }
                             }
                         }
@@ -2354,7 +2354,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         args.Add($"ReadOnlyMemorySlice<byte> slice");
                         args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
-                        args.Add($"{nameof(TypedParseParams)}? parseParams = null");
+                        args.Add($"{nameof(TypedParseParams)}? translationParams = null");
                     }
                     using (sb.CurlyBrace())
                     {
@@ -2367,7 +2367,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             {
                                 args.Add($"finalPos: slice.Length");
                             }
-                            args.AddPassArg("parseParams");
+                            args.AddPassArg("translationParams");
                         }
                     }
                 }
@@ -2426,7 +2426,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     args.Add($"int finalPos");
                 }
-                args.Add($"{nameof(TypedParseParams)}? parseParams = null");
+                args.Add($"{nameof(TypedParseParams)}? translationParams = null");
             }
         }
         using (sb.CurlyBrace())
@@ -2441,7 +2441,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
             {
-                sb.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubrecordHeader" : "MajorRecordHeader")}().RecordType);");
+                sb.AppendLine($"var nextRecord = translationParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubrecordHeader" : "MajorRecordHeader")}().RecordType);");
                 sb.AppendLine($"switch (nextRecord.TypeInt)");
                 using (sb.CurlyBrace())
                 {
@@ -2457,7 +2457,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             args.AddPassArg($"stream");
                             args.Add("recordType: nextRecord");
                             args.AddPassArg("package");
-                            args.AddPassArg("parseParams");
+                            args.AddPassArg("translationParams");
                         }
                     }
                     sb.AppendLine("default:");
@@ -2498,7 +2498,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractGroupMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
                             break;
                         case ObjectType.Subrecord:
-                            args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}, parseParams)");
+                            args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}, translationParams)");
                             break;
                         case ObjectType.Mod:
                             args.AddPassArg($"stream");
@@ -2698,7 +2698,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             args.AddPassArg($"finalPos");
                         }
                         args.Add($"offset: offset");
-                        args.AddPassArg($"parseParams");
+                        args.AddPassArg($"translationParams");
                     }
                     else
                     {

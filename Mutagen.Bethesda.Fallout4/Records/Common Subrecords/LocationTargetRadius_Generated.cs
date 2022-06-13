@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new LocationTargetRadiusBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
@@ -1318,13 +1318,13 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationTargetRadiusGetter LocationTargetRadiusFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LocationTargetRadiusFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 finalPos: slice.Length,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

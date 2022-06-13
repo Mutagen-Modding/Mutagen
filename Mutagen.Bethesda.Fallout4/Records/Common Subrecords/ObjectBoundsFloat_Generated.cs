@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectBoundsFloatGetter ObjectBoundsFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ObjectBoundsFloatBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x18),
@@ -1132,12 +1132,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectBoundsFloatGetter ObjectBoundsFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ObjectBoundsFloatFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectBoundArchetypeGetter MagicEffectBoundArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MagicEffectBoundArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1063,12 +1063,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectBoundArchetypeGetter MagicEffectBoundArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MagicEffectBoundArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

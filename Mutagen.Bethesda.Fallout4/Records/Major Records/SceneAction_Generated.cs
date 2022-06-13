@@ -4985,7 +4985,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneActionGetter SceneActionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new SceneActionBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -4995,7 +4995,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -5003,12 +5003,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneActionGetter SceneActionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return SceneActionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -5018,9 +5018,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ANAM:
@@ -5134,7 +5134,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.StartScenes = this.ParseRepeatedTypelessSubrecord<IStartSceneGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: StartScene_Registration.TriggerSpecs,
                         factory: StartSceneBinaryOverlay.StartSceneFactory);
                     return (int)SceneAction_FieldIndex.StartScenes;
@@ -5273,7 +5273,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 constants: _package.MetaData.Constants.SubConstants,
                                 trigger: type,
                                 skipHeader: true,
-                                parseParams: parseParams));
+                                translationParams: translationParams));
                         return new ParseResult((int)SceneAction_FieldIndex.Packages, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.DialogueSubtype)
@@ -5295,7 +5295,7 @@ namespace Mutagen.Bethesda.Fallout4
                                         constants: _package.MetaData.Constants.SubConstants,
                                         trigger: type,
                                         skipHeader: true,
-                                        parseParams: parseParams));
+                                        translationParams: translationParams));
                                 return new ParseResult((int)SceneAction_FieldIndex.Packages, type);
                             case 1:
                                 _AnimArchTypeLocation = (stream.Position - offset);
@@ -5395,7 +5395,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Unused = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)SceneAction_FieldIndex.Unused;
                 }
                 default:

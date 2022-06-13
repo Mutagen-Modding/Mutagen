@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMessageGetter MessageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new MessageBinaryOverlay(
@@ -2070,7 +2070,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2078,12 +2078,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMessageGetter MessageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MessageFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2093,9 +2093,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DESC:
@@ -2133,7 +2133,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     this.MenuButtons = this.ParseRepeatedTypelessSubrecord<IMessageButtonGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: MessageButton_Registration.TriggerSpecs,
                         factory: MessageButtonBinaryOverlay.MessageButtonFactory);
                     return (int)Message_FieldIndex.MenuButtons;

@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModStringPropertyGetter<T> ObjectModStringPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ObjectModStringPropertyBinaryOverlay<T>(
                 bytes: stream.RemainingMemory,
@@ -956,12 +956,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModStringPropertyGetter<T> ObjectModStringPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ObjectModStringPropertyFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

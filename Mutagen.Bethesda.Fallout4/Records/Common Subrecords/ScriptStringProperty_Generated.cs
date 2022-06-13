@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptStringPropertyGetter ScriptStringPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ScriptStringPropertyBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1124,12 +1124,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptStringPropertyGetter ScriptStringPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ScriptStringPropertyFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

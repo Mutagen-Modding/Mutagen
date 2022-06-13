@@ -477,7 +477,7 @@ partial class CellBinaryOverlay
             stream: stream,
             finalPos: finalPos,
             offset: offset,
-            parseParams: null,
+            translationParams: null,
             fill: ret.FillRecordType);
         try
         {

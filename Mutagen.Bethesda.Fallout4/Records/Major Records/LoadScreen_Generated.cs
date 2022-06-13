@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILoadScreenGetter LoadScreenFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LoadScreenBinaryOverlay(
@@ -2109,7 +2109,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2117,12 +2117,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILoadScreenGetter LoadScreenFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LoadScreenFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2132,9 +2132,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DESC:
@@ -2147,7 +2147,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Rotation = LoadScreenRotationBinaryOverlay.LoadScreenRotationFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)LoadScreen_FieldIndex.Rotation;
                 }
                 case RecordTypeInts.ZNAM:
@@ -2182,7 +2182,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Zoom = LoadScreenZoomBinaryOverlay.LoadScreenZoomFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)LoadScreen_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.MOD2:

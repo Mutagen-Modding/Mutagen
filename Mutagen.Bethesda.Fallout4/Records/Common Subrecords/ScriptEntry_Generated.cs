@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptEntryGetter ScriptEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ScriptEntryBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1311,12 +1311,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptEntryGetter ScriptEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ScriptEntryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

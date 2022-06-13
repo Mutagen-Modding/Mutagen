@@ -537,7 +537,7 @@ partial class PackageBinaryOverlay
         _xnam = xnam.Content;
         this.ProcedureTree = this.ParseRepeatedTypelessSubrecord<IPackageBranchGetter>(
             stream: stream,
-            parseParams: null,
+            translationParams: null,
             trigger: RecordTypes.ANAM,
             factory: PackageBranchBinaryOverlay.PackageBranchFactory);
         PackageBinaryCreateTranslation.AbsorbPackageData(

@@ -22647,9 +22647,9 @@ namespace Mutagen.Bethesda.Skyrim
             int offset,
             RecordType type,
             PreviousParse lastParsed,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.TES4:

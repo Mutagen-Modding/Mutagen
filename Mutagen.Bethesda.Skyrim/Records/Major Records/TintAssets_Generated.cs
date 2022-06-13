@@ -1536,7 +1536,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ITintAssetsGetter TintAssetsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new TintAssetsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1546,7 +1546,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1554,12 +1554,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static ITintAssetsGetter TintAssetsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return TintAssetsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1569,9 +1569,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.TINI:
@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     this.Presets = this.ParseRepeatedTypelessSubrecord<ITintPresetGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: TintPreset_Registration.TriggerSpecs,
                         factory: TintPresetBinaryOverlay.TintPresetFactory);
                     return (int)TintAssets_FieldIndex.Presets;

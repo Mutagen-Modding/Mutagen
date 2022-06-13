@@ -146,7 +146,7 @@ internal partial class ArmorAddonBinaryOverlay
         _boneData ??= new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
         IReadOnlyList<IBoneGetter> list = this.ParseRepeatedTypelessSubrecord(
             stream: stream,
-            parseParams: null,
+            translationParams: null,
             trigger: Bone_Registration.TriggerSpecs,
             factory: BoneBinaryOverlay.BoneFactory);
         if (genderFrame.AsInt32() == 0)

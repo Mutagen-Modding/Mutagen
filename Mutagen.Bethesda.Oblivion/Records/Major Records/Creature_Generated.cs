@@ -4069,7 +4069,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICreatureGetter CreatureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new CreatureBinaryOverlay(
@@ -4088,7 +4088,7 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -4096,12 +4096,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICreatureGetter CreatureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return CreatureFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -4111,9 +4111,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -4126,7 +4126,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Creature_FieldIndex.Model;
                 }
                 case RecordTypeInts.CNTO:
@@ -4134,7 +4134,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Items = BinaryOverlayList.FactoryByArray<IItemEntryGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ItemEntryBinaryOverlay.ItemEntryFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -4155,7 +4155,7 @@ namespace Mutagen.Bethesda.Oblivion
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Creature_FieldIndex.Spells;
                 }
                 case RecordTypeInts.NIFZ:
@@ -4184,7 +4184,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Factions = BinaryOverlayList.FactoryByArray<IRankPlacementGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -4220,7 +4220,7 @@ namespace Mutagen.Bethesda.Oblivion
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Creature_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.KFFZ:
@@ -4285,7 +4285,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<ICreatureSoundGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: CreatureSound_Registration.TriggerSpecs,
                         factory: CreatureSoundBinaryOverlay.CreatureSoundFactory);
                     return (int)Creature_FieldIndex.Sounds;

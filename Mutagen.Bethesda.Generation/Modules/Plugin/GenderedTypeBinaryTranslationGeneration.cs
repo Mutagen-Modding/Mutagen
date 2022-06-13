@@ -78,7 +78,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 if (subData?.RecordTypeConverter != null
                     && subData.RecordTypeConverter.FromConversions.Count > 0)
                 {
-                    args.Add($"parseParams: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                    args.Add($"translationParams: {objGen.RegistrationName}.{typeGen.Name}Converter");
                 }
             }
             if (gender.FemaleConversions != null)
@@ -424,13 +424,13 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             if (subData?.RecordTypeConverter != null
                                 && subData.RecordTypeConverter.FromConversions.Count > 0)
                             {
-                                args.Add($"parseParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                                args.Add($"translationParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
                             }
                             else if (converterAccessor != null
                                      && gendered.FemaleConversions == null
                                      && gendered.MaleConversions == null)
                             {
-                                args.Add($"parseParams: {converterAccessor}");
+                                args.Add($"translationParams: {converterAccessor}");
                             }
                         }
                         else

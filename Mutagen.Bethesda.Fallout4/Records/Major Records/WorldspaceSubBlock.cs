@@ -13,7 +13,7 @@ partial class WorldspaceSubBlockBinaryOverlay
         this.Items = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
             mem: stream.RemainingMemory,
             package: _package,
-            parseParams: null,
+            translationParams: null,
             getter: (s, p, recConv) => CellBinaryOverlay.CellFactory(new OverlayStream(s, p), p, insideWorldspace: true),
             locs: CellBinaryOverlay.ParseRecordLocations(
                 stream: stream,

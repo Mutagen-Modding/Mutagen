@@ -1810,7 +1810,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IActorValuePerkNodeGetter ActorValuePerkNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ActorValuePerkNodeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1820,7 +1820,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1828,12 +1828,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IActorValuePerkNodeGetter ActorValuePerkNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ActorValuePerkNodeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1843,9 +1843,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.PNAM:
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices;
                 }
                 case RecordTypeInts.INAM:

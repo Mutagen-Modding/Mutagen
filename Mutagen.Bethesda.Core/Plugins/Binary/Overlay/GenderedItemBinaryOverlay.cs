@@ -129,7 +129,7 @@ internal static class GenderedItemBinaryOverlay
         RecordType male,
         RecordType female,
         Func<OverlayStream, BinaryOverlayFactoryPackage, TypedParseParams?, T> creator,
-        TypedParseParams? parseParams = null)
+        TypedParseParams? translationParams = null)
         where T : class
     {
         var initialPos = stream.Position;
@@ -142,7 +142,7 @@ internal static class GenderedItemBinaryOverlay
             if (recType == male)
             {
                 var startPos = stream.Position;
-                maleObj = creator(stream, package, parseParams);
+                maleObj = creator(stream, package, translationParams);
                 if (startPos == stream.Position)
                 {
                     maleObj = null;
@@ -151,7 +151,7 @@ internal static class GenderedItemBinaryOverlay
             else if (recType == female)
             {
                 var startPos = stream.Position;
-                femaleObj = creator(stream, package, parseParams);
+                femaleObj = creator(stream, package, translationParams);
                 if (startPos == stream.Position)
                 {
                     femaleObj = null;

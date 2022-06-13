@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkEntryPointAddLeveledItemGetter PerkEntryPointAddLeveledItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new PerkEntryPointAddLeveledItemBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1241,12 +1241,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkEntryPointAddLeveledItemGetter PerkEntryPointAddLeveledItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PerkEntryPointAddLeveledItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

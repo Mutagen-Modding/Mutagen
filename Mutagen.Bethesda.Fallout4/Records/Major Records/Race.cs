@@ -218,7 +218,7 @@ partial class RaceBinaryOverlay
         _boneData ??= new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
         IReadOnlyList<IBoneGetter> list = this.ParseRepeatedTypelessSubrecord(
             stream: stream,
-            parseParams: null,
+            translationParams: null,
             trigger: Bone_Registration.TriggerSpecs,
             factory: BoneBinaryOverlay.BoneFactory);
         if (genderFrame.AsInt32() == 0)
@@ -284,7 +284,7 @@ partial class RaceBinaryOverlay
     {
         this.MorphValues = this.ParseRepeatedTypelessSubrecord<IMorphValueGetter>(
             stream: stream,
-            parseParams: null,
+            translationParams: null,
             trigger: MorphValue_Registration.TriggerSpecs,
             factory: MorphValueBinaryOverlay.MorphValueFactory);
 

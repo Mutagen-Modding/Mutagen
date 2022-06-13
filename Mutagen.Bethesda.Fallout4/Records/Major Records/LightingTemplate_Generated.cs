@@ -3375,7 +3375,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILightingTemplateGetter LightingTemplateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LightingTemplateBinaryOverlay(
@@ -3394,7 +3394,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3402,12 +3402,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILightingTemplateGetter LightingTemplateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return LightingTemplateFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3417,9 +3417,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:
@@ -3442,7 +3442,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.DirectionalAmbientColors = AmbientColorsBinaryOverlay.AmbientColorsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)LightingTemplate_FieldIndex.DirectionalAmbientColors;
                 }
                 case RecordTypeInts.WGDR:

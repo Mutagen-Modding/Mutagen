@@ -2316,7 +2316,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IHeadDataGetter HeadDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new HeadDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -2326,7 +2326,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2334,12 +2334,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IHeadDataGetter HeadDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return HeadDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -2349,9 +2349,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.INDX:
@@ -2360,7 +2360,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
                     this.HeadParts = this.ParseRepeatedTypelessSubrecord<IHeadPartReferenceGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: HeadPartReference_Registration.TriggerSpecs,
                         factory: HeadPartReferenceBinaryOverlay.HeadPartReferenceFactory);
                     return (int)HeadData_FieldIndex.HeadParts;
@@ -2371,7 +2371,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.AvailableMorphs = AvailableMorphsBinaryOverlay.AvailableMorphsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)HeadData_FieldIndex.AvailableMorphs;
                 }
                 case RecordTypeInts.RPRM:
@@ -2386,7 +2386,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)HeadData_FieldIndex.RacePresets;
                 }
                 case RecordTypeInts.AHCM:
@@ -2401,7 +2401,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)HeadData_FieldIndex.AvailableHairColors;
                 }
                 case RecordTypeInts.FTSM:
@@ -2416,7 +2416,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)HeadData_FieldIndex.FaceDetails;
                 }
                 case RecordTypeInts.DFTM:
@@ -2436,7 +2436,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.TintMasks) return ParseResult.Stop;
                     this.TintMasks = this.ParseRepeatedTypelessSubrecord<ITintAssetsGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: TintAssets_Registration.TriggerSpecs,
                         factory: TintAssetsBinaryOverlay.TintAssetsFactory);
                     return (int)HeadData_FieldIndex.TintMasks;
@@ -2447,7 +2447,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)HeadData_FieldIndex.Model;
                 }
                 default:

@@ -3444,7 +3444,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPlacedObjectGetter PlacedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new PlacedObjectBinaryOverlay(
@@ -3463,7 +3463,7 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3471,12 +3471,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPlacedObjectGetter PlacedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PlacedObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3486,9 +3486,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.NAME:
@@ -3587,7 +3587,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MapMarker = MapMarkerBinaryOverlay.MapMarkerFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.ONAM:
@@ -3619,7 +3619,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Location = LocationBinaryOverlay.LocationFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.Location;
                 }
                 default:

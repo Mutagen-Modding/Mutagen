@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRaceWeightGetter RaceWeightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new RaceWeightBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1188,12 +1188,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRaceWeightGetter RaceWeightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return RaceWeightFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

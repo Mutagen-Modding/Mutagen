@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMountDataGetter MountDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MountDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x24),
@@ -1188,12 +1188,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMountDataGetter MountDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MountDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

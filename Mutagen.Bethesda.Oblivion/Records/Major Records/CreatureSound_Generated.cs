@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICreatureSoundGetter CreatureSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new CreatureSoundBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1324,12 +1324,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICreatureSoundGetter CreatureSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return CreatureSoundFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1339,9 +1339,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CSDT:
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CreatureSound_FieldIndex.Sounds) return ParseResult.Stop;
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<ISoundItemGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: SoundItem_Registration.TriggerSpecs,
                         factory: SoundItemBinaryOverlay.SoundItemFactory);
                     return (int)CreatureSound_FieldIndex.Sounds;

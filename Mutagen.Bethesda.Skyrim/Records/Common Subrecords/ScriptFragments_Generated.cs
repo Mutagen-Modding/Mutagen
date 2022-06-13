@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScriptFragmentsGetter ScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ScriptFragmentsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1361,12 +1361,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScriptFragmentsGetter ScriptFragmentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ScriptFragmentsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

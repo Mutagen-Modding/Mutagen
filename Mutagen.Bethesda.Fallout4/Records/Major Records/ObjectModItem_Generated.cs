@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModItemGetter ObjectModItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ObjectModItemBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1128,12 +1128,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModItemGetter ObjectModItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ObjectModItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

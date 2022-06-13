@@ -6355,7 +6355,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INpcGetter NpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new NpcBinaryOverlay(
@@ -6374,7 +6374,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -6382,12 +6382,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static INpcGetter NpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return NpcFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -6397,9 +6397,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -6422,7 +6422,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Factions = BinaryOverlayList.FactoryByArray<IRankPlacementGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -6472,7 +6472,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Npc_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.WNAM:
@@ -6495,7 +6495,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: Attack_Registration.TriggerSpecs,
                         factory: AttackBinaryOverlay.AttackFactory);
                     return (int)Npc_FieldIndex.Attacks;
@@ -6543,7 +6543,7 @@ namespace Mutagen.Bethesda.Skyrim
                         countLength: 4,
                         trigger: ContainerEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.COCT,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Npc_FieldIndex.Items;
@@ -6564,7 +6564,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Npc_FieldIndex.Packages;
                 }
                 case RecordTypeInts.KSIZ:
@@ -6617,7 +6617,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Npc_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HCLF:
@@ -6660,7 +6660,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Sound = NpcInheritSoundBinaryOverlay.NpcInheritSoundFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDT:
@@ -6670,7 +6670,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Sound = NpcSoundTypesBinaryOverlay.NpcSoundTypesFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DOFT:
@@ -6720,7 +6720,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     this.TintLayers = this.ParseRepeatedTypelessSubrecord<ITintLayerGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: TintLayer_Registration.TriggerSpecs,
                         factory: TintLayerBinaryOverlay.TintLayerFactory);
                     return (int)Npc_FieldIndex.TintLayers;

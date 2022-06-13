@@ -3445,7 +3445,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRaceGetter RaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new RaceBinaryOverlay(
@@ -3464,7 +3464,7 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3472,12 +3472,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRaceGetter RaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return RaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3487,9 +3487,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -3513,7 +3513,7 @@ namespace Mutagen.Bethesda.Oblivion
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Race_FieldIndex.Spells;
                 }
                 case RecordTypeInts.XNAM:
@@ -3521,7 +3521,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Relations = BinaryOverlayList.FactoryByArray<IRaceRelationGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => RaceRelationBinaryOverlay.RaceRelationFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -3571,7 +3571,7 @@ namespace Mutagen.Bethesda.Oblivion
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
                     this.FaceData = this.ParseRepeatedTypelessSubrecord<IFacePartGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: FacePart_Registration.TriggerSpecs,
                         factory: FacePartBinaryOverlay.FacePartFactory);
                     return (int)Race_FieldIndex.FaceData;
@@ -3585,7 +3585,7 @@ namespace Mutagen.Bethesda.Oblivion
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
@@ -3619,7 +3619,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.FaceGenData = FaceGenDataBinaryOverlay.FaceGenDataFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Race_FieldIndex.FaceGenData;
                 }
                 case RecordTypeInts.SNAM:

@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITintGroupGetter TintGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new TintGroupBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1459,7 +1459,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1467,12 +1467,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITintGroupGetter TintGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return TintGroupFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1482,9 +1482,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.TTGP:
@@ -1498,7 +1498,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintGroup_FieldIndex.Options) return ParseResult.Stop;
                     this.Options = this.ParseRepeatedTypelessSubrecord<ITintTemplateOptionGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: TintTemplateOption_Registration.TriggerSpecs,
                         factory: TintTemplateOptionBinaryOverlay.TintTemplateOptionFactory);
                     return (int)TintGroup_FieldIndex.Options;

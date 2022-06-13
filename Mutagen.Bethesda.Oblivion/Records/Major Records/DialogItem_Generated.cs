@@ -2636,7 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IDialogItemGetter DialogItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new DialogItemBinaryOverlay(
@@ -2655,7 +2655,7 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2663,12 +2663,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IDialogItemGetter DialogItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return DialogItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2678,9 +2678,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:
@@ -2709,7 +2709,7 @@ namespace Mutagen.Bethesda.Oblivion
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.Topics;
                 }
                 case RecordTypeInts.TRDT:
@@ -2718,7 +2718,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     this.Responses = this.ParseRepeatedTypelessSubrecord<IDialogResponseGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: DialogResponse_Registration.TriggerSpecs,
                         factory: DialogResponseBinaryOverlay.DialogResponseFactory);
                     return (int)DialogItem_FieldIndex.Responses;
@@ -2729,7 +2729,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -2750,7 +2750,7 @@ namespace Mutagen.Bethesda.Oblivion
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.Choices;
                 }
                 case RecordTypeInts.TCLF:
@@ -2764,7 +2764,7 @@ namespace Mutagen.Bethesda.Oblivion
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.LinkFrom;
                 }
                 case RecordTypeInts.SCHD:
@@ -2773,7 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Script = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)DialogItem_FieldIndex.Script;
                 }
                 default:

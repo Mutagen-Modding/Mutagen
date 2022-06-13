@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlphaLayerGetter AlphaLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new AlphaLayerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1175,12 +1175,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlphaLayerGetter AlphaLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return AlphaLayerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1190,9 +1190,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VTXT:
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
                         type: type,
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
-                        parseParams: AlphaLayer_Registration.BaseConverter);
+                        translationParams: AlphaLayer_Registration.BaseConverter);
             }
         }
         #region To String

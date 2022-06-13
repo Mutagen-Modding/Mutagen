@@ -5971,7 +5971,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldspaceGetter WorldspaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var origStream = stream;
             stream = Decompression.DecompressStream(stream);
@@ -5991,7 +5991,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             ret.CustomEnd(
                 stream: origStream,
@@ -6003,12 +6003,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldspaceGetter WorldspaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return WorldspaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -6018,9 +6018,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.RNAM:
@@ -6028,7 +6028,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.LargeReferences = BinaryOverlayList.FactoryByArray<IWorldspaceGridReferenceGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => WorldspaceGridReferenceBinaryOverlay.WorldspaceGridReferenceFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -6078,7 +6078,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Parent = WorldspaceParentBinaryOverlay.WorldspaceParentFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Worldspace_FieldIndex.Parent;
                 }
                 case RecordTypeInts.CNAM:
@@ -6116,7 +6116,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.CloudModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Worldspace_FieldIndex.CloudModel;
                 }
                 case RecordTypeInts.MNAM:
@@ -6179,7 +6179,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.DefaultLevelData = WorldDefaultLevelDataBinaryOverlay.WorldDefaultLevelDataFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Worldspace_FieldIndex.DefaultLevelData;
                 }
                 case RecordTypeInts.OFST:

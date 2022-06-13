@@ -71,7 +71,7 @@ internal class LoquiBinaryAsyncTranslation<T>
     public static readonly LoquiBinaryAsyncTranslation<T> Instance = new LoquiBinaryAsyncTranslation<T>();
     public delegate Task<T> CREATE_FUNC(
         MutagenFrame reader,
-        TypedParseParams? parseParams);
+        TypedParseParams? translationParams);
     public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
     #region Parse
@@ -109,17 +109,17 @@ internal class LoquiBinaryAsyncTranslation<T>
     {
         return Parse(
             frame: frame,
-            parseParams: null);
+            translationParams: null);
     }
 
     [DebuggerStepThrough]
     public async Task<TryGet<T>> Parse(
         MutagenFrame frame,
-        TypedParseParams? parseParams)
+        TypedParseParams? translationParams)
     {
         var item = await CREATE(
             reader: frame,
-            parseParams: parseParams).ConfigureAwait(false);
+            translationParams: translationParams).ConfigureAwait(false);
         return TryGet<T>.Succeed(item);
     }
     #endregion

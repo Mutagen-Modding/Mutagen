@@ -7790,7 +7790,7 @@ namespace Mutagen.Bethesda.Skyrim
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        parseParams: Race_Registration.SkeletalModelConverter,
+                        translationParams: Race_Registration.SkeletalModelConverter,
                         transl: SimpleModel.TryCreateFromBinary);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
@@ -8545,7 +8545,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRaceGetter RaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new RaceBinaryOverlay(
@@ -8564,7 +8564,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -8572,12 +8572,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRaceGetter RaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return RaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -8587,9 +8587,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -8661,7 +8661,7 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
-                        parseParams: Race_Registration.SkeletalModelConverter);
+                        translationParams: Race_Registration.SkeletalModelConverter);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
                 case RecordTypeInts.MTNM:
@@ -8675,7 +8675,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Race_FieldIndex.MovementTypeNames;
                 }
                 case RecordTypeInts.VTCK:
@@ -8718,7 +8718,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: Attack_Registration.TriggerSpecs,
                         factory: AttackBinaryOverlay.AttackFactory);
                     return (int)Race_FieldIndex.Attacks;
@@ -8732,7 +8732,7 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
@@ -8773,7 +8773,7 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
@@ -8814,7 +8814,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     this.MovementTypes = this.ParseRepeatedTypelessSubrecord<IRaceMovementTypeGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: RaceMovementType_Registration.TriggerSpecs,
                         factory: RaceMovementTypeBinaryOverlay.RaceMovementTypeFactory);
                     return (int)Race_FieldIndex.MovementTypes;
@@ -8835,7 +8835,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Race_FieldIndex.EquipmentSlots;
                 }
                 case RecordTypeInts.UNES:

@@ -486,7 +486,7 @@ partial class WeatherBinaryOverlay
         int offset,
         RecordType type,
         PreviousParse lastParsed,
-        TypedParseParams? parseParams = null)
+        TypedParseParams? translationParams = null)
     {
         if (type == RecordTypes.EDID)
         {
@@ -497,7 +497,7 @@ partial class WeatherBinaryOverlay
                 type: type,
                 recordParseCount: null,
                 lastParsed: lastParsed,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
         WeatherBinaryCreateTranslation.FillCloudTexture(
             new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),

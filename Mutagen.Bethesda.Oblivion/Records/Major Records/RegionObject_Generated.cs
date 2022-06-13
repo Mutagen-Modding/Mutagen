@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRegionObjectGetter RegionObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new RegionObjectBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x34),
@@ -1987,12 +1987,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRegionObjectGetter RegionObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return RegionObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

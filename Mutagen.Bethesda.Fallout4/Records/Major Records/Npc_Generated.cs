@@ -10150,7 +10150,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcGetter NpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new NpcBinaryOverlay(
@@ -10169,7 +10169,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -10177,12 +10177,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcGetter NpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return NpcFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -10192,9 +10192,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -10227,7 +10227,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Factions = BinaryOverlayList.FactoryByArray<IRankPlacementGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -10294,7 +10294,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Npc_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.WNAM:
@@ -10320,7 +10320,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: Attack_Registration.TriggerSpecs,
                         factory: AttackBinaryOverlay.AttackFactory);
                     return (int)Npc_FieldIndex.Attacks;
@@ -10400,7 +10400,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         trigger: ContainerEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.COCT,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Npc_FieldIndex.Items;
@@ -10421,7 +10421,7 @@ namespace Mutagen.Bethesda.Fallout4
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Npc_FieldIndex.Packages;
                 }
                 case RecordTypeInts.KSIZ:
@@ -10457,7 +10457,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         trigger: ObjectTemplate_Registration.TriggerSpecs,
                         countType: RecordTypes.OBTE,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Npc.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Npc_FieldIndex.ObjectTemplates;
@@ -10498,7 +10498,7 @@ namespace Mutagen.Bethesda.Fallout4
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Npc_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HCLF:
@@ -10561,7 +10561,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         trigger: NpcSound_Registration.TriggerSpecs,
                         countType: RecordTypes.CS2H,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => NpcSoundBinaryOverlay.NpcSoundFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Npc_FieldIndex.Sounds;
@@ -10622,7 +10622,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.FaceTintingLayers = this.ParseRepeatedTypelessSubrecord<INpcFaceTintingLayerGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: NpcFaceTintingLayer_Registration.TriggerSpecs,
                         factory: NpcFaceTintingLayerBinaryOverlay.NpcFaceTintingLayerFactory);
                     return (int)Npc_FieldIndex.FaceTintingLayers;
@@ -10633,7 +10633,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.BodyMorphRegionValues = NpcBodyMorphRegionValuesBinaryOverlay.NpcBodyMorphRegionValuesFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Npc_FieldIndex.BodyMorphRegionValues;
                 }
                 case RecordTypeInts.FMRI:
@@ -10641,7 +10641,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<INpcFaceMorphGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: NpcFaceMorph_Registration.TriggerSpecs,
                         factory: NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory);
                     return (int)Npc_FieldIndex.FaceMorphs;

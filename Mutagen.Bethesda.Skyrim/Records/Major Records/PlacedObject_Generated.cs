@@ -7200,7 +7200,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPlacedObjectGetter PlacedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new PlacedObjectBinaryOverlay(
@@ -7219,7 +7219,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -7227,12 +7227,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPlacedObjectGetter PlacedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PlacedObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -7242,9 +7242,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -7278,7 +7278,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.OcclusionPlane = BoundingBinaryOverlay.BoundingFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.OcclusionPlane;
                 }
                 case RecordTypeInts.XPOD:
@@ -7299,7 +7299,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.RoomPortal = BoundingBinaryOverlay.BoundingFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.RoomPortal;
                 }
                 case RecordTypeInts.XRMR:
@@ -7333,7 +7333,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Reflections = BinaryOverlayList.FactoryByArray<IWaterReflectionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => WaterReflectionBinaryOverlay.WaterReflectionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -7354,7 +7354,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)PlacedObject_FieldIndex.LitWater;
                 }
                 case RecordTypeInts.XEMI:
@@ -7437,7 +7437,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.ActivateParents = ActivateParentsBinaryOverlay.ActivateParentsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XLIB:
@@ -7527,7 +7527,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -7542,7 +7542,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Patrol = PatrolBinaryOverlay.PatrolFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XACT:
@@ -7571,7 +7571,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.MapMarker = MapMarkerBinaryOverlay.MapMarkerFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.XATR:

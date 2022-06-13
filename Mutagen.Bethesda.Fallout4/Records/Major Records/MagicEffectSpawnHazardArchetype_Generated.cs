@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectSpawnHazardArchetypeGetter MagicEffectSpawnHazardArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MagicEffectSpawnHazardArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1063,12 +1063,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectSpawnHazardArchetypeGetter MagicEffectSpawnHazardArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return MagicEffectSpawnHazardArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

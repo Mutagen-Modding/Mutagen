@@ -1507,9 +1507,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static IConditionGetter ConditionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            var nextRecord = parseParams.ConvertToCustom(stream.GetSubrecordHeader().RecordType);
+            var nextRecord = translationParams.ConvertToCustom(stream.GetSubrecordHeader().RecordType);
             switch (nextRecord.TypeInt)
             {
                 case 1413764163: // CTDT
@@ -1517,12 +1517,12 @@ namespace Mutagen.Bethesda.Oblivion
                         stream: stream,
                         recordType: nextRecord,
                         package: package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                 default:
                     break;
             }
             var ret = new ConditionBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
@@ -1537,12 +1537,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IConditionGetter ConditionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ConditionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

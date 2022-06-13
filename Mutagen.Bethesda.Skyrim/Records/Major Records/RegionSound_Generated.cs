@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRegionSoundGetter RegionSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new RegionSoundBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1210,12 +1210,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRegionSoundGetter RegionSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return RegionSoundFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScenePhaseGetter ScenePhaseFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ScenePhaseBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1932,12 +1932,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScenePhaseGetter ScenePhaseFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return ScenePhaseFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1947,9 +1947,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.HNAM:
@@ -2013,7 +2013,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                             stream: stream,
                             package: _package,
-                            parseParams: parseParams);
+                            translationParams: translationParams);
                         return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
                     }
                     else
@@ -2033,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                                     stream: stream,
                                     package: _package,
-                                    parseParams: parseParams);
+                                    translationParams: translationParams);
                                 return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
                             default:
                                 throw new NotImplementedException();
@@ -2049,7 +2049,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Unused = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)ScenePhase_FieldIndex.Unused;
                 }
                 case RecordTypeInts.WNAM:

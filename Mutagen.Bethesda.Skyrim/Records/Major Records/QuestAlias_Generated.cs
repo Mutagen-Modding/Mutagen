@@ -3927,7 +3927,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IQuestAliasGetter QuestAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new QuestAliasBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -3937,7 +3937,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3945,12 +3945,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IQuestAliasGetter QuestAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return QuestAliasFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -3960,9 +3960,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ALST:
@@ -4011,7 +4011,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Location = LocationAliasReferenceBinaryOverlay.LocationAliasReferenceFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)QuestAlias_FieldIndex.Location;
                 }
                 case RecordTypeInts.ALEQ:
@@ -4020,7 +4020,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.External = ExternalAliasReferenceBinaryOverlay.ExternalAliasReferenceFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)QuestAlias_FieldIndex.External;
                 }
                 case RecordTypeInts.ALCO:
@@ -4028,7 +4028,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.CreateReferenceToObject = CreateReferenceToObjectBinaryOverlay.CreateReferenceToObjectFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)QuestAlias_FieldIndex.CreateReferenceToObject;
                 }
                 case RecordTypeInts.ALNA:
@@ -4037,7 +4037,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.FindMatchingRefNearAlias = FindMatchingRefNearAliasBinaryOverlay.FindMatchingRefNearAliasFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)QuestAlias_FieldIndex.FindMatchingRefNearAlias;
                 }
                 case RecordTypeInts.ALFE:
@@ -4046,7 +4046,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.FindMatchingRefFromEvent = FindMatchingRefFromEventBinaryOverlay.FindMatchingRefFromEventFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)QuestAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:
@@ -4054,7 +4054,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -4086,7 +4086,7 @@ namespace Mutagen.Bethesda.Skyrim
                         countLength: 4,
                         trigger: ContainerEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.COCT,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)QuestAlias_FieldIndex.Items;
@@ -4127,7 +4127,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.Spells;
                 }
                 case RecordTypeInts.ALFC:
@@ -4141,7 +4141,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.Factions;
                 }
                 case RecordTypeInts.ALPC:
@@ -4155,7 +4155,7 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.PackageData;
                 }
                 case RecordTypeInts.VTCK:

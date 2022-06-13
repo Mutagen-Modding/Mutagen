@@ -3226,7 +3226,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIngestibleGetter IngestibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new IngestibleBinaryOverlay(
@@ -3245,7 +3245,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3253,12 +3253,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIngestibleGetter IngestibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return IngestibleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3268,9 +3268,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -3306,7 +3306,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Ingestible_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
@@ -3316,7 +3316,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Ingestible_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ICON:
@@ -3324,7 +3324,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Ingestible_FieldIndex.Icons;
                 }
                 case RecordTypeInts.YNAM:
@@ -3358,7 +3358,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: Effect_Registration.TriggerSpecs,
                         factory: EffectBinaryOverlay.EffectFactory);
                     return (int)Ingestible_FieldIndex.Effects;

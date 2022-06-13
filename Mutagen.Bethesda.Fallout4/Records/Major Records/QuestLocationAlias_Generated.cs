@@ -2085,7 +2085,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IQuestLocationAliasGetter QuestLocationAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new QuestLocationAliasBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2103,12 +2103,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IQuestLocationAliasGetter QuestLocationAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return QuestLocationAliasFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -2118,9 +2118,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ALID:
@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.ReferenceAliasLocation = ReferenceAliasLocationBinaryOverlay.ReferenceAliasLocationFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)QuestLocationAlias_FieldIndex.ReferenceAliasLocation;
                 }
                 case RecordTypeInts.ALEQ:
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.ExternalAliasLocation = ExternalAliasLocationBinaryOverlay.ExternalAliasLocationFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)QuestLocationAlias_FieldIndex.ExternalAliasLocation;
                 }
                 case RecordTypeInts.ALFE:
@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.FindMatchingRefFromEvent = FindMatchingRefFromEventBinaryOverlay.FindMatchingRefFromEventFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)QuestLocationAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:
@@ -2175,7 +2175,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

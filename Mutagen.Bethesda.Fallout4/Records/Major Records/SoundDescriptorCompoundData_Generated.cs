@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundDescriptorCompoundDataGetter SoundDescriptorCompoundDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new SoundDescriptorCompoundDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1014,12 +1014,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundDescriptorCompoundDataGetter SoundDescriptorCompoundDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return SoundDescriptorCompoundDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

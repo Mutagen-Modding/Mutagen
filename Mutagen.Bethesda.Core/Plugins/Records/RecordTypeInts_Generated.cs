@@ -110,10 +110,12 @@ public partial class RecordTypeInts
     public const int NAME = 0x454D414E;
     public const int NAVI = 0x4956414E;
     public const int NAVM = 0x4D56414E;
+    public const int NOCM = 0x4D434F4E;
     public const int NOTE = 0x45544F4E;
     public const int NPC_ = 0x5F43504E;
     public const int OMOD = 0x444F4D4F;
     public const int OTFT = 0x5446544F;
+    public const int OVIS = 0x5349564F;
     public const int PACK = 0x4B434150;
     public const int PARW = 0x57524150;
     public const int PBAR = 0x52414250;

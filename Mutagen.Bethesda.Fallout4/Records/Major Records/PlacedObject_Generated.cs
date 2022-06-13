@@ -8570,7 +8570,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectGetter PlacedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new PlacedObjectBinaryOverlay(
@@ -8589,7 +8589,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -8597,12 +8597,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectGetter PlacedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return PlacedObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -8612,9 +8612,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -8655,7 +8655,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.RoomPortal = BoundingBinaryOverlay.BoundingFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.RoomPortal;
                 }
                 case RecordTypeInts.XORD:
@@ -8669,7 +8669,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.OcclusionPlane = BoundingBinaryOverlay.BoundingFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.OcclusionPlane;
                 }
                 case RecordTypeInts.XRMR:
@@ -8719,7 +8719,7 @@ namespace Mutagen.Bethesda.Fallout4
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)PlacedObject_FieldIndex.LitWater;
                 }
                 case RecordTypeInts.XALP:
@@ -8812,7 +8812,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.ActivateParents = ActivateParentsBinaryOverlay.ActivateParentsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XLIB:
@@ -8895,7 +8895,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XRNK:
@@ -8923,7 +8923,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -8938,7 +8938,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Patrol = PatrolBinaryOverlay.PatrolFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XACT:
@@ -8967,7 +8967,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.MapMarker = PlacedObjectMapMarkerBinaryOverlay.PlacedObjectMapMarkerFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.XATR:
@@ -8980,7 +8980,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.SplineConnections = BinaryOverlayList.FactoryByArray<ISplineLinkGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => SplineLinkBinaryOverlay.SplineLinkFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

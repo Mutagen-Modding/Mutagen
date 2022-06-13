@@ -210,7 +210,7 @@ partial class ImageSpaceBinaryOverlay
     public static IImageSpaceGetter ImageSpaceFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? parseParams = null)
+        TypedParseParams? translationParams = null)
     {
         var header = stream.GetMajorRecordHeader();
         if (header.FormVersion < 16)
@@ -234,7 +234,7 @@ partial class ImageSpaceBinaryOverlay
             stream: stream,
             finalPos: finalPos,
             offset: offset,
-            parseParams: parseParams,
+            translationParams: translationParams,
             fill: ret.FillRecordType);
         return ret;
     }

@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlternateTextureGetter AlternateTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new AlternateTextureBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1225,12 +1225,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlternateTextureGetter AlternateTextureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return AlternateTextureFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

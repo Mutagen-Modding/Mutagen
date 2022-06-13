@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneActionTypicalTypeGetter SceneActionTypicalTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new SceneActionTypicalTypeBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1171,12 +1171,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneActionTypicalTypeGetter SceneActionTypicalTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return SceneActionTypicalTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String

@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IFactionGetter FactionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new FactionBinaryOverlay(
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1995,12 +1995,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static IFactionGetter FactionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
             return FactionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2010,9 +2010,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams? translationParams = null)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Relations = BinaryOverlayList.FactoryByArray<IRelationGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     this.Ranks = this.ParseRepeatedTypelessSubrecord<IRankGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: Rank_Registration.TriggerSpecs,
                         factory: RankBinaryOverlay.RankFactory);
                     return (int)Faction_FieldIndex.Ranks;
