@@ -74,6 +74,14 @@ public static class TypedParseParamsExt
             doNotShortCircuit: true);
     }
 
+    public static TypedParseParams ShortCircuit(this TypedParseParams param)
+    {
+        return new TypedParseParams(
+            lengthOverride: param.LengthOverride,
+            recordTypeConverter: param.RecordTypeConverter, 
+            doNotShortCircuit: false);
+    }
+
     public static RecordType ConvertToStandard(this TypedParseParams converter, RecordType rec)
     {
         return converter.RecordTypeConverter.ConvertToStandard(rec);
