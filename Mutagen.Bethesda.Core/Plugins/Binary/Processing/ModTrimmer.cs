@@ -39,14 +39,14 @@ public class ModTrimmer
         
         var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
         var noRecordLength = recordLocation - inputStream.Position - inputStream.MetaData.Constants.GroupConstants.HeaderLength;
-        inputStream.WriteTo(outputStream, (int)noRecordLength);
+        inputStream.CopyTo(outputStream, (int)noRecordLength);
         
         while (!inputStream.Complete)
         {
             var groupMeta = inputStream.GetGroupHeader(readSafe: true);
             if (interest.IsInterested(groupMeta.ContainedRecordType))
             {
-                inputStream.WriteTo(outputStream, checked((int)groupMeta.TotalLength));
+                inputStream.CopyTo(outputStream, checked((int)groupMeta.TotalLength));
             }
             else
             {

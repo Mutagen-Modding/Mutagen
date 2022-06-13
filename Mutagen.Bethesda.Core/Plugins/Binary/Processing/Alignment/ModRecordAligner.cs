@@ -124,7 +124,7 @@ public static class ModRecordAligner
             { 
                 noRecordLength = inputStream.Remaining; 
             } 
-            inputStream.WriteTo(writer.BaseStream, (int)noRecordLength); 
+            inputStream.CopyTo(writer.BaseStream, (int)noRecordLength); 
  
             // If complete overall, return 
             if (inputStream.Complete) break;
@@ -150,10 +150,10 @@ public static class ModRecordAligner
             writer.Write(len); 
             if (!alignmentRules.Alignments.TryGetValue(recType, out var alignments)) 
             { 
-                inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength + len); 
+                inputStream.CopyTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength + len); 
                 continue; 
             } 
-            inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength); 
+            inputStream.CopyTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength); 
             var writerEndPos = writer.Position + len; 
             var endPos = inputStream.Position + len; 
             var dataDict = new Dictionary<RecordType, List<ReadOnlyMemorySlice<byte>>>(); 
@@ -175,7 +175,7 @@ public static class ModRecordAligner
  
                 if (!started) 
                 { 
-                    inputStream.WriteTo(writer.BaseStream, subType.TotalLength); 
+                    inputStream.CopyTo(writer.BaseStream, subType.TotalLength); 
                     continue; 
                 } 
                      
@@ -192,7 +192,7 @@ public static class ModRecordAligner
                     }
                     else
                     {
-                        inputStream.WriteTo(writer.BaseStream, subType.TotalLength);
+                        inputStream.CopyTo(writer.BaseStream, subType.TotalLength);
                     }
                 }
             } 
@@ -333,7 +333,7 @@ public static class ModRecordAligner
         IMutagenReadStream reader, 
         MutagenWriter writer) 
     { 
-        reader.WriteTo(writer.BaseStream, 4); 
+        reader.CopyTo(writer.BaseStream, 4); 
         ReadOnlyMemorySlice<byte>? roadStorage = null; 
         ReadOnlyMemorySlice<byte>? cellStorage = null; 
         List<ReadOnlyMemorySlice<byte>> grupBytes = new List<ReadOnlyMemorySlice<byte>>(); 

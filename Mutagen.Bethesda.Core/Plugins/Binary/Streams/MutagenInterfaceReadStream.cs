@@ -48,8 +48,6 @@ public class MutagenInterfaceReadStream : IMutagenReadStream
 
     public bool IsPersistantBacking => _readStream.IsPersistantBacking;
 
-    public Stream BaseStream => _readStream.BaseStream;
-
     /// <inheritdoc />
     public void Dispose() => _readStream.Dispose();
 
@@ -214,5 +212,8 @@ public class MutagenInterfaceReadStream : IMutagenReadStream
     public byte ReadUInt8() => _readStream.ReadUInt8();
 
     /// <inheritdoc />
-    public void WriteTo(Stream stream, int amount) => _readStream.WriteTo(stream, amount);
+    public void CopyTo(Stream stream, int amount) => _readStream.CopyTo(stream, amount);
+
+    /// <inheritdoc />
+    public void CopyTo(Stream stream) => _readStream.CopyTo(stream);
 }

@@ -37,7 +37,7 @@ public class AlignmentSubRule : AlignmentRule
             stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData.Constants); 
             using (HeaderExport.Subrecord(stream, subType)) 
             { 
-                inputStream.WriteTo(stream.BaseStream, subLen); 
+                inputStream.CopyTo(stream.BaseStream, subLen); 
             } 
             dataDict[subType] = data; 
         } 

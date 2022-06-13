@@ -23,7 +23,7 @@ public static class ModRecordSorter
             {
                 var grupLoc = inputStream.Position;
                 noRecordLength = grupLoc - inputStream.Position;
-                inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
+                inputStream.CopyTo(writer.BaseStream, (int)noRecordLength);
 
                 // If complete overall, return
                 if (inputStream.Complete) return;
@@ -33,7 +33,7 @@ public static class ModRecordSorter
                 var storage = new Dictionary<FormKey, List<ReadOnlyMemorySlice<byte>>>();
                 using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
                 {
-                    inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.GroupConstants.HeaderLength);
+                    inputStream.CopyTo(writer.BaseStream, inputStream.MetaData.Constants.GroupConstants.HeaderLength);
                     locatorStream.Position = grupLoc;
                     foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                     {
@@ -57,7 +57,7 @@ public static class ModRecordSorter
                 }
             }
 
-            inputStream.WriteTo(writer.BaseStream, (int)inputStream.Remaining);
+            inputStream.CopyTo(writer.BaseStream, (int)inputStream.Remaining);
         }
     }
 }

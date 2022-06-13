@@ -70,8 +70,6 @@ public readonly struct MutagenFrame : IMutagenReadStream
 
     public bool IsPersistantBacking => Reader.IsPersistantBacking;
 
-    public Stream BaseStream => Reader.BaseStream;
-
     /// <summary>
     /// Constructs new frame around current reader position until its completion
     /// </summary>
@@ -371,9 +369,15 @@ public readonly struct MutagenFrame : IMutagenReadStream
     }
 
     /// <inheritdoc/>
-    public void WriteTo(Stream stream, int amount)
+    public void CopyTo(Stream stream, int amount)
     {
-        Reader.WriteTo(stream, amount);
+        Reader.CopyTo(stream, amount);
+    }
+
+    /// <inheritdoc/>
+    public void CopyTo(Stream stream)
+    {
+        Reader.CopyTo(stream);
     }
 
     /// <inheritdoc/>
