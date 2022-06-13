@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
+                        if (lastParsed.ShortCircuit((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, translationParams)) return ParseResult.Stop;
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         var dataFrame = frame.SpawnWithLength(contentLength);
                         item.NorthwestCellCoords = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                         {
                             case 0:
-                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
+                                if (lastParsed.ShortCircuit((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, translationParams)) return ParseResult.Stop;
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                                 var dataFrame = frame.SpawnWithLength(contentLength);
                                 item.NorthwestCellCoords = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
+                        if (lastParsed.ShortCircuit((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, translationParams)) return ParseResult.Stop;
                         _WLEVLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                         return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, type);
                     }
@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
-                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
+                                if (lastParsed.ShortCircuit((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, translationParams)) return ParseResult.Stop;
                                 _WLEVLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                                 return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, type);
                             case 1:

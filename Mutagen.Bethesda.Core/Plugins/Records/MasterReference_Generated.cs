@@ -1057,7 +1057,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             {
                 case RecordTypeInts.MAST:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MasterReference_FieldIndex.Master, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Master = ModKeyBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MasterReference_FieldIndex.Master;
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             {
                 case RecordTypeInts.MAST:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MasterReference_FieldIndex.Master, translationParams)) return ParseResult.Stop;
                     _MasterLocation = (stream.Position - offset);
                     return (int)MasterReference_FieldIndex.Master;
                 }

@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QOBJ:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestObjective_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestObjective_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return (int)QuestObjective_FieldIndex.Index;
@@ -1492,7 +1492,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QOBJ:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestObjective_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestObjective_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)QuestObjective_FieldIndex.Index;
                 }

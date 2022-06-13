@@ -1169,21 +1169,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.FGGS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SymmetricGeometry, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SymmetricGeometry = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FaceGenData_FieldIndex.SymmetricGeometry;
                 }
                 case RecordTypeInts.FGGA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.AsymmetricGeometry, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AsymmetricGeometry = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FaceGenData_FieldIndex.AsymmetricGeometry;
                 }
                 case RecordTypeInts.FGTS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SymmetricTexture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SymmetricTexture = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FaceGenData_FieldIndex.SymmetricTexture;
@@ -1327,19 +1327,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.FGGS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SymmetricGeometry, translationParams)) return ParseResult.Stop;
                     _SymmetricGeometryLocation = (stream.Position - offset);
                     return (int)FaceGenData_FieldIndex.SymmetricGeometry;
                 }
                 case RecordTypeInts.FGGA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.AsymmetricGeometry, translationParams)) return ParseResult.Stop;
                     _AsymmetricGeometryLocation = (stream.Position - offset);
                     return (int)FaceGenData_FieldIndex.AsymmetricGeometry;
                 }
                 case RecordTypeInts.FGTS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SymmetricTexture, translationParams)) return ParseResult.Stop;
                     _SymmetricTextureLocation = (stream.Position - offset);
                     return (int)FaceGenData_FieldIndex.SymmetricTexture;
                 }

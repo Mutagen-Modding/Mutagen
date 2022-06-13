@@ -1082,14 +1082,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INTV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SoundRateOfFire_FieldIndex.RotationsPerMinute) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SoundRateOfFire_FieldIndex.RotationsPerMinute, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RotationsPerMinute = frame.ReadUInt32();
                     return (int)SoundRateOfFire_FieldIndex.RotationsPerMinute;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SoundRateOfFire_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SoundRateOfFire_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.File = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1241,13 +1241,13 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INTV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SoundRateOfFire_FieldIndex.RotationsPerMinute) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SoundRateOfFire_FieldIndex.RotationsPerMinute, translationParams)) return ParseResult.Stop;
                     _RotationsPerMinuteLocation = (stream.Position - offset);
                     return (int)SoundRateOfFire_FieldIndex.RotationsPerMinute;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SoundRateOfFire_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SoundRateOfFire_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     _FileLocation = (stream.Position - offset);
                     return (int)SoundRateOfFire_FieldIndex.File;
                 }

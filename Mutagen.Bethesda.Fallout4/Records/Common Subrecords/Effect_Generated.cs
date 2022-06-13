@@ -1311,20 +1311,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.EFID:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.BaseEffect) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.BaseEffect, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BaseEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Fallout4.EffectData.CreateFromBinary(frame: frame);
                     return (int)Effect_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
@@ -1470,19 +1470,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.EFID:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.BaseEffect) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.BaseEffect, translationParams)) return ParseResult.Stop;
                     _BaseEffectLocation = (stream.Position - offset);
                     return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Effect_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,

@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ALNA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefNearAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     FindMatchingRefNearAliasBinaryCreateTranslation.FillBinaryAliasIDCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALNT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefNearAlias_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1239,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ALNA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefNearAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     AliasIDCustomParse(
                         stream: stream,
                         finalPos: finalPos,
@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALNT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefNearAlias_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
                     return (int)FindMatchingRefNearAlias_FieldIndex.Type;
                 }

@@ -1284,13 +1284,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DSTD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Fallout4.DestructionStageData.CreateFromBinary(frame: frame);
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.SequenceName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.SequenceName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SequenceName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.With(DestructionStage_Registration.ModelConverter));
@@ -1447,19 +1447,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DSTD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.SequenceName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.SequenceName, translationParams)) return ParseResult.Stop;
                     _SequenceNameLocation = (stream.Position - offset);
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,

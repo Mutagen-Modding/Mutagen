@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SCRV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptVariableReference_FieldIndex.VariableIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VariableIndex = frame.ReadInt32();
                     return (int)ScriptVariableReference_FieldIndex.VariableIndex;
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SCRV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptVariableReference_FieldIndex.VariableIndex, translationParams)) return ParseResult.Stop;
                     _VariableIndexLocation = (stream.Position - offset);
                     return (int)ScriptVariableReference_FieldIndex.VariableIndex;
                 }

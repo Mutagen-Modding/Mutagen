@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.PRKC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PerkCondition_FieldIndex.RunOnTabIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RunOnTabIndex = frame.ReadUInt8();
                     return (int)PerkCondition_FieldIndex.RunOnTabIndex;
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.PRKC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PerkCondition_FieldIndex.RunOnTabIndex, translationParams)) return ParseResult.Stop;
                     _RunOnTabIndexLocation = (stream.Position - offset);
                     return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }

@@ -1333,14 +1333,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MPPI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt32();
                     return (int)MorphPreset_FieldIndex.Index;
                 }
                 case RecordTypeInts.MPPN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MPPM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.UnknownMPPM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.UnknownMPPM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.UnknownMPPM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1359,14 +1359,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MPPT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.Texture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)MorphPreset_FieldIndex.Texture;
                 }
                 case RecordTypeInts.MPPF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.UnknownMPPF) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.UnknownMPPF, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.UnknownMPPF = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MorphPreset_FieldIndex.UnknownMPPF;
@@ -1527,31 +1527,31 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MPPI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)MorphPreset_FieldIndex.Index;
                 }
                 case RecordTypeInts.MPPN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)MorphPreset_FieldIndex.Name;
                 }
                 case RecordTypeInts.MPPM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.UnknownMPPM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.UnknownMPPM, translationParams)) return ParseResult.Stop;
                     _UnknownMPPMLocation = (stream.Position - offset);
                     return (int)MorphPreset_FieldIndex.UnknownMPPM;
                 }
                 case RecordTypeInts.MPPT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.Texture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
                     _TextureLocation = (stream.Position - offset);
                     return (int)MorphPreset_FieldIndex.Texture;
                 }
                 case RecordTypeInts.MPPF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphPreset_FieldIndex.UnknownMPPF) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.UnknownMPPF, translationParams)) return ParseResult.Stop;
                     _UnknownMPPFLocation = (stream.Position - offset);
                     return (int)MorphPreset_FieldIndex.UnknownMPPF;
                 }

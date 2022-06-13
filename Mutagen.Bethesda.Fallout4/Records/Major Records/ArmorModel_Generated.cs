@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ArmorModel_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorModel_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ICON:
                 case RecordTypeInts.MICO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ArmorModel_FieldIndex.Icons) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorModel_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     item.Icons = Mutagen.Bethesda.Fallout4.Icons.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ArmorModel_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorModel_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ICON:
                 case RecordTypeInts.MICO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ArmorModel_FieldIndex.Icons) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorModel_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,

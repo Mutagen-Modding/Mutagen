@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ITXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TerminalMenuItem_FieldIndex.ItemText) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TerminalMenuItem_FieldIndex.ItemText, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ItemText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ITXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TerminalMenuItem_FieldIndex.ItemText) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TerminalMenuItem_FieldIndex.ItemText, translationParams)) return ParseResult.Stop;
                     _ItemTextLocation = (stream.Position - offset);
                     return (int)TerminalMenuItem_FieldIndex.ItemText;
                 }

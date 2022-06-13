@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.BNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MaterialSubstitution_FieldIndex.OriginalMaterial) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.OriginalMaterial, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OriginalMaterial = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1317,7 +1317,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.BNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MaterialSubstitution_FieldIndex.OriginalMaterial) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.OriginalMaterial, translationParams)) return ParseResult.Stop;
                     _OriginalMaterialLocation = (stream.Position - offset);
                     return (int)MaterialSubstitution_FieldIndex.OriginalMaterial;
                 }

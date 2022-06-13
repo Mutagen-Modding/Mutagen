@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SCHD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptFields_FieldIndex.MetadataSummary, translationParams)) return ParseResult.Stop;
                     return ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptFields_FieldIndex.MetadataSummary, translationParams)) return ParseResult.Stop;
                     item.MetadataSummary.CopyInFromBinary(
                         frame: frame,
                         translationParams: null);
@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SCHD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptFields_FieldIndex.MetadataSummary, translationParams)) return ParseResult.Stop;
                     return MetadataSummaryOldCustomParse(
                         stream,
                         offset,
@@ -1768,7 +1768,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptFields_FieldIndex.MetadataSummary, translationParams)) return ParseResult.Stop;
                     _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ScriptFields_FieldIndex.MetadataSummary;
                 }

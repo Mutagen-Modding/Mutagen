@@ -1203,14 +1203,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectVisibilityManagerItem_FieldIndex.Object) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectVisibilityManagerItem_FieldIndex.Object, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ObjectVisibilityManagerItem_FieldIndex.Object;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectVisibilityManagerItem_FieldIndex.ObjectBounds) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectVisibilityManagerItem_FieldIndex.ObjectBounds, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ObjectBounds = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectBoundsFloat>.Instance.Parse(
@@ -1352,13 +1352,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectVisibilityManagerItem_FieldIndex.Object) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectVisibilityManagerItem_FieldIndex.Object, translationParams)) return ParseResult.Stop;
                     _ObjectLocation = (stream.Position - offset);
                     return (int)ObjectVisibilityManagerItem_FieldIndex.Object;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectVisibilityManagerItem_FieldIndex.ObjectBounds) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectVisibilityManagerItem_FieldIndex.ObjectBounds, translationParams)) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.ObjectBounds = BinaryOverlayList.FactoryByStartIndex<IObjectBoundsFloatGetter>(

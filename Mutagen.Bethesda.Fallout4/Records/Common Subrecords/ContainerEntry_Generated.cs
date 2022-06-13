@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.CNTO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ContainerEntry_FieldIndex.Item) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ContainerEntry_FieldIndex.Item, translationParams)) return ParseResult.Stop;
                     item.Item = Mutagen.Bethesda.Fallout4.ContainerItem.CreateFromBinary(frame: frame);
                     return (int)ContainerEntry_FieldIndex.Item;
                 }
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.CNTO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ContainerEntry_FieldIndex.Item) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ContainerEntry_FieldIndex.Item, translationParams)) return ParseResult.Stop;
                     _ItemLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ContainerEntry_FieldIndex.Item;
                 }

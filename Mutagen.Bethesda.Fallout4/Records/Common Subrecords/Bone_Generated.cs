@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.BSMB:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Bone_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Bone_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.BSMS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Bone_FieldIndex.Values) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Bone_FieldIndex.Values, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Values = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.BMMP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Bone_FieldIndex.BMMP) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Bone_FieldIndex.BMMP, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BMMP = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Bone_FieldIndex.BMMP;
@@ -1444,13 +1444,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.BSMB:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Bone_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Bone_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)Bone_FieldIndex.Name;
                 }
                 case RecordTypeInts.BSMS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Bone_FieldIndex.Values) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Bone_FieldIndex.Values, translationParams)) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Values = BinaryOverlayList.FactoryByStartIndex<Single>(
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.BMMP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Bone_FieldIndex.BMMP) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Bone_FieldIndex.BMMP, translationParams)) return ParseResult.Stop;
                     _BMMPLocation = (stream.Position - offset);
                     return (int)Bone_FieldIndex.BMMP;
                 }

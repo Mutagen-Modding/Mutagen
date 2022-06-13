@@ -1250,13 +1250,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.OBTF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.IsEditorOnly) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectTemplate_FieldIndex.IsEditorOnly, translationParams)) return ParseResult.Stop;
                     item.IsEditorOnly = true;
                     return (int)ObjectTemplate_FieldIndex.IsEditorOnly;
                 }
                 case RecordTypeInts.FULL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectTemplate_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.OBTS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.AddonIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectTemplate_FieldIndex.AddonIndex, translationParams)) return ParseResult.Stop;
                     return ObjectTemplateBinaryCreateTranslation<T>.FillBinaryOBTSLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1429,19 +1429,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.OBTF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.IsEditorOnly) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectTemplate_FieldIndex.IsEditorOnly, translationParams)) return ParseResult.Stop;
                     _IsEditorOnlyLocation = (stream.Position - offset);
                     return (int)ObjectTemplate_FieldIndex.IsEditorOnly;
                 }
                 case RecordTypeInts.FULL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectTemplate_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)ObjectTemplate_FieldIndex.Name;
                 }
                 case RecordTypeInts.OBTS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.AddonIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ObjectTemplate_FieldIndex.AddonIndex, translationParams)) return ParseResult.Stop;
                     return OBTSLogicCustomParse(
                         stream,
                         offset,

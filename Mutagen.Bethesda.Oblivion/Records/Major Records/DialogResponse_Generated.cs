@@ -1177,13 +1177,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Oblivion.DialogResponseData.CreateFromBinary(frame: frame);
                     return (int)DialogResponse_FieldIndex.Data;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.ResponseText) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.ResponseText, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ResponseText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.ActorNotes, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorNotes = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1338,19 +1338,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DialogResponse_FieldIndex.Data;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.ResponseText) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.ResponseText, translationParams)) return ParseResult.Stop;
                     _ResponseTextLocation = (stream.Position - offset);
                     return (int)DialogResponse_FieldIndex.ResponseText;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.ActorNotes, translationParams)) return ParseResult.Stop;
                     _ActorNotesLocation = (stream.Position - offset);
                     return (int)DialogResponse_FieldIndex.ActorNotes;
                 }

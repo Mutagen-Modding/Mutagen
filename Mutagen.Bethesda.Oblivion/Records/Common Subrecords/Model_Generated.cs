@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Model_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.File = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Model_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     _FileLocation = (stream.Position - offset);
                     return (int)Model_FieldIndex.File;
                 }

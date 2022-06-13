@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestObjectiveTarget_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.AliasID = dataFrame.ReadInt32();
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestObjectiveTarget_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     _QSTALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x8)

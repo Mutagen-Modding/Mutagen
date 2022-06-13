@@ -1119,14 +1119,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.FMRI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceMorph_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceMorph_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt32();
                     return (int)FaceMorph_FieldIndex.Index;
                 }
                 case RecordTypeInts.FMRN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceMorph_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceMorph_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1277,13 +1277,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.FMRI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceMorph_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceMorph_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)FaceMorph_FieldIndex.Index;
                 }
                 case RecordTypeInts.FMRN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceMorph_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceMorph_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)FaceMorph_FieldIndex.Name;
                 }

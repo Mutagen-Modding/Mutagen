@@ -1082,14 +1082,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALFA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ReferenceAliasLocation_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ReferenceAliasLocation_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasID = frame.ReadInt32();
                     return (int)ReferenceAliasLocation_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ReferenceAliasLocation_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ReferenceAliasLocation_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ReferenceAliasLocation_FieldIndex.Keyword;
@@ -1230,13 +1230,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALFA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ReferenceAliasLocation_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ReferenceAliasLocation_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     _AliasIDLocation = (stream.Position - offset);
                     return (int)ReferenceAliasLocation_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ReferenceAliasLocation_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ReferenceAliasLocation_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     _KeywordLocation = (stream.Position - offset);
                     return (int)ReferenceAliasLocation_FieldIndex.Keyword;
                 }

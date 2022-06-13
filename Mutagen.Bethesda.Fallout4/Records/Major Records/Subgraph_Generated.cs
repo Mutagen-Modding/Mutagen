@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.SGNM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BehaviorGraph = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SAKD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     item.ActorKeywords.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             reader: frame,
@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.STKD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     item.TargetKeywords.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             reader: frame,
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SAPT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     item.AnimationPaths.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                             reader: frame,
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SRAF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     SubgraphBinaryCreateTranslation.FillBinaryRoleCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
@@ -1842,13 +1842,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.SGNM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     _BehaviorGraphLocation = (stream.Position - offset);
                     return (int)Subgraph_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.SAKD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     this.ActorKeywords = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IKeywordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.STKD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     this.TargetKeywords = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IKeywordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SAPT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     this.AnimationPaths = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -1893,7 +1893,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SRAF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Subgraph_FieldIndex.Role) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     RoleCustomParse(
                         stream: stream,
                         finalPos: finalPos,

@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestTarget_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestTarget_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Oblivion.QuestTargetData.CreateFromBinary(frame: frame);
                     return (int)QuestTarget_FieldIndex.Data;
                 }
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestTarget_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestTarget_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)QuestTarget_FieldIndex.Data;
                 }

@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                        if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.Type = EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                             reader: frame,
@@ -2230,7 +2230,7 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                         {
                             case 0:
-                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                                if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                                 item.Type = EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                                     reader: frame,
@@ -2570,7 +2570,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                        if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                         _TypeLocation = (stream.Position - offset);
                         return new ParseResult((int)SceneAction_FieldIndex.Type, type);
                     }
@@ -2584,7 +2584,7 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
-                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                                if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                                 _TypeLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.Type, type);
                             case 1:

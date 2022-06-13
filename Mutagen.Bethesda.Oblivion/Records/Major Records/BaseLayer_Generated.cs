@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.BTXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BaseLayer_FieldIndex.Header) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BaseLayer_FieldIndex.Header, translationParams)) return ParseResult.Stop;
                     item.Header = Mutagen.Bethesda.Oblivion.LayerHeader.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.BTXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BaseLayer_FieldIndex.Header) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BaseLayer_FieldIndex.Header, translationParams)) return ParseResult.Stop;
                     _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)BaseLayer_FieldIndex.Header;
                 }

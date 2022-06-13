@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundTypes_FieldIndex.Types) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSoundTypes_FieldIndex.Types, translationParams)) return ParseResult.Stop;
                     item.Types.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NpcSoundType>.Instance.Parse(
                             reader: frame,
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundTypes_FieldIndex.Types) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSoundTypes_FieldIndex.Types, translationParams)) return ParseResult.Stop;
                     this.Types = this.ParseRepeatedTypelessSubrecord<INpcSoundTypeGetter>(
                         stream: stream,
                         translationParams: translationParams,

@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Number) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Number, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Number = frame.ReadUInt32();
                     return (int)Rank_FieldIndex.Number;
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Title) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Title, translationParams)) return ParseResult.Stop;
                     item.Title = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<TranslatedString>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Insignia = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1331,14 +1331,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Number) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Number, translationParams)) return ParseResult.Stop;
                     _NumberLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.Number;
                 }
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Title) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Title, translationParams)) return ParseResult.Stop;
                     _TitleOverlay = GenderedItemBinaryOverlay.Factory<ITranslatedStringGetter>(
                         package: _package,
                         male: RecordTypes.MNAM,
@@ -1349,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     _InsigniaLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.Insignia;
                 }

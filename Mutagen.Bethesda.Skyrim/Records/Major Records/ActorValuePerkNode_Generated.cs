@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.PNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActorValuePerkNode_FieldIndex.Perk, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.PNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActorValuePerkNode_FieldIndex.Perk, translationParams)) return ParseResult.Stop;
                     _PerkLocation = (stream.Position - offset);
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }

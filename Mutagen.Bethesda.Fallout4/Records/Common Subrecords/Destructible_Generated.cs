@@ -1438,13 +1438,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DEST:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Fallout4.DestructableData.CreateFromBinary(frame: frame);
                     return (int)Destructible_FieldIndex.Data;
                 }
                 case RecordTypeInts.DAMC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Resistances) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Resistances, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Resistances = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ResistanceDestructible>.Instance.Parse(
@@ -1457,7 +1457,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DSTA:
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Stages, translationParams)) return ParseResult.Stop;
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DestructionStage>.Instance.Parse(
                             reader: frame,
@@ -1600,13 +1600,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DEST:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Destructible_FieldIndex.Data;
                 }
                 case RecordTypeInts.DAMC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Resistances) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Resistances, translationParams)) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Resistances = BinaryOverlayList.FactoryByStartIndex<IResistanceDestructibleGetter>(
@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DSTA:
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Stages, translationParams)) return ParseResult.Stop;
                     this.Stages = this.ParseRepeatedTypelessSubrecord<IDestructionStageGetter>(
                         stream: stream,
                         translationParams: translationParams,

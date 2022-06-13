@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.PRKE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)APerkEffect_FieldIndex.Priority) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)APerkEffect_FieldIndex.Priority, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     return (int)APerkEffect_FieldIndex.Priority;
@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.PRKE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)APerkEffect_FieldIndex.Priority) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)APerkEffect_FieldIndex.Priority, translationParams)) return ParseResult.Stop;
                     _PRKELocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)APerkEffect_FieldIndex.Priority;
                 }

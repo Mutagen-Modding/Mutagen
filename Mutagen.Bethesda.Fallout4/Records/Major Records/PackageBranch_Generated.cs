@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageBranch_FieldIndex.BranchType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageBranch_FieldIndex.BranchType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BranchType = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -2190,7 +2190,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageBranch_FieldIndex.BranchType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageBranch_FieldIndex.BranchType, translationParams)) return ParseResult.Stop;
                     _BranchTypeLocation = (stream.Position - offset);
                     return (int)PackageBranch_FieldIndex.BranchType;
                 }

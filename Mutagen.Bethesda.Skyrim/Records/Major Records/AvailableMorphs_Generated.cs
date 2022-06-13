@@ -1363,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AvailableMorphs_FieldIndex.Nose, translationParams)) return ParseResult.Stop;
                     return AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AvailableMorphs_FieldIndex.Nose, translationParams)) return ParseResult.Stop;
                     return ParseCustomParse(
                         stream,
                         offset,

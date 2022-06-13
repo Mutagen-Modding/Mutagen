@@ -1181,13 +1181,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.LVLO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LeveledSpellEntry_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LeveledSpellEntry_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Skyrim.LeveledSpellEntryData.CreateFromBinary(frame: frame);
                     return (int)LeveledSpellEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.COED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LeveledSpellEntry_FieldIndex.ExtraData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LeveledSpellEntry_FieldIndex.ExtraData, translationParams)) return ParseResult.Stop;
                     item.ExtraData = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
                     return (int)LeveledSpellEntry_FieldIndex.ExtraData;
                 }
@@ -1327,13 +1327,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.LVLO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LeveledSpellEntry_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LeveledSpellEntry_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LeveledSpellEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.COED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LeveledSpellEntry_FieldIndex.ExtraData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LeveledSpellEntry_FieldIndex.ExtraData, translationParams)) return ParseResult.Stop;
                     _ExtraDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LeveledSpellEntry_FieldIndex.ExtraData;
                 }

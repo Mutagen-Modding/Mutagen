@@ -1305,14 +1305,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt32();
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NavigationMeshObstacleManagerSubObject_FieldIndex.DATAs) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.DATAs, translationParams)) return ParseResult.Stop;
                     item.DATAs.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt64>.Instance.Parse(
                             reader: frame,
@@ -1322,14 +1322,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INTV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NavigationMeshObstacleManagerSubObject_FieldIndex.INTV) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.INTV, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INTV = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.INTV;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Model = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1476,13 +1476,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NavigationMeshObstacleManagerSubObject_FieldIndex.DATAs) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.DATAs, translationParams)) return ParseResult.Stop;
                     this.DATAs = BinaryOverlayList.FactoryByArray<UInt64>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -1497,13 +1497,13 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INTV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NavigationMeshObstacleManagerSubObject_FieldIndex.INTV) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.INTV, translationParams)) return ParseResult.Stop;
                     _INTVLocation = (stream.Position - offset);
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.INTV;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     _ModelLocation = (stream.Position - offset);
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model;
                 }

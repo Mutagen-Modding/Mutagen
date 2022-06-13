@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Icons_FieldIndex.InventoryImage) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Icons_FieldIndex.InventoryImage, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InventoryImage = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MICO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Icons_FieldIndex.MessageIcon) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Icons_FieldIndex.MessageIcon, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MessageIcon = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1221,13 +1221,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Icons_FieldIndex.InventoryImage) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Icons_FieldIndex.InventoryImage, translationParams)) return ParseResult.Stop;
                     _InventoryImageLocation = (stream.Position - offset);
                     return (int)Icons_FieldIndex.InventoryImage;
                 }
                 case RecordTypeInts.MICO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Icons_FieldIndex.MessageIcon) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Icons_FieldIndex.MessageIcon, translationParams)) return ParseResult.Stop;
                     _MessageIconLocation = (stream.Position - offset);
                     return (int)Icons_FieldIndex.MessageIcon;
                 }

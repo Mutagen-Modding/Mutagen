@@ -1203,14 +1203,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ONAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Static) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)StaticPart_FieldIndex.Static, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Static.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)StaticPart_FieldIndex.Static;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Placements) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)StaticPart_FieldIndex.Placements, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Placements = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<StaticPlacement>.Instance.Parse(
@@ -1352,13 +1352,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ONAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Static) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)StaticPart_FieldIndex.Static, translationParams)) return ParseResult.Stop;
                     _StaticLocation = (stream.Position - offset);
                     return (int)StaticPart_FieldIndex.Static;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Placements) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)StaticPart_FieldIndex.Placements, translationParams)) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Placements = BinaryOverlayList.FactoryByStartIndex<IStaticPlacementGetter>(

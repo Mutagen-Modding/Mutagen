@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1282,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.FULL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Types) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Types, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Types = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MapMarker.Type>.Instance.Parse(
@@ -1445,19 +1445,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _FlagsLocation = (stream.Position - offset);
                     return (int)MapMarker_FieldIndex.Flags;
                 }
                 case RecordTypeInts.FULL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)MapMarker_FieldIndex.Name;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Types) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Types, translationParams)) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Types = BinaryOverlayList.FactoryByStartIndex<MapMarker.Type>(

@@ -1083,14 +1083,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)EquipmentSlot_FieldIndex.Slot) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Slot, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Slot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)EquipmentSlot_FieldIndex.Slot;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)EquipmentSlot_FieldIndex.Node) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Node, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Node = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1233,13 +1233,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)EquipmentSlot_FieldIndex.Slot) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Slot, translationParams)) return ParseResult.Stop;
                     _SlotLocation = (stream.Position - offset);
                     return (int)EquipmentSlot_FieldIndex.Slot;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)EquipmentSlot_FieldIndex.Node) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Node, translationParams)) return ParseResult.Stop;
                     _NodeLocation = (stream.Position - offset);
                     return (int)EquipmentSlot_FieldIndex.Node;
                 }

@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LogEntry.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Entry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Entry, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Entry = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.ResultScript) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.ResultScript, translationParams)) return ParseResult.Stop;
                     item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
@@ -1542,14 +1542,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _FlagsLocation = (stream.Position - offset);
                     return (int)LogEntry_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -1565,14 +1565,14 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Entry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Entry, translationParams)) return ParseResult.Stop;
                     _EntryLocation = (stream.Position - offset);
                     return (int)LogEntry_FieldIndex.Entry;
                 }
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.ResultScript) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.ResultScript, translationParams)) return ParseResult.Stop;
                     this.ResultScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,

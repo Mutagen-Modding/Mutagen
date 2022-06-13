@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LensFlareSprite_FieldIndex.LensFlareSpriteId) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LensFlareSprite_FieldIndex.LensFlareSpriteId, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LensFlareSpriteId = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LensFlareSprite_FieldIndex.Texture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LensFlareSprite_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Texture = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.LFSD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LensFlareSprite_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LensFlareSprite_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Fallout4.LensFlareSpriteData.CreateFromBinary(frame: frame);
                     return (int)LensFlareSprite_FieldIndex.Data;
                 }
@@ -1338,19 +1338,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LensFlareSprite_FieldIndex.LensFlareSpriteId) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LensFlareSprite_FieldIndex.LensFlareSpriteId, translationParams)) return ParseResult.Stop;
                     _LensFlareSpriteIdLocation = (stream.Position - offset);
                     return (int)LensFlareSprite_FieldIndex.LensFlareSpriteId;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LensFlareSprite_FieldIndex.Texture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LensFlareSprite_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
                     _TextureLocation = (stream.Position - offset);
                     return (int)LensFlareSprite_FieldIndex.Texture;
                 }
                 case RecordTypeInts.LFSD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LensFlareSprite_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LensFlareSprite_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LensFlareSprite_FieldIndex.Data;
                 }

@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALCO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CreateReferenceToObject_FieldIndex.Object) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CreateReferenceToObject_FieldIndex.Object, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)CreateReferenceToObject_FieldIndex.Object;
@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALCO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CreateReferenceToObject_FieldIndex.Object) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CreateReferenceToObject_FieldIndex.Object, translationParams)) return ParseResult.Stop;
                     _ObjectLocation = (stream.Position - offset);
                     return (int)CreateReferenceToObject_FieldIndex.Object;
                 }

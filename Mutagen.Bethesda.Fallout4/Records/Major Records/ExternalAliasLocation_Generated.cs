@@ -1082,14 +1082,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALEQ:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasLocation_FieldIndex.Quest) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ExternalAliasLocation_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ExternalAliasLocation_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasLocation_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ExternalAliasLocation_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasID = frame.ReadInt32();
                     return (int)ExternalAliasLocation_FieldIndex.AliasID;
@@ -1230,13 +1230,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALEQ:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasLocation_FieldIndex.Quest) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ExternalAliasLocation_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
                     _QuestLocation = (stream.Position - offset);
                     return (int)ExternalAliasLocation_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasLocation_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ExternalAliasLocation_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     _AliasIDLocation = (stream.Position - offset);
                     return (int)ExternalAliasLocation_FieldIndex.AliasID;
                 }

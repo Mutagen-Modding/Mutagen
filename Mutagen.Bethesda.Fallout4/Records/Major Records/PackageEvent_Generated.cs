@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.Idle) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageEvent_FieldIndex.Idle, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Idle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PackageEvent_FieldIndex.Idle;
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.Idle) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageEvent_FieldIndex.Idle, translationParams)) return ParseResult.Stop;
                     _IdleLocation = (stream.Position - offset);
                     return (int)PackageEvent_FieldIndex.Idle;
                 }

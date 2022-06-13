@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.Unknown3) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.Unknown3, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Emotion = EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.Unknown3) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.Unknown3, translationParams)) return ParseResult.Stop;
                     _TRDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)DialogResponse_FieldIndex.Unknown3;
                 }

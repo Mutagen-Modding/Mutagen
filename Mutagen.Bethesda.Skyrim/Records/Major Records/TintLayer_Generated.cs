@@ -1195,21 +1195,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintLayer_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return (int)TintLayer_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintLayer_FieldIndex.Color) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Color, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
                     return (int)TintLayer_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.InterpolationValue, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InterpolationValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TIAS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintLayer_FieldIndex.Preset) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Preset, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Preset = frame.ReadInt16();
                     return (int)TintLayer_FieldIndex.Preset;
@@ -1367,25 +1367,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintLayer_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)TintLayer_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintLayer_FieldIndex.Color) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Color, translationParams)) return ParseResult.Stop;
                     _ColorLocation = (stream.Position - offset);
                     return (int)TintLayer_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.InterpolationValue, translationParams)) return ParseResult.Stop;
                     _InterpolationValueLocation = (stream.Position - offset);
                     return (int)TintLayer_FieldIndex.InterpolationValue;
                 }
                 case RecordTypeInts.TIAS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintLayer_FieldIndex.Preset) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Preset, translationParams)) return ParseResult.Stop;
                     _PresetLocation = (stream.Position - offset);
                     return (int)TintLayer_FieldIndex.Preset;
                 }

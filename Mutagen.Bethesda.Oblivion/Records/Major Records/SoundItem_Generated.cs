@@ -1082,14 +1082,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.CSDI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SoundItem_FieldIndex.Sound) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SoundItem_FieldIndex.Sound, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SoundItem_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SoundItem_FieldIndex.Chance) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SoundItem_FieldIndex.Chance, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Chance = frame.ReadUInt8();
                     return (int)SoundItem_FieldIndex.Chance;
@@ -1230,13 +1230,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.CSDI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SoundItem_FieldIndex.Sound) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SoundItem_FieldIndex.Sound, translationParams)) return ParseResult.Stop;
                     _SoundLocation = (stream.Position - offset);
                     return (int)SoundItem_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SoundItem_FieldIndex.Chance) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SoundItem_FieldIndex.Chance, translationParams)) return ParseResult.Stop;
                     _ChanceLocation = (stream.Position - offset);
                     return (int)SoundItem_FieldIndex.Chance;
                 }

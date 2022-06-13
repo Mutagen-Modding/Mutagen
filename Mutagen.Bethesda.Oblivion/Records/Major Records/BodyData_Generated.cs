@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.BodyParts) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.BodyParts, translationParams)) return ParseResult.Stop;
                     item.BodyParts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BodyPart>.Instance.Parse(
                             reader: frame,
@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
@@ -1399,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.BodyParts) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.BodyParts, translationParams)) return ParseResult.Stop;
                     this.BodyParts = this.ParseRepeatedTypelessSubrecord<IBodyPartGetter>(
                         stream: stream,
                         translationParams: translationParams,

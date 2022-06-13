@@ -2459,7 +2459,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.NNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.NeckFatAdjustmentsScale) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.NeckFatAdjustmentsScale, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.NeckFatAdjustmentsScale = Mutagen.Bethesda.Fallout4.NeckFatAdjustmentsScale.CreateFromBinary(frame: frame);
                     return (int)HeadData_FieldIndex.NeckFatAdjustmentsScale;
@@ -2467,7 +2467,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.HEAD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.HeadParts, translationParams)) return ParseResult.Stop;
                     item.HeadParts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
                             reader: frame,
@@ -2478,7 +2478,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RPRM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.RacePresets, translationParams)) return ParseResult.Stop;
                     item.RacePresets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                             reader: frame,
@@ -2488,7 +2488,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.AHCM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.AvailableHairColors, translationParams)) return ParseResult.Stop;
                     item.AvailableHairColors.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Parse(
                             reader: frame,
@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FTSM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FaceDetails, translationParams)) return ParseResult.Stop;
                     item.FaceDetails.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Parse(
                             reader: frame,
@@ -2508,7 +2508,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DFTM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.DefaultFaceTexture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DefaultFaceTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
@@ -2517,7 +2517,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TETI:
                 case RecordTypeInts.TTGE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.TintLayers) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.TintLayers, translationParams)) return ParseResult.Stop;
                     item.TintLayers.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintGroup>.Instance.Parse(
                             reader: frame,
@@ -2536,7 +2536,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MPPK:
                 case RecordTypeInts.MPGS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.MorphGroups) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.MorphGroups, translationParams)) return ParseResult.Stop;
                     item.MorphGroups.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MorphGroup>.Instance.Parse(
                             reader: frame,
@@ -2548,7 +2548,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FMRI:
                 case RecordTypeInts.FMRN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.FaceMorphs) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FaceMorphs, translationParams)) return ParseResult.Stop;
                     item.FaceMorphs.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FaceMorph>.Instance.Parse(
                             reader: frame,
@@ -2559,7 +2559,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.WMAP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.MaleWrinkleMapPath) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.MaleWrinkleMapPath, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaleWrinkleMapPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -2710,7 +2710,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.NNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.NeckFatAdjustmentsScale) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.NeckFatAdjustmentsScale, translationParams)) return ParseResult.Stop;
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     this.NeckFatAdjustmentsScale = NeckFatAdjustmentsScaleBinaryOverlay.NeckFatAdjustmentsScaleFactory(
                         stream: stream,
@@ -2721,7 +2721,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.HEAD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.HeadParts, translationParams)) return ParseResult.Stop;
                     this.HeadParts = this.ParseRepeatedTypelessSubrecord<IHeadPartReferenceGetter>(
                         stream: stream,
                         translationParams: translationParams,
@@ -2731,7 +2731,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RPRM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.RacePresets, translationParams)) return ParseResult.Stop;
                     this.RacePresets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<INpcGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -2746,7 +2746,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.AHCM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.AvailableHairColors, translationParams)) return ParseResult.Stop;
                     this.AvailableHairColors = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IColorRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -2761,7 +2761,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FTSM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FaceDetails, translationParams)) return ParseResult.Stop;
                     this.FaceDetails = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ITextureSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -2776,7 +2776,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DFTM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.DefaultFaceTexture, translationParams)) return ParseResult.Stop;
                     _DefaultFaceTextureLocation = (stream.Position - offset);
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
                 }
@@ -2784,7 +2784,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TETI:
                 case RecordTypeInts.TTGE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.TintLayers) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.TintLayers, translationParams)) return ParseResult.Stop;
                     this.TintLayers = this.ParseRepeatedTypelessSubrecord<ITintGroupGetter>(
                         stream: stream,
                         translationParams: translationParams,
@@ -2802,7 +2802,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MPPK:
                 case RecordTypeInts.MPGS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.MorphGroups) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.MorphGroups, translationParams)) return ParseResult.Stop;
                     this.MorphGroups = this.ParseRepeatedTypelessSubrecord<IMorphGroupGetter>(
                         stream: stream,
                         translationParams: translationParams,
@@ -2813,7 +2813,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FMRI:
                 case RecordTypeInts.FMRN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.FaceMorphs) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FaceMorphs, translationParams)) return ParseResult.Stop;
                     this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<IFaceMorphGetter>(
                         stream: stream,
                         translationParams: translationParams,
@@ -2823,7 +2823,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.WMAP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.MaleWrinkleMapPath) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.MaleWrinkleMapPath, translationParams)) return ParseResult.Stop;
                     _MaleWrinkleMapPathLocation = (stream.Position - offset);
                     return (int)HeadData_FieldIndex.MaleWrinkleMapPath;
                 }

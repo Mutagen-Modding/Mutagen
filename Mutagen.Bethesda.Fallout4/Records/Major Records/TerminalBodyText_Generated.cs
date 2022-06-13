@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.BTXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TerminalBodyText_FieldIndex.Text) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TerminalBodyText_FieldIndex.Text, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Text = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.BTXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TerminalBodyText_FieldIndex.Text) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TerminalBodyText_FieldIndex.Text, translationParams)) return ParseResult.Stop;
                     _TextLocation = (stream.Position - offset);
                     return (int)TerminalBodyText_FieldIndex.Text;
                 }

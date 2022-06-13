@@ -1319,35 +1319,35 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.SCHR) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.SCHR, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ScenePhaseUnusedData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.SCDA) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.SCDA, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCDA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ScenePhaseUnusedData_FieldIndex.SCDA;
                 }
                 case RecordTypeInts.SCTX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.SCTX) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.SCTX, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ScenePhaseUnusedData_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.QNAM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.QNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ScenePhaseUnusedData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.SCRO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.SCRO) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.SCRO, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCRO = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ScenePhaseUnusedData_FieldIndex.SCRO;
@@ -1499,31 +1499,31 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.SCHR) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.SCHR, translationParams)) return ParseResult.Stop;
                     _SCHRLocation = (stream.Position - offset);
                     return (int)ScenePhaseUnusedData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.SCDA) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.SCDA, translationParams)) return ParseResult.Stop;
                     _SCDALocation = (stream.Position - offset);
                     return (int)ScenePhaseUnusedData_FieldIndex.SCDA;
                 }
                 case RecordTypeInts.SCTX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.SCTX) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.SCTX, translationParams)) return ParseResult.Stop;
                     _SCTXLocation = (stream.Position - offset);
                     return (int)ScenePhaseUnusedData_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.QNAM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     _QNAMLocation = (stream.Position - offset);
                     return (int)ScenePhaseUnusedData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.SCRO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScenePhaseUnusedData_FieldIndex.SCRO) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScenePhaseUnusedData_FieldIndex.SCRO, translationParams)) return ParseResult.Stop;
                     _SCROLocation = (stream.Position - offset);
                     return (int)ScenePhaseUnusedData_FieldIndex.SCRO;
                 }

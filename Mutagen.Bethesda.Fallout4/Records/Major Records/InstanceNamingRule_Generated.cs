@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Keywords) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Keywords, translationParams)) return ParseResult.Stop;
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             reader: frame,
@@ -1463,13 +1463,13 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Properties) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Properties, translationParams)) return ParseResult.Stop;
                     item.Properties = Mutagen.Bethesda.Fallout4.InstanceNamingRuleProperties.CreateFromBinary(frame: frame);
                     return (int)InstanceNamingRule_FieldIndex.Properties;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return (int)InstanceNamingRule_FieldIndex.Index;
@@ -1626,14 +1626,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)InstanceNamingRule_FieldIndex.Name;
                 }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Keywords) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Keywords, translationParams)) return ParseResult.Stop;
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
@@ -1646,13 +1646,13 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Properties) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Properties, translationParams)) return ParseResult.Stop;
                     _PropertiesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)InstanceNamingRule_FieldIndex.Properties;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRule_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)InstanceNamingRule_FieldIndex.Index;
                 }

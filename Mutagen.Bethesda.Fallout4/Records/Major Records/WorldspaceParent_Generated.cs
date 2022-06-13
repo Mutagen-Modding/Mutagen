@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)WorldspaceParent_FieldIndex.Worldspace, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)WorldspaceParent_FieldIndex.Worldspace;
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)WorldspaceParent_FieldIndex.Worldspace, translationParams)) return ParseResult.Stop;
                     _WorldspaceLocation = (stream.Position - offset);
                     return (int)WorldspaceParent_FieldIndex.Worldspace;
                 }

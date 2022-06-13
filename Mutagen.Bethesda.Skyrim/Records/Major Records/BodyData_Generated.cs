@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = EnumBinaryTranslation<BodyData.PartIndex, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
@@ -1296,13 +1296,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)BodyData_FieldIndex.Index;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,

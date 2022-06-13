@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALCS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestCollectionAlias_FieldIndex.Collection) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestCollectionAlias_FieldIndex.Collection, translationParams)) return ParseResult.Stop;
                     item.Collection.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<CollectionAlias>.Instance.Parse(
                             reader: frame,
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALCS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestCollectionAlias_FieldIndex.Collection) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestCollectionAlias_FieldIndex.Collection, translationParams)) return ParseResult.Stop;
                     this.Collection = this.ParseRepeatedTypelessSubrecord<ICollectionAliasGetter>(
                         stream: stream,
                         translationParams: translationParams,

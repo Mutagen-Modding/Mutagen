@@ -1130,14 +1130,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MTYP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MovementDataOverride_FieldIndex.MovementType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MovementType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)MovementDataOverride_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MovementDataOverride_FieldIndex.MovementData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementData, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.MovementData = Mutagen.Bethesda.Fallout4.MovementData.CreateFromBinary(frame: frame);
                     return (int)MovementDataOverride_FieldIndex.MovementData;
@@ -1275,13 +1275,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MTYP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MovementDataOverride_FieldIndex.MovementType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementType, translationParams)) return ParseResult.Stop;
                     _MovementTypeLocation = (stream.Position - offset);
                     return (int)MovementDataOverride_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MovementDataOverride_FieldIndex.MovementData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementData, translationParams)) return ParseResult.Stop;
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     this.MovementData = MovementDataBinaryOverlay.MovementDataFactory(
                         stream: stream,

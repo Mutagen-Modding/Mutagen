@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CSCR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InheritsSoundsFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom;
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CSCR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom, translationParams)) return ParseResult.Stop;
                     _InheritsSoundsFromLocation = (stream.Position - offset);
                     return (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom;
                 }

@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.RankNumber) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.RankNumber, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RankNumber = frame.ReadInt32();
                     return (int)Rank_FieldIndex.RankNumber;
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     item.Name = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Insignia = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1315,14 +1315,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.RankNumber) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.RankNumber, translationParams)) return ParseResult.Stop;
                     _RankNumberLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.RankNumber;
                 }
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameOverlay = GenderedItemBinaryOverlay.Factory<String>(
                         package: _package,
                         male: RecordTypes.MNAM,
@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     _InsigniaLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.Insignia;
                 }

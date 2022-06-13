@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RPLI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EdgeFallOff = frame.ReadUInt32();
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
@@ -1392,7 +1392,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RPLI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
                     _EdgeFallOffLocation = (stream.Position - offset);
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }

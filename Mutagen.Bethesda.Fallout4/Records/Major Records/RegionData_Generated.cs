@@ -1155,14 +1155,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RDAT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionData_FieldIndex.Header) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Header, translationParams)) return ParseResult.Stop;
                     item.Header = Mutagen.Bethesda.Fallout4.RegionDataHeader.CreateFromBinary(frame: frame);
                     return (int)RegionData_FieldIndex.Header;
                 }
                 case RecordTypeInts.ICON:
                 case RecordTypeInts.MICO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionData_FieldIndex.Icons) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     item.Icons = Mutagen.Bethesda.Fallout4.Icons.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
@@ -1273,14 +1273,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RDAT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionData_FieldIndex.Header) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Header, translationParams)) return ParseResult.Stop;
                     _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)RegionData_FieldIndex.Header;
                 }
                 case RecordTypeInts.ICON:
                 case RecordTypeInts.MICO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionData_FieldIndex.Icons) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,

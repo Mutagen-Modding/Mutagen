@@ -1388,14 +1388,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TINP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.MaskType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TIND:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.PresetDefault, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PresetDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)TintAssets_FieldIndex.PresetDefault;
@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.Presets, translationParams)) return ParseResult.Stop;
                     item.Presets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintPreset>.Instance.Parse(
                             reader: frame,
@@ -1576,25 +1576,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     _FileNameLocation = (stream.Position - offset);
                     return (int)TintAssets_FieldIndex.FileName;
                 }
                 case RecordTypeInts.TINP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.MaskType, translationParams)) return ParseResult.Stop;
                     _MaskTypeLocation = (stream.Position - offset);
                     return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.PresetDefault, translationParams)) return ParseResult.Stop;
                     _PresetDefaultLocation = (stream.Position - offset);
                     return (int)TintAssets_FieldIndex.PresetDefault;
                 }
@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.Presets, translationParams)) return ParseResult.Stop;
                     this.Presets = this.ParseRepeatedTypelessSubrecord<ITintPresetGetter>(
                         stream: stream,
                         translationParams: translationParams,

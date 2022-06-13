@@ -1177,14 +1177,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RPLI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EdgeFallOff = frame.ReadUInt32();
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.RegionPoints) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.RegionPoints, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RegionPoints = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Float>.Instance.Parse(
@@ -1325,13 +1325,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RPLI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
                     _EdgeFallOffLocation = (stream.Position - offset);
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.RegionPoints) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.RegionPoints, translationParams)) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RegionPoints = BinaryOverlayList.FactoryByStartIndex<P2Float>(

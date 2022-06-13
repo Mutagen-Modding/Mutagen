@@ -1156,13 +1156,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SCIT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptEffect_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptEffect_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Oblivion.ScriptEffectData.CreateFromBinary(frame: frame);
                     return (int)ScriptEffect_FieldIndex.Data;
                 }
                 case RecordTypeInts.FULL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptEffect_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptEffect_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1309,13 +1309,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SCIT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptEffect_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptEffect_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ScriptEffect_FieldIndex.Data;
                 }
                 case RecordTypeInts.FULL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptEffect_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptEffect_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)ScriptEffect_FieldIndex.Name;
                 }

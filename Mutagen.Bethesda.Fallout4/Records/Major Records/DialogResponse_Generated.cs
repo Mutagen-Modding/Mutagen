@@ -1991,7 +1991,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.TRDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.CameraLocationAlias) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.CameraLocationAlias, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Emotion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -2285,7 +2285,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.TRDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.CameraLocationAlias) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.CameraLocationAlias, translationParams)) return ParseResult.Stop;
                     _TRDALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)DialogResponse_FieldIndex.CameraLocationAlias;
                 }

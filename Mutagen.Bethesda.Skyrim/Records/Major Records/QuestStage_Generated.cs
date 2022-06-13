@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestStage_FieldIndex.Unknown) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Unknown, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Index = dataFrame.ReadUInt16();
@@ -1539,7 +1539,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestStage_FieldIndex.Unknown) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Unknown, translationParams)) return ParseResult.Stop;
                     _INDXLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)QuestStage_FieldIndex.Unknown;
                 }

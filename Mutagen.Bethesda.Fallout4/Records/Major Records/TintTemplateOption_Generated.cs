@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.TETI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintTemplateOption_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintTemplateOption_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Slot = EnumBinaryTranslation<TintTemplateOption.TintSlot, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -2198,7 +2198,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.TETI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintTemplateOption_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintTemplateOption_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _TETILocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)TintTemplateOption_FieldIndex.Index;
                 }

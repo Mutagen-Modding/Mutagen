@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.SNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneCollectionItem_FieldIndex.Scene) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SceneCollectionItem_FieldIndex.Scene, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Scene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SceneCollectionItem_FieldIndex.Scene;
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.SNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneCollectionItem_FieldIndex.Scene) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SceneCollectionItem_FieldIndex.Scene, translationParams)) return ParseResult.Stop;
                     _SceneLocation = (stream.Position - offset);
                     return (int)SceneCollectionItem_FieldIndex.Scene;
                 }

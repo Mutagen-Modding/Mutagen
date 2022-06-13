@@ -1150,21 +1150,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ALFA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocationAliasReference_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasID = frame.ReadInt32();
                     return (int)LocationAliasReference_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocationAliasReference_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LocationAliasReference_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.ALRT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocationAliasReference_FieldIndex.RefType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LocationAliasReference_FieldIndex.RefType;
@@ -1309,19 +1309,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ALFA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocationAliasReference_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     _AliasIDLocation = (stream.Position - offset);
                     return (int)LocationAliasReference_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocationAliasReference_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     _KeywordLocation = (stream.Position - offset);
                     return (int)LocationAliasReference_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.ALRT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocationAliasReference_FieldIndex.RefType, translationParams)) return ParseResult.Stop;
                     _RefTypeLocation = (stream.Position - offset);
                     return (int)LocationAliasReference_FieldIndex.RefType;
                 }

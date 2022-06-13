@@ -1088,14 +1088,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.CS2K:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSound_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)NpcSound_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.CS2D:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSound_FieldIndex.Sound) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Sound, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)NpcSound_FieldIndex.Sound;
@@ -1236,13 +1236,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.CS2K:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSound_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     _KeywordLocation = (stream.Position - offset);
                     return (int)NpcSound_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.CS2D:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSound_FieldIndex.Sound) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Sound, translationParams)) return ParseResult.Stop;
                     _SoundLocation = (stream.Position - offset);
                     return (int)NpcSound_FieldIndex.Sound;
                 }

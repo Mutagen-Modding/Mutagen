@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DebrisModel_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Percentage = dataFrame.ReadUInt8();
@@ -1441,7 +1441,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DebrisModel_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= ModelFilenameEndingPos)

@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALCS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CollectionAlias_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasID = frame.ReadInt32();
                     return (int)CollectionAlias_FieldIndex.AliasID;
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALCS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CollectionAlias_FieldIndex.AliasID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     _AliasIDLocation = (stream.Position - offset);
                     return (int)CollectionAlias_FieldIndex.AliasID;
                 }

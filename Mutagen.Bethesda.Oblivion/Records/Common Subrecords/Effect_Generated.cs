@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.EFID:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     return EffectBinaryCreateTranslation.FillBinaryEffectInitialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.EFIT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Oblivion.EffectData.CreateFromBinary(frame: frame);
                     return (int)Effect_FieldIndex.Data;
                 }
@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.EFID:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     return EffectInitialCustomParse(
                         stream,
                         offset,
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.EFIT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Effect_FieldIndex.Data;
                 }

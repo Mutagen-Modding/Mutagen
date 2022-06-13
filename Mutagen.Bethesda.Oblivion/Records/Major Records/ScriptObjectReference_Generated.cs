@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SCRO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptObjectReference_FieldIndex.Reference, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ScriptObjectReference_FieldIndex.Reference;
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SCRO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ScriptObjectReference_FieldIndex.Reference, translationParams)) return ParseResult.Stop;
                     _ReferenceLocation = (stream.Position - offset);
                     return (int)ScriptObjectReference_FieldIndex.Reference;
                 }

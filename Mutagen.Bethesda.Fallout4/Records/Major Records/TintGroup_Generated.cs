@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.TTGP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintGroup_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintGroup_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1328,7 +1328,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TETI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintGroup_FieldIndex.Options) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintGroup_FieldIndex.Options, translationParams)) return ParseResult.Stop;
                     item.Options.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintTemplateOption>.Instance.Parse(
                             reader: frame,
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TTGE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintGroup_FieldIndex.CategoryIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintGroup_FieldIndex.CategoryIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CategoryIndex = frame.ReadUInt32();
                     return (int)TintGroup_FieldIndex.CategoryIndex;
@@ -1489,13 +1489,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.TTGP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintGroup_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintGroup_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)TintGroup_FieldIndex.Name;
                 }
                 case RecordTypeInts.TETI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintGroup_FieldIndex.Options) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintGroup_FieldIndex.Options, translationParams)) return ParseResult.Stop;
                     this.Options = this.ParseRepeatedTypelessSubrecord<ITintTemplateOptionGetter>(
                         stream: stream,
                         translationParams: translationParams,
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TTGE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintGroup_FieldIndex.CategoryIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintGroup_FieldIndex.CategoryIndex, translationParams)) return ParseResult.Stop;
                     _CategoryIndexLocation = (stream.Position - offset);
                     return (int)TintGroup_FieldIndex.CategoryIndex;
                 }

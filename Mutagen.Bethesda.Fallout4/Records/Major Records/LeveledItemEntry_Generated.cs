@@ -1181,13 +1181,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.LVLO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LeveledItemEntry_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LeveledItemEntry_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Fallout4.LeveledItemEntryData.CreateFromBinary(frame: frame);
                     return (int)LeveledItemEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.COED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LeveledItemEntry_FieldIndex.ExtraData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LeveledItemEntry_FieldIndex.ExtraData, translationParams)) return ParseResult.Stop;
                     item.ExtraData = Mutagen.Bethesda.Fallout4.ExtraData.CreateFromBinary(frame: frame);
                     return (int)LeveledItemEntry_FieldIndex.ExtraData;
                 }
@@ -1327,13 +1327,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.LVLO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LeveledItemEntry_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LeveledItemEntry_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LeveledItemEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.COED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LeveledItemEntry_FieldIndex.ExtraData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LeveledItemEntry_FieldIndex.ExtraData, translationParams)) return ParseResult.Stop;
                     _ExtraDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LeveledItemEntry_FieldIndex.ExtraData;
                 }

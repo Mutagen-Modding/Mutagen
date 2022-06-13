@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ITXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Text) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Text, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Text = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
@@ -1353,13 +1353,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ITXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Text) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Text, translationParams)) return ParseResult.Stop;
                     _TextLocation = (stream.Position - offset);
                     return (int)MessageButton_FieldIndex.Text;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,

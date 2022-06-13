@@ -1329,13 +1329,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ATKD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.AttackData, translationParams)) return ParseResult.Stop;
                     item.AttackData = Mutagen.Bethesda.Fallout4.AttackData.CreateFromBinary(frame: frame);
                     return (int)Attack_FieldIndex.AttackData;
                 }
                 case RecordTypeInts.ATKE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackEvent) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.AttackEvent, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackEvent = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1344,21 +1344,21 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ATKW:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.WeaponSlot) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.WeaponSlot, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WeaponSlot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Attack_FieldIndex.WeaponSlot;
                 }
                 case RecordTypeInts.ATKS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.RequiredSlot) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.RequiredSlot, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RequiredSlot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Attack_FieldIndex.RequiredSlot;
                 }
                 case RecordTypeInts.ATKT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.Description) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.Description, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1513,31 +1513,31 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ATKD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.AttackData, translationParams)) return ParseResult.Stop;
                     _AttackDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Attack_FieldIndex.AttackData;
                 }
                 case RecordTypeInts.ATKE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackEvent) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.AttackEvent, translationParams)) return ParseResult.Stop;
                     _AttackEventLocation = (stream.Position - offset);
                     return (int)Attack_FieldIndex.AttackEvent;
                 }
                 case RecordTypeInts.ATKW:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.WeaponSlot) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.WeaponSlot, translationParams)) return ParseResult.Stop;
                     _WeaponSlotLocation = (stream.Position - offset);
                     return (int)Attack_FieldIndex.WeaponSlot;
                 }
                 case RecordTypeInts.ATKS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.RequiredSlot) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.RequiredSlot, translationParams)) return ParseResult.Stop;
                     _RequiredSlotLocation = (stream.Position - offset);
                     return (int)Attack_FieldIndex.RequiredSlot;
                 }
                 case RecordTypeInts.ATKT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.Description) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.Description, translationParams)) return ParseResult.Stop;
                     _DescriptionLocation = (stream.Position - offset);
                     return (int)Attack_FieldIndex.Description;
                 }

@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.VNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRuleSet_FieldIndex.Names) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRuleSet_FieldIndex.Names, translationParams)) return ParseResult.Stop;
                     item.Names = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<InstanceNamingRule>.Instance.ParsePerItem(
                             reader: frame,
@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.VNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)InstanceNamingRuleSet_FieldIndex.Names) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRuleSet_FieldIndex.Names, translationParams)) return ParseResult.Stop;
                     this.Names = BinaryOverlayList.FactoryByCountPerItem<IInstanceNamingRuleGetter>(
                         stream: stream,
                         package: _package,

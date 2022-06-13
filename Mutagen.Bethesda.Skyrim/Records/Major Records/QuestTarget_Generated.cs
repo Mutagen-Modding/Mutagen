@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestTarget_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestTarget_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestTarget_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestTarget_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _QSTALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)QuestTarget_FieldIndex.Flags;
                 }

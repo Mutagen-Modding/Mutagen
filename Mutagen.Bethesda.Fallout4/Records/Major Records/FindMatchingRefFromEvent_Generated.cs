@@ -1081,14 +1081,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALFE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.FromEvent, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FromEvent = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.EventData, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EventData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FindMatchingRefFromEvent_FieldIndex.EventData;
@@ -1228,13 +1228,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALFE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.FromEvent, translationParams)) return ParseResult.Stop;
                     _FromEventLocation = (stream.Position - offset);
                     return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.EventData, translationParams)) return ParseResult.Stop;
                     _EventDataLocation = (stream.Position - offset);
                     return (int)FindMatchingRefFromEvent_FieldIndex.EventData;
                 }

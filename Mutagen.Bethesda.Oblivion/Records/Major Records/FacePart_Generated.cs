@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FacePart_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FacePart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = EnumBinaryTranslation<Race.FaceIndex, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FacePart_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FacePart_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FacePart_FieldIndex.Icon) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FacePart_FieldIndex.Icon, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1355,13 +1355,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FacePart_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FacePart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)FacePart_FieldIndex.Index;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FacePart_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FacePart_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FacePart_FieldIndex.Icon) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FacePart_FieldIndex.Icon, translationParams)) return ParseResult.Stop;
                     _IconLocation = (stream.Position - offset);
                     return (int)FacePart_FieldIndex.Icon;
                 }

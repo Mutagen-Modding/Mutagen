@@ -1151,21 +1151,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.SCHR, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogResponsesUnknownData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.QNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.NEXT, translationParams)) return ParseResult.Stop;
                     item.NEXT = true;
                     return (int)DialogResponsesUnknownData_FieldIndex.NEXT;
                 }
@@ -1309,19 +1309,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.SCHR, translationParams)) return ParseResult.Stop;
                     _SCHRLocation = (stream.Position - offset);
                     return (int)DialogResponsesUnknownData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     _QNAMLocation = (stream.Position - offset);
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.NEXT, translationParams)) return ParseResult.Stop;
                     _NEXTLocation = (stream.Position - offset);
                     return (int)DialogResponsesUnknownData_FieldIndex.NEXT;
                 }

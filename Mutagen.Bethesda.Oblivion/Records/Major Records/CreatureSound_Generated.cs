@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CreatureSound_FieldIndex.SoundType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CreatureSound_FieldIndex.SoundType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CreatureSound_FieldIndex.Sounds) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CreatureSound_FieldIndex.Sounds, translationParams)) return ParseResult.Stop;
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SoundItem>.Instance.Parse(
                             reader: frame,
@@ -1346,14 +1346,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CreatureSound_FieldIndex.SoundType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CreatureSound_FieldIndex.SoundType, translationParams)) return ParseResult.Stop;
                     _SoundTypeLocation = (stream.Position - offset);
                     return (int)CreatureSound_FieldIndex.SoundType;
                 }
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CreatureSound_FieldIndex.Sounds) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CreatureSound_FieldIndex.Sounds, translationParams)) return ParseResult.Stop;
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<ISoundItemGetter>(
                         stream: stream,
                         translationParams: translationParams,

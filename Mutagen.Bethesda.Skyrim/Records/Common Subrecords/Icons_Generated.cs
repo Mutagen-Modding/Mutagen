@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Icons_FieldIndex.LargeIconFilename) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Icons_FieldIndex.LargeIconFilename, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LargeIconFilename = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Icons_FieldIndex.LargeIconFilename) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Icons_FieldIndex.LargeIconFilename, translationParams)) return ParseResult.Stop;
                     _LargeIconFilenameLocation = (stream.Position - offset);
                     return (int)Icons_FieldIndex.LargeIconFilename;
                 }

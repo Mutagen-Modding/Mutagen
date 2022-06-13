@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageIdles_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1509,7 +1509,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageIdles_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
                     return (int)PackageIdles_FieldIndex.Type;
                 }

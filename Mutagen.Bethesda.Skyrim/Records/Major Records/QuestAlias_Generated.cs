@@ -3571,7 +3571,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     return QuestAliasBinaryCreateTranslation.FillBinaryIDParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -3968,7 +3968,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     return IDParseCustomParse(
                         stream,
                         offset,

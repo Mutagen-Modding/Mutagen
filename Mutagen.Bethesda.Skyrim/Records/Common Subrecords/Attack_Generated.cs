@@ -1130,13 +1130,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ATKD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.AttackData, translationParams)) return ParseResult.Stop;
                     item.AttackData = Mutagen.Bethesda.Skyrim.AttackData.CreateFromBinary(frame: frame);
                     return (int)Attack_FieldIndex.AttackData;
                 }
                 case RecordTypeInts.ATKE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackEvent) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.AttackEvent, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackEvent = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1279,13 +1279,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ATKD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.AttackData, translationParams)) return ParseResult.Stop;
                     _AttackDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Attack_FieldIndex.AttackData;
                 }
                 case RecordTypeInts.ATKE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackEvent) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Attack_FieldIndex.AttackEvent, translationParams)) return ParseResult.Stop;
                     _AttackEventLocation = (stream.Position - offset);
                     return (int)Attack_FieldIndex.AttackEvent;
                 }

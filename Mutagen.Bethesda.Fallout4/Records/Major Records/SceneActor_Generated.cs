@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALID:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneActor_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SceneActor_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ID = frame.ReadUInt32();
                     return (int)SceneActor_FieldIndex.ID;
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ALID:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneActor_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SceneActor_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     _IDLocation = (stream.Position - offset);
                     return (int)SceneActor_FieldIndex.ID;
                 }

@@ -1177,14 +1177,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.RPLI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EdgeFallOff = frame.ReadUInt32();
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.RegionPointListData, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RegionPointListData = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Float>.Instance.Parse(
@@ -1325,13 +1325,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.RPLI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
                     _EdgeFallOffLocation = (stream.Position - offset);
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.RegionPointListData, translationParams)) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RegionPointListData = BinaryOverlayList.FactoryByStartIndex<P2Float>(

@@ -1216,13 +1216,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DSTD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Skyrim.DestructionStageData.CreateFromBinary(frame: frame);
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.With(DestructionStage_Registration.ModelConverter));
@@ -1366,13 +1366,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DSTD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,

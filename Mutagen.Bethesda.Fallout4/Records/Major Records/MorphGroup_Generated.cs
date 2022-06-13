@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MPGN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MPPF:
                 case RecordTypeInts.MPPC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.MorphPresets) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.MorphPresets, translationParams)) return ParseResult.Stop;
                     item.MorphPresets = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MorphPreset>.Instance.ParsePerItem(
                             reader: frame,
@@ -1416,14 +1416,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MPPK:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.UnknownMPPK) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.UnknownMPPK, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.UnknownMPPK = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MorphGroup_FieldIndex.UnknownMPPK;
                 }
                 case RecordTypeInts.MPGS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.UnknownMPGS) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.UnknownMPGS, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.UnknownMPGS = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MorphGroup_FieldIndex.UnknownMPGS;
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MPGN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)MorphGroup_FieldIndex.Name;
                 }
@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MPPF:
                 case RecordTypeInts.MPPC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.MorphPresets) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.MorphPresets, translationParams)) return ParseResult.Stop;
                     this.MorphPresets = BinaryOverlayList.FactoryByCountPerItem<IMorphPresetGetter>(
                         stream: stream,
                         package: _package,
@@ -1598,13 +1598,13 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MPPK:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.UnknownMPPK) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.UnknownMPPK, translationParams)) return ParseResult.Stop;
                     _UnknownMPPKLocation = (stream.Position - offset);
                     return (int)MorphGroup_FieldIndex.UnknownMPPK;
                 }
                 case RecordTypeInts.MPGS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.UnknownMPGS) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.UnknownMPGS, translationParams)) return ParseResult.Stop;
                     _UnknownMPGSLocation = (stream.Position - offset);
                     return (int)MorphGroup_FieldIndex.UnknownMPGS;
                 }

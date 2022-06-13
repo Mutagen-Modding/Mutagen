@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundType_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSoundType_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<NpcSoundType.SoundType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundType_FieldIndex.Sounds) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSoundType_FieldIndex.Sounds, translationParams)) return ParseResult.Stop;
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NpcSound>.Instance.Parse(
                             reader: frame,
@@ -1346,14 +1346,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundType_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSoundType_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
                     return (int)NpcSoundType_FieldIndex.Type;
                 }
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundType_FieldIndex.Sounds) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcSoundType_FieldIndex.Sounds, translationParams)) return ParseResult.Stop;
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<INpcSoundGetter>(
                         stream: stream,
                         translationParams: translationParams,

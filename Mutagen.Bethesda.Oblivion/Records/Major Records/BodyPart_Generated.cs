@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = EnumBinaryTranslation<Race.BodyIndex, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Icon) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Icon, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1221,13 +1221,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)BodyPart_FieldIndex.Index;
                 }
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Icon) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Icon, translationParams)) return ParseResult.Stop;
                     _IconLocation = (stream.Position - offset);
                     return (int)BodyPart_FieldIndex.Icon;
                 }

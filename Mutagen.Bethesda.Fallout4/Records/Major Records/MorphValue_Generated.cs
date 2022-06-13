@@ -1132,14 +1132,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MSID:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphValue_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphValue_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadInt32();
                     return (int)MorphValue_FieldIndex.Index;
                 }
                 case RecordTypeInts.MSM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphValue_FieldIndex.MinName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphValue_FieldIndex.MinName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MinName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MSM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphValue_FieldIndex.MaxName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphValue_FieldIndex.MaxName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaxName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1294,19 +1294,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MSID:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphValue_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphValue_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)MorphValue_FieldIndex.Index;
                 }
                 case RecordTypeInts.MSM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphValue_FieldIndex.MinName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphValue_FieldIndex.MinName, translationParams)) return ParseResult.Stop;
                     _MinNameLocation = (stream.Position - offset);
                     return (int)MorphValue_FieldIndex.MinName;
                 }
                 case RecordTypeInts.MSM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphValue_FieldIndex.MaxName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MorphValue_FieldIndex.MaxName, translationParams)) return ParseResult.Stop;
                     _MaxNameLocation = (stream.Position - offset);
                     return (int)MorphValue_FieldIndex.MaxName;
                 }

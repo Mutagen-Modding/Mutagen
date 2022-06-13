@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.XOWN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Ownership_FieldIndex.NoCrime) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Ownership_FieldIndex.NoCrime, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.XOWN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Ownership_FieldIndex.NoCrime) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Ownership_FieldIndex.NoCrime, translationParams)) return ParseResult.Stop;
                     _XOWNLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Ownership_FieldIndex.NoCrime;
                 }

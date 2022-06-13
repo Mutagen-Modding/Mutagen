@@ -1140,13 +1140,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SLSD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocalVariable_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocalVariable_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Oblivion.LocalVariableData.CreateFromBinary(frame: frame);
                     return (int)LocalVariable_FieldIndex.Data;
                 }
                 case RecordTypeInts.SCVR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocalVariable_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocalVariable_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1292,13 +1292,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.SLSD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocalVariable_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocalVariable_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LocalVariable_FieldIndex.Data;
                 }
                 case RecordTypeInts.SCVR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocalVariable_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LocalVariable_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)LocalVariable_FieldIndex.Name;
                 }

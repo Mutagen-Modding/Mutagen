@@ -1127,14 +1127,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.MTYP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RaceMovementType_FieldIndex.MovementType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RaceMovementType_FieldIndex.MovementType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MovementType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)RaceMovementType_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RaceMovementType_FieldIndex.Overrides) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RaceMovementType_FieldIndex.Overrides, translationParams)) return ParseResult.Stop;
                     item.Overrides = Mutagen.Bethesda.Skyrim.SpeedOverrides.CreateFromBinary(frame: frame);
                     return (int)RaceMovementType_FieldIndex.Overrides;
                 }
@@ -1274,13 +1274,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.MTYP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RaceMovementType_FieldIndex.MovementType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RaceMovementType_FieldIndex.MovementType, translationParams)) return ParseResult.Stop;
                     _MovementTypeLocation = (stream.Position - offset);
                     return (int)RaceMovementType_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RaceMovementType_FieldIndex.Overrides) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RaceMovementType_FieldIndex.Overrides, translationParams)) return ParseResult.Stop;
                     _OverridesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)RaceMovementType_FieldIndex.Overrides;
                 }

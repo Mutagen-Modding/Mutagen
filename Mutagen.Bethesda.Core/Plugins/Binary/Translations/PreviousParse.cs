@@ -1,6 +1,6 @@
 ﻿namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-internal struct PreviousParse
+internal readonly struct PreviousParse
 {
     public readonly int? ParsedIndex;
     public readonly int? LengthOverride;
@@ -16,5 +16,12 @@ internal struct PreviousParse
         return new PreviousParse(
             parsedIndex: lastParsed.ParsedIndex,
             lengthOverride: lastParsed.LengthOverride);
+    }
+
+    public bool ShortCircuit(int fieldEnum, TypedParseParams? parseParams)
+    {
+        var shouldShortCircuit = ParsedIndex.HasValue && ParsedIndex.Value >= fieldEnum;
+        if (!shouldShortCircuit) return false;
+        return true;
     }
 }

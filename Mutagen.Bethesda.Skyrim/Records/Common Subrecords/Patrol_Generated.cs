@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.XPRD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Patrol_FieldIndex.IdleTime, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Patrol_FieldIndex.IdleTime;
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.XPRD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Patrol_FieldIndex.IdleTime, translationParams)) return ParseResult.Stop;
                     _IdleTimeLocation = (stream.Position - offset);
                     return (int)Patrol_FieldIndex.IdleTime;
                 }

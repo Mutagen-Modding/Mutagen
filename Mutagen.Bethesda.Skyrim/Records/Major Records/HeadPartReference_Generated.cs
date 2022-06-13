@@ -1082,14 +1082,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadPartReference_FieldIndex.Number) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadPartReference_FieldIndex.Number, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Number = frame.ReadInt32();
                     return (int)HeadPartReference_FieldIndex.Number;
                 }
                 case RecordTypeInts.HEAD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadPartReference_FieldIndex.Head) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadPartReference_FieldIndex.Head, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Head.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)HeadPartReference_FieldIndex.Head;
@@ -1230,13 +1230,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadPartReference_FieldIndex.Number) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadPartReference_FieldIndex.Number, translationParams)) return ParseResult.Stop;
                     _NumberLocation = (stream.Position - offset);
                     return (int)HeadPartReference_FieldIndex.Number;
                 }
                 case RecordTypeInts.HEAD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadPartReference_FieldIndex.Head) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadPartReference_FieldIndex.Head, translationParams)) return ParseResult.Stop;
                     _HeadLocation = (stream.Position - offset);
                     return (int)HeadPartReference_FieldIndex.Head;
                 }

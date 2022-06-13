@@ -1082,14 +1082,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ArmorAddonModel_FieldIndex.AddonIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AddonIndex = frame.ReadUInt16();
                     return (int)ArmorAddonModel_FieldIndex.AddonIndex;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ArmorAddonModel_FieldIndex.AddonModel) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonModel, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AddonModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ArmorAddonModel_FieldIndex.AddonModel;
@@ -1230,13 +1230,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ArmorAddonModel_FieldIndex.AddonIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonIndex, translationParams)) return ParseResult.Stop;
                     _AddonIndexLocation = (stream.Position - offset);
                     return (int)ArmorAddonModel_FieldIndex.AddonIndex;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ArmorAddonModel_FieldIndex.AddonModel) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonModel, translationParams)) return ParseResult.Stop;
                     _AddonModelLocation = (stream.Position - offset);
                     return (int)ArmorAddonModel_FieldIndex.AddonModel;
                 }

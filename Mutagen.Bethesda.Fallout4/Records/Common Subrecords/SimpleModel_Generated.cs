@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SimpleModel_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.File = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SimpleModel_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     _FileLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.File;
                 }

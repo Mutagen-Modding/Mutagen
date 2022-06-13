@@ -1562,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<QuestLogEntry.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Entry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Entry, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Entry = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1592,28 +1592,28 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.NextQuest) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.NextQuest, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NextQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestLogEntry_FieldIndex.NextQuest;
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.SCHR) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.SCHR, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)QuestLogEntry_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCTX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.SCTX) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.SCTX, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)QuestLogEntry_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.QNAM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.QNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)QuestLogEntry_FieldIndex.QNAM;
@@ -1771,13 +1771,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _FlagsLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -1793,31 +1793,31 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Entry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Entry, translationParams)) return ParseResult.Stop;
                     _EntryLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.Entry;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.NextQuest) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.NextQuest, translationParams)) return ParseResult.Stop;
                     _NextQuestLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.NextQuest;
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.SCHR) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.SCHR, translationParams)) return ParseResult.Stop;
                     _SCHRLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCTX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.SCTX) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.SCTX, translationParams)) return ParseResult.Stop;
                     _SCTXLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.QNAM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     _QNAMLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.QNAM;
                 }

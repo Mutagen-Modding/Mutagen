@@ -1339,7 +1339,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (dataSet != null)
             {
-                sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ShortCircuit)}((int){dataSet.SubFields.Last().IndexEnumName}, translationParams)) return {nameof(ParseResult)}.Stop;");
             }
             else if (field.Field is CustomLogic)
             {
@@ -1349,12 +1349,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                 var enumName = lastReqField?.IndexEnumName ?? nextField.Field?.IndexEnumName ?? prevField.Field?.IndexEnumName;
                 if (enumName != null)
                 {
-                    sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){enumName}) return {nameof(ParseResult)}.Stop;");
+                    sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ShortCircuit)}((int){enumName}, translationParams)) return {nameof(ParseResult)}.Stop;");
                 }
             }
             else if (field.Field is not MarkerType)
             {
-                sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){lastReqField?.IndexEnumName ?? field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ShortCircuit)}((int){lastReqField?.IndexEnumName ?? field.Field.IndexEnumName}, translationParams)) return {nameof(ParseResult)}.Stop;");
             }
         }
         await toDo();

@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<QuestLogEntry.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Note) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Note, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Note = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Entry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Entry, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Entry = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1437,7 +1437,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.NextQuest) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.NextQuest, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NextQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestLogEntry_FieldIndex.NextQuest;
@@ -1587,13 +1587,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _FlagsLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -1609,19 +1609,19 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Note) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Note, translationParams)) return ParseResult.Stop;
                     _NoteLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.Note;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Entry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Entry, translationParams)) return ParseResult.Stop;
                     _EntryLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.Entry;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.NextQuest) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.NextQuest, translationParams)) return ParseResult.Stop;
                     _NextQuestLocation = (stream.Position - offset);
                     return (int)QuestLogEntry_FieldIndex.NextQuest;
                 }

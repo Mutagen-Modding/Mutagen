@@ -4322,7 +4322,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                        if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                         SceneActionBinaryCreateTranslation.FillBinaryTypeCustom(
                             frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                             item: item);
@@ -4338,7 +4338,7 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                         {
                             case 0:
-                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                                if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                                 SceneActionBinaryCreateTranslation.FillBinaryTypeCustom(
                                     frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                                     item: item);
@@ -5027,7 +5027,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                        if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                         TypeCustomParse(
                             stream,
                             finalPos,
@@ -5044,7 +5044,7 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
-                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                                if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                                 TypeCustomParse(
                                     stream,
                                     finalPos,

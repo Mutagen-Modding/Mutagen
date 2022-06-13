@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Part_FieldIndex.PartType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Part_FieldIndex.PartType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PartType = EnumBinaryTranslation<Part.PartTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Part_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1221,13 +1221,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Part_FieldIndex.PartType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Part_FieldIndex.PartType, translationParams)) return ParseResult.Stop;
                     _PartTypeLocation = (stream.Position - offset);
                     return (int)Part_FieldIndex.PartType;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Part_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     _FileNameLocation = (stream.Position - offset);
                     return (int)Part_FieldIndex.FileName;
                 }

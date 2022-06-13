@@ -1350,14 +1350,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.FMRI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcFaceMorph_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcFaceMorph_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt32();
                     return (int)NpcFaceMorph_FieldIndex.Index;
                 }
                 case RecordTypeInts.FMRS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcFaceMorph_FieldIndex.Unknown2) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcFaceMorph_FieldIndex.Unknown2, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
@@ -1525,13 +1525,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.FMRI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcFaceMorph_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcFaceMorph_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)NpcFaceMorph_FieldIndex.Index;
                 }
                 case RecordTypeInts.FMRS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcFaceMorph_FieldIndex.Unknown2) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcFaceMorph_FieldIndex.Unknown2, translationParams)) return ParseResult.Stop;
                     _FMRSLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)NpcFaceMorph_FieldIndex.Unknown2;
                 }
