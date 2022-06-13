@@ -112,7 +112,13 @@ public static class Implicits
         #region Fallout4
         var falloutBaseMasters = new HashSet<ModKey>()
         {
-            "Fallout4.esm"
+            "Fallout4.esm",
+            "DLCRobot.esm",
+            "DLCworkshop01.esm",
+            "DLCCoast.esm",
+            "DLCworkshop02.esm",
+            "DLCworkshop03.esm",
+            "DLCNukaWorld.esm",
         };
         Fallout4 = new ImplicitRegistration(
             GameRelease.Fallout4,

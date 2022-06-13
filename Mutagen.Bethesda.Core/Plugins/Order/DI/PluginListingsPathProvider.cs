@@ -31,7 +31,7 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
             GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
             GameRelease.EnderalSE => "Enderal Special Edition/Plugins.txt",
             GameRelease.SkyrimVR => "Skyrim VR/Plugins.txt",
-            GameRelease.Fallout4 => "Fallout4/DLCList.txt",
+            GameRelease.Fallout4 => "Fallout4/Plugins.txt",
             _ => throw new NotImplementedException()
         };
     }
