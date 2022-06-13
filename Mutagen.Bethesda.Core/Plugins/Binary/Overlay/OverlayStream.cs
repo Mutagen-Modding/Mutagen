@@ -1,12 +1,11 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using Noggog.Streams.Binary;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
 internal class OverlayStream : IMutagenReadStream
 {
-    private BinaryMemoryReadStructStream _readStream;
+    private readonly BinaryMemoryReadStream _readStream;
     public ParsingBundle MetaData { get; }
 
     public ReadOnlyMemorySlice<byte> Data { get; private set; }
@@ -17,18 +16,18 @@ internal class OverlayStream : IMutagenReadStream
     }
     long IBinaryReadStream.Position
     {
-        get => _readStream.Position;
-        set => _readStream.Position = checked((int)value);
+        get => ((IBinaryReadStream)_readStream).Position;
+        set => ((IBinaryReadStream)_readStream).Position = value;
     }
 
-    public int Length => _readStream.Length;
+    public int Length => _readStream.LengthInt;
 
     public bool IsLittleEndian => _readStream.IsLittleEndian;
 
     public OverlayStream(ReadOnlyMemorySlice<byte> data, ParsingBundle constants)
     {
         Data = data;
-        _readStream = new BinaryMemoryReadStructStream(data);
+        _readStream = new BinaryMemoryReadStream(data);
         MetaData = constants;
     }
 
@@ -48,281 +47,278 @@ internal class OverlayStream : IMutagenReadStream
     #endregion
 
     #region IBinaryReadStream
-    long IBinaryReadStream.Length => _readStream.Length;
+    long IBinaryReadStream.Length => ((IBinaryReadStream)_readStream).Length;
 
-    public long Remaining => _readStream.Remaining;
+    public long Remaining => ((IBinaryReadStream)_readStream).Remaining;
 
-    public bool Complete => _readStream.Complete;
+    public bool Complete => ((IBinaryReadStream)_readStream).Complete;
 
-    public ReadOnlySpan<byte> RemainingSpan => _readStream.RemainingSpan;
+    public ReadOnlySpan<byte> RemainingSpan => ((IBinaryReadStream)_readStream).RemainingSpan;
 
-    public ReadOnlyMemorySlice<byte> RemainingMemory => _readStream.RemainingMemory;
+    public ReadOnlyMemorySlice<byte> RemainingMemory => ((IBinaryReadStream)_readStream).RemainingMemory;
 
     public bool IsPersistantBacking => true;
 
+    public Stream BaseStream => _readStream.BaseStream;
+
     public void Dispose()
     {
-        _readStream.Dispose();
+        ((IDisposable)_readStream).Dispose();
     }
 
     public int Get(byte[] buffer, int targetOffset, int amount)
     {
-        return _readStream.Get(buffer, targetOffset, amount);
+        return ((IBinaryReadStream)_readStream).Get(buffer, targetOffset, amount);
     }
 
     public int Get(byte[] buffer, int targetOffset)
     {
-        return _readStream.Get(buffer, targetOffset);
+        return ((IBinaryReadStream)_readStream).Get(buffer, targetOffset);
     }
 
     public bool GetBoolean()
     {
-        return _readStream.GetBoolean();
+        return ((IBinaryReadStream)_readStream).GetBoolean();
     }
 
     public bool GetBoolean(int offset)
     {
-        return _readStream.GetBoolean(offset);
+        return ((IBinaryReadStream)_readStream).GetBoolean(offset);
     }
 
     public byte[] GetBytes(int amount)
     {
-        return _readStream.GetBytes(amount);
+        return ((IBinaryReadStream)_readStream).GetBytes(amount);
     }
 
     public double GetDouble()
     {
-        return _readStream.GetDouble();
+        return ((IBinaryReadStream)_readStream).GetDouble();
     }
 
     public double GetDouble(int offset)
     {
-        return _readStream.GetDouble(offset);
+        return ((IBinaryReadStream)_readStream).GetDouble(offset);
     }
 
     public float GetFloat()
     {
-        return _readStream.GetFloat();
+        return ((IBinaryReadStream)_readStream).GetFloat();
     }
 
     public float GetFloat(int offset)
     {
-        return _readStream.GetFloat(offset);
+        return ((IBinaryReadStream)_readStream).GetFloat(offset);
     }
 
     public short GetInt16()
     {
-        return _readStream.GetInt16();
+        return ((IBinaryReadStream)_readStream).GetInt16();
     }
 
     public short GetInt16(int offset)
     {
-        return _readStream.GetInt16(offset);
+        return ((IBinaryReadStream)_readStream).GetInt16(offset);
     }
 
     public int GetInt32()
     {
-        return _readStream.GetInt32();
+        return ((IBinaryReadStream)_readStream).GetInt32();
     }
 
     public int GetInt32(int offset)
     {
-        return _readStream.GetInt32(offset);
+        return ((IBinaryReadStream)_readStream).GetInt32(offset);
     }
 
     public long GetInt64()
     {
-        return _readStream.GetInt64();
+        return ((IBinaryReadStream)_readStream).GetInt64();
     }
 
     public long GetInt64(int offset)
     {
-        return _readStream.GetInt64(offset);
+        return ((IBinaryReadStream)_readStream).GetInt64(offset);
     }
 
     public sbyte GetInt8()
     {
-        return _readStream.GetInt8();
+        return ((IBinaryReadStream)_readStream).GetInt8();
     }
 
     public sbyte GetInt8(int offset)
     {
-        return _readStream.GetInt8(offset);
+        return ((IBinaryReadStream)_readStream).GetInt8(offset);
     }
 
     public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true)
     {
-        return _readStream.GetMemory(amount, readSafe);
+        return ((IBinaryReadStream)_readStream).GetMemory(amount, readSafe);
     }
 
     public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true)
     {
-        return _readStream.GetMemory(amount, offset, readSafe);
+        return ((IBinaryReadStream)_readStream).GetMemory(amount, offset, readSafe);
     }
 
     public ReadOnlySpan<byte> GetSpan(int amount, bool readSafe = true)
     {
-        return _readStream.GetSpan(amount, readSafe);
+        return ((IBinaryReadStream)_readStream).GetSpan(amount, readSafe);
     }
 
     public ReadOnlySpan<byte> GetSpan(int amount, int offset, bool readSafe = true)
     {
-        return _readStream.GetSpan(amount, offset, readSafe);
+        return ((IBinaryReadStream)_readStream).GetSpan(amount, offset, readSafe);
     }
 
     public string GetStringUTF8(int amount)
     {
-        return _readStream.GetStringUTF8(amount);
+        return ((IBinaryReadStream)_readStream).GetStringUTF8(amount);
     }
 
     public string GetStringUTF8(int amount, int offset)
     {
-        return _readStream.GetStringUTF8(amount, offset);
+        return ((IBinaryReadStream)_readStream).GetStringUTF8(amount, offset);
     }
 
     public ushort GetUInt16()
     {
-        return _readStream.GetUInt16();
+        return ((IBinaryReadStream)_readStream).GetUInt16();
     }
 
     public ushort GetUInt16(int offset)
     {
-        return _readStream.GetUInt16(offset);
+        return ((IBinaryReadStream)_readStream).GetUInt16(offset);
     }
 
     public uint GetUInt32()
     {
-        return _readStream.GetUInt32();
+        return ((IBinaryReadStream)_readStream).GetUInt32();
     }
 
     public uint GetUInt32(int offset)
     {
-        return _readStream.GetUInt32(offset);
+        return ((IBinaryReadStream)_readStream).GetUInt32(offset);
     }
 
     public ulong GetUInt64()
     {
-        return _readStream.GetUInt64();
+        return ((IBinaryReadStream)_readStream).GetUInt64();
     }
 
     public ulong GetUInt64(int offset)
     {
-        return _readStream.GetUInt64(offset);
+        return ((IBinaryReadStream)_readStream).GetUInt64(offset);
     }
 
     public byte GetUInt8()
     {
-        return _readStream.GetUInt8();
+        return ((IBinaryReadStream)_readStream).GetUInt8();
     }
 
     public byte GetUInt8(int offset)
     {
-        return _readStream.GetUInt8(offset);
+        return ((IBinaryReadStream)_readStream).GetUInt8(offset);
     }
 
     public int Read(byte[] buffer, int offset, int amount)
     {
-        return _readStream.Read(buffer, offset, amount);
+        return ((IBinaryReadStream)_readStream).Read(buffer, offset, amount);
     }
 
     public int Read(byte[] buffer)
     {
-        return _readStream.Read(buffer);
+        return ((IBinaryReadStream)_readStream).Read(buffer);
     }
 
     public bool ReadBoolean()
     {
-        return _readStream.ReadBoolean();
+        return ((IBinaryReadStream)_readStream).ReadBoolean();
     }
 
     public byte[] ReadBytes(int amount)
     {
-        return _readStream.ReadBytes(amount);
+        return ((IBinaryReadStream)_readStream).ReadBytes(amount);
     }
 
     public double ReadDouble()
     {
-        return _readStream.ReadDouble();
+        return ((IBinaryReadStream)_readStream).ReadDouble();
     }
 
     public float ReadFloat()
     {
-        return _readStream.ReadFloat();
+        return ((IBinaryReadStream)_readStream).ReadFloat();
     }
 
     public short ReadInt16()
     {
-        return _readStream.ReadInt16();
+        return ((IBinaryReadStream)_readStream).ReadInt16();
     }
 
     public int ReadInt32()
     {
-        return _readStream.ReadInt32();
+        return ((IBinaryReadStream)_readStream).ReadInt32();
     }
 
     public long ReadInt64()
     {
-        return _readStream.ReadInt64();
+        return ((IBinaryReadStream)_readStream).ReadInt64();
     }
 
     public sbyte ReadInt8()
     {
-        return _readStream.ReadInt8();
+        return ((IBinaryReadStream)_readStream).ReadInt8();
     }
 
     public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true)
     {
-        return _readStream.ReadMemory(amount, readSafe);
+        return ((IBinaryReadStream)_readStream).ReadMemory(amount, readSafe);
     }
 
     public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset, bool readSafe = true)
     {
-        return _readStream.ReadMemory(amount, offset, readSafe);
+        return ((IBinaryReadStream)_readStream).ReadMemory(amount, offset, readSafe);
     }
 
     public ReadOnlySpan<byte> ReadSpan(int amount, bool readSafe = true)
     {
-        return _readStream.ReadSpan(amount, readSafe);
+        return ((IBinaryReadStream)_readStream).ReadSpan(amount, readSafe);
     }
 
     public ReadOnlySpan<byte> ReadSpan(int amount, int offset, bool readSafe = true)
     {
-        return _readStream.ReadSpan(amount, offset, readSafe);
+        return ((IBinaryReadStream)_readStream).ReadSpan(amount, offset, readSafe);
     }
 
     public string ReadStringUTF8(int amount)
     {
-        return _readStream.ReadStringUTF8(amount);
+        return ((IBinaryReadStream)_readStream).ReadStringUTF8(amount);
     }
 
     public ushort ReadUInt16()
     {
-        return _readStream.ReadUInt16();
+        return ((IBinaryReadStream)_readStream).ReadUInt16();
     }
 
     public uint ReadUInt32()
     {
-        return _readStream.ReadUInt32();
+        return ((IBinaryReadStream)_readStream).ReadUInt32();
     }
 
     public ulong ReadUInt64()
     {
-        return _readStream.ReadUInt64();
+        return ((IBinaryReadStream)_readStream).ReadUInt64();
     }
 
     public byte ReadUInt8()
     {
-        return _readStream.ReadUInt8();
+        return ((IBinaryReadStream)_readStream).ReadUInt8();
     }
 
-    public void CopyTo(Stream stream, int amount)
+    public void WriteTo(Stream stream, int amount)
     {
-        _readStream.CopyTo(stream, amount);
-    }
-
-    public void CopyTo(Stream stream)
-    {
-        _readStream.CopyTo(stream);
+        ((IBinaryReadStream)_readStream).WriteTo(stream, amount);
     }
     #endregion
 }

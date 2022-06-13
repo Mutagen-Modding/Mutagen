@@ -54,7 +54,7 @@ public static class ModDecompressor
             {
                 noRecordLength = inputStream.Length - inputStream.Position;
             }
-            inputStream.CopyTo(outputStream, (int)noRecordLength);
+            inputStream.WriteTo(outputStream, (int)noRecordLength);
 
             // If complete overall, return
             if (inputStream.Complete) break;

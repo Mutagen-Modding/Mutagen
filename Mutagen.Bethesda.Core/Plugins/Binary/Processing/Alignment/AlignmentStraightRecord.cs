@@ -28,7 +28,7 @@ public class AlignmentStraightRecord : AlignmentRule
         MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants); 
         using (HeaderExport.Subrecord(stream, _recordType)) 
         { 
-            inputStream.CopyTo(stream.BaseStream, subLen); 
+            inputStream.WriteTo(stream.BaseStream, subLen); 
         } 
         return ret; 
     } 

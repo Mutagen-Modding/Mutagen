@@ -47,8 +47,8 @@ public class ModGroupMerger
 
         if (dict.Count == 0)
         {
-            inputStream.Position = 0;
-            inputStream.CopyTo(outputStream);
+            inputStream.BaseStream.Position = 0;
+            inputStream.BaseStream.CopyTo(outputStream);
             return;
         }
         
@@ -71,7 +71,7 @@ public class ModGroupMerger
                 noRecordLength = inputStream.Remaining;
             }
 
-            inputStream.CopyTo(writer.BaseStream, (int)noRecordLength);
+            inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
 
             if (inputStream.Complete) break;
             
@@ -79,7 +79,7 @@ public class ModGroupMerger
 
             if (!dict.TryGetValue(groupMeta.ContainedRecordType, out var groupLocations))
             {
-                inputStream.CopyTo(writer.BaseStream, checked((int)groupMeta.TotalLength));
+                inputStream.WriteTo(writer.BaseStream, checked((int)groupMeta.TotalLength));
                 continue;
             }
 
@@ -95,7 +95,7 @@ public class ModGroupMerger
             long totalLen = groupMeta.HeaderLength;
 
             inputStream.Position = groupLocations.Last().Location.Min;
-            inputStream.CopyTo(writer.BaseStream, groupMeta.HeaderLength);
+            inputStream.WriteTo(writer.BaseStream, groupMeta.HeaderLength);
 
             // Write all group contents
             foreach (var groupLoc in groupLocations)
@@ -131,6 +131,6 @@ public class ModGroupMerger
             noRecordLength = inputStream.Remaining;
         }
 
-        inputStream.CopyTo(writer.BaseStream, (int)noRecordLength);
+        inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
     }
 }
