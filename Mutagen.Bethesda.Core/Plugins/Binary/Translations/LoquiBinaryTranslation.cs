@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class LoquiBinaryTranslation<T>
+internal class LoquiBinaryTranslation<T>
     where T : class, ILoquiObjectGetter
 {
     public static readonly LoquiBinaryTranslation<T> Instance = new();
@@ -125,7 +125,7 @@ internal class LoquiBinaryAsyncTranslation<T>
     #endregion
 }
 
-public static class LoquiBinaryTranslationExt
+internal static class LoquiBinaryTranslationExt
 {
     [DebuggerStepThrough]
     public static bool Parse<T, B>(
@@ -150,7 +150,7 @@ public static class LoquiBinaryTranslationExt
         this LoquiBinaryTranslation<T> loquiTrans,
         MutagenFrame frame,
         [MaybeNullWhen(false)] out B item,
-        TypedParseParams? translationParams = null)
+        TypedParseParams? translationParams)
         where T : class, ILoquiObjectGetter, B
     {
         if (loquiTrans.Parse(

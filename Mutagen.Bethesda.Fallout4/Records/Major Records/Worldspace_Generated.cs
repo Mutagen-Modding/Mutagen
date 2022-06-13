@@ -5813,7 +5813,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region MaxHeight
         private int? _MaxHeightLengthOverride;
         private RangeInt32? _MaxHeightLocation;
-        public IWorldspaceMaxHeightGetter? MaxHeight => _MaxHeightLocation.HasValue ? WorldspaceMaxHeightBinaryOverlay.WorldspaceMaxHeightFactory(new OverlayStream(_data.Slice(_MaxHeightLocation!.Value.Min), _package), _package, new TypedParseParams(_MaxHeightLengthOverride, null)) : default;
+        public IWorldspaceMaxHeightGetter? MaxHeight => _MaxHeightLocation.HasValue ? WorldspaceMaxHeightBinaryOverlay.WorldspaceMaxHeightFactory(new OverlayStream(_data.Slice(_MaxHeightLocation!.Value.Min), _package), _package, TypedParseParams.FromLengthOverride(_MaxHeightLengthOverride)) : default;
         #endregion
         #region Name
         private int? _NameLocation;

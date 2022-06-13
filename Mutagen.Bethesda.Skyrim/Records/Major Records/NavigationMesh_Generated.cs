@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Data
         private int? _DataLengthOverride;
         private RangeInt32? _DataLocation;
-        public INavigationMeshDataGetter? Data => _DataLocation.HasValue ? NavigationMeshDataBinaryOverlay.NavigationMeshDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, new TypedParseParams(_DataLengthOverride, null)) : default;
+        public INavigationMeshDataGetter? Data => _DataLocation.HasValue ? NavigationMeshDataBinaryOverlay.NavigationMeshDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, TypedParseParams.FromLengthOverride(_DataLengthOverride)) : default;
         #endregion
         #region ONAM
         private int? _ONAMLocation;

@@ -22,6 +22,6 @@ internal readonly struct PreviousParse
     {
         var shouldShortCircuit = ParsedIndex.HasValue && ParsedIndex.Value >= fieldEnum;
         if (!shouldShortCircuit) return false;
-        return true;
+        return parseParams?.ShortCircuit ?? true;
     }
 }

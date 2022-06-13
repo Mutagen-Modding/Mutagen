@@ -418,7 +418,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                         if (!severalSubTypes)
                         {
                             sb.Append($" => _{typeGen.Name}Location.HasValue ? ");
-                            sb.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}, _package), _package{(data.OverflowRecordType.HasValue ? $", new {nameof(TypedParseParams)}(_{typeGen.Name}LengthOverride, null)" : null)}");
+                            sb.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}, _package), _package{(data.OverflowRecordType.HasValue ? $", {nameof(TypedParseParams)}.{nameof(TypedParseParams.FromLengthOverride)}(_{typeGen.Name}LengthOverride)" : null)}");
                             if (!recConverter.StartsWith("default("))
                             {
                                 sb.Append($", {recConverter}");
