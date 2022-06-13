@@ -26,20 +26,4 @@ internal static class BinaryOverlayArrayHelper
     {
         return mem.Span.Slice(0, amount * 4).AsFloatSpan().ToArray();
     }
-
-    public static ReadOnlyMemorySlice<T> LoquiSliceFromFixedSize<T>(
-        ReadOnlyMemorySlice<byte> mem,
-        int amount,
-        int length,
-        BinaryOverlayFactoryPackage package,
-        RecordTypeConverter? recordTypeConverter,
-        PluginBinaryOverlay.ConverterFactory<T> getter)
-    {
-        T[] ret = new T[amount];
-        for (int i = 0; i < amount; i++)
-        {
-            ret[i] = getter(new OverlayStream(mem.Slice(i * length), package), package, recordTypeConverter);
-        }
-        return ret;
-    }
 }
