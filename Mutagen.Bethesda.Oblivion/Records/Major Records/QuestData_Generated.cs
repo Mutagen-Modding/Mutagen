@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static QuestData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestData();
             ((QuestDataSetterCommon)((IQuestDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out QuestData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IQuestData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestDataSetterCommon)((IQuestDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IQuestData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Oblivion
             QuestData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Priority = item.Priority == rhs.Priority;
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class QuestDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static QuestDataBinaryWriteTranslation Instance = new QuestDataBinaryWriteTranslation();
+        public static readonly QuestDataBinaryWriteTranslation Instance = new QuestDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IQuestDataGetter item,
@@ -1009,12 +1008,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IQuestDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1026,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestDataGetter)item,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class QuestDataBinaryCreateTranslation
     {
-        public readonly static QuestDataBinaryCreateTranslation Instance = new QuestDataBinaryCreateTranslation();
+        public static readonly QuestDataBinaryCreateTranslation Instance = new QuestDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IQuestData item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IQuestDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1134,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IQuestDataGetter QuestDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IQuestDataGetter QuestDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
@@ -103,7 +103,7 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
     
     void IBinaryItem.WriteToBinary(
         MutagenWriter writer,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         ((OblivionGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
             item: this,

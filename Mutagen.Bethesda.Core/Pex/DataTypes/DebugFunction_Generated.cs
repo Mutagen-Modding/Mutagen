@@ -861,7 +861,6 @@ namespace Mutagen.Bethesda.Pex
             DebugFunction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectName = string.Equals(item.ObjectName, rhs.ObjectName);
             ret.StateName = string.Equals(item.StateName, rhs.StateName);
             ret.FunctionName = string.Equals(item.FunctionName, rhs.FunctionName);

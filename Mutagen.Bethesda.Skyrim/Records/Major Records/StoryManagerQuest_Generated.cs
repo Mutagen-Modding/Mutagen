@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StoryManagerQuestBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static StoryManagerQuest CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StoryManagerQuest();
             ((StoryManagerQuestSetterCommon)((IStoryManagerQuestGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out StoryManagerQuest item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IStoryManagerQuest item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((StoryManagerQuestSetterCommon)((IStoryManagerQuestGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IStoryManagerQuest item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -839,7 +839,6 @@ namespace Mutagen.Bethesda.Skyrim
             StoryManagerQuest.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.FNAM = item.FNAM == rhs.FNAM;
             ret.HoursUntilReset = item.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset);
@@ -1075,12 +1074,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class StoryManagerQuestBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static StoryManagerQuestBinaryWriteTranslation Instance = new StoryManagerQuestBinaryWriteTranslation();
+        public static readonly StoryManagerQuestBinaryWriteTranslation Instance = new StoryManagerQuestBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IStoryManagerQuestGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1100,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IStoryManagerQuestGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1111,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IStoryManagerQuestGetter)item,
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class StoryManagerQuestBinaryCreateTranslation
     {
-        public readonly static StoryManagerQuestBinaryCreateTranslation Instance = new StoryManagerQuestBinaryCreateTranslation();
+        public static readonly StoryManagerQuestBinaryCreateTranslation Instance = new StoryManagerQuestBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IStoryManagerQuest item,
@@ -1138,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1182,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IStoryManagerQuestGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StoryManagerQuestBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1227,7 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StoryManagerQuestBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1266,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IStoryManagerQuestGetter StoryManagerQuestFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StoryManagerQuestBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1284,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IStoryManagerQuestGetter StoryManagerQuestFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return StoryManagerQuestFactory(
                 stream: new OverlayStream(slice, package),
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

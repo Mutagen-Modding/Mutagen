@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MappingSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MappingSound CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MappingSound();
             ((MappingSoundSetterCommon)((IMappingSoundGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MappingSound item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMappingSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MappingSoundSetterCommon)((IMappingSoundGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -759,12 +759,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMappingSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.RNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
             MappingSound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ReverbClass = item.ReverbClass == rhs.ReverbClass;
             ret.Descriptor = item.Descriptor.Equals(rhs.Descriptor);
         }
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MappingSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MappingSoundBinaryWriteTranslation Instance = new MappingSoundBinaryWriteTranslation();
+        public static readonly MappingSoundBinaryWriteTranslation Instance = new MappingSoundBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMappingSoundGetter item,
@@ -1028,12 +1027,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMappingSoundGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.RNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1045,7 +1044,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMappingSoundGetter)item,
@@ -1057,7 +1056,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MappingSoundBinaryCreateTranslation
     {
-        public readonly static MappingSoundBinaryCreateTranslation Instance = new MappingSoundBinaryCreateTranslation();
+        public static readonly MappingSoundBinaryCreateTranslation Instance = new MappingSoundBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMappingSound item,
@@ -1080,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMappingSoundGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MappingSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1125,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MappingSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1154,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMappingSoundGetter MappingSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MappingSoundBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1172,7 +1171,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMappingSoundGetter MappingSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MappingSoundFactory(
                 stream: new OverlayStream(slice, package),

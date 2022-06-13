@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintPresetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static TintPreset CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintPreset();
             ((TintPresetSetterCommon)((ITintPresetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TintPreset item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITintPreset item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TintPresetSetterCommon)((ITintPresetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ITintPreset item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -839,7 +839,6 @@ namespace Mutagen.Bethesda.Skyrim
             TintPreset.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Color = item.Color.Equals(rhs.Color);
             ret.DefaultValue = item.DefaultValue.EqualsWithin(rhs.DefaultValue);
             ret.Index = item.Index == rhs.Index;
@@ -1075,12 +1074,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TintPresetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TintPresetBinaryWriteTranslation Instance = new TintPresetBinaryWriteTranslation();
+        public static readonly TintPresetBinaryWriteTranslation Instance = new TintPresetBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ITintPresetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1099,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ITintPresetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITintPresetGetter)item,
@@ -1122,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class TintPresetBinaryCreateTranslation
     {
-        public readonly static TintPresetBinaryCreateTranslation Instance = new TintPresetBinaryCreateTranslation();
+        public static readonly TintPresetBinaryCreateTranslation Instance = new TintPresetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITintPreset item,
@@ -1137,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ITintPresetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintPresetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1224,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintPresetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1263,7 +1262,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ITintPresetGetter TintPresetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintPresetBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1281,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ITintPresetGetter TintPresetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TintPresetFactory(
                 stream: new OverlayStream(slice, package),
@@ -1296,7 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

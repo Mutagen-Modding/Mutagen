@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -99,7 +99,7 @@ partial class MaterialSwapBinaryWriteTranslation
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMaterialSubstitutionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Substitutions,
-                transl: (MutagenWriter subWriter, IMaterialSubstitutionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IMaterialSubstitutionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((MaterialSubstitutionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -113,7 +113,7 @@ partial class MaterialSwapBinaryWriteTranslation
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMaterialSubstitutionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Substitutions,
-                transl: (MutagenWriter subWriter, IMaterialSubstitutionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IMaterialSubstitutionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((MaterialSubstitutionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(

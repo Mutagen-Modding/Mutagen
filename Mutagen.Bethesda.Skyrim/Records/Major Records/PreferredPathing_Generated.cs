@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreferredPathingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PreferredPathing CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PreferredPathing();
             ((PreferredPathingSetterCommon)((IPreferredPathingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PreferredPathing item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPreferredPathing item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PreferredPathingSetterCommon)((IPreferredPathingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -906,12 +906,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPreferredPathing item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.NVPP),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -946,7 +946,6 @@ namespace Mutagen.Bethesda.Skyrim
             PreferredPathing.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NavmeshSets = item.NavmeshSets.CollectionEqualsHelper(
                 rhs.NavmeshSets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1230,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PreferredPathingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PreferredPathingBinaryWriteTranslation Instance = new PreferredPathingBinaryWriteTranslation();
+        public static readonly PreferredPathingBinaryWriteTranslation Instance = new PreferredPathingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPreferredPathingGetter item,
@@ -1240,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.NavmeshSets,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshSetGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshSetGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.NavmeshTree,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshNodeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshNodeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshNodeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1265,12 +1264,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPreferredPathingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.NVPP),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1282,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPreferredPathingGetter)item,
@@ -1294,7 +1293,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PreferredPathingBinaryCreateTranslation
     {
-        public readonly static PreferredPathingBinaryCreateTranslation Instance = new PreferredPathingBinaryCreateTranslation();
+        public static readonly PreferredPathingBinaryCreateTranslation Instance = new PreferredPathingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPreferredPathing item,
@@ -1323,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPreferredPathingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreferredPathingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1368,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreferredPathingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1403,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPreferredPathingGetter PreferredPathingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PreferredPathingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1422,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPreferredPathingGetter PreferredPathingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PreferredPathingFactory(
                 stream: new OverlayStream(slice, package),

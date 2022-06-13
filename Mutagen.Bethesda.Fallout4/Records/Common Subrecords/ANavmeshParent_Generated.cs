@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANavmeshParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IANavmeshParent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ANavmeshParentSetterCommon)((IANavmeshParentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IANavmeshParent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -678,7 +678,6 @@ namespace Mutagen.Bethesda.Fallout4
             ANavmeshParent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -860,19 +859,19 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ANavmeshParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ANavmeshParentBinaryWriteTranslation Instance = new ANavmeshParentBinaryWriteTranslation();
+        public static readonly ANavmeshParentBinaryWriteTranslation Instance = new ANavmeshParentBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IANavmeshParentGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IANavmeshParentGetter)item,
@@ -884,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ANavmeshParentBinaryCreateTranslation
     {
-        public readonly static ANavmeshParentBinaryCreateTranslation Instance = new ANavmeshParentBinaryCreateTranslation();
+        public static readonly ANavmeshParentBinaryCreateTranslation Instance = new ANavmeshParentBinaryCreateTranslation();
 
     }
 
@@ -897,7 +896,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IANavmeshParentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANavmeshParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -942,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANavmeshParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

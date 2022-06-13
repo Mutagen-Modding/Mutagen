@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => RegionMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static RegionMap CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionMap();
             ((RegionMapSetterCommon)((IRegionMapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RegionMap item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRegionMap item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionMapSetterCommon)((IRegionMapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IRegionMap item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IRegionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (RegionMap)item,
@@ -726,7 +726,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionMap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Map = string.Equals(item.Map, rhs.Map);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -982,12 +981,12 @@ namespace Mutagen.Bethesda.Oblivion
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static RegionMapBinaryWriteTranslation Instance = new RegionMapBinaryWriteTranslation();
+        public new static readonly RegionMapBinaryWriteTranslation Instance = new RegionMapBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRegionMapGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             RegionDataBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1003,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IRegionMapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1014,7 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionMapGetter)item,
@@ -1025,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IRegionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRegionMapGetter)item,
@@ -1037,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class RegionMapBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
-        public new readonly static RegionMapBinaryCreateTranslation Instance = new RegionMapBinaryCreateTranslation();
+        public new static readonly RegionMapBinaryCreateTranslation Instance = new RegionMapBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRegionMap item,
@@ -1052,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1112,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => RegionMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1143,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRegionMapGetter RegionMapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionMapBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1161,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRegionMapGetter RegionMapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionMapFactory(
                 stream: new OverlayStream(slice, package),
@@ -1176,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

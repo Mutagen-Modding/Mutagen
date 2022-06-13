@@ -25,7 +25,7 @@ partial class AObjectModification
 
     public static AObjectModification CreateFromBinary(
         MutagenFrame frame,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var majorMeta = frame.GetMajorRecord();
         if (!majorMeta.TryFindSubrecord(RecordTypes.DATA, out var data))
@@ -162,7 +162,7 @@ partial class AObjectModificationBinaryWriteTranslation
             writer: writer,
             items: item.AttachParentSlots,
             countLengthLength: 4,
-            transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
             {
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: subWriter,
@@ -172,7 +172,7 @@ partial class AObjectModificationBinaryWriteTranslation
             writer: writer,
             items: item.Items,
             countLengthLength: 4,
-            transl: (MutagenWriter subWriter, IObjectModItemGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IObjectModItemGetter subItem, TypedWriteParams conv) =>
             {
                 var Item = subItem;
                 ((ObjectModItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -183,7 +183,7 @@ partial class AObjectModificationBinaryWriteTranslation
         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectModIncludeGetter>.Instance.Write(
             writer: writer,
             items: includes,
-            transl: (MutagenWriter subWriter, IObjectModIncludeGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IObjectModIncludeGetter subItem, TypedWriteParams conv) =>
             {
                 subItem.WriteToBinary(subWriter);
             });
@@ -288,7 +288,7 @@ partial class AObjectModificationBinaryOverlay
     public static IAObjectModificationGetter AObjectModificationFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var majorRec = stream.GetMajorRecord();
         if (!majorRec.TryFindSubrecord(RecordTypes.DATA, out var data))

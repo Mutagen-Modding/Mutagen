@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConstructibleCreatedObjectCountBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ConstructibleCreatedObjectCount CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ConstructibleCreatedObjectCount();
             ((ConstructibleCreatedObjectCountSetterCommon)((IConstructibleCreatedObjectCountGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ConstructibleCreatedObjectCount item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IConstructibleCreatedObjectCount item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ConstructibleCreatedObjectCountSetterCommon)((IConstructibleCreatedObjectCountGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IConstructibleCreatedObjectCount item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -817,7 +817,6 @@ namespace Mutagen.Bethesda.Fallout4
             ConstructibleCreatedObjectCount.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Count = item.Count == rhs.Count;
             ret.Priority = item.Priority == rhs.Priority;
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ConstructibleCreatedObjectCountBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ConstructibleCreatedObjectCountBinaryWriteTranslation Instance = new ConstructibleCreatedObjectCountBinaryWriteTranslation();
+        public static readonly ConstructibleCreatedObjectCountBinaryWriteTranslation Instance = new ConstructibleCreatedObjectCountBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IConstructibleCreatedObjectCountGetter item,
@@ -1058,7 +1057,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IConstructibleCreatedObjectCountGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1068,7 +1067,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IConstructibleCreatedObjectCountGetter)item,
@@ -1080,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ConstructibleCreatedObjectCountBinaryCreateTranslation
     {
-        public readonly static ConstructibleCreatedObjectCountBinaryCreateTranslation Instance = new ConstructibleCreatedObjectCountBinaryCreateTranslation();
+        public static readonly ConstructibleCreatedObjectCountBinaryCreateTranslation Instance = new ConstructibleCreatedObjectCountBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IConstructibleCreatedObjectCount item,
@@ -1106,7 +1105,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IConstructibleCreatedObjectCountGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConstructibleCreatedObjectCountBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1150,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConstructibleCreatedObjectCountBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1181,7 +1180,7 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ConstructibleCreatedObjectCountBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IConstructibleCreatedObjectCountGetter ConstructibleCreatedObjectCountFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ConstructibleCreatedObjectCountFactory(
                 stream: new OverlayStream(slice, package),

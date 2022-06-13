@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => NpcOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static NpcOwner CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcOwner();
             ((NpcOwnerSetterCommon)((INpcOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcOwner item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INpcOwner item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcOwnerSetterCommon)((INpcOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INpcOwner item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IOwnerTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NpcOwner)item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Fallout4
             NpcOwner.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Npc = item.Npc.Equals(rhs.Npc);
             ret.Global = item.Global.Equals(rhs.Global);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Fallout4
         OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NpcOwnerBinaryWriteTranslation Instance = new NpcOwnerBinaryWriteTranslation();
+        public new static readonly NpcOwnerBinaryWriteTranslation Instance = new NpcOwnerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcOwnerGetter item,
@@ -1055,7 +1054,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INpcOwnerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1065,7 +1064,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcOwnerGetter)item,
@@ -1076,7 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IOwnerTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcOwnerGetter)item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NpcOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
-        public new readonly static NpcOwnerBinaryCreateTranslation Instance = new NpcOwnerBinaryCreateTranslation();
+        public new static readonly NpcOwnerBinaryCreateTranslation Instance = new NpcOwnerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcOwner item,
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => NpcOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1164,7 +1163,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcOwnerGetter NpcOwnerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcOwnerBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1181,7 +1180,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcOwnerGetter NpcOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcOwnerFactory(
                 stream: new OverlayStream(slice, package),

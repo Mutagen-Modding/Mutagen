@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static RankPlacement CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RankPlacement();
             ((RankPlacementSetterCommon)((IRankPlacementGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RankPlacement item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IRankPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RankPlacementSetterCommon)((IRankPlacementGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -759,12 +759,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IRankPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
             RankPlacement.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Faction = item.Faction.Equals(rhs.Faction);
             ret.Rank = item.Rank == rhs.Rank;
         }
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RankPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RankPlacementBinaryWriteTranslation Instance = new RankPlacementBinaryWriteTranslation();
+        public static readonly RankPlacementBinaryWriteTranslation Instance = new RankPlacementBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRankPlacementGetter item,
@@ -1025,12 +1024,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IRankPlacementGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRankPlacementGetter)item,
@@ -1054,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class RankPlacementBinaryCreateTranslation
     {
-        public readonly static RankPlacementBinaryCreateTranslation Instance = new RankPlacementBinaryCreateTranslation();
+        public static readonly RankPlacementBinaryCreateTranslation Instance = new RankPlacementBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRankPlacement item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IRankPlacementGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1120,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRankPlacementGetter RankPlacementFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RankPlacementBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRankPlacementGetter RankPlacementFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RankPlacementFactory(
                 stream: new OverlayStream(slice, package),

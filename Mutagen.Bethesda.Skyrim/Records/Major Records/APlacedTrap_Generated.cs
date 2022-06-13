@@ -1405,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => APlacedTrapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APlacedTrapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAPlacedTrapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((APlacedTrapSetterCommon)((IAPlacedTrapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1879,14 +1879,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAPlacedTrapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (APlacedTrap)item,
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (APlacedTrap)item,
@@ -1932,7 +1932,6 @@ namespace Mutagen.Bethesda.Skyrim
             APlacedTrap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -2915,12 +2914,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static APlacedTrapBinaryWriteTranslation Instance = new APlacedTrapBinaryWriteTranslation();
+        public new static readonly APlacedTrapBinaryWriteTranslation Instance = new APlacedTrapBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IAPlacedTrapGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2959,7 +2958,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWaterReflectionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Reflections,
-                transl: (MutagenWriter subWriter, IWaterReflectionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IWaterReflectionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((WaterReflectionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2970,7 +2969,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILinkedReferencesGetter>.Instance.Write(
                 writer: writer,
                 items: item.LinkedReferences,
-                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LinkedReferencesBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -3008,7 +3007,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.LocationRefTypes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.XLRT),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3052,7 +3051,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             IAPlacedTrapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
@@ -3075,7 +3074,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAPlacedTrapGetter)item,
@@ -3086,7 +3085,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAPlacedTrapGetter)item,
@@ -3097,7 +3096,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAPlacedTrapGetter)item,
@@ -3109,7 +3108,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class APlacedTrapBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static APlacedTrapBinaryCreateTranslation Instance = new APlacedTrapBinaryCreateTranslation();
+        public new static readonly APlacedTrapBinaryCreateTranslation Instance = new APlacedTrapBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
         public static ParseResult FillBinaryRecordTypes(
@@ -3119,7 +3118,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3304,7 +3303,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => APlacedTrapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APlacedTrapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3400,7 +3399,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

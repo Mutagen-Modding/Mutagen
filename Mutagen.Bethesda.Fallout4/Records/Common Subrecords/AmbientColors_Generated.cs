@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static AmbientColors CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AmbientColors();
             ((AmbientColorsSetterCommon)((IAmbientColorsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AmbientColors item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAmbientColors item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AmbientColorsSetterCommon)((IAmbientColorsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAmbientColors item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -996,7 +996,6 @@ namespace Mutagen.Bethesda.Fallout4
             AmbientColors.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DirectionalXPlus = item.DirectionalXPlus.ColorOnlyEquals(rhs.DirectionalXPlus);
             ret.DirectionalXMinus = item.DirectionalXMinus.ColorOnlyEquals(rhs.DirectionalXMinus);
             ret.DirectionalYPlus = item.DirectionalYPlus.ColorOnlyEquals(rhs.DirectionalYPlus);
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AmbientColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AmbientColorsBinaryWriteTranslation Instance = new AmbientColorsBinaryWriteTranslation();
+        public static readonly AmbientColorsBinaryWriteTranslation Instance = new AmbientColorsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAmbientColorsGetter item,
@@ -1325,7 +1324,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IAmbientColorsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1335,7 +1334,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAmbientColorsGetter)item,
@@ -1347,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class AmbientColorsBinaryCreateTranslation
     {
-        public readonly static AmbientColorsBinaryCreateTranslation Instance = new AmbientColorsBinaryCreateTranslation();
+        public static readonly AmbientColorsBinaryCreateTranslation Instance = new AmbientColorsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAmbientColors item,
@@ -1374,7 +1373,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IAmbientColorsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1418,7 +1417,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1453,7 +1452,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IAmbientColorsGetter AmbientColorsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AmbientColorsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x20),
@@ -1470,7 +1469,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IAmbientColorsGetter AmbientColorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AmbientColorsFactory(
                 stream: new OverlayStream(slice, package),

@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectBoundsFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ObjectBoundsFloat CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ObjectBoundsFloat();
             ((ObjectBoundsFloatSetterCommon)((IObjectBoundsFloatGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ObjectBoundsFloat item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IObjectBoundsFloat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ObjectBoundsFloatSetterCommon)((IObjectBoundsFloatGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IObjectBoundsFloat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Fallout4
             ObjectBoundsFloat.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.First = item.First.Equals(rhs.First);
             ret.Second = item.Second.Equals(rhs.Second);
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectBoundsFloatBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ObjectBoundsFloatBinaryWriteTranslation Instance = new ObjectBoundsFloatBinaryWriteTranslation();
+        public static readonly ObjectBoundsFloatBinaryWriteTranslation Instance = new ObjectBoundsFloatBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IObjectBoundsFloatGetter item,
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IObjectBoundsFloatGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1009,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IObjectBoundsFloatGetter)item,
@@ -1021,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ObjectBoundsFloatBinaryCreateTranslation
     {
-        public readonly static ObjectBoundsFloatBinaryCreateTranslation Instance = new ObjectBoundsFloatBinaryCreateTranslation();
+        public static readonly ObjectBoundsFloatBinaryCreateTranslation Instance = new ObjectBoundsFloatBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IObjectBoundsFloat item,
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IObjectBoundsFloatGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectBoundsFloatBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1086,7 +1085,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectBoundsFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectBoundsFloatGetter ObjectBoundsFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ObjectBoundsFloatBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x18),
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectBoundsFloatGetter ObjectBoundsFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ObjectBoundsFloatFactory(
                 stream: new OverlayStream(slice, package),

@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnableParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static EnableParent CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EnableParent();
             ((EnableParentSetterCommon)((IEnableParentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EnableParent item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IEnableParent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EnableParentSetterCommon)((IEnableParentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -846,12 +846,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IEnableParent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XESP),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -886,7 +886,6 @@ namespace Mutagen.Bethesda.Fallout4
             EnableParent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Flags = item.Flags == rhs.Flags;
@@ -1126,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class EnableParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EnableParentBinaryWriteTranslation Instance = new EnableParentBinaryWriteTranslation();
+        public static readonly EnableParentBinaryWriteTranslation Instance = new EnableParentBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEnableParentGetter item,
@@ -1150,12 +1149,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IEnableParentGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XESP),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEnableParentGetter)item,
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class EnableParentBinaryCreateTranslation
     {
-        public readonly static EnableParentBinaryCreateTranslation Instance = new EnableParentBinaryCreateTranslation();
+        public static readonly EnableParentBinaryCreateTranslation Instance = new EnableParentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEnableParent item,
@@ -1208,7 +1207,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IEnableParentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnableParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1253,7 +1252,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnableParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1284,7 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IEnableParentGetter EnableParentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EnableParentBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1305,7 +1304,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IEnableParentGetter EnableParentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return EnableParentFactory(
                 stream: new OverlayStream(slice, package),

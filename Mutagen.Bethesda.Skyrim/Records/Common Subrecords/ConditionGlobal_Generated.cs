@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ConditionGlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionGlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ConditionGlobal CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ConditionGlobal();
             ((ConditionGlobalSetterCommon)((IConditionGlobalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ConditionGlobal item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IConditionGlobal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ConditionGlobalSetterCommon)((IConditionGlobalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,12 +736,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IConditionGlobal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CTDA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ICondition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ConditionGlobal)item,
@@ -790,7 +790,6 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionGlobal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ComparisonValue = item.ComparisonValue.Equals(rhs.ComparisonValue);
             ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1087,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
+        public new static readonly ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IConditionGlobalGetter item,
@@ -1131,12 +1130,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IConditionGlobalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CTDA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1151,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IConditionGlobalGetter)item,
@@ -1162,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IConditionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IConditionGlobalGetter)item,
@@ -1174,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ConditionGlobalBinaryCreateTranslation : ConditionBinaryCreateTranslation
     {
-        public new readonly static ConditionGlobalBinaryCreateTranslation Instance = new ConditionGlobalBinaryCreateTranslation();
+        public new static readonly ConditionGlobalBinaryCreateTranslation Instance = new ConditionGlobalBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IConditionGlobal item,
@@ -1241,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ConditionGlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionGlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1279,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IConditionGlobalGetter ConditionGlobalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ConditionGlobalBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1301,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IConditionGlobalGetter ConditionGlobalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ConditionGlobalFactory(
                 stream: new OverlayStream(slice, package),

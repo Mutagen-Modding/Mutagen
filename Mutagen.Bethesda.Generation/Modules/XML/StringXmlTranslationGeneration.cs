@@ -23,7 +23,7 @@ public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTrans
             using (var args = sb.Call(
                        $"Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write"))
             {
-                args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {writerAccessor}");
+                args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen, Context.Backend)}: {writerAccessor}");
                 args.Add($"name: {nameAccessor}");
                 args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
                 if (typeGen.HasIndex)
@@ -38,7 +38,7 @@ public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTrans
             using (var args = sb.Call(
                        $"{this.TypeName(typeGen)}XmlTranslation.Instance.Write"))
             {
-                args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {writerAccessor}");
+                args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen, Context.Backend)}: {writerAccessor}");
                 args.Add($"name: {nameAccessor}");
                 args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
                 if (typeGen.HasIndex)

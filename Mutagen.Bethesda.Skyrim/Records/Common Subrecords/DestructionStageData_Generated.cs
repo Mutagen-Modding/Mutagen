@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructionStageDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DestructionStageData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DestructionStageData();
             ((DestructionStageDataSetterCommon)((IDestructionStageDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DestructionStageData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDestructionStageData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DestructionStageDataSetterCommon)((IDestructionStageDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -989,12 +989,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IDestructionStageData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DSTD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1029,7 +1029,6 @@ namespace Mutagen.Bethesda.Skyrim
             DestructionStageData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.HealthPercent = item.HealthPercent == rhs.HealthPercent;
             ret.Index = item.Index == rhs.Index;
             ret.ModelDamageStage = item.ModelDamageStage == rhs.ModelDamageStage;
@@ -1325,7 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DestructionStageDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DestructionStageDataBinaryWriteTranslation Instance = new DestructionStageDataBinaryWriteTranslation();
+        public static readonly DestructionStageDataBinaryWriteTranslation Instance = new DestructionStageDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDestructionStageDataGetter item,
@@ -1351,12 +1350,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IDestructionStageDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DSTD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1368,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDestructionStageDataGetter)item,
@@ -1380,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class DestructionStageDataBinaryCreateTranslation
     {
-        public readonly static DestructionStageDataBinaryCreateTranslation Instance = new DestructionStageDataBinaryCreateTranslation();
+        public static readonly DestructionStageDataBinaryCreateTranslation Instance = new DestructionStageDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDestructionStageData item,
@@ -1409,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDestructionStageDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructionStageDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1454,7 +1453,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructionStageDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1489,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDestructionStageDataGetter DestructionStageDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DestructionStageDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1507,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDestructionStageDataGetter DestructionStageDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DestructionStageDataFactory(
                 stream: new OverlayStream(slice, package),

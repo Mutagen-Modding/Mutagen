@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static NavigationMesh CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationMesh();
             ((NavigationMeshSetterCommon)((INavigationMeshGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavigationMesh item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INavigationMeshInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavigationMeshSetterCommon)((INavigationMeshGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             INavigationMeshInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<INavigationMeshInternal>(
                 record: item,
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NavigationMesh)item,
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NavigationMesh)item,
@@ -1009,7 +1009,6 @@ namespace Mutagen.Bethesda.Skyrim
             NavigationMesh.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -1514,12 +1513,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NavigationMeshBinaryWriteTranslation Instance = new NavigationMeshBinaryWriteTranslation();
+        public new static readonly NavigationMeshBinaryWriteTranslation Instance = new NavigationMeshBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             INavigationMeshGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1549,7 +1548,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             INavigationMeshGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1577,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavigationMeshGetter)item,
@@ -1588,7 +1587,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INavigationMeshGetter)item,
@@ -1599,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INavigationMeshGetter)item,
@@ -1611,7 +1610,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class NavigationMeshBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static NavigationMeshBinaryCreateTranslation Instance = new NavigationMeshBinaryCreateTranslation();
+        public new static readonly NavigationMeshBinaryCreateTranslation Instance = new NavigationMeshBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NAVM;
         public static void FillBinaryStructs(
@@ -1630,7 +1629,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1713,7 +1712,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1760,7 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INavigationMeshGetter NavigationMeshFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new NavigationMeshBinaryOverlay(
@@ -1787,7 +1786,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INavigationMeshGetter NavigationMeshFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavigationMeshFactory(
                 stream: new OverlayStream(slice, package),
@@ -1802,7 +1801,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

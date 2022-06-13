@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ObjectModFormLinkFloatPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectModFormLinkFloatPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ObjectModFormLinkFloatProperty<T> CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ObjectModFormLinkFloatProperty<T>();
             ((ObjectModFormLinkFloatPropertySetterCommon<T>)((IObjectModFormLinkFloatPropertyGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ObjectModFormLinkFloatProperty<T> item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary<T>(
             this IObjectModFormLinkFloatProperty<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
             where T : struct, Enum
         {
             ((ObjectModFormLinkFloatPropertySetterCommon<T>)((IObjectModFormLinkFloatPropertyGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IObjectModFormLinkFloatProperty<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAObjectModProperty<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ObjectModFormLinkFloatProperty<T>)item,
@@ -522,7 +522,6 @@ namespace Mutagen.Bethesda.Fallout4
             ObjectModFormLinkFloatProperty.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Record = item.Record.Equals(rhs.Record);
             ret.Value = item.Value.EqualsWithin(rhs.Value);
             ret.FunctionType = item.FunctionType == rhs.FunctionType;
@@ -809,7 +808,7 @@ namespace Mutagen.Bethesda.Fallout4
         AObjectModPropertyBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ObjectModFormLinkFloatPropertyBinaryWriteTranslation Instance = new ObjectModFormLinkFloatPropertyBinaryWriteTranslation();
+        public new static readonly ObjectModFormLinkFloatPropertyBinaryWriteTranslation Instance = new ObjectModFormLinkFloatPropertyBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
             IObjectModFormLinkFloatPropertyGetter<T> item,
@@ -834,7 +833,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write<T>(
             MutagenWriter writer,
             IObjectModFormLinkFloatPropertyGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
             where T : struct, Enum
         {
             WriteEmbedded(
@@ -845,7 +844,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             throw new NotImplementedException();
         }
@@ -853,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write<T>(
             MutagenWriter writer,
             IAObjectModPropertyGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IObjectModFormLinkFloatPropertyGetter<T>)item,
@@ -866,7 +865,7 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T> : AObjectModPropertyBinaryCreateTranslation<T>
         where T : struct, Enum
     {
-        public new readonly static ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T> Instance = new ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T>();
+        public new static readonly ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T> Instance = new ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
             IObjectModFormLinkFloatProperty<T> item,
@@ -920,7 +919,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ObjectModFormLinkFloatPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectModFormLinkFloatPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -950,7 +949,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModFormLinkFloatPropertyGetter<T> ObjectModFormLinkFloatPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ObjectModFormLinkFloatPropertyBinaryOverlay<T>(
                 bytes: stream.RemainingMemory.Slice(0, 0x11),
@@ -967,7 +966,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModFormLinkFloatPropertyGetter<T> ObjectModFormLinkFloatPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ObjectModFormLinkFloatPropertyFactory(
                 stream: new OverlayStream(slice, package),

@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DelayAudioEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DelayAudioEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static DelayAudioEffect CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DelayAudioEffect();
             ((DelayAudioEffectSetterCommon)((IDelayAudioEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DelayAudioEffect item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDelayAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DelayAudioEffectSetterCommon)((IDelayAudioEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDelayAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DelayAudioEffect)item,
@@ -786,7 +786,6 @@ namespace Mutagen.Bethesda.Fallout4
             DelayAudioEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FeedbackPercent = item.FeedbackPercent.EqualsWithin(rhs.FeedbackPercent);
             ret.WetMixPercent = item.WetMixPercent.EqualsWithin(rhs.WetMixPercent);
             ret.Milliseconds = item.Milliseconds == rhs.Milliseconds;
@@ -1062,7 +1061,7 @@ namespace Mutagen.Bethesda.Fallout4
         AAudioEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DelayAudioEffectBinaryWriteTranslation Instance = new DelayAudioEffectBinaryWriteTranslation();
+        public new static readonly DelayAudioEffectBinaryWriteTranslation Instance = new DelayAudioEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDelayAudioEffectGetter item,
@@ -1083,7 +1082,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IDelayAudioEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDelayAudioEffectGetter)item,
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAAudioEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDelayAudioEffectGetter)item,
@@ -1116,7 +1115,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DelayAudioEffectBinaryCreateTranslation : AAudioEffectBinaryCreateTranslation
     {
-        public new readonly static DelayAudioEffectBinaryCreateTranslation Instance = new DelayAudioEffectBinaryCreateTranslation();
+        public new static readonly DelayAudioEffectBinaryCreateTranslation Instance = new DelayAudioEffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDelayAudioEffect item,
@@ -1166,7 +1165,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DelayAudioEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DelayAudioEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDelayAudioEffectGetter DelayAudioEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DelayAudioEffectBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDelayAudioEffectGetter DelayAudioEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DelayAudioEffectFactory(
                 stream: new OverlayStream(slice, package),

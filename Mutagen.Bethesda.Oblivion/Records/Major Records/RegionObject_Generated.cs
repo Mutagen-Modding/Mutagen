@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -916,7 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static RegionObject CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionObject();
             ((RegionObjectSetterCommon)((IRegionObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RegionObject item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRegionObject item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionObjectSetterCommon)((IRegionObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IRegionObject item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1351,7 +1351,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Object = item.Object.Equals(rhs.Object);
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1772,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RegionObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RegionObjectBinaryWriteTranslation Instance = new RegionObjectBinaryWriteTranslation();
+        public static readonly RegionObjectBinaryWriteTranslation Instance = new RegionObjectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRegionObjectGetter item,
@@ -1821,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IRegionObjectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1831,7 +1830,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionObjectGetter)item,
@@ -1843,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class RegionObjectBinaryCreateTranslation
     {
-        public readonly static RegionObjectBinaryCreateTranslation Instance = new RegionObjectBinaryCreateTranslation();
+        public static readonly RegionObjectBinaryCreateTranslation Instance = new RegionObjectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRegionObject item,
@@ -1881,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRegionObjectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionObjectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1926,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1970,7 +1969,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRegionObjectGetter RegionObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionObjectBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x34),
@@ -1987,7 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRegionObjectGetter RegionObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionObjectFactory(
                 stream: new OverlayStream(slice, package),

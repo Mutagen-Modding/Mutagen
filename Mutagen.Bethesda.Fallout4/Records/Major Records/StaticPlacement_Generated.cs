@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StaticPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static StaticPlacement CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StaticPlacement();
             ((StaticPlacementSetterCommon)((IStaticPlacementGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out StaticPlacement item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IStaticPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((StaticPlacementSetterCommon)((IStaticPlacementGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IStaticPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -812,7 +812,6 @@ namespace Mutagen.Bethesda.Fallout4
             StaticPlacement.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
@@ -1036,7 +1035,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class StaticPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static StaticPlacementBinaryWriteTranslation Instance = new StaticPlacementBinaryWriteTranslation();
+        public static readonly StaticPlacementBinaryWriteTranslation Instance = new StaticPlacementBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IStaticPlacementGetter item,
@@ -1056,7 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IStaticPlacementGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1066,7 +1065,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IStaticPlacementGetter)item,
@@ -1078,7 +1077,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class StaticPlacementBinaryCreateTranslation
     {
-        public readonly static StaticPlacementBinaryCreateTranslation Instance = new StaticPlacementBinaryCreateTranslation();
+        public static readonly StaticPlacementBinaryCreateTranslation Instance = new StaticPlacementBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IStaticPlacement item,
@@ -1100,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IStaticPlacementGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StaticPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1144,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StaticPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1174,7 +1173,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStaticPlacementGetter StaticPlacementFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StaticPlacementBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x1C),
@@ -1191,7 +1190,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStaticPlacementGetter StaticPlacementFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return StaticPlacementFactory(
                 stream: new OverlayStream(slice, package),

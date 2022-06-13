@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ArmorModel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ArmorModel();
             ((ArmorModelSetterCommon)((IArmorModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ArmorModel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IArmorModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ArmorModelSetterCommon)((IArmorModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IArmorModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -852,7 +852,6 @@ namespace Mutagen.Bethesda.Skyrim
             ArmorModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1137,12 +1136,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ArmorModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ArmorModelBinaryWriteTranslation Instance = new ArmorModelBinaryWriteTranslation();
+        public static readonly ArmorModelBinaryWriteTranslation Instance = new ArmorModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IArmorModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             if (item.Model is {} ModelItem)
             {
@@ -1163,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IArmorModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1174,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IArmorModelGetter)item,
@@ -1186,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ArmorModelBinaryCreateTranslation
     {
-        public readonly static ArmorModelBinaryCreateTranslation Instance = new ArmorModelBinaryCreateTranslation();
+        public static readonly ArmorModelBinaryCreateTranslation Instance = new ArmorModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IArmorModel item,
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1238,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IArmorModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1283,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1312,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IArmorModelGetter ArmorModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ArmorModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1330,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IArmorModelGetter ArmorModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ArmorModelFactory(
                 stream: new OverlayStream(slice, package),
@@ -1345,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

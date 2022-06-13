@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcWeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static NpcWeight CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcWeight();
             ((NpcWeightSetterCommon)((INpcWeightGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcWeight item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INpcWeight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcWeightSetterCommon)((INpcWeightGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -780,12 +780,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INpcWeight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MWGT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -820,7 +820,6 @@ namespace Mutagen.Bethesda.Fallout4
             NpcWeight.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Thin = item.Thin.EqualsWithin(rhs.Thin);
             ret.Muscular = item.Muscular.EqualsWithin(rhs.Muscular);
             ret.Fat = item.Fat.EqualsWithin(rhs.Fat);
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcWeightBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcWeightBinaryWriteTranslation Instance = new NpcWeightBinaryWriteTranslation();
+        public static readonly NpcWeightBinaryWriteTranslation Instance = new NpcWeightBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcWeightGetter item,
@@ -1064,12 +1063,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INpcWeightGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MWGT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcWeightGetter)item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NpcWeightBinaryCreateTranslation
     {
-        public readonly static NpcWeightBinaryCreateTranslation Instance = new NpcWeightBinaryCreateTranslation();
+        public static readonly NpcWeightBinaryCreateTranslation Instance = new NpcWeightBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcWeight item,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this INpcWeightGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcWeightBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcWeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1189,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcWeightGetter NpcWeightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcWeightBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcWeightGetter NpcWeightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcWeightFactory(
                 stream: new OverlayStream(slice, package),

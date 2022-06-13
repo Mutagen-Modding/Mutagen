@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherImageSpacesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeatherImageSpaces CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherImageSpaces();
             ((WeatherImageSpacesSetterCommon)((IWeatherImageSpacesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherImageSpaces item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherImageSpaces item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherImageSpacesSetterCommon)((IWeatherImageSpacesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -857,12 +857,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IWeatherImageSpaces item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.IMSP),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -897,7 +897,6 @@ namespace Mutagen.Bethesda.Skyrim
             WeatherImageSpaces.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sunrise = item.Sunrise.Equals(rhs.Sunrise);
             ret.Day = item.Day.Equals(rhs.Day);
             ret.Sunset = item.Sunset.Equals(rhs.Sunset);
@@ -1139,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherImageSpacesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherImageSpacesBinaryWriteTranslation Instance = new WeatherImageSpacesBinaryWriteTranslation();
+        public static readonly WeatherImageSpacesBinaryWriteTranslation Instance = new WeatherImageSpacesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherImageSpacesGetter item,
@@ -1162,12 +1161,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IWeatherImageSpacesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.IMSP),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherImageSpacesGetter)item,
@@ -1191,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class WeatherImageSpacesBinaryCreateTranslation
     {
-        public readonly static WeatherImageSpacesBinaryCreateTranslation Instance = new WeatherImageSpacesBinaryCreateTranslation();
+        public static readonly WeatherImageSpacesBinaryCreateTranslation Instance = new WeatherImageSpacesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherImageSpaces item,
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeatherImageSpacesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherImageSpacesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1259,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherImageSpacesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherImageSpacesGetter WeatherImageSpacesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherImageSpacesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1308,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherImageSpacesGetter WeatherImageSpacesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherImageSpacesFactory(
                 stream: new OverlayStream(slice, package),

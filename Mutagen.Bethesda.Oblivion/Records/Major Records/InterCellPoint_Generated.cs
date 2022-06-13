@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InterCellPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static InterCellPoint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new InterCellPoint();
             ((InterCellPointSetterCommon)((IInterCellPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out InterCellPoint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IInterCellPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IInterCellPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Oblivion
             InterCellPoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.PointID = item.PointID == rhs.PointID;
             ret.Point = item.Point.Equals(rhs.Point);
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class InterCellPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static InterCellPointBinaryWriteTranslation Instance = new InterCellPointBinaryWriteTranslation();
+        public static readonly InterCellPointBinaryWriteTranslation Instance = new InterCellPointBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IInterCellPointGetter item,
@@ -997,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IInterCellPointGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1007,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IInterCellPointGetter)item,
@@ -1019,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class InterCellPointBinaryCreateTranslation
     {
-        public readonly static InterCellPointBinaryCreateTranslation Instance = new InterCellPointBinaryCreateTranslation();
+        public static readonly InterCellPointBinaryCreateTranslation Instance = new InterCellPointBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IInterCellPoint item,
@@ -1040,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IInterCellPointGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InterCellPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1084,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InterCellPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1113,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IInterCellPointGetter InterCellPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new InterCellPointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1130,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IInterCellPointGetter InterCellPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return InterCellPointFactory(
                 stream: new OverlayStream(slice, package),

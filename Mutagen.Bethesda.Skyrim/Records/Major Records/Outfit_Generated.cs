@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => OutfitBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OutfitBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Outfit CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Outfit();
             ((OutfitSetterCommon)((IOutfitGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Outfit item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IOutfitInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((OutfitSetterCommon)((IOutfitGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IOutfitInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IOutfitInternal>(
                 record: item,
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Outfit)item,
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Outfit)item,
@@ -922,7 +922,6 @@ namespace Mutagen.Bethesda.Skyrim
             Outfit.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (l, r) => object.Equals(l, r),
@@ -1355,12 +1354,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static OutfitBinaryWriteTranslation Instance = new OutfitBinaryWriteTranslation();
+        public new static readonly OutfitBinaryWriteTranslation Instance = new OutfitBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IOutfitGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1370,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Items,
                 recordType: translationParams.ConvertToCustom(RecordTypes.INAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IOutfitTargetGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IOutfitTargetGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1381,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IOutfitGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1409,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1420,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1431,7 +1430,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1443,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class OutfitBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static OutfitBinaryCreateTranslation Instance = new OutfitBinaryCreateTranslation();
+        public new static readonly OutfitBinaryCreateTranslation Instance = new OutfitBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OTFT;
         public static void FillBinaryStructs(
@@ -1462,7 +1461,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1525,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => OutfitBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OutfitBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1555,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IOutfitGetter OutfitFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new OutfitBinaryOverlay(
@@ -1582,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IOutfitGetter OutfitFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return OutfitFactory(
                 stream: new OverlayStream(slice, package),
@@ -1597,7 +1596,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

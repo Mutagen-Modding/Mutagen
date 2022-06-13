@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => StateVariableFilterAudioEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StateVariableFilterAudioEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static StateVariableFilterAudioEffect CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StateVariableFilterAudioEffect();
             ((StateVariableFilterAudioEffectSetterCommon)((IStateVariableFilterAudioEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out StateVariableFilterAudioEffect item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IStateVariableFilterAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((StateVariableFilterAudioEffectSetterCommon)((IStateVariableFilterAudioEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IStateVariableFilterAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (StateVariableFilterAudioEffect)item,
@@ -786,7 +786,6 @@ namespace Mutagen.Bethesda.Fallout4
             StateVariableFilterAudioEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.CenterFrequency = item.CenterFrequency.EqualsWithin(rhs.CenterFrequency);
             ret.QValue = item.QValue.EqualsWithin(rhs.QValue);
             ret.Mode = item.Mode == rhs.Mode;
@@ -1062,7 +1061,7 @@ namespace Mutagen.Bethesda.Fallout4
         AAudioEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static StateVariableFilterAudioEffectBinaryWriteTranslation Instance = new StateVariableFilterAudioEffectBinaryWriteTranslation();
+        public new static readonly StateVariableFilterAudioEffectBinaryWriteTranslation Instance = new StateVariableFilterAudioEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IStateVariableFilterAudioEffectGetter item,
@@ -1086,7 +1085,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IStateVariableFilterAudioEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1096,7 +1095,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IStateVariableFilterAudioEffectGetter)item,
@@ -1107,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAAudioEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IStateVariableFilterAudioEffectGetter)item,
@@ -1119,7 +1118,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class StateVariableFilterAudioEffectBinaryCreateTranslation : AAudioEffectBinaryCreateTranslation
     {
-        public new readonly static StateVariableFilterAudioEffectBinaryCreateTranslation Instance = new StateVariableFilterAudioEffectBinaryCreateTranslation();
+        public new static readonly StateVariableFilterAudioEffectBinaryCreateTranslation Instance = new StateVariableFilterAudioEffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IStateVariableFilterAudioEffect item,
@@ -1171,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => StateVariableFilterAudioEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StateVariableFilterAudioEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStateVariableFilterAudioEffectGetter StateVariableFilterAudioEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StateVariableFilterAudioEffectBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1218,7 +1217,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStateVariableFilterAudioEffectGetter StateVariableFilterAudioEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return StateVariableFilterAudioEffectFactory(
                 stream: new OverlayStream(slice, package),

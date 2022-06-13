@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SkillBoost CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SkillBoost();
             ((SkillBoostSetterCommon)((ISkillBoostGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SkillBoost item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkillBoost item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISkillBoost item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -773,7 +773,6 @@ namespace Mutagen.Bethesda.Skyrim
             SkillBoost.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Skill = item.Skill == rhs.Skill;
             ret.Boost = item.Boost == rhs.Boost;
         }
@@ -983,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkillBoostBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SkillBoostBinaryWriteTranslation Instance = new SkillBoostBinaryWriteTranslation();
+        public static readonly SkillBoostBinaryWriteTranslation Instance = new SkillBoostBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISkillBoostGetter item,
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ISkillBoostGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1009,7 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISkillBoostGetter)item,
@@ -1021,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SkillBoostBinaryCreateTranslation
     {
-        public readonly static SkillBoostBinaryCreateTranslation Instance = new SkillBoostBinaryCreateTranslation();
+        public static readonly SkillBoostBinaryCreateTranslation Instance = new SkillBoostBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISkillBoost item,
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkillBoostGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkillBoostBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1117,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkillBoostGetter SkillBoostFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SkillBoostBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x2),
@@ -1134,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkillBoostGetter SkillBoostFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SkillBoostFactory(
                 stream: new OverlayStream(slice, package),

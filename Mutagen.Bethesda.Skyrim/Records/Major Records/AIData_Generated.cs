@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AIData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIData();
             ((AIDataSetterCommon)((IAIDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AIData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAIData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AIDataSetterCommon)((IAIDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1076,12 +1076,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAIData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.AIDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1116,7 +1116,6 @@ namespace Mutagen.Bethesda.Skyrim
             AIData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Aggression = item.Aggression == rhs.Aggression;
             ret.Confidence = item.Confidence == rhs.Confidence;
             ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
@@ -1452,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AIDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AIDataBinaryWriteTranslation Instance = new AIDataBinaryWriteTranslation();
+        public static readonly AIDataBinaryWriteTranslation Instance = new AIDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAIDataGetter item,
@@ -1489,12 +1488,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IAIDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.AIDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1506,7 +1505,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAIDataGetter)item,
@@ -1518,7 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class AIDataBinaryCreateTranslation
     {
-        public readonly static AIDataBinaryCreateTranslation Instance = new AIDataBinaryCreateTranslation();
+        public static readonly AIDataBinaryCreateTranslation Instance = new AIDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAIData item,
@@ -1558,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAIDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1602,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1640,7 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAIDataGetter AIDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1658,7 +1657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAIDataGetter AIDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AIDataFactory(
                 stream: new OverlayStream(slice, package),

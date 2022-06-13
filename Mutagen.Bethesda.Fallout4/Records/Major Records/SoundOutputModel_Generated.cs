@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => SoundOutputModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static SoundOutputModel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundOutputModel();
             ((SoundOutputModelSetterCommon)((ISoundOutputModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundOutputModel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISoundOutputModelInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundOutputModelSetterCommon)((ISoundOutputModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISoundOutputModelInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ISoundOutputModelInternal>(
                 record: item,
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundOutputModel)item,
@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundOutputModel)item,
@@ -1077,7 +1077,6 @@ namespace Mutagen.Bethesda.Fallout4
             SoundOutputModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -1650,12 +1649,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoundOutputModelBinaryWriteTranslation Instance = new SoundOutputModelBinaryWriteTranslation();
+        public new static readonly SoundOutputModelBinaryWriteTranslation Instance = new SoundOutputModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISoundOutputModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1702,7 +1701,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ISoundOutputModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1730,7 +1729,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundOutputModelGetter)item,
@@ -1741,7 +1740,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundOutputModelGetter)item,
@@ -1752,7 +1751,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundOutputModelGetter)item,
@@ -1764,7 +1763,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SoundOutputModelBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static SoundOutputModelBinaryCreateTranslation Instance = new SoundOutputModelBinaryCreateTranslation();
+        public new static readonly SoundOutputModelBinaryCreateTranslation Instance = new SoundOutputModelBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SOPM;
         public static void FillBinaryStructs(
@@ -1783,7 +1782,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1874,7 +1873,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => SoundOutputModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1927,7 +1926,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundOutputModelGetter SoundOutputModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new SoundOutputModelBinaryOverlay(
@@ -1954,7 +1953,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundOutputModelGetter SoundOutputModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundOutputModelFactory(
                 stream: new OverlayStream(slice, package),
@@ -1969,7 +1968,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

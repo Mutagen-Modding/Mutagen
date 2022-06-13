@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HeadPartReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static HeadPartReference CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HeadPartReference();
             ((HeadPartReferenceSetterCommon)((IHeadPartReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out HeadPartReference item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IHeadPartReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HeadPartReferenceSetterCommon)((IHeadPartReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IHeadPartReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Skyrim
             HeadPartReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Number = item.Number == rhs.Number;
             ret.Head = item.Head.Equals(rhs.Head);
         }
@@ -1017,12 +1016,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class HeadPartReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static HeadPartReferenceBinaryWriteTranslation Instance = new HeadPartReferenceBinaryWriteTranslation();
+        public static readonly HeadPartReferenceBinaryWriteTranslation Instance = new HeadPartReferenceBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IHeadPartReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1037,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IHeadPartReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1048,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHeadPartReferenceGetter)item,
@@ -1060,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class HeadPartReferenceBinaryCreateTranslation
     {
-        public readonly static HeadPartReferenceBinaryCreateTranslation Instance = new HeadPartReferenceBinaryCreateTranslation();
+        public static readonly HeadPartReferenceBinaryCreateTranslation Instance = new HeadPartReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IHeadPartReference item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IHeadPartReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HeadPartReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HeadPartReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IHeadPartReferenceGetter HeadPartReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HeadPartReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1208,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IHeadPartReferenceGetter HeadPartReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return HeadPartReferenceFactory(
                 stream: new OverlayStream(slice, package),
@@ -1223,7 +1222,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

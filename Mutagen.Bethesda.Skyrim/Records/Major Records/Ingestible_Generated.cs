@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => IngestibleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IngestibleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Ingestible CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Ingestible();
             ((IngestibleSetterCommon)((IIngestibleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Ingestible item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1624,7 +1624,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IIngestibleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IngestibleSetterCommon)((IIngestibleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1836,7 +1836,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IIngestibleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IIngestibleInternal>(
                 record: item,
@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Ingestible)item,
@@ -1860,7 +1860,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Ingestible)item,
@@ -1895,7 +1895,6 @@ namespace Mutagen.Bethesda.Skyrim
             Ingestible.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
@@ -2763,7 +2762,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static IngestibleBinaryWriteTranslation Instance = new IngestibleBinaryWriteTranslation();
+        public new static readonly IngestibleBinaryWriteTranslation Instance = new IngestibleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IIngestibleGetter item,
@@ -2777,7 +2776,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IIngestibleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2800,7 +2799,7 @@ namespace Mutagen.Bethesda.Skyrim
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2869,7 +2868,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
-                transl: (MutagenWriter subWriter, IEffectGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IEffectGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((EffectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2882,7 +2881,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IIngestibleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2910,7 +2909,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIngestibleGetter)item,
@@ -2921,7 +2920,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IIngestibleGetter)item,
@@ -2932,7 +2931,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IIngestibleGetter)item,
@@ -2944,7 +2943,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class IngestibleBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static IngestibleBinaryCreateTranslation Instance = new IngestibleBinaryCreateTranslation();
+        public new static readonly IngestibleBinaryCreateTranslation Instance = new IngestibleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ALCH;
         public static void FillBinaryStructs(
@@ -2963,7 +2962,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3124,7 +3123,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => IngestibleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IngestibleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3226,7 +3225,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIngestibleGetter IngestibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new IngestibleBinaryOverlay(
@@ -3253,7 +3252,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIngestibleGetter IngestibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return IngestibleFactory(
                 stream: new OverlayStream(slice, package),
@@ -3268,7 +3267,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

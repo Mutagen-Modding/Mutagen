@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => BookActorValueBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookActorValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static BookActorValue CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookActorValue();
             ((BookActorValueSetterCommon)((IBookActorValueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BookActorValue item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IBookActorValue item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BookActorValueSetterCommon)((IBookActorValueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IBookActorValue item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IBookTeachTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BookActorValue)item,
@@ -720,7 +720,6 @@ namespace Mutagen.Bethesda.Fallout4
             BookActorValue.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ActorValue = item.ActorValue.Equals(rhs.ActorValue);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -971,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         BookTeachTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static BookActorValueBinaryWriteTranslation Instance = new BookActorValueBinaryWriteTranslation();
+        public new static readonly BookActorValueBinaryWriteTranslation Instance = new BookActorValueBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBookActorValueGetter item,
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IBookActorValueGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -995,7 +994,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBookActorValueGetter)item,
@@ -1006,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IBookTeachTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBookActorValueGetter)item,
@@ -1018,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class BookActorValueBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
-        public new readonly static BookActorValueBinaryCreateTranslation Instance = new BookActorValueBinaryCreateTranslation();
+        public new static readonly BookActorValueBinaryCreateTranslation Instance = new BookActorValueBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBookActorValue item,
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => BookActorValueBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookActorValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1092,7 +1091,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IBookActorValueGetter BookActorValueFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookActorValueBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IBookActorValueGetter BookActorValueFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BookActorValueFactory(
                 stream: new OverlayStream(slice, package),

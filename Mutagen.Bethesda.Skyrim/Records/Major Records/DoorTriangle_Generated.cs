@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DoorTriangleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DoorTriangle CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DoorTriangle();
             ((DoorTriangleSetterCommon)((IDoorTriangleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DoorTriangle item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDoorTriangle item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DoorTriangleSetterCommon)((IDoorTriangleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IDoorTriangle item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -825,7 +825,6 @@ namespace Mutagen.Bethesda.Skyrim
             DoorTriangle.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.TriangleBeforeDoor = item.TriangleBeforeDoor == rhs.TriangleBeforeDoor;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Door = item.Door.Equals(rhs.Door);
@@ -1050,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DoorTriangleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DoorTriangleBinaryWriteTranslation Instance = new DoorTriangleBinaryWriteTranslation();
+        public static readonly DoorTriangleBinaryWriteTranslation Instance = new DoorTriangleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDoorTriangleGetter item,
@@ -1066,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IDoorTriangleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1076,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDoorTriangleGetter)item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class DoorTriangleBinaryCreateTranslation
     {
-        public readonly static DoorTriangleBinaryCreateTranslation Instance = new DoorTriangleBinaryCreateTranslation();
+        public static readonly DoorTriangleBinaryCreateTranslation Instance = new DoorTriangleBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDoorTriangle item,
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDoorTriangleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DoorTriangleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DoorTriangleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1185,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDoorTriangleGetter DoorTriangleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DoorTriangleBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xA),
@@ -1202,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDoorTriangleGetter DoorTriangleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DoorTriangleFactory(
                 stream: new OverlayStream(slice, package),

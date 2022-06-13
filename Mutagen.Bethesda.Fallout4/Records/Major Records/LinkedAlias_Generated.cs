@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LinkedAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static LinkedAlias CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LinkedAlias();
             ((LinkedAliasSetterCommon)((ILinkedAliasGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LinkedAlias item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILinkedAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LinkedAliasSetterCommon)((ILinkedAliasGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILinkedAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -788,7 +788,6 @@ namespace Mutagen.Bethesda.Fallout4
             LinkedAlias.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Keyword = item.Keyword.Equals(rhs.Keyword);
             ret.AliasID = item.AliasID == rhs.AliasID;
         }
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LinkedAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LinkedAliasBinaryWriteTranslation Instance = new LinkedAliasBinaryWriteTranslation();
+        public static readonly LinkedAliasBinaryWriteTranslation Instance = new LinkedAliasBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILinkedAliasGetter item,
@@ -1014,7 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILinkedAliasGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1024,7 +1023,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILinkedAliasGetter)item,
@@ -1036,7 +1035,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LinkedAliasBinaryCreateTranslation
     {
-        public readonly static LinkedAliasBinaryCreateTranslation Instance = new LinkedAliasBinaryCreateTranslation();
+        public static readonly LinkedAliasBinaryCreateTranslation Instance = new LinkedAliasBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILinkedAlias item,
@@ -1057,7 +1056,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ILinkedAliasGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LinkedAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1102,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LinkedAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1131,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILinkedAliasGetter LinkedAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LinkedAliasBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILinkedAliasGetter LinkedAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LinkedAliasFactory(
                 stream: new OverlayStream(slice, package),

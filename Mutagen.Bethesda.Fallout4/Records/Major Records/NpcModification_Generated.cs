@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => NpcModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static NpcModification CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcModification();
             ((NpcModificationSetterCommon)((INpcModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcModification item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INpcModificationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcModificationSetterCommon)((INpcModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INpcModificationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<INpcModificationInternal>(
                 record: item,
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAObjectModificationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NpcModification)item,
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NpcModification)item,
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NpcModification)item,
@@ -985,7 +985,6 @@ namespace Mutagen.Bethesda.Fallout4
             NpcModification.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1522,7 +1521,7 @@ namespace Mutagen.Bethesda.Fallout4
         AObjectModificationBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NpcModificationBinaryWriteTranslation Instance = new NpcModificationBinaryWriteTranslation();
+        public new static readonly NpcModificationBinaryWriteTranslation Instance = new NpcModificationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcModificationGetter item,
@@ -1536,7 +1535,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INpcModificationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1562,7 +1561,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcModificationGetter)item,
@@ -1573,7 +1572,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAObjectModificationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcModificationGetter)item,
@@ -1584,7 +1583,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcModificationGetter)item,
@@ -1595,7 +1594,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcModificationGetter)item,
@@ -1607,7 +1606,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NpcModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
     {
-        public new readonly static NpcModificationBinaryCreateTranslation Instance = new NpcModificationBinaryCreateTranslation();
+        public new static readonly NpcModificationBinaryCreateTranslation Instance = new NpcModificationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OMOD;
         public static void FillBinaryStructs(
@@ -1656,7 +1655,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => NpcModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1685,7 +1684,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcModificationGetter NpcModificationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new NpcModificationBinaryOverlay(
@@ -1712,7 +1711,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcModificationGetter NpcModificationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcModificationFactory(
                 stream: new OverlayStream(slice, package),

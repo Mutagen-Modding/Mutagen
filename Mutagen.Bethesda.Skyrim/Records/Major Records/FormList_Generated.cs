@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => FormListBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FormListBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static FormList CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FormList();
             ((FormListSetterCommon)((IFormListGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FormList item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFormListInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FormListSetterCommon)((IFormListGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IFormListInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IFormListInternal>(
                 record: item,
@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (FormList)item,
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (FormList)item,
@@ -928,7 +928,6 @@ namespace Mutagen.Bethesda.Skyrim
             FormList.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (l, r) => object.Equals(l, r),
@@ -1349,12 +1348,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static FormListBinaryWriteTranslation Instance = new FormListBinaryWriteTranslation();
+        public new static readonly FormListBinaryWriteTranslation Instance = new FormListBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFormListGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1363,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Items,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1375,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IFormListGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1403,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFormListGetter)item,
@@ -1414,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFormListGetter)item,
@@ -1425,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFormListGetter)item,
@@ -1437,7 +1436,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class FormListBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
+        public new static readonly FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLST;
         public static void FillBinaryStructs(
@@ -1456,7 +1455,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1518,7 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => FormListBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FormListBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1548,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IFormListGetter FormListFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new FormListBinaryOverlay(
@@ -1575,7 +1574,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IFormListGetter FormListFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FormListFactory(
                 stream: new OverlayStream(slice, package),
@@ -1590,7 +1589,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

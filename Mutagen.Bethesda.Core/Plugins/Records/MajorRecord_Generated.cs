@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static void CopyInFromBinary(
             this IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public virtual void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -1195,7 +1195,6 @@ namespace Mutagen.Bethesda.Plugins.Records
             MajorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MajorRecordFlagsRaw = item.MajorRecordFlagsRaw == rhs.MajorRecordFlagsRaw;
             ret.FormKey = item.FormKey == rhs.FormKey;
             ret.VersionControl = item.VersionControl == rhs.VersionControl;
@@ -1510,7 +1509,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 {
     public partial class MajorRecordBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MajorRecordBinaryWriteTranslation Instance = new MajorRecordBinaryWriteTranslation();
+        public static readonly MajorRecordBinaryWriteTranslation Instance = new MajorRecordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMajorRecordGetter item,
@@ -1526,7 +1525,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static void WriteRecordTypes(
             IMajorRecordGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1538,7 +1537,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public virtual void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
@@ -1561,7 +1560,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMajorRecordGetter)item,
@@ -1573,7 +1572,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
     internal partial class MajorRecordBinaryCreateTranslation
     {
-        public readonly static MajorRecordBinaryCreateTranslation Instance = new MajorRecordBinaryCreateTranslation();
+        public static readonly MajorRecordBinaryCreateTranslation Instance = new MajorRecordBinaryCreateTranslation();
 
         public virtual RecordType RecordType => throw new ArgumentException();
         public static void FillBinaryStructs(
@@ -1592,7 +1591,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1622,7 +1621,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static void WriteToBinary(
             this IMajorRecordGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MajorRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1673,7 +1672,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1712,7 +1711,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

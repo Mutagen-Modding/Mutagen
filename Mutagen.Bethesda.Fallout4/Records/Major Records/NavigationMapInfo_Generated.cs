@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMapInfoBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static NavigationMapInfo CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationMapInfo();
             ((NavigationMapInfoSetterCommon)((INavigationMapInfoGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavigationMapInfo item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INavigationMapInfo item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavigationMapInfoSetterCommon)((INavigationMapInfoGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1394,12 +1394,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INavigationMapInfo item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.NVMI),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1434,7 +1434,6 @@ namespace Mutagen.Bethesda.Fallout4
             NavigationMapInfo.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NavigationMesh = item.NavigationMesh.Equals(rhs.NavigationMesh);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Point = item.Point.Equals(rhs.Point);
@@ -1922,7 +1921,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavigationMapInfoBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavigationMapInfoBinaryWriteTranslation Instance = new NavigationMapInfoBinaryWriteTranslation();
+        public static readonly NavigationMapInfoBinaryWriteTranslation Instance = new NavigationMapInfoBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavigationMapInfoGetter item,
@@ -1940,7 +1939,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.MergedTo,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1950,7 +1949,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.PreferredMerges,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1960,7 +1959,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.LinkedDoors,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, ILinkedDoorGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILinkedDoorGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LinkedDoorBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2009,12 +2008,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INavigationMapInfoGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.NVMI),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2026,7 +2025,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavigationMapInfoGetter)item,
@@ -2038,7 +2037,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NavigationMapInfoBinaryCreateTranslation
     {
-        public readonly static NavigationMapInfoBinaryCreateTranslation Instance = new NavigationMapInfoBinaryCreateTranslation();
+        public static readonly NavigationMapInfoBinaryCreateTranslation Instance = new NavigationMapInfoBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavigationMapInfo item,
@@ -2093,7 +2092,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this INavigationMapInfoGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMapInfoBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2138,7 +2137,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMapInfoBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2195,7 +2194,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavigationMapInfoGetter NavigationMapInfoFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationMapInfoBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -2216,7 +2215,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavigationMapInfoGetter NavigationMapInfoFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavigationMapInfoFactory(
                 stream: new OverlayStream(slice, package),

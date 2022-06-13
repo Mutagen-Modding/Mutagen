@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActivateParentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ActivateParents CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActivateParents();
             ((ActivateParentsSetterCommon)((IActivateParentsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ActivateParents item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IActivateParents item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ActivateParentsSetterCommon)((IActivateParentsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IActivateParents item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -869,7 +869,6 @@ namespace Mutagen.Bethesda.Skyrim
             ActivateParents.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Parents = item.Parents.CollectionEqualsHelper(
                 rhs.Parents,
@@ -1116,12 +1115,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActivateParentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ActivateParentsBinaryWriteTranslation Instance = new ActivateParentsBinaryWriteTranslation();
+        public static readonly ActivateParentsBinaryWriteTranslation Instance = new ActivateParentsBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IActivateParentsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<ActivateParents.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
@@ -1131,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IActivateParentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Parents,
-                transl: (MutagenWriter subWriter, IActivateParentGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IActivateParentGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ActivateParentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1144,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IActivateParentsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IActivateParentsGetter)item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ActivateParentsBinaryCreateTranslation
     {
-        public readonly static ActivateParentsBinaryCreateTranslation Instance = new ActivateParentsBinaryCreateTranslation();
+        public static readonly ActivateParentsBinaryCreateTranslation Instance = new ActivateParentsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IActivateParents item,
@@ -1182,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1222,7 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IActivateParentsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActivateParentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1267,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActivateParentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IActivateParentsGetter ActivateParentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActivateParentsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1317,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IActivateParentsGetter ActivateParentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ActivateParentsFactory(
                 stream: new OverlayStream(slice, package),
@@ -1332,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

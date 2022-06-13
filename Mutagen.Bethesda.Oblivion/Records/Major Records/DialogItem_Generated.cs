@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static DialogItem CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogItem();
             ((DialogItemSetterCommon)((IDialogItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogItem item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDialogItemInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogItemSetterCommon)((IDialogItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IDialogItemInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IDialogItemInternal>(
                 record: item,
@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DialogItem)item,
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DialogItem)item,
@@ -1559,7 +1559,6 @@ namespace Mutagen.Bethesda.Oblivion
             DialogItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -2289,12 +2288,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DialogItemBinaryWriteTranslation Instance = new DialogItemBinaryWriteTranslation();
+        public new static readonly DialogItemBinaryWriteTranslation Instance = new DialogItemBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDialogItemGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2318,7 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Topics,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2328,7 +2327,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDialogResponseGetter>.Instance.Write(
                 writer: writer,
                 items: item.Responses,
-                transl: (MutagenWriter subWriter, IDialogResponseGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IDialogResponseGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((DialogResponseBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2339,7 +2338,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2350,7 +2349,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Choices,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2360,7 +2359,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LinkFrom,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2377,7 +2376,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IDialogItemGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2405,7 +2404,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogItemGetter)item,
@@ -2416,7 +2415,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDialogItemGetter)item,
@@ -2427,7 +2426,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDialogItemGetter)item,
@@ -2439,7 +2438,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class DialogItemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static DialogItemBinaryCreateTranslation Instance = new DialogItemBinaryCreateTranslation();
+        public new static readonly DialogItemBinaryCreateTranslation Instance = new DialogItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.INFO;
         public static void FillBinaryStructs(
@@ -2458,7 +2457,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2586,7 +2585,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2636,7 +2635,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IDialogItemGetter DialogItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new DialogItemBinaryOverlay(
@@ -2663,7 +2662,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IDialogItemGetter DialogItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogItemFactory(
                 stream: new OverlayStream(slice, package),
@@ -2678,7 +2677,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

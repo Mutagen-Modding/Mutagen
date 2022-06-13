@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PlacedObjectLighting CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObjectLighting();
             ((PlacedObjectLightingSetterCommon)((IPlacedObjectLightingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedObjectLighting item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPlacedObjectLighting item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedObjectLightingSetterCommon)((IPlacedObjectLightingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -937,12 +937,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPlacedObjectLighting item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XLIG),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -977,7 +977,6 @@ namespace Mutagen.Bethesda.Fallout4
             PlacedObjectLighting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Fov90PlusMinus = item.Fov90PlusMinus.EqualsWithin(rhs.Fov90PlusMinus);
             ret.Fade1PlusMinus = item.Fade1PlusMinus.EqualsWithin(rhs.Fade1PlusMinus);
@@ -1259,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedObjectLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PlacedObjectLightingBinaryWriteTranslation Instance = new PlacedObjectLightingBinaryWriteTranslation();
+        public static readonly PlacedObjectLightingBinaryWriteTranslation Instance = new PlacedObjectLightingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedObjectLightingGetter item,
@@ -1294,12 +1293,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPlacedObjectLightingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XLIG),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1311,7 +1310,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedObjectLightingGetter)item,
@@ -1323,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PlacedObjectLightingBinaryCreateTranslation
     {
-        public readonly static PlacedObjectLightingBinaryCreateTranslation Instance = new PlacedObjectLightingBinaryCreateTranslation();
+        public static readonly PlacedObjectLightingBinaryCreateTranslation Instance = new PlacedObjectLightingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPlacedObjectLighting item,
@@ -1358,7 +1357,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPlacedObjectLightingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1402,7 +1401,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1436,7 +1435,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectLightingGetter PlacedObjectLightingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObjectLightingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1461,7 +1460,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectLightingGetter PlacedObjectLightingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedObjectLightingFactory(
                 stream: new OverlayStream(slice, package),

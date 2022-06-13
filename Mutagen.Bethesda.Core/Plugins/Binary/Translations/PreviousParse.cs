@@ -18,10 +18,10 @@ internal readonly struct PreviousParse
             lengthOverride: lastParsed.LengthOverride);
     }
 
-    public bool ShortCircuit(int fieldEnum, TypedParseParams? parseParams)
+    public bool ShortCircuit(int fieldEnum, TypedParseParams parseParams)
     {
         var shouldShortCircuit = ParsedIndex.HasValue && ParsedIndex.Value >= fieldEnum;
         if (!shouldShortCircuit) return false;
-        return parseParams?.ShortCircuit ?? true;
+        return parseParams.ShortCircuit;
     }
 }

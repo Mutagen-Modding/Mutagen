@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMaxHeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static WorldspaceMaxHeight CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceMaxHeight();
             ((WorldspaceMaxHeightSetterCommon)((IWorldspaceMaxHeightGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceMaxHeight item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IWorldspaceMaxHeight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceMaxHeightSetterCommon)((IWorldspaceMaxHeightGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -788,12 +788,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IWorldspaceMaxHeight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MHDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -828,7 +828,6 @@ namespace Mutagen.Bethesda.Fallout4
             WorldspaceMaxHeight.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Min = item.Min.Equals(rhs.Min);
             ret.Max = item.Max.Equals(rhs.Max);
             ret.CellData = MemoryExtensions.SequenceEqual(item.CellData.Span, rhs.CellData.Span);
@@ -1052,7 +1051,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WorldspaceMaxHeightBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceMaxHeightBinaryWriteTranslation Instance = new WorldspaceMaxHeightBinaryWriteTranslation();
+        public static readonly WorldspaceMaxHeightBinaryWriteTranslation Instance = new WorldspaceMaxHeightBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceMaxHeightGetter item,
@@ -1072,12 +1071,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IWorldspaceMaxHeightGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MHDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1089,7 +1088,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceMaxHeightGetter)item,
@@ -1101,7 +1100,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class WorldspaceMaxHeightBinaryCreateTranslation
     {
-        public readonly static WorldspaceMaxHeightBinaryCreateTranslation Instance = new WorldspaceMaxHeightBinaryCreateTranslation();
+        public static readonly WorldspaceMaxHeightBinaryCreateTranslation Instance = new WorldspaceMaxHeightBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceMaxHeight item,
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IWorldspaceMaxHeightGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMaxHeightBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMaxHeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1200,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldspaceMaxHeightGetter WorldspaceMaxHeightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceMaxHeightBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1217,7 +1216,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldspaceMaxHeightGetter WorldspaceMaxHeightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceMaxHeightFactory(
                 stream: new OverlayStream(slice, package),

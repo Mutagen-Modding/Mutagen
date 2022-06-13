@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APerkEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((APerkEffectSetterCommon)((IAPerkEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -928,7 +928,6 @@ namespace Mutagen.Bethesda.Skyrim
             APerkEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Rank = item.Rank == rhs.Rank;
             ret.Priority = item.Priority == rhs.Priority;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
@@ -1204,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class APerkEffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static APerkEffectBinaryWriteTranslation Instance = new APerkEffectBinaryWriteTranslation();
+        public static readonly APerkEffectBinaryWriteTranslation Instance = new APerkEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAPerkEffectGetter item,
@@ -1215,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IAPerkEffectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.PRKE)))
             {
@@ -1226,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1240,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAPerkEffectGetter)item,
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class APerkEffectBinaryCreateTranslation
     {
-        public readonly static APerkEffectBinaryCreateTranslation Instance = new APerkEffectBinaryCreateTranslation();
+        public static readonly APerkEffectBinaryCreateTranslation Instance = new APerkEffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAPerkEffect item,
@@ -1267,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1300,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAPerkEffectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APerkEffectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1345,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APerkEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1379,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -30,7 +30,7 @@ internal class LoquiBinaryOverlayTranslation<T>
                 if (param.Length != 3) return false;
                 if (!param[0].ParameterType.Equals(typeof(OverlayStream))) return false;
                 if (!param[1].ParameterType.Equals(typeof(BinaryOverlayFactoryPackage))) return false;
-                if (!param[2].ParameterType.Equals(typeof(TypedParseParams?))) return false;
+                if (!param[2].ParameterType.Equals(typeof(TypedParseParams))) return false;
                 return true;
             })
             .FirstOrDefault();

@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static CreatureSound CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CreatureSound();
             ((CreatureSoundSetterCommon)((ICreatureSoundGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CreatureSound item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICreatureSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CreatureSoundSetterCommon)((ICreatureSoundGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ICreatureSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -870,7 +870,6 @@ namespace Mutagen.Bethesda.Oblivion
             CreatureSound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SoundType = item.SoundType == rhs.SoundType;
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
@@ -1121,12 +1120,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CreatureSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CreatureSoundBinaryWriteTranslation Instance = new CreatureSoundBinaryWriteTranslation();
+        public static readonly CreatureSoundBinaryWriteTranslation Instance = new CreatureSoundBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ICreatureSoundGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<CreatureSound.CreatureSoundType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1136,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISoundItemGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                transl: (MutagenWriter subWriter, ISoundItemGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ISoundItemGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((SoundItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ICreatureSoundGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1160,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICreatureSoundGetter)item,
@@ -1172,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class CreatureSoundBinaryCreateTranslation
     {
-        public readonly static CreatureSoundBinaryCreateTranslation Instance = new CreatureSoundBinaryCreateTranslation();
+        public static readonly CreatureSoundBinaryCreateTranslation Instance = new CreatureSoundBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICreatureSound item,
@@ -1187,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1229,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ICreatureSoundGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1274,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1306,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICreatureSoundGetter CreatureSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CreatureSoundBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1324,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICreatureSoundGetter CreatureSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CreatureSoundFactory(
                 stream: new OverlayStream(slice, package),
@@ -1339,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

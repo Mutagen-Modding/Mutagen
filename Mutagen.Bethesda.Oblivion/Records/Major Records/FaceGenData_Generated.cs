@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceGenDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static FaceGenData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FaceGenData();
             ((FaceGenDataSetterCommon)((IFaceGenDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FaceGenData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IFaceGenData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IFaceGenData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -843,7 +843,6 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SymmetricGeometry = MemorySliceExt.Equal(item.SymmetricGeometry, rhs.SymmetricGeometry);
             ret.AsymmetricGeometry = MemorySliceExt.Equal(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
             ret.SymmetricTexture = MemorySliceExt.Equal(item.SymmetricTexture, rhs.SymmetricTexture);
@@ -1100,12 +1099,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FaceGenDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FaceGenDataBinaryWriteTranslation Instance = new FaceGenDataBinaryWriteTranslation();
+        public static readonly FaceGenDataBinaryWriteTranslation Instance = new FaceGenDataBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFaceGenDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1124,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IFaceGenDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFaceGenDataGetter)item,
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class FaceGenDataBinaryCreateTranslation
     {
-        public readonly static FaceGenDataBinaryCreateTranslation Instance = new FaceGenDataBinaryCreateTranslation();
+        public static readonly FaceGenDataBinaryCreateTranslation Instance = new FaceGenDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFaceGenData item,
@@ -1162,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1204,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IFaceGenDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceGenDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1248,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceGenDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1287,7 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IFaceGenDataGetter FaceGenDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FaceGenDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1305,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IFaceGenDataGetter FaceGenDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FaceGenDataFactory(
                 stream: new OverlayStream(slice, package),
@@ -1320,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MusicTrackLoopDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MusicTrackLoopData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MusicTrackLoopData();
             ((MusicTrackLoopDataSetterCommon)((IMusicTrackLoopDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MusicTrackLoopData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMusicTrackLoopData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MusicTrackLoopDataSetterCommon)((IMusicTrackLoopDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -780,12 +780,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMusicTrackLoopData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.LNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -820,7 +820,6 @@ namespace Mutagen.Bethesda.Fallout4
             MusicTrackLoopData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Begins = item.Begins.EqualsWithin(rhs.Begins);
             ret.Ends = item.Ends.EqualsWithin(rhs.Ends);
             ret.Count = item.Count == rhs.Count;
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MusicTrackLoopDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MusicTrackLoopDataBinaryWriteTranslation Instance = new MusicTrackLoopDataBinaryWriteTranslation();
+        public static readonly MusicTrackLoopDataBinaryWriteTranslation Instance = new MusicTrackLoopDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMusicTrackLoopDataGetter item,
@@ -1062,12 +1061,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMusicTrackLoopDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.LNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1079,7 +1078,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMusicTrackLoopDataGetter)item,
@@ -1091,7 +1090,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MusicTrackLoopDataBinaryCreateTranslation
     {
-        public readonly static MusicTrackLoopDataBinaryCreateTranslation Instance = new MusicTrackLoopDataBinaryCreateTranslation();
+        public static readonly MusicTrackLoopDataBinaryCreateTranslation Instance = new MusicTrackLoopDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMusicTrackLoopData item,
@@ -1113,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMusicTrackLoopDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MusicTrackLoopDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MusicTrackLoopDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1187,7 +1186,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMusicTrackLoopDataGetter MusicTrackLoopDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MusicTrackLoopDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1205,7 +1204,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMusicTrackLoopDataGetter MusicTrackLoopDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MusicTrackLoopDataFactory(
                 stream: new OverlayStream(slice, package),

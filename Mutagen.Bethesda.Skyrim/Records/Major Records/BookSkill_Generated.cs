@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => BookSkillBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookSkillBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static BookSkill CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookSkill();
             ((BookSkillSetterCommon)((IBookSkillGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BookSkill item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBookSkill item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BookSkillSetterCommon)((IBookSkillGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IBookSkill item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IBookTeachTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BookSkill)item,
@@ -706,7 +706,6 @@ namespace Mutagen.Bethesda.Skyrim
             BookSkill.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Skill = item.Skill == rhs.Skill;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -960,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         BookTeachTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static BookSkillBinaryWriteTranslation Instance = new BookSkillBinaryWriteTranslation();
+        public new static readonly BookSkillBinaryWriteTranslation Instance = new BookSkillBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBookSkillGetter item,
@@ -975,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IBookSkillGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBookSkillGetter)item,
@@ -996,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IBookTeachTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBookSkillGetter)item,
@@ -1008,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class BookSkillBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
-        public new readonly static BookSkillBinaryCreateTranslation Instance = new BookSkillBinaryCreateTranslation();
+        public new static readonly BookSkillBinaryCreateTranslation Instance = new BookSkillBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBookSkill item,
@@ -1056,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => BookSkillBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookSkillBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1094,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IBookSkillGetter BookSkillFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookSkillBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1111,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IBookSkillGetter BookSkillFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BookSkillFactory(
                 stream: new OverlayStream(slice, package),

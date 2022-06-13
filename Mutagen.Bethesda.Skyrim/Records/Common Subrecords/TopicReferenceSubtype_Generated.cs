@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TopicReferenceSubtypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TopicReferenceSubtypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static TopicReferenceSubtype CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TopicReferenceSubtype();
             ((TopicReferenceSubtypeSetterCommon)((ITopicReferenceSubtypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TopicReferenceSubtype item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITopicReferenceSubtype item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TopicReferenceSubtypeSetterCommon)((ITopicReferenceSubtypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ITopicReferenceSubtype item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IATopicReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (TopicReferenceSubtype)item,
@@ -711,7 +711,6 @@ namespace Mutagen.Bethesda.Skyrim
             TopicReferenceSubtype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Subtype = item.Subtype == rhs.Subtype;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -961,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
         ATopicReferenceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static TopicReferenceSubtypeBinaryWriteTranslation Instance = new TopicReferenceSubtypeBinaryWriteTranslation();
+        public new static readonly TopicReferenceSubtypeBinaryWriteTranslation Instance = new TopicReferenceSubtypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITopicReferenceSubtypeGetter item,
@@ -975,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ITopicReferenceSubtypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITopicReferenceSubtypeGetter)item,
@@ -996,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IATopicReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITopicReferenceSubtypeGetter)item,
@@ -1008,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class TopicReferenceSubtypeBinaryCreateTranslation : ATopicReferenceBinaryCreateTranslation
     {
-        public new readonly static TopicReferenceSubtypeBinaryCreateTranslation Instance = new TopicReferenceSubtypeBinaryCreateTranslation();
+        public new static readonly TopicReferenceSubtypeBinaryCreateTranslation Instance = new TopicReferenceSubtypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITopicReferenceSubtype item,
@@ -1053,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TopicReferenceSubtypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TopicReferenceSubtypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ITopicReferenceSubtypeGetter TopicReferenceSubtypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TopicReferenceSubtypeBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1098,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ITopicReferenceSubtypeGetter TopicReferenceSubtypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TopicReferenceSubtypeFactory(
                 stream: new OverlayStream(slice, package),

@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => MagicEffectLightArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectLightArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static MagicEffectLightArchetype CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectLightArchetype();
             ((MagicEffectLightArchetypeSetterCommon)((IMagicEffectLightArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MagicEffectLightArchetype item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMagicEffectLightArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MagicEffectLightArchetypeSetterCommon)((IMagicEffectLightArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMagicEffectLightArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMagicEffectArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MagicEffectLightArchetype)item,
@@ -673,7 +673,6 @@ namespace Mutagen.Bethesda.Fallout4
             MagicEffectLightArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -944,12 +943,12 @@ namespace Mutagen.Bethesda.Fallout4
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MagicEffectLightArchetypeBinaryWriteTranslation Instance = new MagicEffectLightArchetypeBinaryWriteTranslation();
+        public new static readonly MagicEffectLightArchetypeBinaryWriteTranslation Instance = new MagicEffectLightArchetypeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             IMagicEffectLightArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
                 item: item,
@@ -959,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMagicEffectLightArchetypeGetter)item,
@@ -970,7 +969,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMagicEffectArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMagicEffectLightArchetypeGetter)item,
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MagicEffectLightArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
-        public new readonly static MagicEffectLightArchetypeBinaryCreateTranslation Instance = new MagicEffectLightArchetypeBinaryCreateTranslation();
+        public new static readonly MagicEffectLightArchetypeBinaryCreateTranslation Instance = new MagicEffectLightArchetypeBinaryCreateTranslation();
 
     }
 
@@ -1020,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => MagicEffectLightArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectLightArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1047,7 +1046,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectLightArchetypeGetter MagicEffectLightArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectLightArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1063,7 +1062,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectLightArchetypeGetter MagicEffectLightArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MagicEffectLightArchetypeFactory(
                 stream: new OverlayStream(slice, package),

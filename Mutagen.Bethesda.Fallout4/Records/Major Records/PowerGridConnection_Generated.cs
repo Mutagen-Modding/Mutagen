@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PowerGridConnectionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PowerGridConnection CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PowerGridConnection();
             ((PowerGridConnectionSetterCommon)((IPowerGridConnectionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PowerGridConnection item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPowerGridConnection item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PowerGridConnectionSetterCommon)((IPowerGridConnectionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -812,12 +812,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPowerGridConnection item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XWPN),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -852,7 +852,6 @@ namespace Mutagen.Bethesda.Fallout4
             PowerGridConnection.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NodeOne = item.NodeOne.Equals(rhs.NodeOne);
             ret.NodeTwo = item.NodeTwo.Equals(rhs.NodeTwo);
             ret.Line = item.Line.Equals(rhs.Line);
@@ -1079,7 +1078,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PowerGridConnectionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PowerGridConnectionBinaryWriteTranslation Instance = new PowerGridConnectionBinaryWriteTranslation();
+        public static readonly PowerGridConnectionBinaryWriteTranslation Instance = new PowerGridConnectionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPowerGridConnectionGetter item,
@@ -1099,12 +1098,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPowerGridConnectionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XWPN),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1116,7 +1115,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPowerGridConnectionGetter)item,
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PowerGridConnectionBinaryCreateTranslation
     {
-        public readonly static PowerGridConnectionBinaryCreateTranslation Instance = new PowerGridConnectionBinaryCreateTranslation();
+        public static readonly PowerGridConnectionBinaryCreateTranslation Instance = new PowerGridConnectionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPowerGridConnection item,
@@ -1150,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPowerGridConnectionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PowerGridConnectionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1195,7 +1194,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PowerGridConnectionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPowerGridConnectionGetter PowerGridConnectionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PowerGridConnectionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1243,7 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPowerGridConnectionGetter PowerGridConnectionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PowerGridConnectionFactory(
                 stream: new OverlayStream(slice, package),

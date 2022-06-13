@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SoundCategoryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundCategoryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static SoundCategory CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundCategory();
             ((SoundCategorySetterCommon)((ISoundCategoryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundCategory item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISoundCategoryInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundCategorySetterCommon)((ISoundCategoryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISoundCategoryInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ISoundCategoryInternal>(
                 record: item,
@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundCategory)item,
@@ -1025,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundCategory)item,
@@ -1060,7 +1060,6 @@ namespace Mutagen.Bethesda.Skyrim
             SoundCategory.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Parent = item.Parent.Equals(rhs.Parent);
@@ -1525,12 +1524,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoundCategoryBinaryWriteTranslation Instance = new SoundCategoryBinaryWriteTranslation();
+        public new static readonly SoundCategoryBinaryWriteTranslation Instance = new SoundCategoryBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISoundCategoryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1568,7 +1567,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ISoundCategoryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1596,7 +1595,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundCategoryGetter)item,
@@ -1607,7 +1606,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundCategoryGetter)item,
@@ -1618,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundCategoryGetter)item,
@@ -1630,7 +1629,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SoundCategoryBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static SoundCategoryBinaryCreateTranslation Instance = new SoundCategoryBinaryCreateTranslation();
+        public new static readonly SoundCategoryBinaryCreateTranslation Instance = new SoundCategoryBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SNCT;
         public static void FillBinaryStructs(
@@ -1649,7 +1648,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1743,7 +1742,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SoundCategoryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundCategoryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1800,7 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISoundCategoryGetter SoundCategoryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new SoundCategoryBinaryOverlay(
@@ -1827,7 +1826,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISoundCategoryGetter SoundCategoryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundCategoryFactory(
                 stream: new OverlayStream(slice, package),
@@ -1842,7 +1841,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

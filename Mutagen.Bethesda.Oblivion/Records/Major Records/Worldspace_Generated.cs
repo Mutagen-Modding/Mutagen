@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Worldspace CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Worldspace();
             ((WorldspaceSetterCommon)((IWorldspaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Worldspace item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IWorldspaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IWorldspaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IWorldspaceInternal>(
                 record: item,
@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IPlaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Worldspace)item,
@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Worldspace)item,
@@ -1985,7 +1985,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Worldspace)item,
@@ -2020,7 +2020,6 @@ namespace Mutagen.Bethesda.Oblivion
             Worldspace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.Climate = item.Climate.Equals(rhs.Climate);
@@ -3621,7 +3620,7 @@ namespace Mutagen.Bethesda.Oblivion
         PlaceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
+        public new static readonly WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceGetter item,
@@ -3635,7 +3634,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteRecordTypes(
             IWorldspaceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -3709,7 +3708,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IWorldspaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -3740,7 +3739,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -3751,7 +3750,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IPlaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -3762,7 +3761,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -3773,7 +3772,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -3785,7 +3784,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class WorldspaceBinaryCreateTranslation : PlaceBinaryCreateTranslation
     {
-        public new readonly static WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
+        public new static readonly WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WRLD;
         public static void FillBinaryStructs(
@@ -3804,7 +3803,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3952,7 +3951,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -4038,7 +4037,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IWorldspaceGetter WorldspaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var origStream = stream;
             stream = Decompression.DecompressStream(stream);
@@ -4070,7 +4069,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IWorldspaceGetter WorldspaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceFactory(
                 stream: new OverlayStream(slice, package),
@@ -4085,7 +4084,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

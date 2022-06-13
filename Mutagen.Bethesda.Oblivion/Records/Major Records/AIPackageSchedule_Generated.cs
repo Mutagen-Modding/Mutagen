@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static AIPackageSchedule CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIPackageSchedule();
             ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AIPackageSchedule item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAIPackageSchedule item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -854,12 +854,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IAIPackageSchedule item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PSDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -894,7 +894,6 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageSchedule.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Month = item.Month == rhs.Month;
             ret.DayOfWeek = item.DayOfWeek == rhs.DayOfWeek;
             ret.Day = item.Day == rhs.Day;
@@ -1146,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageScheduleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AIPackageScheduleBinaryWriteTranslation Instance = new AIPackageScheduleBinaryWriteTranslation();
+        public static readonly AIPackageScheduleBinaryWriteTranslation Instance = new AIPackageScheduleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAIPackageScheduleGetter item,
@@ -1168,12 +1167,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IAIPackageScheduleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PSDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1185,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAIPackageScheduleGetter)item,
@@ -1197,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class AIPackageScheduleBinaryCreateTranslation
     {
-        public readonly static AIPackageScheduleBinaryCreateTranslation Instance = new AIPackageScheduleBinaryCreateTranslation();
+        public static readonly AIPackageScheduleBinaryCreateTranslation Instance = new AIPackageScheduleBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAIPackageSchedule item,
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAIPackageScheduleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageScheduleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1269,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1301,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IAIPackageScheduleGetter AIPackageScheduleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIPackageScheduleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1319,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IAIPackageScheduleGetter AIPackageScheduleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AIPackageScheduleFactory(
                 stream: new OverlayStream(slice, package),

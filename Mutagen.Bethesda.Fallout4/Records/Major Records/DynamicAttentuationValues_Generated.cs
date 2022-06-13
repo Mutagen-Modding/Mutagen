@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DynamicAttentuationValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static DynamicAttentuationValues CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DynamicAttentuationValues();
             ((DynamicAttentuationValuesSetterCommon)((IDynamicAttentuationValuesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DynamicAttentuationValues item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDynamicAttentuationValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DynamicAttentuationValuesSetterCommon)((IDynamicAttentuationValuesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1113,12 +1113,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDynamicAttentuationValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ATTN),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1153,7 +1153,6 @@ namespace Mutagen.Bethesda.Fallout4
             DynamicAttentuationValues.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FadeInDistanceStart = item.FadeInDistanceStart.EqualsWithin(rhs.FadeInDistanceStart);
             ret.FadeInDistanceEnd = item.FadeInDistanceEnd.EqualsWithin(rhs.FadeInDistanceEnd);
             ret.FadeOutDistanceStart = item.FadeOutDistanceStart.EqualsWithin(rhs.FadeOutDistanceStart);
@@ -1503,7 +1502,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DynamicAttentuationValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DynamicAttentuationValuesBinaryWriteTranslation Instance = new DynamicAttentuationValuesBinaryWriteTranslation();
+        public static readonly DynamicAttentuationValuesBinaryWriteTranslation Instance = new DynamicAttentuationValuesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDynamicAttentuationValuesGetter item,
@@ -1534,12 +1533,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IDynamicAttentuationValuesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ATTN),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1551,7 +1550,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDynamicAttentuationValuesGetter)item,
@@ -1563,7 +1562,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DynamicAttentuationValuesBinaryCreateTranslation
     {
-        public readonly static DynamicAttentuationValuesBinaryCreateTranslation Instance = new DynamicAttentuationValuesBinaryCreateTranslation();
+        public static readonly DynamicAttentuationValuesBinaryCreateTranslation Instance = new DynamicAttentuationValuesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDynamicAttentuationValues item,
@@ -1594,7 +1593,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IDynamicAttentuationValuesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DynamicAttentuationValuesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1638,7 +1637,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DynamicAttentuationValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1677,7 +1676,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDynamicAttentuationValuesGetter DynamicAttentuationValuesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DynamicAttentuationValuesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1695,7 +1694,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDynamicAttentuationValuesGetter DynamicAttentuationValuesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DynamicAttentuationValuesFactory(
                 stream: new OverlayStream(slice, package),

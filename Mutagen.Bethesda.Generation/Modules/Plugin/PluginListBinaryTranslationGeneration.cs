@@ -224,7 +224,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 await args.Add(async (gen) =>
                 {
                     var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                    gen.AppendLine($"transl: ({nameof(MutagenWriter)} subWriter, {typeName} subItem{(needsMasters ? $", {nameof(TypedWriteParams)}? conv" : null)}) =>");
+                    gen.AppendLine($"transl: ({nameof(MutagenWriter)} subWriter, {typeName} subItem{(needsMasters ? $", {nameof(TypedWriteParams)} conv" : null)}) =>");
                     using (gen.CurlyBrace())
                     {
                         var major = loqui != null && await loqui.TargetObjectGeneration.IsMajorRecord();
@@ -484,7 +484,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                             }
                             else
                             {
-                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", [MaybeNullWhen(false)] out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
+                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", [MaybeNullWhen(false)] out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(TypedParseParams)} translationParams" : null)}) =>");
                                 using (gen.CurlyBrace())
                                 {
                                     subGen.GenerateCopyInRet(
@@ -505,7 +505,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         }
                         else
                         {
-                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", [MaybeNullWhen(false)] out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
+                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", [MaybeNullWhen(false)] out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(TypedParseParams)} translationParams" : null)}) =>");
                             using (gen.CurlyBrace())
                             {
                                 gen.AppendLine("switch (header.TypeInt)");

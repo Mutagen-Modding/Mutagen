@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MessageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MessageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Message CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Message();
             ((MessageSetterCommon)((IMessageGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Message item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMessageInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MessageSetterCommon)((IMessageGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IMessageInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMessageInternal>(
                 record: item,
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Message)item,
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Message)item,
@@ -1221,7 +1221,6 @@ namespace Mutagen.Bethesda.Skyrim
             Message.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.INAM = MemoryExtensions.SequenceEqual(item.INAM.Span, rhs.INAM.Span);
@@ -1744,12 +1743,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MessageBinaryWriteTranslation Instance = new MessageBinaryWriteTranslation();
+        public new static readonly MessageBinaryWriteTranslation Instance = new MessageBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMessageGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1787,7 +1786,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMessageButtonGetter>.Instance.Write(
                 writer: writer,
                 items: item.MenuButtons,
-                transl: (MutagenWriter subWriter, IMessageButtonGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IMessageButtonGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((MessageButtonBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1800,7 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IMessageGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1828,7 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMessageGetter)item,
@@ -1839,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMessageGetter)item,
@@ -1850,7 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMessageGetter)item,
@@ -1862,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class MessageBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static MessageBinaryCreateTranslation Instance = new MessageBinaryCreateTranslation();
+        public new static readonly MessageBinaryCreateTranslation Instance = new MessageBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MESG;
         public static void FillBinaryStructs(
@@ -1881,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1989,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MessageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MessageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2051,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMessageGetter MessageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new MessageBinaryOverlay(
@@ -2078,7 +2077,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMessageGetter MessageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MessageFactory(
                 stream: new OverlayStream(slice, package),
@@ -2093,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValuePerkNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ActorValuePerkNode CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActorValuePerkNode();
             ((ActorValuePerkNodeSetterCommon)((IActorValuePerkNodeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ActorValuePerkNode item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IActorValuePerkNode item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ActorValuePerkNodeSetterCommon)((IActorValuePerkNodeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IActorValuePerkNode item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1169,7 +1169,6 @@ namespace Mutagen.Bethesda.Skyrim
             ActorValuePerkNode.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Perk = item.Perk.Equals(rhs.Perk);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.PerkGridX = item.PerkGridX == rhs.PerkGridX;
@@ -1539,12 +1538,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActorValuePerkNodeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ActorValuePerkNodeBinaryWriteTranslation Instance = new ActorValuePerkNodeBinaryWriteTranslation();
+        public static readonly ActorValuePerkNodeBinaryWriteTranslation Instance = new ActorValuePerkNodeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IActorValuePerkNodeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1588,7 +1587,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IActorValuePerkNodeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1599,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IActorValuePerkNodeGetter)item,
@@ -1611,7 +1610,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ActorValuePerkNodeBinaryCreateTranslation
     {
-        public readonly static ActorValuePerkNodeBinaryCreateTranslation Instance = new ActorValuePerkNodeBinaryCreateTranslation();
+        public static readonly ActorValuePerkNodeBinaryCreateTranslation Instance = new ActorValuePerkNodeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IActorValuePerkNode item,
@@ -1626,7 +1625,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1705,7 +1704,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IActorValuePerkNodeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValuePerkNodeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1750,7 +1749,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValuePerkNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1810,7 +1809,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IActorValuePerkNodeGetter ActorValuePerkNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActorValuePerkNodeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1828,7 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IActorValuePerkNodeGetter ActorValuePerkNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ActorValuePerkNodeFactory(
                 stream: new OverlayStream(slice, package),
@@ -1843,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

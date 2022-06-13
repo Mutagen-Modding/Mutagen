@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructableDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static DestructableData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DestructableData();
             ((DestructableDataSetterCommon)((IDestructableDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DestructableData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDestructableData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DestructableDataSetterCommon)((IDestructableDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDestructableData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DEST),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Fallout4
             DestructableData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Health = item.Health == rhs.Health;
             ret.DESTCount = item.DESTCount == rhs.DESTCount;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DestructableDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DestructableDataBinaryWriteTranslation Instance = new DestructableDataBinaryWriteTranslation();
+        public static readonly DestructableDataBinaryWriteTranslation Instance = new DestructableDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDestructableDataGetter item,
@@ -1113,12 +1112,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IDestructableDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DEST),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1130,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDestructableDataGetter)item,
@@ -1142,7 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DestructableDataBinaryCreateTranslation
     {
-        public readonly static DestructableDataBinaryCreateTranslation Instance = new DestructableDataBinaryCreateTranslation();
+        public static readonly DestructableDataBinaryCreateTranslation Instance = new DestructableDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDestructableData item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IDestructableDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructableDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1211,7 +1210,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructableDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1242,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDestructableDataGetter DestructableDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DestructableDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1260,7 +1259,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDestructableDataGetter DestructableDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DestructableDataFactory(
                 stream: new OverlayStream(slice, package),

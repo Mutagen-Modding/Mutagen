@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MasterReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region Binary Create
         public static MasterReference CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MasterReference();
             ((MasterReferenceSetterCommon)((IMasterReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MasterReference item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static void CopyInFromBinary(
             this IMasterReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public virtual void CopyInFromBinary(
             IMasterReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -782,7 +782,6 @@ namespace Mutagen.Bethesda.Plugins.Records
             MasterReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Master = item.Master == rhs.Master;
             ret.FileSize = item.FileSize == rhs.FileSize;
         }
@@ -992,12 +991,12 @@ namespace Mutagen.Bethesda.Plugins.Records
 {
     public partial class MasterReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MasterReferenceBinaryWriteTranslation Instance = new MasterReferenceBinaryWriteTranslation();
+        public static readonly MasterReferenceBinaryWriteTranslation Instance = new MasterReferenceBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMasterReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             ModKeyBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1012,7 +1011,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public void Write(
             MutagenWriter writer,
             IMasterReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1023,7 +1022,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMasterReferenceGetter)item,
@@ -1035,7 +1034,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
     internal partial class MasterReferenceBinaryCreateTranslation
     {
-        public readonly static MasterReferenceBinaryCreateTranslation Instance = new MasterReferenceBinaryCreateTranslation();
+        public static readonly MasterReferenceBinaryCreateTranslation Instance = new MasterReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMasterReference item,
@@ -1050,7 +1049,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1084,7 +1083,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static void WriteToBinary(
             this IMasterReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MasterReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MasterReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1163,7 +1162,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IMasterReferenceGetter MasterReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MasterReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1181,7 +1180,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IMasterReferenceGetter MasterReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MasterReferenceFactory(
                 stream: new OverlayStream(slice, package),
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

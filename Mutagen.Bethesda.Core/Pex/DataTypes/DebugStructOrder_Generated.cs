@@ -787,7 +787,6 @@ namespace Mutagen.Bethesda.Pex
             DebugStructOrder.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectName = string.Equals(item.ObjectName, rhs.ObjectName);
             ret.OrderName = string.Equals(item.OrderName, rhs.OrderName);
             ret.Names = item.Names.CollectionEqualsHelper(

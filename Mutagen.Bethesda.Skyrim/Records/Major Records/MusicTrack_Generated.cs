@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MusicTrackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static MusicTrack CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MusicTrack();
             ((MusicTrackSetterCommon)((IMusicTrackGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MusicTrack item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMusicTrackInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MusicTrackSetterCommon)((IMusicTrackGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IMusicTrackInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMusicTrackInternal>(
                 record: item,
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MusicTrack)item,
@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MusicTrack)item,
@@ -1405,7 +1405,6 @@ namespace Mutagen.Bethesda.Skyrim
             MusicTrack.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
             ret.FadeOut = item.FadeOut.EqualsWithin(rhs.FadeOut);
@@ -2086,12 +2085,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MusicTrackBinaryWriteTranslation Instance = new MusicTrackBinaryWriteTranslation();
+        public new static readonly MusicTrackBinaryWriteTranslation Instance = new MusicTrackBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMusicTrackGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2137,7 +2136,7 @@ namespace Mutagen.Bethesda.Skyrim
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2149,7 +2148,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Tracks,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IMusicTrackGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMusicTrackGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2160,7 +2159,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IMusicTrackGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2188,7 +2187,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMusicTrackGetter)item,
@@ -2199,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMusicTrackGetter)item,
@@ -2210,7 +2209,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMusicTrackGetter)item,
@@ -2222,7 +2221,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class MusicTrackBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
+        public new static readonly MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MUST;
         public static void FillBinaryStructs(
@@ -2241,7 +2240,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2369,7 +2368,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MusicTrackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2425,7 +2424,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMusicTrackGetter MusicTrackFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new MusicTrackBinaryOverlay(
@@ -2452,7 +2451,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMusicTrackGetter MusicTrackFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MusicTrackFactory(
                 stream: new OverlayStream(slice, package),
@@ -2467,7 +2466,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

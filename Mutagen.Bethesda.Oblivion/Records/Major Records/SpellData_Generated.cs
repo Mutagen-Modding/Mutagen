@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpellDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static SpellData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SpellData();
             ((SpellDataSetterCommon)((ISpellDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SpellData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISpellData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SpellDataSetterCommon)((ISpellDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ISpellData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SPIT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Oblivion
             SpellData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Cost = item.Cost == rhs.Cost;
             ret.Level = item.Level == rhs.Level;
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SpellDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SpellDataBinaryWriteTranslation Instance = new SpellDataBinaryWriteTranslation();
+        public static readonly SpellDataBinaryWriteTranslation Instance = new SpellDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISpellDataGetter item,
@@ -1119,12 +1118,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ISpellDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SPIT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1136,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISpellDataGetter)item,
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class SpellDataBinaryCreateTranslation
     {
-        public readonly static SpellDataBinaryCreateTranslation Instance = new SpellDataBinaryCreateTranslation();
+        public static readonly SpellDataBinaryCreateTranslation Instance = new SpellDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISpellData item,
@@ -1177,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ISpellDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpellDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1221,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpellDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISpellDataGetter SpellDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SpellDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1270,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISpellDataGetter SpellDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SpellDataFactory(
                 stream: new OverlayStream(slice, package),

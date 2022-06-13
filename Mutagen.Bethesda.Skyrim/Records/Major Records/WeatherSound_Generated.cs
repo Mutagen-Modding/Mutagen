@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeatherSound CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherSound();
             ((WeatherSoundSetterCommon)((IWeatherSoundGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherSound item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherSoundSetterCommon)((IWeatherSoundGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -759,12 +759,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IWeatherSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Skyrim
             WeatherSound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Type = item.Type == rhs.Type;
         }
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherSoundBinaryWriteTranslation Instance = new WeatherSoundBinaryWriteTranslation();
+        public static readonly WeatherSoundBinaryWriteTranslation Instance = new WeatherSoundBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherSoundGetter item,
@@ -1028,12 +1027,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IWeatherSoundGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1045,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherSoundGetter)item,
@@ -1057,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class WeatherSoundBinaryCreateTranslation
     {
-        public readonly static WeatherSoundBinaryCreateTranslation Instance = new WeatherSoundBinaryCreateTranslation();
+        public static readonly WeatherSoundBinaryCreateTranslation Instance = new WeatherSoundBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherSound item,
@@ -1080,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeatherSoundGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1125,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1154,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherSoundGetter WeatherSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherSoundBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1172,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherSoundGetter WeatherSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherSoundFactory(
                 stream: new OverlayStream(slice, package),

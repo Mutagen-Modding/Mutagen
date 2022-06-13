@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static WeatherData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherData();
             ((WeatherDataSetterCommon)((IWeatherDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IWeatherData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherDataSetterCommon)((IWeatherDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1151,12 +1151,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IWeatherData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1191,7 +1191,6 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.WindSpeed = item.WindSpeed == rhs.WindSpeed;
             ret.CloudSpeedLower = item.CloudSpeedLower == rhs.CloudSpeedLower;
             ret.CloudSpeedUpper = item.CloudSpeedUpper == rhs.CloudSpeedUpper;
@@ -1555,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeatherDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherDataBinaryWriteTranslation Instance = new WeatherDataBinaryWriteTranslation();
+        public static readonly WeatherDataBinaryWriteTranslation Instance = new WeatherDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherDataGetter item,
@@ -1585,12 +1584,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IWeatherDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1602,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherDataGetter)item,
@@ -1614,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class WeatherDataBinaryCreateTranslation
     {
-        public readonly static WeatherDataBinaryCreateTranslation Instance = new WeatherDataBinaryCreateTranslation();
+        public static readonly WeatherDataBinaryCreateTranslation Instance = new WeatherDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherData item,
@@ -1648,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IWeatherDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1692,7 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1732,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IWeatherDataGetter WeatherDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1750,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IWeatherDataGetter WeatherDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherDataFactory(
                 stream: new OverlayStream(slice, package),

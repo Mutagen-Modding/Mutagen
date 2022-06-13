@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IGlobalInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -720,14 +720,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IGlobalInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Global)item,
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Global)item,
@@ -773,7 +773,6 @@ namespace Mutagen.Bethesda.Skyrim
             Global.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1146,12 +1145,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GlobalBinaryWriteTranslation Instance = new GlobalBinaryWriteTranslation();
+        public new static readonly GlobalBinaryWriteTranslation Instance = new GlobalBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IGlobalGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1178,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             IGlobalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1206,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGlobalGetter)item,
@@ -1217,7 +1216,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGlobalGetter)item,
@@ -1228,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGlobalGetter)item,
@@ -1240,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class GlobalBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
+        public new static readonly GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
         public static ParseResult FillBinaryRecordTypes(
@@ -1250,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1312,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1350,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

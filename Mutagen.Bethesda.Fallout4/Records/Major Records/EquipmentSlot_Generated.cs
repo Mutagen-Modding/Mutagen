@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EquipmentSlotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static EquipmentSlot CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EquipmentSlot();
             ((EquipmentSlotSetterCommon)((IEquipmentSlotGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EquipmentSlot item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IEquipmentSlot item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EquipmentSlotSetterCommon)((IEquipmentSlotGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IEquipmentSlot item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
             EquipmentSlot.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Slot = item.Slot.Equals(rhs.Slot);
             ret.Node = string.Equals(item.Node, rhs.Node);
         }
@@ -1017,12 +1016,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class EquipmentSlotBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EquipmentSlotBinaryWriteTranslation Instance = new EquipmentSlotBinaryWriteTranslation();
+        public static readonly EquipmentSlotBinaryWriteTranslation Instance = new EquipmentSlotBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IEquipmentSlotGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IEquipmentSlotGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1049,7 +1048,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEquipmentSlotGetter)item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class EquipmentSlotBinaryCreateTranslation
     {
-        public readonly static EquipmentSlotBinaryCreateTranslation Instance = new EquipmentSlotBinaryCreateTranslation();
+        public static readonly EquipmentSlotBinaryCreateTranslation Instance = new EquipmentSlotBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEquipmentSlot item,
@@ -1076,7 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1113,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IEquipmentSlotGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EquipmentSlotBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1158,7 +1157,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EquipmentSlotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1193,7 +1192,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IEquipmentSlotGetter EquipmentSlotFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EquipmentSlotBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1211,7 +1210,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IEquipmentSlotGetter EquipmentSlotFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return EquipmentSlotFactory(
                 stream: new OverlayStream(slice, package),
@@ -1226,7 +1225,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

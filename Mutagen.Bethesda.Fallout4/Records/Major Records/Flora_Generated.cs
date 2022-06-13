@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => FloraBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FloraBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Flora CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Flora();
             ((FloraSetterCommon)((IFloraGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Flora item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFloraInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1658,7 +1658,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IFloraInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IFloraInternal>(
                 record: item,
@@ -1671,7 +1671,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Flora)item,
@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Flora)item,
@@ -1717,7 +1717,6 @@ namespace Mutagen.Bethesda.Fallout4
             Flora.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -2598,12 +2597,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static FloraBinaryWriteTranslation Instance = new FloraBinaryWriteTranslation();
+        public new static readonly FloraBinaryWriteTranslation Instance = new FloraBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFloraGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2651,7 +2650,7 @@ namespace Mutagen.Bethesda.Fallout4
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2661,7 +2660,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.Properties,
                 recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
-                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2703,7 +2702,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IFloraGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2731,7 +2730,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -2742,7 +2741,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -2753,7 +2752,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -2765,7 +2764,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class FloraBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static FloraBinaryCreateTranslation Instance = new FloraBinaryCreateTranslation();
+        public new static readonly FloraBinaryCreateTranslation Instance = new FloraBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLOR;
         public static void FillBinaryStructs(
@@ -2784,7 +2783,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2941,7 +2940,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => FloraBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FloraBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3023,7 +3022,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFloraGetter FloraFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new FloraBinaryOverlay(
@@ -3050,7 +3049,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFloraGetter FloraFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FloraFactory(
                 stream: new OverlayStream(slice, package),
@@ -3065,7 +3064,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

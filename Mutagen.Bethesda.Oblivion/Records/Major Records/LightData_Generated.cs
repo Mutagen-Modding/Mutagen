@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LightData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LightData();
             ((LightDataSetterCommon)((ILightDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LightData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILightData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LightDataSetterCommon)((ILightDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1017,12 +1017,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILightData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1057,7 +1057,6 @@ namespace Mutagen.Bethesda.Oblivion
             LightData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Time = item.Time == rhs.Time;
             ret.Radius = item.Radius == rhs.Radius;
@@ -1366,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LightDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LightDataBinaryWriteTranslation Instance = new LightDataBinaryWriteTranslation();
+        public static readonly LightDataBinaryWriteTranslation Instance = new LightDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILightDataGetter item,
@@ -1399,12 +1398,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILightDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1416,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILightDataGetter)item,
@@ -1428,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LightDataBinaryCreateTranslation
     {
-        public readonly static LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
+        public static readonly LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILightData item,
@@ -1462,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILightDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1506,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1542,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILightDataGetter LightDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LightDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1563,7 +1562,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILightDataGetter LightDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LightDataFactory(
                 stream: new OverlayStream(slice, package),

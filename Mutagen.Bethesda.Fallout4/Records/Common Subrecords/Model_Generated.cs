@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Model CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Model();
             ((ModelSetterCommon)((IModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Model item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             ISimpleModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Model)item,
@@ -747,7 +747,6 @@ namespace Mutagen.Bethesda.Fallout4
             Model.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1016,12 +1015,12 @@ namespace Mutagen.Bethesda.Fallout4
         SimpleModelBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
+        public new static readonly ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             SimpleModelBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1036,7 +1035,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1047,7 +1046,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IModelGetter)item,
@@ -1058,7 +1057,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             ISimpleModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IModelGetter)item,
@@ -1070,7 +1069,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ModelBinaryCreateTranslation : SimpleModelBinaryCreateTranslation
     {
-        public new readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
+        public new static readonly ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
             IModel item,
@@ -1079,7 +1078,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1137,7 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1168,7 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IModelGetter ModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1186,7 +1185,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IModelGetter ModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ModelFactory(
                 stream: new OverlayStream(slice, package),
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

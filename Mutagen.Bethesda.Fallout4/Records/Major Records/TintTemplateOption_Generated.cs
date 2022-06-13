@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintTemplateOptionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static TintTemplateOption CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintTemplateOption();
             ((TintTemplateOptionSetterCommon)((ITintTemplateOptionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TintTemplateOption item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ITintTemplateOption item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TintTemplateOptionSetterCommon)((ITintTemplateOptionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ITintTemplateOption item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1389,7 +1389,6 @@ namespace Mutagen.Bethesda.Fallout4
             TintTemplateOption.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Slot = item.Slot == rhs.Slot;
             ret.Index = item.Index == rhs.Index;
             ret.Name = object.Equals(item.Name, rhs.Name);
@@ -1840,7 +1839,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TintTemplateOptionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TintTemplateOptionBinaryWriteTranslation Instance = new TintTemplateOptionBinaryWriteTranslation();
+        public static readonly TintTemplateOptionBinaryWriteTranslation Instance = new TintTemplateOptionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITintTemplateOptionGetter item,
@@ -1851,7 +1850,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             ITintTemplateOptionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.TETI)))
             {
@@ -1875,7 +1874,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1897,7 +1896,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.TemplateColors,
                 recordType: translationParams.ConvertToCustom(RecordTypes.TTEC),
-                transl: (MutagenWriter subWriter, ITintTemplateColorGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ITintTemplateColorGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((TintTemplateColorBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1914,7 +1913,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ITintTemplateOptionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1928,7 +1927,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITintTemplateOptionGetter)item,
@@ -1940,7 +1939,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class TintTemplateOptionBinaryCreateTranslation
     {
-        public readonly static TintTemplateOptionBinaryCreateTranslation Instance = new TintTemplateOptionBinaryCreateTranslation();
+        public static readonly TintTemplateOptionBinaryCreateTranslation Instance = new TintTemplateOptionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITintTemplateOption item,
@@ -1955,7 +1954,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2047,7 +2046,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ITintTemplateOptionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintTemplateOptionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2092,7 +2091,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintTemplateOptionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2158,7 +2157,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITintTemplateOptionGetter TintTemplateOptionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintTemplateOptionBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -2176,7 +2175,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITintTemplateOptionGetter TintTemplateOptionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TintTemplateOptionFactory(
                 stream: new OverlayStream(slice, package),
@@ -2191,7 +2190,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

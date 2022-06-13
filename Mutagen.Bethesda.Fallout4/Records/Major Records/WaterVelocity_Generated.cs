@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterVelocityBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static WaterVelocity CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WaterVelocity();
             ((WaterVelocitySetterCommon)((IWaterVelocityGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WaterVelocity item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IWaterVelocity item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WaterVelocitySetterCommon)((IWaterVelocityGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -825,12 +825,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IWaterVelocity item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XWCU),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -865,7 +865,6 @@ namespace Mutagen.Bethesda.Fallout4
             WaterVelocity.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Offset = item.Offset.Equals(rhs.Offset);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Angle = item.Angle.Equals(rhs.Angle);
@@ -1103,7 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WaterVelocityBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WaterVelocityBinaryWriteTranslation Instance = new WaterVelocityBinaryWriteTranslation();
+        public static readonly WaterVelocityBinaryWriteTranslation Instance = new WaterVelocityBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWaterVelocityGetter item,
@@ -1124,12 +1123,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IWaterVelocityGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XWCU),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWaterVelocityGetter)item,
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class WaterVelocityBinaryCreateTranslation
     {
-        public readonly static WaterVelocityBinaryCreateTranslation Instance = new WaterVelocityBinaryCreateTranslation();
+        public static readonly WaterVelocityBinaryCreateTranslation Instance = new WaterVelocityBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWaterVelocity item,
@@ -1176,7 +1175,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IWaterVelocityGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterVelocityBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1220,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterVelocityBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1251,7 +1250,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWaterVelocityGetter WaterVelocityFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WaterVelocityBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1269,7 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWaterVelocityGetter WaterVelocityFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WaterVelocityFactory(
                 stream: new OverlayStream(slice, package),

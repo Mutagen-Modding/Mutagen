@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreateReferenceToObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CreateReferenceToObject CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CreateReferenceToObject();
             ((CreateReferenceToObjectSetterCommon)((ICreateReferenceToObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CreateReferenceToObject item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICreateReferenceToObject item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CreateReferenceToObjectSetterCommon)((ICreateReferenceToObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -878,7 +878,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICreateReferenceToObject item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -915,7 +915,6 @@ namespace Mutagen.Bethesda.Skyrim
             CreateReferenceToObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Object = item.Object.Equals(rhs.Object);
             ret.AliasID = item.AliasID == rhs.AliasID;
             ret.Create = item.Create == rhs.Create;
@@ -1168,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CreateReferenceToObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CreateReferenceToObjectBinaryWriteTranslation Instance = new CreateReferenceToObjectBinaryWriteTranslation();
+        public static readonly CreateReferenceToObjectBinaryWriteTranslation Instance = new CreateReferenceToObjectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICreateReferenceToObjectGetter item,
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             ICreateReferenceToObjectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICreateReferenceToObjectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1217,7 +1216,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICreateReferenceToObjectGetter)item,
@@ -1229,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CreateReferenceToObjectBinaryCreateTranslation
     {
-        public readonly static CreateReferenceToObjectBinaryCreateTranslation Instance = new CreateReferenceToObjectBinaryCreateTranslation();
+        public static readonly CreateReferenceToObjectBinaryCreateTranslation Instance = new CreateReferenceToObjectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICreateReferenceToObject item,
@@ -1244,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICreateReferenceToObjectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreateReferenceToObjectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1335,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreateReferenceToObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1382,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICreateReferenceToObjectGetter CreateReferenceToObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CreateReferenceToObjectBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1400,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICreateReferenceToObjectGetter CreateReferenceToObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CreateReferenceToObjectFactory(
                 stream: new OverlayStream(slice, package),
@@ -1415,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

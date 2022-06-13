@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLodBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static DistantLod CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DistantLod();
             ((DistantLodSetterCommon)((IDistantLodGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DistantLod item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDistantLod item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DistantLodSetterCommon)((IDistantLodGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDistantLod item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -780,7 +780,6 @@ namespace Mutagen.Bethesda.Fallout4
             DistantLod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Mesh = string.Equals(item.Mesh, rhs.Mesh);
             ret.Data = MemoryExtensions.SequenceEqual(item.Data.Span, rhs.Data.Span);
         }
@@ -990,7 +989,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DistantLodBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DistantLodBinaryWriteTranslation Instance = new DistantLodBinaryWriteTranslation();
+        public static readonly DistantLodBinaryWriteTranslation Instance = new DistantLodBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDistantLodGetter item,
@@ -1008,7 +1007,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IDistantLodGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1018,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDistantLodGetter)item,
@@ -1030,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DistantLodBinaryCreateTranslation
     {
-        public readonly static DistantLodBinaryCreateTranslation Instance = new DistantLodBinaryCreateTranslation();
+        public static readonly DistantLodBinaryCreateTranslation Instance = new DistantLodBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDistantLod item,
@@ -1054,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IDistantLodGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLodBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1098,7 +1097,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLodBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1133,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDistantLodGetter DistantLodFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DistantLodBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDistantLodGetter DistantLodFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DistantLodFactory(
                 stream: new OverlayStream(slice, package),

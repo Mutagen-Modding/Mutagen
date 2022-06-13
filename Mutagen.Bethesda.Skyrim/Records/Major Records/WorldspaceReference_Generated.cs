@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WorldspaceReference CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceReference();
             ((WorldspaceReferenceSetterCommon)((IWorldspaceReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceReference item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWorldspaceReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceReferenceSetterCommon)((IWorldspaceReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IWorldspaceReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -788,7 +788,6 @@ namespace Mutagen.Bethesda.Skyrim
             WorldspaceReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Position = item.Position.Equals(rhs.Position);
         }
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceReferenceBinaryWriteTranslation Instance = new WorldspaceReferenceBinaryWriteTranslation();
+        public static readonly WorldspaceReferenceBinaryWriteTranslation Instance = new WorldspaceReferenceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceReferenceGetter item,
@@ -1016,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IWorldspaceReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1026,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceReferenceGetter)item,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class WorldspaceReferenceBinaryCreateTranslation
     {
-        public readonly static WorldspaceReferenceBinaryCreateTranslation Instance = new WorldspaceReferenceBinaryCreateTranslation();
+        public static readonly WorldspaceReferenceBinaryCreateTranslation Instance = new WorldspaceReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceReference item,
@@ -1059,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1133,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWorldspaceReferenceGetter WorldspaceReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1150,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWorldspaceReferenceGetter WorldspaceReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceReferenceFactory(
                 stream: new OverlayStream(slice, package),

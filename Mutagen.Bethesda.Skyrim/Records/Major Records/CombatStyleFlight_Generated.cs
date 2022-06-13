@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleFlightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CombatStyleFlight CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleFlight();
             ((CombatStyleFlightSetterCommon)((ICombatStyleFlightGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CombatStyleFlight item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICombatStyleFlight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CombatStyleFlightSetterCommon)((ICombatStyleFlightGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1013,12 +1013,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICombatStyleFlight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CSFL),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1053,7 +1053,6 @@ namespace Mutagen.Bethesda.Skyrim
             CombatStyleFlight.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.HoverChance = item.HoverChance.EqualsWithin(rhs.HoverChance);
             ret.DiveBombChance = item.DiveBombChance.EqualsWithin(rhs.DiveBombChance);
@@ -1365,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleFlightBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CombatStyleFlightBinaryWriteTranslation Instance = new CombatStyleFlightBinaryWriteTranslation();
+        public static readonly CombatStyleFlightBinaryWriteTranslation Instance = new CombatStyleFlightBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICombatStyleFlightGetter item,
@@ -1412,12 +1411,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICombatStyleFlightGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CSFL),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1429,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICombatStyleFlightGetter)item,
@@ -1441,7 +1440,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CombatStyleFlightBinaryCreateTranslation
     {
-        public readonly static CombatStyleFlightBinaryCreateTranslation Instance = new CombatStyleFlightBinaryCreateTranslation();
+        public static readonly CombatStyleFlightBinaryCreateTranslation Instance = new CombatStyleFlightBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICombatStyleFlight item,
@@ -1488,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICombatStyleFlightGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleFlightBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1532,7 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleFlightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1568,7 +1567,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICombatStyleFlightGetter CombatStyleFlightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleFlightBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1601,7 +1600,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICombatStyleFlightGetter CombatStyleFlightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CombatStyleFlightFactory(
                 stream: new OverlayStream(slice, package),

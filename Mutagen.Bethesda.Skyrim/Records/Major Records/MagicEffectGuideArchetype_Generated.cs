@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MagicEffectGuideArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectGuideArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static MagicEffectGuideArchetype CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectGuideArchetype();
             ((MagicEffectGuideArchetypeSetterCommon)((IMagicEffectGuideArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MagicEffectGuideArchetype item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMagicEffectGuideArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MagicEffectGuideArchetypeSetterCommon)((IMagicEffectGuideArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IMagicEffectGuideArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMagicEffectArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MagicEffectGuideArchetype)item,
@@ -667,7 +667,6 @@ namespace Mutagen.Bethesda.Skyrim
             MagicEffectGuideArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -934,12 +933,12 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MagicEffectGuideArchetypeBinaryWriteTranslation Instance = new MagicEffectGuideArchetypeBinaryWriteTranslation();
+        public new static readonly MagicEffectGuideArchetypeBinaryWriteTranslation Instance = new MagicEffectGuideArchetypeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             IMagicEffectGuideArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
                 item: item,
@@ -949,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMagicEffectGuideArchetypeGetter)item,
@@ -960,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMagicEffectArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMagicEffectGuideArchetypeGetter)item,
@@ -972,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class MagicEffectGuideArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
-        public new readonly static MagicEffectGuideArchetypeBinaryCreateTranslation Instance = new MagicEffectGuideArchetypeBinaryCreateTranslation();
+        public new static readonly MagicEffectGuideArchetypeBinaryCreateTranslation Instance = new MagicEffectGuideArchetypeBinaryCreateTranslation();
 
     }
 
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MagicEffectGuideArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectGuideArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1037,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMagicEffectGuideArchetypeGetter MagicEffectGuideArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectGuideArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1053,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMagicEffectGuideArchetypeGetter MagicEffectGuideArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MagicEffectGuideArchetypeFactory(
                 stream: new OverlayStream(slice, package),

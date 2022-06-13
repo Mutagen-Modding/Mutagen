@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectMapMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PlacedObjectMapMarker CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObjectMapMarker();
             ((PlacedObjectMapMarkerSetterCommon)((IPlacedObjectMapMarkerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedObjectMapMarker item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPlacedObjectMapMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedObjectMapMarkerSetterCommon)((IPlacedObjectMapMarkerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -901,7 +901,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPlacedObjectMapMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -938,7 +938,6 @@ namespace Mutagen.Bethesda.Fallout4
             PlacedObjectMapMarker.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Type = item.Type == rhs.Type;
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedObjectMapMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PlacedObjectMapMarkerBinaryWriteTranslation Instance = new PlacedObjectMapMarkerBinaryWriteTranslation();
+        public static readonly PlacedObjectMapMarkerBinaryWriteTranslation Instance = new PlacedObjectMapMarkerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedObjectMapMarkerGetter item,
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IPlacedObjectMapMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<PlacedObjectMapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
@@ -1227,7 +1226,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPlacedObjectMapMarkerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1241,7 +1240,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedObjectMapMarkerGetter)item,
@@ -1253,7 +1252,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PlacedObjectMapMarkerBinaryCreateTranslation
     {
-        public readonly static PlacedObjectMapMarkerBinaryCreateTranslation Instance = new PlacedObjectMapMarkerBinaryCreateTranslation();
+        public static readonly PlacedObjectMapMarkerBinaryCreateTranslation Instance = new PlacedObjectMapMarkerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPlacedObjectMapMarker item,
@@ -1268,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1317,7 +1316,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPlacedObjectMapMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectMapMarkerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1361,7 +1360,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectMapMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1412,7 +1411,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectMapMarkerGetter PlacedObjectMapMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObjectMapMarkerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1430,7 +1429,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectMapMarkerGetter PlacedObjectMapMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedObjectMapMarkerFactory(
                 stream: new OverlayStream(slice, package),
@@ -1445,7 +1444,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

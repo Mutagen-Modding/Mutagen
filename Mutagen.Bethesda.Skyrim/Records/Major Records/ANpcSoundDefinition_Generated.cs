@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcSoundDefinitionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IANpcSoundDefinition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ANpcSoundDefinitionSetterCommon)((IANpcSoundDefinitionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IANpcSoundDefinition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -688,7 +688,6 @@ namespace Mutagen.Bethesda.Skyrim
             ANpcSoundDefinition.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -870,19 +869,19 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ANpcSoundDefinitionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ANpcSoundDefinitionBinaryWriteTranslation Instance = new ANpcSoundDefinitionBinaryWriteTranslation();
+        public static readonly ANpcSoundDefinitionBinaryWriteTranslation Instance = new ANpcSoundDefinitionBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IANpcSoundDefinitionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IANpcSoundDefinitionGetter)item,
@@ -894,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ANpcSoundDefinitionBinaryCreateTranslation
     {
-        public readonly static ANpcSoundDefinitionBinaryCreateTranslation Instance = new ANpcSoundDefinitionBinaryCreateTranslation();
+        public static readonly ANpcSoundDefinitionBinaryCreateTranslation Instance = new ANpcSoundDefinitionBinaryCreateTranslation();
 
     }
 
@@ -907,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IANpcSoundDefinitionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcSoundDefinitionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -952,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcSoundDefinitionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

@@ -1136,7 +1136,6 @@ namespace Mutagen.Bethesda.Pex
             PexFile.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MajorVersion = item.MajorVersion == rhs.MajorVersion;
             ret.MinorVersion = item.MinorVersion == rhs.MinorVersion;
             ret.GameId = item.GameId == rhs.GameId;

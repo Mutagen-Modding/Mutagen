@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LeveledNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static LeveledNpc CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LeveledNpc();
             ((LeveledNpcSetterCommon)((ILeveledNpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LeveledNpc item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILeveledNpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LeveledNpcSetterCommon)((ILeveledNpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILeveledNpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILeveledNpcInternal>(
                 record: item,
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LeveledNpc)item,
@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LeveledNpc)item,
@@ -1188,7 +1188,6 @@ namespace Mutagen.Bethesda.Skyrim
             LeveledNpc.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1764,12 +1763,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LeveledNpcBinaryWriteTranslation Instance = new LeveledNpcBinaryWriteTranslation();
+        public new static readonly LeveledNpcBinaryWriteTranslation Instance = new LeveledNpcBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILeveledNpcGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1798,7 +1797,7 @@ namespace Mutagen.Bethesda.Skyrim
                 items: item.Entries,
                 counterType: RecordTypes.LLCT,
                 counterLength: 1,
-                transl: (MutagenWriter subWriter, ILeveledNpcEntryGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILeveledNpcEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LeveledNpcEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1818,7 +1817,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILeveledNpcGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1846,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILeveledNpcGetter)item,
@@ -1857,7 +1856,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILeveledNpcGetter)item,
@@ -1868,7 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILeveledNpcGetter)item,
@@ -1880,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LeveledNpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static LeveledNpcBinaryCreateTranslation Instance = new LeveledNpcBinaryCreateTranslation();
+        public new static readonly LeveledNpcBinaryCreateTranslation Instance = new LeveledNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVLN;
         public static void FillBinaryStructs(
@@ -1899,7 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1999,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LeveledNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2047,7 +2046,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILeveledNpcGetter LeveledNpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LeveledNpcBinaryOverlay(
@@ -2074,7 +2073,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILeveledNpcGetter LeveledNpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LeveledNpcFactory(
                 stream: new OverlayStream(slice, package),
@@ -2089,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

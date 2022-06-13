@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static WeaponDamageType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeaponDamageType();
             ((WeaponDamageTypeSetterCommon)((IWeaponDamageTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeaponDamageType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IWeaponDamageType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeaponDamageTypeSetterCommon)((IWeaponDamageTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -759,12 +759,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IWeaponDamageType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DAMA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
             WeaponDamageType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DamageType = item.DamageType.Equals(rhs.DamageType);
             ret.Amount = item.Amount == rhs.Amount;
         }
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeaponDamageTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeaponDamageTypeBinaryWriteTranslation Instance = new WeaponDamageTypeBinaryWriteTranslation();
+        public static readonly WeaponDamageTypeBinaryWriteTranslation Instance = new WeaponDamageTypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeaponDamageTypeGetter item,
@@ -1025,12 +1024,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IWeaponDamageTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DAMA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeaponDamageTypeGetter)item,
@@ -1054,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class WeaponDamageTypeBinaryCreateTranslation
     {
-        public readonly static WeaponDamageTypeBinaryCreateTranslation Instance = new WeaponDamageTypeBinaryCreateTranslation();
+        public static readonly WeaponDamageTypeBinaryCreateTranslation Instance = new WeaponDamageTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeaponDamageType item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IWeaponDamageTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDamageTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1120,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeaponDamageTypeGetter WeaponDamageTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeaponDamageTypeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeaponDamageTypeGetter WeaponDamageTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeaponDamageTypeFactory(
                 stream: new OverlayStream(slice, package),

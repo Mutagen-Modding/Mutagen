@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundRateOfFireBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static SoundRateOfFire CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundRateOfFire();
             ((SoundRateOfFireSetterCommon)((ISoundRateOfFireGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundRateOfFire item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISoundRateOfFire item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundRateOfFireSetterCommon)((ISoundRateOfFireGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISoundRateOfFire item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -791,7 +791,6 @@ namespace Mutagen.Bethesda.Fallout4
             SoundRateOfFire.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.RotationsPerMinute = item.RotationsPerMinute == rhs.RotationsPerMinute;
             ret.File = string.Equals(item.File, rhs.File);
         }
@@ -1009,12 +1008,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundRateOfFireBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundRateOfFireBinaryWriteTranslation Instance = new SoundRateOfFireBinaryWriteTranslation();
+        public static readonly SoundRateOfFireBinaryWriteTranslation Instance = new SoundRateOfFireBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISoundRateOfFireGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.ITMS)) { }
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -1032,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ISoundRateOfFireGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1043,7 +1042,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundRateOfFireGetter)item,
@@ -1055,7 +1054,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SoundRateOfFireBinaryCreateTranslation
     {
-        public readonly static SoundRateOfFireBinaryCreateTranslation Instance = new SoundRateOfFireBinaryCreateTranslation();
+        public static readonly SoundRateOfFireBinaryCreateTranslation Instance = new SoundRateOfFireBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundRateOfFire item,
@@ -1070,7 +1069,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1117,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ISoundRateOfFireGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundRateOfFireBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1161,7 +1160,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundRateOfFireBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundRateOfFireGetter SoundRateOfFireFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundRateOfFireBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundRateOfFireGetter SoundRateOfFireFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundRateOfFireFactory(
                 stream: new OverlayStream(slice, package),
@@ -1229,7 +1228,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

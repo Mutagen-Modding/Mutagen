@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StartSceneBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static StartScene CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StartScene();
             ((StartSceneSetterCommon)((IStartSceneGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out StartScene item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IStartScene item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((StartSceneSetterCommon)((IStartSceneGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IStartScene item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -964,7 +964,6 @@ namespace Mutagen.Bethesda.Fallout4
             StartScene.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Scene = item.Scene.Equals(rhs.Scene);
             ret.PhaseIndex = item.PhaseIndex == rhs.PhaseIndex;
             ret.StartPhaseForScene = string.Equals(item.StartPhaseForScene, rhs.StartPhaseForScene);
@@ -1264,12 +1263,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class StartSceneBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static StartSceneBinaryWriteTranslation Instance = new StartSceneBinaryWriteTranslation();
+        public static readonly StartSceneBinaryWriteTranslation Instance = new StartSceneBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IStartSceneGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1289,7 +1288,7 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1302,7 +1301,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IStartSceneGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1313,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IStartSceneGetter)item,
@@ -1325,7 +1324,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class StartSceneBinaryCreateTranslation
     {
-        public readonly static StartSceneBinaryCreateTranslation Instance = new StartSceneBinaryCreateTranslation();
+        public static readonly StartSceneBinaryCreateTranslation Instance = new StartSceneBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IStartScene item,
@@ -1340,7 +1339,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1399,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IStartSceneGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StartSceneBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1444,7 +1443,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StartSceneBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1484,7 +1483,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStartSceneGetter StartSceneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StartSceneBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1502,7 +1501,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IStartSceneGetter StartSceneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return StartSceneFactory(
                 stream: new OverlayStream(slice, package),
@@ -1517,7 +1516,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Debris CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Debris();
             ((DebrisSetterCommon)((IDebrisGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Debris item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDebrisInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DebrisSetterCommon)((IDebrisGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IDebrisInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IDebrisInternal>(
                 record: item,
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Debris)item,
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Debris)item,
@@ -915,7 +915,6 @@ namespace Mutagen.Bethesda.Skyrim
             Debris.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Models = item.Models.CollectionEqualsHelper(
                 rhs.Models,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1337,12 +1336,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DebrisBinaryWriteTranslation Instance = new DebrisBinaryWriteTranslation();
+        public new static readonly DebrisBinaryWriteTranslation Instance = new DebrisBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDebrisGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1351,7 +1350,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDebrisModelGetter>.Instance.Write(
                 writer: writer,
                 items: item.Models,
-                transl: (MutagenWriter subWriter, IDebrisModelGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IDebrisModelGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((DebrisModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1364,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IDebrisGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1392,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDebrisGetter)item,
@@ -1403,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDebrisGetter)item,
@@ -1414,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDebrisGetter)item,
@@ -1426,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class DebrisBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
+        public new static readonly DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DEBR;
         public static void FillBinaryStructs(
@@ -1445,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1507,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1537,7 +1536,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDebrisGetter DebrisFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new DebrisBinaryOverlay(
@@ -1564,7 +1563,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDebrisGetter DebrisFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DebrisFactory(
                 stream: new OverlayStream(slice, package),
@@ -1579,7 +1578,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

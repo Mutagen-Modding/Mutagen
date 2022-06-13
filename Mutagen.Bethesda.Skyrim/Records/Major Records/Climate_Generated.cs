@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClimateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Climate CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Climate();
             ((ClimateSetterCommon)((IClimateGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Climate item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IClimateInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ClimateSetterCommon)((IClimateGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IClimateInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IClimateInternal>(
                 record: item,
@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Climate)item,
@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Climate)item,
@@ -1372,7 +1372,6 @@ namespace Mutagen.Bethesda.Skyrim
             Climate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.WeatherTypes = item.WeatherTypes.CollectionEqualsHelper(
                 rhs.WeatherTypes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2013,7 +2012,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ClimateBinaryWriteTranslation Instance = new ClimateBinaryWriteTranslation();
+        public new static readonly ClimateBinaryWriteTranslation Instance = new ClimateBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IClimateGetter item,
@@ -2027,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IClimateGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2037,7 +2036,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.WeatherTypes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.WLST),
-                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2091,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IClimateGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2119,7 +2118,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IClimateGetter)item,
@@ -2130,7 +2129,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IClimateGetter)item,
@@ -2141,7 +2140,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IClimateGetter)item,
@@ -2153,7 +2152,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ClimateBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
+        public new static readonly ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLMT;
         public static void FillBinaryStructs(
@@ -2172,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2276,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClimateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2352,7 +2351,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IClimateGetter ClimateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new ClimateBinaryOverlay(
@@ -2379,7 +2378,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IClimateGetter ClimateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ClimateFactory(
                 stream: new OverlayStream(slice, package),
@@ -2394,7 +2393,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

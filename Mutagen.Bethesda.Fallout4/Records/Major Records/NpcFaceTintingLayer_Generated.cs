@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFaceTintingLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static NpcFaceTintingLayer CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcFaceTintingLayer();
             ((NpcFaceTintingLayerSetterCommon)((INpcFaceTintingLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcFaceTintingLayer item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -820,7 +820,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INpcFaceTintingLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcFaceTintingLayerSetterCommon)((INpcFaceTintingLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INpcFaceTintingLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1001,7 +1001,6 @@ namespace Mutagen.Bethesda.Fallout4
             NpcFaceTintingLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DataType = item.DataType == rhs.DataType;
             ret.Index = item.Index == rhs.Index;
             ret.Value = item.Value.EqualsWithin(rhs.Value);
@@ -1281,7 +1280,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcFaceTintingLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcFaceTintingLayerBinaryWriteTranslation Instance = new NpcFaceTintingLayerBinaryWriteTranslation();
+        public static readonly NpcFaceTintingLayerBinaryWriteTranslation Instance = new NpcFaceTintingLayerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcFaceTintingLayerGetter item,
@@ -1292,7 +1291,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             INpcFaceTintingLayerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.TETI)))
             {
@@ -1322,7 +1321,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INpcFaceTintingLayerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1336,7 +1335,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcFaceTintingLayerGetter)item,
@@ -1348,7 +1347,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NpcFaceTintingLayerBinaryCreateTranslation
     {
-        public readonly static NpcFaceTintingLayerBinaryCreateTranslation Instance = new NpcFaceTintingLayerBinaryCreateTranslation();
+        public static readonly NpcFaceTintingLayerBinaryCreateTranslation Instance = new NpcFaceTintingLayerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcFaceTintingLayer item,
@@ -1363,7 +1362,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1412,7 +1411,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this INpcFaceTintingLayerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFaceTintingLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1456,7 +1455,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFaceTintingLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1512,7 +1511,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcFaceTintingLayerGetter NpcFaceTintingLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcFaceTintingLayerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1530,7 +1529,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcFaceTintingLayerGetter NpcFaceTintingLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcFaceTintingLayerFactory(
                 stream: new OverlayStream(slice, package),
@@ -1545,7 +1544,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

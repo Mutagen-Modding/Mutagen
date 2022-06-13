@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Generation.Fields;
 using Noggog;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
@@ -105,7 +106,8 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             {
                 foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(
                              obj,
-                             TranslationDirection.Reader,
+                             TranslationDirection.Reader, 
+                             Context.Class,
                              new APILine(OutItemKey, $"out {obj.ObjectName} item")))
                 {
                     if (Public)
@@ -120,7 +122,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                 using (var args = sb.Call(
                            $"item = CreateFromBinary"))
                 {
-                    args.Add(this.MainAPI.PassArgs(obj, TranslationDirection.Reader));
+                    args.Add(this.MainAPI.PassArgs(obj, TranslationDirection.Reader, Context.Class, Context.Class));
                 }
                 sb.AppendLine($"return startPos != {ReaderMemberName}.Position;");
             }

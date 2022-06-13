@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PortalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Portal CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Portal();
             ((PortalSetterCommon)((IPortalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Portal item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPortal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PortalSetterCommon)((IPortalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPortal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -796,7 +796,6 @@ namespace Mutagen.Bethesda.Skyrim
             Portal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Origin = item.Origin.Equals(rhs.Origin);
             ret.Destination = item.Destination.Equals(rhs.Destination);
         }
@@ -1008,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PortalBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PortalBinaryWriteTranslation Instance = new PortalBinaryWriteTranslation();
+        public static readonly PortalBinaryWriteTranslation Instance = new PortalBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPortalGetter item,
@@ -1025,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPortalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1035,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPortalGetter)item,
@@ -1047,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PortalBinaryCreateTranslation
     {
-        public readonly static PortalBinaryCreateTranslation Instance = new PortalBinaryCreateTranslation();
+        public static readonly PortalBinaryCreateTranslation Instance = new PortalBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPortal item,
@@ -1068,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPortalGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PortalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1113,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PortalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1142,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPortalGetter PortalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PortalBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPortalGetter PortalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PortalFactory(
                 stream: new OverlayStream(slice, package),

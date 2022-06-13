@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => IngredientBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IngredientBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Ingredient CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Ingredient();
             ((IngredientSetterCommon)((IIngredientGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Ingredient item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IIngredientInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IngredientSetterCommon)((IIngredientGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IIngredientInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IIngredientInternal>(
                 record: item,
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Ingredient)item,
@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Ingredient)item,
@@ -1215,7 +1215,6 @@ namespace Mutagen.Bethesda.Oblivion
             Ingredient.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
@@ -1807,12 +1806,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static IngredientBinaryWriteTranslation Instance = new IngredientBinaryWriteTranslation();
+        public new static readonly IngredientBinaryWriteTranslation Instance = new IngredientBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IIngredientGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1853,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
-                transl: (MutagenWriter subWriter, IEffectGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IEffectGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((EffectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1866,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IIngredientGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1894,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIngredientGetter)item,
@@ -1905,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IIngredientGetter)item,
@@ -1916,7 +1915,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IIngredientGetter)item,
@@ -1928,7 +1927,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class IngredientBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static IngredientBinaryCreateTranslation Instance = new IngredientBinaryCreateTranslation();
+        public new static readonly IngredientBinaryCreateTranslation Instance = new IngredientBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.INGR;
         public static void FillBinaryStructs(
@@ -1947,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2051,7 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => IngredientBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IngredientBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2106,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IIngredientGetter IngredientFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new IngredientBinaryOverlay(
@@ -2133,7 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IIngredientGetter IngredientFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return IngredientFactory(
                 stream: new OverlayStream(slice, package),
@@ -2148,7 +2147,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

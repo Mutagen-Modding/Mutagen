@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => LandTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static LandTexture CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LandTexture();
             ((LandTextureSetterCommon)((ILandTextureGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LandTexture item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILandTextureInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILandTextureInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILandTextureInternal>(
                 record: item,
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LandTexture)item,
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LandTexture)item,
@@ -1033,7 +1033,6 @@ namespace Mutagen.Bethesda.Oblivion
             LandTexture.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Havok = EqualsMaskHelper.EqualsHelper(
                 item.Havok,
@@ -1536,12 +1535,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LandTextureBinaryWriteTranslation Instance = new LandTextureBinaryWriteTranslation();
+        public new static readonly LandTextureBinaryWriteTranslation Instance = new LandTextureBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILandTextureGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1566,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
                 writer: writer,
                 items: item.PotentialGrass,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1578,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILandTextureGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1606,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -1617,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -1628,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -1640,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LandTextureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static LandTextureBinaryCreateTranslation Instance = new LandTextureBinaryCreateTranslation();
+        public new static readonly LandTextureBinaryCreateTranslation Instance = new LandTextureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LTEX;
         public static void FillBinaryStructs(
@@ -1659,7 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1740,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => LandTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1782,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILandTextureGetter LandTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LandTextureBinaryOverlay(
@@ -1809,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILandTextureGetter LandTextureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LandTextureFactory(
                 stream: new OverlayStream(slice, package),
@@ -1824,7 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

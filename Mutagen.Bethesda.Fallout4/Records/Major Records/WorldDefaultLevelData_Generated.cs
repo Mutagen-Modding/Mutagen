@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldDefaultLevelDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static WorldDefaultLevelData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldDefaultLevelData();
             ((WorldDefaultLevelDataSetterCommon)((IWorldDefaultLevelDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldDefaultLevelData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IWorldDefaultLevelData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldDefaultLevelDataSetterCommon)((IWorldDefaultLevelDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -835,7 +835,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IWorldDefaultLevelData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -872,7 +872,6 @@ namespace Mutagen.Bethesda.Fallout4
             WorldDefaultLevelData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NorthwestCellCoords = item.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords);
             ret.NorthwestCellSize = item.NorthwestCellSize.Equals(rhs.NorthwestCellSize);
             ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
@@ -1121,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WorldDefaultLevelDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldDefaultLevelDataBinaryWriteTranslation Instance = new WorldDefaultLevelDataBinaryWriteTranslation();
+        public static readonly WorldDefaultLevelDataBinaryWriteTranslation Instance = new WorldDefaultLevelDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldDefaultLevelDataGetter item,
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IWorldDefaultLevelDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WLEV)))
             {
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IWorldDefaultLevelDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldDefaultLevelDataGetter)item,
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class WorldDefaultLevelDataBinaryCreateTranslation
     {
-        public readonly static WorldDefaultLevelDataBinaryCreateTranslation Instance = new WorldDefaultLevelDataBinaryCreateTranslation();
+        public static readonly WorldDefaultLevelDataBinaryCreateTranslation Instance = new WorldDefaultLevelDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldDefaultLevelData item,
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1257,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IWorldDefaultLevelDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldDefaultLevelDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1301,7 +1300,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldDefaultLevelDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1349,7 +1348,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldDefaultLevelDataGetter WorldDefaultLevelDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldDefaultLevelDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1367,7 +1366,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldDefaultLevelDataGetter WorldDefaultLevelDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldDefaultLevelDataFactory(
                 stream: new OverlayStream(slice, package),
@@ -1382,7 +1381,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

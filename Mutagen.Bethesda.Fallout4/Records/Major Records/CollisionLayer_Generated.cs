@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => CollisionLayerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CollisionLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static CollisionLayer CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CollisionLayer();
             ((CollisionLayerSetterCommon)((ICollisionLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CollisionLayer item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ICollisionLayerInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CollisionLayerSetterCommon)((ICollisionLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ICollisionLayerInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ICollisionLayerInternal>(
                 record: item,
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CollisionLayer)item,
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CollisionLayer)item,
@@ -1123,7 +1123,6 @@ namespace Mutagen.Bethesda.Fallout4
             CollisionLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Index = item.Index == rhs.Index;
             ret.DebugColor = item.DebugColor.ColorOnlyEquals(rhs.DebugColor);
@@ -1626,12 +1625,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CollisionLayerBinaryWriteTranslation Instance = new CollisionLayerBinaryWriteTranslation();
+        public new static readonly CollisionLayerBinaryWriteTranslation Instance = new CollisionLayerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ICollisionLayerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1668,7 +1667,7 @@ namespace Mutagen.Bethesda.Fallout4
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.CNAM),
                 writeCounterIfNull: true,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ICollisionLayerGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ICollisionLayerGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1679,7 +1678,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ICollisionLayerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1707,7 +1706,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICollisionLayerGetter)item,
@@ -1718,7 +1717,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICollisionLayerGetter)item,
@@ -1729,7 +1728,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICollisionLayerGetter)item,
@@ -1741,7 +1740,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class CollisionLayerBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static CollisionLayerBinaryCreateTranslation Instance = new CollisionLayerBinaryCreateTranslation();
+        public new static readonly CollisionLayerBinaryCreateTranslation Instance = new CollisionLayerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.COLL;
         public static void FillBinaryStructs(
@@ -1760,7 +1759,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1864,7 +1863,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => CollisionLayerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CollisionLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1914,7 +1913,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICollisionLayerGetter CollisionLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new CollisionLayerBinaryOverlay(
@@ -1941,7 +1940,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICollisionLayerGetter CollisionLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CollisionLayerFactory(
                 stream: new OverlayStream(slice, package),
@@ -1956,7 +1955,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

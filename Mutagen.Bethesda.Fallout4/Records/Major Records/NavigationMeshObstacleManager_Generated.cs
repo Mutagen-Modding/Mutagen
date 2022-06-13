@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => NavigationMeshObstacleManagerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMeshObstacleManagerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static NavigationMeshObstacleManager CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationMeshObstacleManager();
             ((NavigationMeshObstacleManagerSetterCommon)((INavigationMeshObstacleManagerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavigationMeshObstacleManager item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INavigationMeshObstacleManagerInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavigationMeshObstacleManagerSetterCommon)((INavigationMeshObstacleManagerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INavigationMeshObstacleManagerInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<INavigationMeshObstacleManagerInternal>(
                 record: item,
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NavigationMeshObstacleManager)item,
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NavigationMeshObstacleManager)item,
@@ -910,7 +910,6 @@ namespace Mutagen.Bethesda.Fallout4
             NavigationMeshObstacleManager.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SubObjects = item.SubObjects.CollectionEqualsHelper(
                 rhs.SubObjects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1332,12 +1331,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NavigationMeshObstacleManagerBinaryWriteTranslation Instance = new NavigationMeshObstacleManagerBinaryWriteTranslation();
+        public new static readonly NavigationMeshObstacleManagerBinaryWriteTranslation Instance = new NavigationMeshObstacleManagerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             INavigationMeshObstacleManagerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1346,7 +1345,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationMeshObstacleManagerSubObjectGetter>.Instance.Write(
                 writer: writer,
                 items: item.SubObjects,
-                transl: (MutagenWriter subWriter, INavigationMeshObstacleManagerSubObjectGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INavigationMeshObstacleManagerSubObjectGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1359,7 +1358,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INavigationMeshObstacleManagerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1387,7 +1386,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavigationMeshObstacleManagerGetter)item,
@@ -1398,7 +1397,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INavigationMeshObstacleManagerGetter)item,
@@ -1409,7 +1408,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INavigationMeshObstacleManagerGetter)item,
@@ -1421,7 +1420,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NavigationMeshObstacleManagerBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static NavigationMeshObstacleManagerBinaryCreateTranslation Instance = new NavigationMeshObstacleManagerBinaryCreateTranslation();
+        public new static readonly NavigationMeshObstacleManagerBinaryCreateTranslation Instance = new NavigationMeshObstacleManagerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NOCM;
         public static void FillBinaryStructs(
@@ -1440,7 +1439,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1505,7 +1504,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => NavigationMeshObstacleManagerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMeshObstacleManagerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1535,7 +1534,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavigationMeshObstacleManagerGetter NavigationMeshObstacleManagerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new NavigationMeshObstacleManagerBinaryOverlay(
@@ -1562,7 +1561,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavigationMeshObstacleManagerGetter NavigationMeshObstacleManagerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavigationMeshObstacleManagerFactory(
                 stream: new OverlayStream(slice, package),
@@ -1577,7 +1576,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

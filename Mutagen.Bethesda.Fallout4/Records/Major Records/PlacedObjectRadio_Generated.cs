@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectRadioBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PlacedObjectRadio CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObjectRadio();
             ((PlacedObjectRadioSetterCommon)((IPlacedObjectRadioGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedObjectRadio item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPlacedObjectRadio item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedObjectRadioSetterCommon)((IPlacedObjectRadioGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPlacedObjectRadio item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XRDO),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Fallout4
             PlacedObjectRadio.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Frequency = item.Frequency.EqualsWithin(rhs.Frequency);
             ret.MinWeakDistance = item.MinWeakDistance.EqualsWithin(rhs.MinWeakDistance);
             ret.MaxWeakDistance = item.MaxWeakDistance.EqualsWithin(rhs.MaxWeakDistance);
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedObjectRadioBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PlacedObjectRadioBinaryWriteTranslation Instance = new PlacedObjectRadioBinaryWriteTranslation();
+        public static readonly PlacedObjectRadioBinaryWriteTranslation Instance = new PlacedObjectRadioBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedObjectRadioGetter item,
@@ -1119,12 +1118,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPlacedObjectRadioGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XRDO),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1136,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedObjectRadioGetter)item,
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PlacedObjectRadioBinaryCreateTranslation
     {
-        public readonly static PlacedObjectRadioBinaryCreateTranslation Instance = new PlacedObjectRadioBinaryCreateTranslation();
+        public static readonly PlacedObjectRadioBinaryCreateTranslation Instance = new PlacedObjectRadioBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPlacedObjectRadio item,
@@ -1173,7 +1172,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPlacedObjectRadioGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectRadioBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1217,7 +1216,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectRadioBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1248,7 +1247,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectRadioGetter PlacedObjectRadioFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObjectRadioBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1266,7 +1265,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectRadioGetter PlacedObjectRadioFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedObjectRadioFactory(
                 stream: new OverlayStream(slice, package),

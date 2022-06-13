@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APackageTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAPackageTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((APackageTargetSetterCommon)((IAPackageTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAPackageTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -715,7 +715,6 @@ namespace Mutagen.Bethesda.Fallout4
             APackageTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.CountOrDistance = item.CountOrDistance == rhs.CountOrDistance;
         }
         
@@ -911,7 +910,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class APackageTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static APackageTargetBinaryWriteTranslation Instance = new APackageTargetBinaryWriteTranslation();
+        public static readonly APackageTargetBinaryWriteTranslation Instance = new APackageTargetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAPackageTargetGetter item,
@@ -939,7 +938,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             IAPackageTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -949,7 +948,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAPackageTargetGetter)item,
@@ -961,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class APackageTargetBinaryCreateTranslation
     {
-        public readonly static APackageTargetBinaryCreateTranslation Instance = new APackageTargetBinaryCreateTranslation();
+        public static readonly APackageTargetBinaryCreateTranslation Instance = new APackageTargetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAPackageTarget item,
@@ -988,7 +987,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IAPackageTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APackageTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1033,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APackageTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

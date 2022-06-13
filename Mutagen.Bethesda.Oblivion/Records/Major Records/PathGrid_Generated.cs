@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PathGridBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PathGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static PathGrid CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PathGrid();
             ((PathGridSetterCommon)((IPathGridGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PathGrid item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPathGridInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PathGridSetterCommon)((IPathGridGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IPathGridInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IPathGridInternal>(
                 record: item,
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PathGrid)item,
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PathGrid)item,
@@ -1175,7 +1175,6 @@ namespace Mutagen.Bethesda.Oblivion
             PathGrid.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.PointToPointConnections = item.PointToPointConnections.CollectionEqualsHelper(
                 rhs.PointToPointConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1736,12 +1735,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PathGridBinaryWriteTranslation Instance = new PathGridBinaryWriteTranslation();
+        public new static readonly PathGridBinaryWriteTranslation Instance = new PathGridBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IPathGridGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1754,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 items: item.InterCellConnections,
                 recordType: translationParams.ConvertToCustom(RecordTypes.PGRI),
-                transl: (MutagenWriter subWriter, IInterCellPointGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IInterCellPointGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((InterCellPointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1765,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPointToReferenceMappingGetter>.Instance.Write(
                 writer: writer,
                 items: item.PointToReferenceMappings,
-                transl: (MutagenWriter subWriter, IPointToReferenceMappingGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IPointToReferenceMappingGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((PointToReferenceMappingBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1791,7 +1790,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IPathGridGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1819,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPathGridGetter)item,
@@ -1830,7 +1829,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPathGridGetter)item,
@@ -1841,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPathGridGetter)item,
@@ -1853,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class PathGridBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static PathGridBinaryCreateTranslation Instance = new PathGridBinaryCreateTranslation();
+        public new static readonly PathGridBinaryCreateTranslation Instance = new PathGridBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PGRD;
         public static void FillBinaryStructs(
@@ -1872,7 +1871,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1956,7 +1955,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PathGridBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PathGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1995,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPathGridGetter PathGridFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new PathGridBinaryOverlay(
@@ -2022,7 +2021,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPathGridGetter PathGridFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PathGridFactory(
                 stream: new OverlayStream(slice, package),
@@ -2037,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenRotationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static LoadScreenRotation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LoadScreenRotation();
             ((LoadScreenRotationSetterCommon)((ILoadScreenRotationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LoadScreenRotation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILoadScreenRotation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LoadScreenRotationSetterCommon)((ILoadScreenRotationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILoadScreenRotation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Fallout4
             LoadScreenRotation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Min = item.Min == rhs.Min;
             ret.Max = item.Max == rhs.Max;
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LoadScreenRotationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LoadScreenRotationBinaryWriteTranslation Instance = new LoadScreenRotationBinaryWriteTranslation();
+        public static readonly LoadScreenRotationBinaryWriteTranslation Instance = new LoadScreenRotationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILoadScreenRotationGetter item,
@@ -995,7 +994,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILoadScreenRotationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1005,7 +1004,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILoadScreenRotationGetter)item,
@@ -1017,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LoadScreenRotationBinaryCreateTranslation
     {
-        public readonly static LoadScreenRotationBinaryCreateTranslation Instance = new LoadScreenRotationBinaryCreateTranslation();
+        public static readonly LoadScreenRotationBinaryCreateTranslation Instance = new LoadScreenRotationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILoadScreenRotation item,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ILoadScreenRotationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenRotationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1082,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenRotationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1111,7 +1110,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILoadScreenRotationGetter LoadScreenRotationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LoadScreenRotationBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILoadScreenRotationGetter LoadScreenRotationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LoadScreenRotationFactory(
                 stream: new OverlayStream(slice, package),

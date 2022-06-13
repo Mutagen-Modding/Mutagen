@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ContainerItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ContainerItem CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ContainerItem();
             ((ContainerItemSetterCommon)((IContainerItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ContainerItem item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IContainerItem item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ContainerItemSetterCommon)((IContainerItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -759,12 +759,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IContainerItem item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CNTO),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Skyrim
             ContainerItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Item = item.Item.Equals(rhs.Item);
             ret.Count = item.Count == rhs.Count;
         }
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ContainerItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ContainerItemBinaryWriteTranslation Instance = new ContainerItemBinaryWriteTranslation();
+        public static readonly ContainerItemBinaryWriteTranslation Instance = new ContainerItemBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IContainerItemGetter item,
@@ -1025,12 +1024,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IContainerItemGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CNTO),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IContainerItemGetter)item,
@@ -1054,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ContainerItemBinaryCreateTranslation
     {
-        public readonly static ContainerItemBinaryCreateTranslation Instance = new ContainerItemBinaryCreateTranslation();
+        public static readonly ContainerItemBinaryCreateTranslation Instance = new ContainerItemBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IContainerItem item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IContainerItemGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ContainerItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1120,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ContainerItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IContainerItemGetter ContainerItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ContainerItemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IContainerItemGetter ContainerItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ContainerItemFactory(
                 stream: new OverlayStream(slice, package),

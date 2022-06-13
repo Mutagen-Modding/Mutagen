@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputChannelsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static SoundOutputChannels CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundOutputChannels();
             ((SoundOutputChannelsSetterCommon)((ISoundOutputChannelsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundOutputChannels item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISoundOutputChannels item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundOutputChannelsSetterCommon)((ISoundOutputChannelsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -802,12 +802,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISoundOutputChannels item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ONAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -842,7 +842,6 @@ namespace Mutagen.Bethesda.Fallout4
             SoundOutputChannels.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Channel0 = MaskItemExt.Factory(item.Channel0.GetEqualsMask(rhs.Channel0, include), include);
             ret.Channel1 = MaskItemExt.Factory(item.Channel1.GetEqualsMask(rhs.Channel1, include), include);
             ret.Channel2 = MaskItemExt.Factory(item.Channel2.GetEqualsMask(rhs.Channel2, include), include);
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundOutputChannelsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundOutputChannelsBinaryWriteTranslation Instance = new SoundOutputChannelsBinaryWriteTranslation();
+        public static readonly SoundOutputChannelsBinaryWriteTranslation Instance = new SoundOutputChannelsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISoundOutputChannelsGetter item,
@@ -1155,12 +1154,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ISoundOutputChannelsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ONAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1172,7 +1171,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundOutputChannelsGetter)item,
@@ -1184,7 +1183,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SoundOutputChannelsBinaryCreateTranslation
     {
-        public readonly static SoundOutputChannelsBinaryCreateTranslation Instance = new SoundOutputChannelsBinaryCreateTranslation();
+        public static readonly SoundOutputChannelsBinaryCreateTranslation Instance = new SoundOutputChannelsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundOutputChannels item,
@@ -1206,7 +1205,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ISoundOutputChannelsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputChannelsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1250,7 +1249,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputChannelsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1280,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundOutputChannelsGetter SoundOutputChannelsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundOutputChannelsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1298,7 +1297,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundOutputChannelsGetter SoundOutputChannelsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundOutputChannelsFactory(
                 stream: new OverlayStream(slice, package),

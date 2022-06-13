@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestObjectiveTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static QuestObjectiveTarget CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestObjectiveTarget();
             ((QuestObjectiveTargetSetterCommon)((IQuestObjectiveTargetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out QuestObjectiveTarget item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IQuestObjectiveTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestObjectiveTargetSetterCommon)((IQuestObjectiveTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IQuestObjectiveTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -949,7 +949,6 @@ namespace Mutagen.Bethesda.Skyrim
             QuestObjectiveTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.AliasID = item.AliasID == rhs.AliasID;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestObjectiveTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static QuestObjectiveTargetBinaryWriteTranslation Instance = new QuestObjectiveTargetBinaryWriteTranslation();
+        public static readonly QuestObjectiveTargetBinaryWriteTranslation Instance = new QuestObjectiveTargetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IQuestObjectiveTargetGetter item,
@@ -1236,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IQuestObjectiveTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.QSTA)))
             {
@@ -1249,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1262,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IQuestObjectiveTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1276,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestObjectiveTargetGetter)item,
@@ -1288,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class QuestObjectiveTargetBinaryCreateTranslation
     {
-        public readonly static QuestObjectiveTargetBinaryCreateTranslation Instance = new QuestObjectiveTargetBinaryCreateTranslation();
+        public static readonly QuestObjectiveTargetBinaryCreateTranslation Instance = new QuestObjectiveTargetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IQuestObjectiveTarget item,
@@ -1303,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1345,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IQuestObjectiveTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestObjectiveTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1390,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestObjectiveTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1430,7 +1429,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IQuestObjectiveTargetGetter QuestObjectiveTargetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestObjectiveTargetBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1448,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IQuestObjectiveTargetGetter QuestObjectiveTargetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestObjectiveTargetFactory(
                 stream: new OverlayStream(slice, package),
@@ -1463,7 +1462,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

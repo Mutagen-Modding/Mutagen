@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MountDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static MountData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MountData();
             ((MountDataSetterCommon)((IMountDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MountData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMountData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MountDataSetterCommon)((IMountDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IMountData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -809,7 +809,6 @@ namespace Mutagen.Bethesda.Skyrim
             MountData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MountOffset = item.MountOffset.Equals(rhs.MountOffset);
             ret.DismountOffset = item.DismountOffset.Equals(rhs.DismountOffset);
             ret.MountCameraOffset = item.MountCameraOffset.Equals(rhs.MountCameraOffset);
@@ -1033,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MountDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MountDataBinaryWriteTranslation Instance = new MountDataBinaryWriteTranslation();
+        public static readonly MountDataBinaryWriteTranslation Instance = new MountDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMountDataGetter item,
@@ -1053,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IMountDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1063,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMountDataGetter)item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class MountDataBinaryCreateTranslation
     {
-        public readonly static MountDataBinaryCreateTranslation Instance = new MountDataBinaryCreateTranslation();
+        public static readonly MountDataBinaryCreateTranslation Instance = new MountDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMountData item,
@@ -1097,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IMountDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MountDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MountDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1171,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMountDataGetter MountDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MountDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x24),
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMountDataGetter MountDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MountDataFactory(
                 stream: new OverlayStream(slice, package),

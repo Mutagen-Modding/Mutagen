@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFlagBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PerkScriptFlag CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkScriptFlag();
             ((PerkScriptFlagSetterCommon)((IPerkScriptFlagGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkScriptFlag item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkScriptFlag item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkScriptFlagSetterCommon)((IPerkScriptFlagGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPerkScriptFlag item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.EPF3),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
             PerkScriptFlag.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.FragmentIndex = item.FragmentIndex == rhs.FragmentIndex;
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkScriptFlagBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PerkScriptFlagBinaryWriteTranslation Instance = new PerkScriptFlagBinaryWriteTranslation();
+        public static readonly PerkScriptFlagBinaryWriteTranslation Instance = new PerkScriptFlagBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkScriptFlagGetter item,
@@ -1009,12 +1008,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPerkScriptFlagGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.EPF3),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1026,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkScriptFlagGetter)item,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PerkScriptFlagBinaryCreateTranslation
     {
-        public readonly static PerkScriptFlagBinaryCreateTranslation Instance = new PerkScriptFlagBinaryCreateTranslation();
+        public static readonly PerkScriptFlagBinaryCreateTranslation Instance = new PerkScriptFlagBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkScriptFlag item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPerkScriptFlagGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFlagBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFlagBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1134,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkScriptFlagGetter PerkScriptFlagFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkScriptFlagBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkScriptFlagGetter PerkScriptFlagFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkScriptFlagFactory(
                 stream: new OverlayStream(slice, package),

@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceLandDefaultsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static WorldspaceLandDefaults CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceLandDefaults();
             ((WorldspaceLandDefaultsSetterCommon)((IWorldspaceLandDefaultsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceLandDefaults item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IWorldspaceLandDefaults item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceLandDefaultsSetterCommon)((IWorldspaceLandDefaultsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IWorldspaceLandDefaults item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
             WorldspaceLandDefaults.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DefaultLandHeight = item.DefaultLandHeight.EqualsWithin(rhs.DefaultLandHeight);
             ret.DefaultWaterHeight = item.DefaultWaterHeight.EqualsWithin(rhs.DefaultWaterHeight);
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WorldspaceLandDefaultsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceLandDefaultsBinaryWriteTranslation Instance = new WorldspaceLandDefaultsBinaryWriteTranslation();
+        public static readonly WorldspaceLandDefaultsBinaryWriteTranslation Instance = new WorldspaceLandDefaultsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceLandDefaultsGetter item,
@@ -1010,12 +1009,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IWorldspaceLandDefaultsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1027,7 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceLandDefaultsGetter)item,
@@ -1039,7 +1038,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class WorldspaceLandDefaultsBinaryCreateTranslation
     {
-        public readonly static WorldspaceLandDefaultsBinaryCreateTranslation Instance = new WorldspaceLandDefaultsBinaryCreateTranslation();
+        public static readonly WorldspaceLandDefaultsBinaryCreateTranslation Instance = new WorldspaceLandDefaultsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceLandDefaults item,
@@ -1060,7 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IWorldspaceLandDefaultsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceLandDefaultsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceLandDefaultsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1133,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldspaceLandDefaultsGetter WorldspaceLandDefaultsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceLandDefaultsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1151,7 +1150,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWorldspaceLandDefaultsGetter WorldspaceLandDefaultsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceLandDefaultsFactory(
                 stream: new OverlayStream(slice, package),

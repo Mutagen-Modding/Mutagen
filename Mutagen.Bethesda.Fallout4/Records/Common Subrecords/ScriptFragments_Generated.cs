@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ScriptFragments CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptFragments();
             ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptFragments item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IScriptFragments item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IScriptFragments item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -899,7 +899,6 @@ namespace Mutagen.Bethesda.Fallout4
             ScriptFragments.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ExtraBindDataVersion = item.ExtraBindDataVersion == rhs.ExtraBindDataVersion;
             ret.Script = MaskItemExt.Factory(item.Script.GetEqualsMask(rhs.Script, include), include);
             ret.OnBegin = EqualsMaskHelper.EqualsHelper(
@@ -1234,7 +1233,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ScriptFragmentsBinaryWriteTranslation Instance = new ScriptFragmentsBinaryWriteTranslation();
+        public static readonly ScriptFragmentsBinaryWriteTranslation Instance = new ScriptFragmentsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScriptFragmentsGetter item,
@@ -1246,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             IScriptFragmentsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1256,7 +1255,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptFragmentsGetter)item,
@@ -1268,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ScriptFragmentsBinaryCreateTranslation
     {
-        public readonly static ScriptFragmentsBinaryCreateTranslation Instance = new ScriptFragmentsBinaryCreateTranslation();
+        public static readonly ScriptFragmentsBinaryCreateTranslation Instance = new ScriptFragmentsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptFragments item,
@@ -1288,7 +1287,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IScriptFragmentsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1333,7 +1332,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1361,7 +1360,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptFragmentsGetter ScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptFragmentsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x1),
@@ -1378,7 +1377,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptFragmentsGetter ScriptFragmentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptFragmentsFactory(
                 stream: new OverlayStream(slice, package),

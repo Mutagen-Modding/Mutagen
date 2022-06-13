@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ScriptVariablePropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptVariablePropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ScriptVariableProperty CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptVariableProperty();
             ((ScriptVariablePropertySetterCommon)((IScriptVariablePropertyGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptVariableProperty item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IScriptVariableProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptVariablePropertySetterCommon)((IScriptVariablePropertyGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IScriptVariableProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IScriptProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ScriptVariableProperty)item,
@@ -720,7 +720,6 @@ namespace Mutagen.Bethesda.Fallout4
             ScriptVariableProperty.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -974,7 +973,7 @@ namespace Mutagen.Bethesda.Fallout4
         ScriptPropertyBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ScriptVariablePropertyBinaryWriteTranslation Instance = new ScriptVariablePropertyBinaryWriteTranslation();
+        public new static readonly ScriptVariablePropertyBinaryWriteTranslation Instance = new ScriptVariablePropertyBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScriptVariablePropertyGetter item,
@@ -989,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IScriptVariablePropertyGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptVariablePropertyGetter)item,
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IScriptPropertyGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IScriptVariablePropertyGetter)item,
@@ -1022,7 +1021,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ScriptVariablePropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
-        public new readonly static ScriptVariablePropertyBinaryCreateTranslation Instance = new ScriptVariablePropertyBinaryCreateTranslation();
+        public new static readonly ScriptVariablePropertyBinaryCreateTranslation Instance = new ScriptVariablePropertyBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptVariableProperty item,
@@ -1070,7 +1069,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ScriptVariablePropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptVariablePropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1098,7 +1097,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptVariablePropertyGetter ScriptVariablePropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptVariablePropertyBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptVariablePropertyGetter ScriptVariablePropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptVariablePropertyFactory(
                 stream: new OverlayStream(slice, package),

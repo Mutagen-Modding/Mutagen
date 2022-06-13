@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceWeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static RaceWeight CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RaceWeight();
             ((RaceWeightSetterCommon)((IRaceWeightGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RaceWeight item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IRaceWeight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RaceWeightSetterCommon)((IRaceWeightGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IRaceWeight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -809,7 +809,6 @@ namespace Mutagen.Bethesda.Fallout4
             RaceWeight.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Thin = item.Thin.EqualsWithin(rhs.Thin);
             ret.Muscular = item.Muscular.EqualsWithin(rhs.Muscular);
             ret.Fat = item.Fat.EqualsWithin(rhs.Fat);
@@ -1033,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RaceWeightBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RaceWeightBinaryWriteTranslation Instance = new RaceWeightBinaryWriteTranslation();
+        public static readonly RaceWeightBinaryWriteTranslation Instance = new RaceWeightBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRaceWeightGetter item,
@@ -1053,7 +1052,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IRaceWeightGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1063,7 +1062,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRaceWeightGetter)item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class RaceWeightBinaryCreateTranslation
     {
-        public readonly static RaceWeightBinaryCreateTranslation Instance = new RaceWeightBinaryCreateTranslation();
+        public static readonly RaceWeightBinaryCreateTranslation Instance = new RaceWeightBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRaceWeight item,
@@ -1097,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IRaceWeightGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceWeightBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceWeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1171,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRaceWeightGetter RaceWeightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RaceWeightBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRaceWeightGetter RaceWeightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RaceWeightFactory(
                 stream: new OverlayStream(slice, package),

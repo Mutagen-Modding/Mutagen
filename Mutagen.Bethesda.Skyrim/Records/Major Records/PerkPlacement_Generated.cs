@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PerkPlacement CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkPlacement();
             ((PerkPlacementSetterCommon)((IPerkPlacementGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkPlacement item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkPlacementSetterCommon)((IPerkPlacementGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -804,12 +804,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPerkPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PRKR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -844,7 +844,6 @@ namespace Mutagen.Bethesda.Skyrim
             PerkPlacement.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Perk = item.Perk.Equals(rhs.Perk);
             ret.Rank = item.Rank == rhs.Rank;
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
@@ -1069,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PerkPlacementBinaryWriteTranslation Instance = new PerkPlacementBinaryWriteTranslation();
+        public static readonly PerkPlacementBinaryWriteTranslation Instance = new PerkPlacementBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkPlacementGetter item,
@@ -1087,12 +1086,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPerkPlacementGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PRKR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkPlacementGetter)item,
@@ -1116,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PerkPlacementBinaryCreateTranslation
     {
-        public readonly static PerkPlacementBinaryCreateTranslation Instance = new PerkPlacementBinaryCreateTranslation();
+        public static readonly PerkPlacementBinaryCreateTranslation Instance = new PerkPlacementBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkPlacement item,
@@ -1138,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPerkPlacementGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1183,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkPlacementGetter PerkPlacementFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkPlacementBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1231,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkPlacementGetter PerkPlacementFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkPlacementFactory(
                 stream: new OverlayStream(slice, package),

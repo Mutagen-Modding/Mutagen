@@ -13,7 +13,7 @@ internal class LoquiBinaryTranslation<T>
     public static readonly LoquiBinaryTranslation<T> Instance = new();
     public delegate T CREATE_FUNC(
         MutagenFrame reader,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
     public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
     #region Parse
@@ -27,7 +27,7 @@ internal class LoquiBinaryTranslation<T>
             .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
             .Where((methodInfo) => methodInfo.GetParameters().Length == 2)
             .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
-            .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(Nullable<TypedParseParams>)))
+            .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(TypedParseParams)))
             .FirstOrDefault();
         if (method != null)
         {
@@ -54,7 +54,7 @@ internal class LoquiBinaryTranslation<T>
     public bool Parse(
         MutagenFrame frame,
         out T item,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var startPos = frame.Position;
         item = CREATE(
@@ -71,7 +71,7 @@ internal class LoquiBinaryAsyncTranslation<T>
     public static readonly LoquiBinaryAsyncTranslation<T> Instance = new LoquiBinaryAsyncTranslation<T>();
     public delegate Task<T> CREATE_FUNC(
         MutagenFrame reader,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
     public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
     #region Parse
@@ -93,7 +93,7 @@ internal class LoquiBinaryAsyncTranslation<T>
         if (method.ReturnType == tType)
         {
             var wrap = LoquiBinaryTranslation<T>.CREATE;
-            return async (MutagenFrame frame, TypedParseParams? recConv) =>
+            return async (MutagenFrame frame, TypedParseParams recConv) =>
             {
                 return wrap(frame, recConv);
             };
@@ -115,7 +115,7 @@ internal class LoquiBinaryAsyncTranslation<T>
     [DebuggerStepThrough]
     public async Task<TryGet<T>> Parse(
         MutagenFrame frame,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var item = await CREATE(
             reader: frame,
@@ -150,7 +150,7 @@ internal static class LoquiBinaryTranslationExt
         this LoquiBinaryTranslation<T> loquiTrans,
         MutagenFrame frame,
         [MaybeNullWhen(false)] out B item,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
         where T : class, ILoquiObjectGetter, B
     {
         if (loquiTrans.Parse(

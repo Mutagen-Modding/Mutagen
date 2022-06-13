@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImpactDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ImpactData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImpactData();
             ((ImpactDataSetterCommon)((IImpactDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImpactData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImpactData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImpactDataSetterCommon)((IImpactDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -767,12 +767,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IImpactData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -807,7 +807,6 @@ namespace Mutagen.Bethesda.Skyrim
             ImpactData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Material = item.Material.Equals(rhs.Material);
             ret.Impact = item.Impact.Equals(rhs.Impact);
         }
@@ -1019,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImpactDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ImpactDataBinaryWriteTranslation Instance = new ImpactDataBinaryWriteTranslation();
+        public static readonly ImpactDataBinaryWriteTranslation Instance = new ImpactDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImpactDataGetter item,
@@ -1036,12 +1035,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IImpactDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1053,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImpactDataGetter)item,
@@ -1065,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ImpactDataBinaryCreateTranslation
     {
-        public readonly static ImpactDataBinaryCreateTranslation Instance = new ImpactDataBinaryCreateTranslation();
+        public static readonly ImpactDataBinaryCreateTranslation Instance = new ImpactDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IImpactData item,
@@ -1086,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IImpactDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImpactDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1131,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImpactDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1160,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImpactDataGetter ImpactDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImpactDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1178,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImpactDataGetter ImpactDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImpactDataFactory(
                 stream: new OverlayStream(slice, package),

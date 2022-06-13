@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneActionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SceneAction CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SceneAction();
             ((SceneActionSetterCommon)((ISceneActionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SceneAction item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISceneAction item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SceneActionSetterCommon)((ISceneActionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1486,7 +1486,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISceneAction item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1523,7 +1523,6 @@ namespace Mutagen.Bethesda.Skyrim
             SceneAction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.ActorID = item.ActorID == rhs.ActorID;
@@ -2072,12 +2071,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SceneActionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SceneActionBinaryWriteTranslation Instance = new SceneActionBinaryWriteTranslation();
+        public static readonly SceneActionBinaryWriteTranslation Instance = new SceneActionBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISceneActionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
@@ -2121,7 +2120,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2166,7 +2165,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ISceneActionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -2177,7 +2176,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISceneActionGetter)item,
@@ -2189,7 +2188,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SceneActionBinaryCreateTranslation
     {
-        public readonly static SceneActionBinaryCreateTranslation Instance = new SceneActionBinaryCreateTranslation();
+        public static readonly SceneActionBinaryCreateTranslation Instance = new SceneActionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISceneAction item,
@@ -2204,7 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2390,7 +2389,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISceneActionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneActionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2435,7 +2434,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneActionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2528,7 +2527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISceneActionGetter SceneActionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SceneActionBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -2546,7 +2545,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISceneActionGetter SceneActionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SceneActionFactory(
                 stream: new OverlayStream(slice, package),
@@ -2561,7 +2560,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

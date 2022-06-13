@@ -18,14 +18,14 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordType type,
         PreviousParse lastParsed,
         Dictionary<RecordType, int>? recordParseCount,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
     public delegate ParseResult ModTypeFillWrapper(
         IBinaryReadStream stream,
         long finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     ILoquiRegistration ILoquiObject.Registration => throw new NotImplementedException();
 
@@ -85,7 +85,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         int finalPos,
         int offset,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordTypeFillWrapper fill)
     {
         var lastParsed = new PreviousParse();
@@ -139,7 +139,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         int finalPos,
         int offset,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordTypeFillWrapper fill)
     {
         var lastParsed = new PreviousParse();
@@ -177,7 +177,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         int finalPos,
         int offset,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordTypeFillWrapper fill)
     {
         var lastParsed = new PreviousParse();
@@ -235,7 +235,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         int finalPos,
         int offset,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordTypeFillWrapper fill)
     {
         try
@@ -257,7 +257,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         int finalPos,
         int offset,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordTypeFillWrapper fill)
     {
         var lastParsed = new PreviousParse();
@@ -303,7 +303,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordType trigger,
         RecordHeaderConstants constants,
         bool skipHeader,
-        TypedParseParams? translationParams = null,
+        TypedParseParams translationParams = default,
         // Not needed, just for generation simplification
         bool triggersAlwaysAreNewRecords = false)
     {
@@ -334,7 +334,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordTriggerSpecs triggers,
         RecordHeaderConstants constants,
         bool skipHeader,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         List<int> ret = new List<int>();
         var startingPos = stream.Position;
@@ -445,7 +445,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var ret = new List<int>();
         int? lastParsed = null;
@@ -562,7 +562,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams);
     }
@@ -582,7 +582,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams);
     }
@@ -633,7 +633,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
     public delegate T ConverterFactory<T>(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     public delegate T StreamFactory<T>(
         OverlayStream stream,
@@ -643,7 +643,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         RecordType recordType,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     public delegate T SpanFactory<T>(
         ReadOnlyMemorySlice<byte> span,
@@ -652,13 +652,13 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
     public delegate T SpanRecordFactory<T>(
         ReadOnlyMemorySlice<byte> span,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
         OverlayStream stream,
         RecordTriggerSpecs trigger,
         StreamTypedFactory<T> factory,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var ret = new List<T>();
         while (!stream.Complete)
@@ -680,7 +680,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         RecordTriggerSpecs trigger,
         ConverterFactory<T> factory,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         return ParseRepeatedTypelessSubrecord(
             stream,
@@ -693,7 +693,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         RecordType trigger,
         StreamTypedFactory<T> factory,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var ret = new List<T>();
         while (!stream.Complete)
@@ -715,7 +715,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         RecordType trigger,
         SpanRecordFactory<T> factory,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         bool skipHeader)
     {
         var ret = new List<T>();
@@ -742,7 +742,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         OverlayStream stream,
         RecordType trigger,
         ConverterFactory<T> factory,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         return ParseRepeatedTypelessSubrecord(
             stream,

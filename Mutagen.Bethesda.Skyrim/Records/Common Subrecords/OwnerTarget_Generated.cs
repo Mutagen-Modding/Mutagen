@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OwnerTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IOwnerTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((OwnerTargetSetterCommon)((IOwnerTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IOwnerTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -678,7 +678,6 @@ namespace Mutagen.Bethesda.Skyrim
             OwnerTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -860,19 +859,19 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class OwnerTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static OwnerTargetBinaryWriteTranslation Instance = new OwnerTargetBinaryWriteTranslation();
+        public static readonly OwnerTargetBinaryWriteTranslation Instance = new OwnerTargetBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IOwnerTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IOwnerTargetGetter)item,
@@ -884,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class OwnerTargetBinaryCreateTranslation
     {
-        public readonly static OwnerTargetBinaryCreateTranslation Instance = new OwnerTargetBinaryCreateTranslation();
+        public static readonly OwnerTargetBinaryCreateTranslation Instance = new OwnerTargetBinaryCreateTranslation();
 
     }
 
@@ -897,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IOwnerTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OwnerTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -942,7 +941,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OwnerTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

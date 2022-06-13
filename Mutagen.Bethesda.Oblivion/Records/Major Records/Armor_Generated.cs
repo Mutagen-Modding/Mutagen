@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Armor CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Armor();
             ((ArmorSetterCommon)((IArmorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Armor item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IArmorInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ArmorSetterCommon)((IArmorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IArmorInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IArmorInternal>(
                 record: item,
@@ -1361,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Armor)item,
@@ -1372,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Armor)item,
@@ -1407,7 +1407,6 @@ namespace Mutagen.Bethesda.Oblivion
             Armor.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Script = item.Script.Equals(rhs.Script);
             ret.Enchantment = item.Enchantment.Equals(rhs.Enchantment);
@@ -2176,12 +2175,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ArmorBinaryWriteTranslation Instance = new ArmorBinaryWriteTranslation();
+        public new static readonly ArmorBinaryWriteTranslation Instance = new ArmorBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IArmorGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2261,7 +2260,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IArmorGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2289,7 +2288,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IArmorGetter)item,
@@ -2300,7 +2299,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IArmorGetter)item,
@@ -2311,7 +2310,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IArmorGetter)item,
@@ -2323,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class ArmorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ArmorBinaryCreateTranslation Instance = new ArmorBinaryCreateTranslation();
+        public new static readonly ArmorBinaryCreateTranslation Instance = new ArmorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARMO;
         public static void FillBinaryStructs(
@@ -2342,7 +2341,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2475,7 +2474,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2544,7 +2543,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IArmorGetter ArmorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new ArmorBinaryOverlay(
@@ -2571,7 +2570,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IArmorGetter ArmorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ArmorFactory(
                 stream: new OverlayStream(slice, package),
@@ -2586,7 +2585,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorAddonModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ArmorAddonModel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ArmorAddonModel();
             ((ArmorAddonModelSetterCommon)((IArmorAddonModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ArmorAddonModel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IArmorAddonModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ArmorAddonModelSetterCommon)((IArmorAddonModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IArmorAddonModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
             ArmorAddonModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.AddonIndex = item.AddonIndex == rhs.AddonIndex;
             ret.AddonModel = item.AddonModel.Equals(rhs.AddonModel);
         }
@@ -1017,12 +1016,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ArmorAddonModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ArmorAddonModelBinaryWriteTranslation Instance = new ArmorAddonModelBinaryWriteTranslation();
+        public static readonly ArmorAddonModelBinaryWriteTranslation Instance = new ArmorAddonModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IArmorAddonModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1037,7 +1036,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IArmorAddonModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1048,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IArmorAddonModelGetter)item,
@@ -1060,7 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ArmorAddonModelBinaryCreateTranslation
     {
-        public readonly static ArmorAddonModelBinaryCreateTranslation Instance = new ArmorAddonModelBinaryCreateTranslation();
+        public static readonly ArmorAddonModelBinaryCreateTranslation Instance = new ArmorAddonModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IArmorAddonModel item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IArmorAddonModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorAddonModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorAddonModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IArmorAddonModelGetter ArmorAddonModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ArmorAddonModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1208,7 +1207,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IArmorAddonModelGetter ArmorAddonModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ArmorAddonModelFactory(
                 stream: new OverlayStream(slice, package),
@@ -1223,7 +1222,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HDRDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static HDRData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HDRData();
             ((HDRDataSetterCommon)((IHDRDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out HDRData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IHDRData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HDRDataSetterCommon)((IHDRDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1187,12 +1187,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IHDRData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.HNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1227,7 +1227,6 @@ namespace Mutagen.Bethesda.Oblivion
             HDRData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EyeAdaptSpeed = item.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed);
             ret.BlurRadius = item.BlurRadius.EqualsWithin(rhs.BlurRadius);
             ret.BlurPasses = item.BlurPasses.EqualsWithin(rhs.BlurPasses);
@@ -1605,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class HDRDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static HDRDataBinaryWriteTranslation Instance = new HDRDataBinaryWriteTranslation();
+        public static readonly HDRDataBinaryWriteTranslation Instance = new HDRDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IHDRDataGetter item,
@@ -1658,12 +1657,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IHDRDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1675,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHDRDataGetter)item,
@@ -1687,7 +1686,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class HDRDataBinaryCreateTranslation
     {
-        public readonly static HDRDataBinaryCreateTranslation Instance = new HDRDataBinaryCreateTranslation();
+        public static readonly HDRDataBinaryCreateTranslation Instance = new HDRDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IHDRData item,
@@ -1720,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IHDRDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HDRDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1764,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HDRDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1805,7 +1804,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IHDRDataGetter HDRDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HDRDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1823,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IHDRDataGetter HDRDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return HDRDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellEnablePointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static LocationCellEnablePoint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationCellEnablePoint();
             ((LocationCellEnablePointSetterCommon)((ILocationCellEnablePointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationCellEnablePoint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILocationCellEnablePoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationCellEnablePointSetterCommon)((ILocationCellEnablePointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILocationCellEnablePoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -833,7 +833,6 @@ namespace Mutagen.Bethesda.Fallout4
             LocationCellEnablePoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Actor = item.Actor.Equals(rhs.Actor);
             ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Grid = item.Grid.Equals(rhs.Grid);
@@ -1059,7 +1058,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationCellEnablePointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocationCellEnablePointBinaryWriteTranslation Instance = new LocationCellEnablePointBinaryWriteTranslation();
+        public static readonly LocationCellEnablePointBinaryWriteTranslation Instance = new LocationCellEnablePointBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationCellEnablePointGetter item,
@@ -1080,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILocationCellEnablePointGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1090,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationCellEnablePointGetter)item,
@@ -1102,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LocationCellEnablePointBinaryCreateTranslation
     {
-        public readonly static LocationCellEnablePointBinaryCreateTranslation Instance = new LocationCellEnablePointBinaryCreateTranslation();
+        public static readonly LocationCellEnablePointBinaryCreateTranslation Instance = new LocationCellEnablePointBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationCellEnablePoint item,
@@ -1126,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ILocationCellEnablePointGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellEnablePointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1171,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellEnablePointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationCellEnablePointGetter LocationCellEnablePointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationCellEnablePointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1218,7 +1217,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationCellEnablePointGetter LocationCellEnablePointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationCellEnablePointFactory(
                 stream: new OverlayStream(slice, package),

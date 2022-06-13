@@ -17,7 +17,7 @@ internal static class PluginUtilityTranslation
     internal delegate bool BinaryMasterParseDelegate<TItem>(
         MutagenFrame reader,
         [MaybeNullWhen(false)] out TItem item,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     internal delegate bool BinarySubParseRecordDelegate<TItem>(
         MutagenFrame reader,
@@ -28,12 +28,12 @@ internal static class PluginUtilityTranslation
         MutagenFrame reader,
         RecordType header,
         [MaybeNullWhen(false)] out TItem item,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     internal delegate void BinaryMasterWriteDelegate<TItem>(
         MutagenWriter writer,
         TItem item,
-        TypedWriteParams? translationParams);
+        TypedWriteParams translationParams);
 
     internal delegate void RecordStructFill<R>(
         R record,
@@ -45,7 +45,7 @@ internal static class PluginUtilityTranslation
         Dictionary<RecordType, int>? recordParseCount,
         RecordType nextRecordType,
         int contentLength,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     internal delegate ParseResult MajorRecordFill<R>(
         R record,
@@ -54,7 +54,7 @@ internal static class PluginUtilityTranslation
         Dictionary<RecordType, int>? recordParseCount,
         RecordType nextRecordType,
         int contentLength,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     internal delegate ParseResult SubrecordFill<R>(
         R record,
@@ -63,7 +63,7 @@ internal static class PluginUtilityTranslation
         Dictionary<RecordType, int>? recordParseCount,
         RecordType nextRecordType,
         int contentLength,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     internal delegate ParseResult ModRecordTypeFill<TRecord, TImportMask>(
         TRecord record,
@@ -71,12 +71,12 @@ internal static class PluginUtilityTranslation
         RecordType nextRecordType,
         int contentLength,
         TImportMask importMask,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
 
     internal static M MajorRecordParse<M>(
         M record,
         MutagenFrame frame,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordStructFill<M> fillStructs,
         MajorRecordFill<M> fillTyped)
         where M : IMajorRecordGetter
@@ -168,7 +168,7 @@ internal static class PluginUtilityTranslation
     internal static M RecordParse<M>(
         M record,
         MutagenFrame frame,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordStructFill<M> fillStructs,
         MajorRecordFill<M> fillTyped)
     {
@@ -215,7 +215,7 @@ internal static class PluginUtilityTranslation
     internal static M SubrecordParse<M>(
         M record,
         MutagenFrame frame,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordStructFill<M> fillStructs)
     {
         fillStructs?.Invoke(
@@ -227,7 +227,7 @@ internal static class PluginUtilityTranslation
     internal static M SubrecordParse<M>(
         M record,
         MutagenFrame frame,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordStructFill<M> fillStructs,
         SubrecordFill<M> fillTyped)
     {
@@ -281,7 +281,7 @@ internal static class PluginUtilityTranslation
     internal static G GroupParse<G>(
         G record,
         MutagenFrame frame,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         RecordStructFill<G> fillStructs,
         RecordTypeFill<G> fillTyped)
     {

@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherMagicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static WeatherMagic CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherMagic();
             ((WeatherMagicSetterCommon)((IWeatherMagicGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherMagic item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IWeatherMagic item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherMagicSetterCommon)((IWeatherMagicGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -920,12 +920,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IWeatherMagic item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.UNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -960,7 +960,6 @@ namespace Mutagen.Bethesda.Fallout4
             WeatherMagic.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.OnLightningStrikeSpell = item.OnLightningStrikeSpell.Equals(rhs.OnLightningStrikeSpell);
             ret.OnLightningStrikeThreshold = item.OnLightningStrikeThreshold.EqualsWithin(rhs.OnLightningStrikeThreshold);
@@ -1229,7 +1228,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeatherMagicBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherMagicBinaryWriteTranslation Instance = new WeatherMagicBinaryWriteTranslation();
+        public static readonly WeatherMagicBinaryWriteTranslation Instance = new WeatherMagicBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherMagicGetter item,
@@ -1256,12 +1255,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IWeatherMagicGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.UNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1273,7 +1272,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherMagicGetter)item,
@@ -1285,7 +1284,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class WeatherMagicBinaryCreateTranslation
     {
-        public readonly static WeatherMagicBinaryCreateTranslation Instance = new WeatherMagicBinaryCreateTranslation();
+        public static readonly WeatherMagicBinaryCreateTranslation Instance = new WeatherMagicBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherMagic item,
@@ -1314,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IWeatherMagicGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherMagicBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1359,7 +1358,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherMagicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1392,7 +1391,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeatherMagicGetter WeatherMagicFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherMagicBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1413,7 +1412,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeatherMagicGetter WeatherMagicFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherMagicFactory(
                 stream: new OverlayStream(slice, package),

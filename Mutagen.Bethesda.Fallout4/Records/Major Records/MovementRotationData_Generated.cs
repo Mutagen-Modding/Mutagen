@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementRotationDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MovementRotationData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MovementRotationData();
             ((MovementRotationDataSetterCommon)((IMovementRotationDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MovementRotationData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMovementRotationData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MovementRotationDataSetterCommon)((IMovementRotationDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMovementRotationData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -846,7 +846,6 @@ namespace Mutagen.Bethesda.Fallout4
             MovementRotationData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unused1 = item.Unused1 == rhs.Unused1;
             ret.Walk = item.Walk.EqualsWithin(rhs.Walk);
             ret.Run = item.Run.EqualsWithin(rhs.Run);
@@ -1084,7 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MovementRotationDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MovementRotationDataBinaryWriteTranslation Instance = new MovementRotationDataBinaryWriteTranslation();
+        public static readonly MovementRotationDataBinaryWriteTranslation Instance = new MovementRotationDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMovementRotationDataGetter item,
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMovementRotationDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMovementRotationDataGetter)item,
@@ -1127,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MovementRotationDataBinaryCreateTranslation
     {
-        public readonly static MovementRotationDataBinaryCreateTranslation Instance = new MovementRotationDataBinaryCreateTranslation();
+        public static readonly MovementRotationDataBinaryCreateTranslation Instance = new MovementRotationDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMovementRotationData item,
@@ -1154,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMovementRotationDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementRotationDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1198,7 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementRotationDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1229,7 +1228,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMovementRotationDataGetter MovementRotationDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MovementRotationDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1246,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMovementRotationDataGetter MovementRotationDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MovementRotationDataFactory(
                 stream: new OverlayStream(slice, package),

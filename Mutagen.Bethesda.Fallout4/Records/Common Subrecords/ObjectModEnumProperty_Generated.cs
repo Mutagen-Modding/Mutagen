@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ObjectModEnumPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectModEnumPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ObjectModEnumProperty<T> CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ObjectModEnumProperty<T>();
             ((ObjectModEnumPropertySetterCommon<T>)((IObjectModEnumPropertyGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ObjectModEnumProperty<T> item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary<T>(
             this IObjectModEnumProperty<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
             where T : struct, Enum
         {
             ((ObjectModEnumPropertySetterCommon<T>)((IObjectModEnumPropertyGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IObjectModEnumProperty<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAObjectModProperty<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ObjectModEnumProperty<T>)item,
@@ -506,7 +506,6 @@ namespace Mutagen.Bethesda.Fallout4
             ObjectModEnumProperty.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EnumIntValue = item.EnumIntValue == rhs.EnumIntValue;
             ret.Unused = item.Unused == rhs.Unused;
             ret.FunctionType = item.FunctionType == rhs.FunctionType;
@@ -792,7 +791,7 @@ namespace Mutagen.Bethesda.Fallout4
         AObjectModPropertyBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ObjectModEnumPropertyBinaryWriteTranslation Instance = new ObjectModEnumPropertyBinaryWriteTranslation();
+        public new static readonly ObjectModEnumPropertyBinaryWriteTranslation Instance = new ObjectModEnumPropertyBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
             IObjectModEnumPropertyGetter<T> item,
@@ -813,7 +812,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write<T>(
             MutagenWriter writer,
             IObjectModEnumPropertyGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
             where T : struct, Enum
         {
             WriteEmbedded(
@@ -824,7 +823,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             throw new NotImplementedException();
         }
@@ -832,7 +831,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write<T>(
             MutagenWriter writer,
             IAObjectModPropertyGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IObjectModEnumPropertyGetter<T>)item,
@@ -845,7 +844,7 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class ObjectModEnumPropertyBinaryCreateTranslation<T> : AObjectModPropertyBinaryCreateTranslation<T>
         where T : struct, Enum
     {
-        public new readonly static ObjectModEnumPropertyBinaryCreateTranslation<T> Instance = new ObjectModEnumPropertyBinaryCreateTranslation<T>();
+        public new static readonly ObjectModEnumPropertyBinaryCreateTranslation<T> Instance = new ObjectModEnumPropertyBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
             IObjectModEnumProperty<T> item,
@@ -898,7 +897,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ObjectModEnumPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectModEnumPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -928,7 +927,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModEnumPropertyGetter<T> ObjectModEnumPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ObjectModEnumPropertyBinaryOverlay<T>(
                 bytes: stream.RemainingMemory.Slice(0, 0x11),
@@ -945,7 +944,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectModEnumPropertyGetter<T> ObjectModEnumPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ObjectModEnumPropertyFactory(
                 stream: new OverlayStream(slice, package),

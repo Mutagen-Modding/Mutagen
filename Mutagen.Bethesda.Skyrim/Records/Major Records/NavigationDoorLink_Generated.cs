@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationDoorLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NavigationDoorLink CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationDoorLink();
             ((NavigationDoorLinkSetterCommon)((INavigationDoorLinkGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavigationDoorLink item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INavigationDoorLink item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavigationDoorLinkSetterCommon)((INavigationDoorLinkGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -796,12 +796,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             INavigationDoorLink item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XNDP),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -836,7 +836,6 @@ namespace Mutagen.Bethesda.Skyrim
             NavigationDoorLink.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NavMesh = item.NavMesh.Equals(rhs.NavMesh);
             ret.TeleportMarkerTriangle = item.TeleportMarkerTriangle == rhs.TeleportMarkerTriangle;
             ret.Unused = item.Unused == rhs.Unused;
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavigationDoorLinkBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavigationDoorLinkBinaryWriteTranslation Instance = new NavigationDoorLinkBinaryWriteTranslation();
+        public static readonly NavigationDoorLinkBinaryWriteTranslation Instance = new NavigationDoorLinkBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavigationDoorLinkGetter item,
@@ -1077,12 +1076,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             INavigationDoorLinkGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XNDP),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1094,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavigationDoorLinkGetter)item,
@@ -1106,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class NavigationDoorLinkBinaryCreateTranslation
     {
-        public readonly static NavigationDoorLinkBinaryCreateTranslation Instance = new NavigationDoorLinkBinaryCreateTranslation();
+        public static readonly NavigationDoorLinkBinaryCreateTranslation Instance = new NavigationDoorLinkBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavigationDoorLink item,
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INavigationDoorLinkGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationDoorLinkBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1173,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationDoorLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INavigationDoorLinkGetter NavigationDoorLinkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationDoorLinkBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1221,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INavigationDoorLinkGetter NavigationDoorLinkFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavigationDoorLinkFactory(
                 stream: new OverlayStream(slice, package),

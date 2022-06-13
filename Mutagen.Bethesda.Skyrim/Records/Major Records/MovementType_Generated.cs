@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MovementTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static MovementType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MovementType();
             ((MovementTypeSetterCommon)((IMovementTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MovementType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMovementTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MovementTypeSetterCommon)((IMovementTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IMovementTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMovementTypeInternal>(
                 record: item,
@@ -1331,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MovementType)item,
@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MovementType)item,
@@ -1377,7 +1377,6 @@ namespace Mutagen.Bethesda.Skyrim
             MovementType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.LeftWalk = item.LeftWalk.EqualsWithin(rhs.LeftWalk);
             ret.LeftRun = item.LeftRun.EqualsWithin(rhs.LeftRun);
@@ -1986,7 +1985,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MovementTypeBinaryWriteTranslation Instance = new MovementTypeBinaryWriteTranslation();
+        public new static readonly MovementTypeBinaryWriteTranslation Instance = new MovementTypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMovementTypeGetter item,
@@ -2000,7 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IMovementTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2065,7 +2064,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IMovementTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2093,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMovementTypeGetter)item,
@@ -2104,7 +2103,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMovementTypeGetter)item,
@@ -2115,7 +2114,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMovementTypeGetter)item,
@@ -2127,7 +2126,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class MovementTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static MovementTypeBinaryCreateTranslation Instance = new MovementTypeBinaryCreateTranslation();
+        public new static readonly MovementTypeBinaryCreateTranslation Instance = new MovementTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MOVT;
         public static void FillBinaryStructs(
@@ -2146,7 +2145,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2239,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MovementTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2337,7 +2336,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMovementTypeGetter MovementTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new MovementTypeBinaryOverlay(
@@ -2364,7 +2363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMovementTypeGetter MovementTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MovementTypeFactory(
                 stream: new OverlayStream(slice, package),
@@ -2379,7 +2378,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

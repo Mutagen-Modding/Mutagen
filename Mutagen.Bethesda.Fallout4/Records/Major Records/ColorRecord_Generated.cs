@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ColorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ColorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ColorRecord CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ColorRecord();
             ((ColorRecordSetterCommon)((IColorRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ColorRecord item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IColorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ColorRecordSetterCommon)((IColorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IColorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IColorRecordInternal>(
                 record: item,
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ColorRecord)item,
@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ColorRecord)item,
@@ -1087,7 +1087,6 @@ namespace Mutagen.Bethesda.Fallout4
             ColorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             ret.Flags = item.Flags == rhs.Flags;
@@ -1582,12 +1581,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ColorRecordBinaryWriteTranslation Instance = new ColorRecordBinaryWriteTranslation();
+        public new static readonly ColorRecordBinaryWriteTranslation Instance = new ColorRecordBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IColorRecordGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1608,7 +1607,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1647,7 +1646,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IColorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1675,7 +1674,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IColorRecordGetter)item,
@@ -1686,7 +1685,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IColorRecordGetter)item,
@@ -1697,7 +1696,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IColorRecordGetter)item,
@@ -1709,7 +1708,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ColorRecordBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ColorRecordBinaryCreateTranslation Instance = new ColorRecordBinaryCreateTranslation();
+        public new static readonly ColorRecordBinaryCreateTranslation Instance = new ColorRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLFM;
         public static void FillBinaryStructs(
@@ -1728,7 +1727,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1822,7 +1821,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ColorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ColorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1880,7 +1879,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IColorRecordGetter ColorRecordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new ColorRecordBinaryOverlay(
@@ -1907,7 +1906,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IColorRecordGetter ColorRecordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ColorRecordFactory(
                 stream: new OverlayStream(slice, package),
@@ -1922,7 +1921,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

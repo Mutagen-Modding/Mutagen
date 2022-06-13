@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Attack CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Attack();
             ((AttackSetterCommon)((IAttackGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Attack item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAttack item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AttackSetterCommon)((IAttackGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAttack item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -806,7 +806,6 @@ namespace Mutagen.Bethesda.Skyrim
             Attack.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.AttackData = EqualsMaskHelper.EqualsHelper(
                 item.AttackData,
                 rhs.AttackData,
@@ -1061,12 +1060,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AttackBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AttackBinaryWriteTranslation Instance = new AttackBinaryWriteTranslation();
+        public static readonly AttackBinaryWriteTranslation Instance = new AttackBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IAttackGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             if (item.AttackData is {} AttackDataItem)
             {
@@ -1085,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IAttackGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1096,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAttackGetter)item,
@@ -1108,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class AttackBinaryCreateTranslation
     {
-        public readonly static AttackBinaryCreateTranslation Instance = new AttackBinaryCreateTranslation();
+        public static readonly AttackBinaryCreateTranslation Instance = new AttackBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAttack item,
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAttackGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1204,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1239,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAttackGetter AttackFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AttackBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1257,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAttackGetter AttackFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AttackFactory(
                 stream: new OverlayStream(slice, package),
@@ -1272,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

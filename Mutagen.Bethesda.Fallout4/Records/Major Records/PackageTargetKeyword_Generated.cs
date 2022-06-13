@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PackageTargetKeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageTargetKeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static PackageTargetKeyword CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageTargetKeyword();
             ((PackageTargetKeywordSetterCommon)((IPackageTargetKeywordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageTargetKeyword item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPackageTargetKeyword item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageTargetKeywordSetterCommon)((IPackageTargetKeywordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPackageTargetKeyword item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAPackageTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PackageTargetKeyword)item,
@@ -729,7 +729,6 @@ namespace Mutagen.Bethesda.Fallout4
             PackageTargetKeyword.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Keyword = item.Keyword.Equals(rhs.Keyword);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
         APackageTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PackageTargetKeywordBinaryWriteTranslation Instance = new PackageTargetKeywordBinaryWriteTranslation();
+        public new static readonly PackageTargetKeywordBinaryWriteTranslation Instance = new PackageTargetKeywordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPackageTargetKeywordGetter item,
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPackageTargetKeywordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1009,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageTargetKeywordGetter)item,
@@ -1020,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAPackageTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPackageTargetKeywordGetter)item,
@@ -1032,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PackageTargetKeywordBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
     {
-        public new readonly static PackageTargetKeywordBinaryCreateTranslation Instance = new PackageTargetKeywordBinaryCreateTranslation();
+        public new static readonly PackageTargetKeywordBinaryCreateTranslation Instance = new PackageTargetKeywordBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageTargetKeyword item,
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PackageTargetKeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageTargetKeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageTargetKeywordGetter PackageTargetKeywordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageTargetKeywordBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1126,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageTargetKeywordGetter PackageTargetKeywordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageTargetKeywordFactory(
                 stream: new OverlayStream(slice, package),

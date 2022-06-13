@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestFragmentAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static QuestFragmentAlias CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestFragmentAlias();
             ((QuestFragmentAliasSetterCommon)((IQuestFragmentAliasGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out QuestFragmentAlias item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IQuestFragmentAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestFragmentAliasSetterCommon)((IQuestFragmentAliasGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IQuestFragmentAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -942,7 +942,6 @@ namespace Mutagen.Bethesda.Skyrim
             QuestFragmentAlias.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Property = MaskItemExt.Factory(item.Property.GetEqualsMask(rhs.Property, include), include);
             ret.Version = item.Version == rhs.Version;
             ret.ObjectFormat = item.ObjectFormat == rhs.ObjectFormat;
@@ -1244,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestFragmentAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static QuestFragmentAliasBinaryWriteTranslation Instance = new QuestFragmentAliasBinaryWriteTranslation();
+        public static readonly QuestFragmentAliasBinaryWriteTranslation Instance = new QuestFragmentAliasBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IQuestFragmentAliasGetter item,
@@ -1289,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IQuestFragmentAliasGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestFragmentAliasGetter)item,
@@ -1311,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class QuestFragmentAliasBinaryCreateTranslation
     {
-        public readonly static QuestFragmentAliasBinaryCreateTranslation Instance = new QuestFragmentAliasBinaryCreateTranslation();
+        public static readonly QuestFragmentAliasBinaryCreateTranslation Instance = new QuestFragmentAliasBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IQuestFragmentAlias item,
@@ -1346,7 +1345,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IQuestFragmentAliasGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestFragmentAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1391,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestFragmentAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1430,7 +1429,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IQuestFragmentAliasGetter QuestFragmentAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestFragmentAliasBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1448,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IQuestFragmentAliasGetter QuestFragmentAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestFragmentAliasFactory(
                 stream: new OverlayStream(slice, package),

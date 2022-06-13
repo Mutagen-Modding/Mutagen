@@ -351,7 +351,7 @@ partial class RaceBinaryWriteTranslation
             writer.Write(genderInt);
         }
         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBoneGetter>.Instance.Write(writer, bones,
-            transl: (MutagenWriter subWriter, IBoneGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IBoneGetter subItem, TypedWriteParams conv) =>
             {
                 var Item = subItem;
                 ((BoneBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -391,7 +391,7 @@ partial class RaceBinaryWriteTranslation
         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMorphValueGetter>.Instance.Write(
             writer: writer,
             items: morphs,
-            transl: (MutagenWriter subWriter, IMorphValueGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IMorphValueGetter subItem, TypedWriteParams conv) =>
             {
                 var Item = subItem;
                 ((MorphValueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(

@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ScriptBoolListPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptBoolListPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ScriptBoolListProperty CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptBoolListProperty();
             ((ScriptBoolListPropertySetterCommon)((IScriptBoolListPropertyGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptBoolListProperty item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IScriptBoolListProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptBoolListPropertySetterCommon)((IScriptBoolListPropertyGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IScriptBoolListProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IScriptProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ScriptBoolListProperty)item,
@@ -798,7 +798,6 @@ namespace Mutagen.Bethesda.Fallout4
             ScriptBoolListProperty.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data.CollectionEqualsHelper(
                 rhs.Data,
                 (l, r) => l == r,
@@ -1078,7 +1077,7 @@ namespace Mutagen.Bethesda.Fallout4
         ScriptPropertyBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ScriptBoolListPropertyBinaryWriteTranslation Instance = new ScriptBoolListPropertyBinaryWriteTranslation();
+        public new static readonly ScriptBoolListPropertyBinaryWriteTranslation Instance = new ScriptBoolListPropertyBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScriptBoolListPropertyGetter item,
@@ -1097,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IScriptBoolListPropertyGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1107,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptBoolListPropertyGetter)item,
@@ -1118,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IScriptPropertyGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IScriptBoolListPropertyGetter)item,
@@ -1130,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ScriptBoolListPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
-        public new readonly static ScriptBoolListPropertyBinaryCreateTranslation Instance = new ScriptBoolListPropertyBinaryCreateTranslation();
+        public new static readonly ScriptBoolListPropertyBinaryCreateTranslation Instance = new ScriptBoolListPropertyBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptBoolListProperty item,
@@ -1182,7 +1181,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ScriptBoolListPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptBoolListPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptBoolListPropertyGetter ScriptBoolListPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptBoolListPropertyBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1231,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScriptBoolListPropertyGetter ScriptBoolListPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptBoolListPropertyFactory(
                 stream: new OverlayStream(slice, package),

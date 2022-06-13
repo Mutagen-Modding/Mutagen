@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SkyrimGroup<T> CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SkyrimGroup<T>();
             ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SkyrimGroup<T> item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary<T>(
             this ISkyrimGroup<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
             ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISkyrimGroup<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.GroupParse(
                 record: item,
@@ -899,7 +899,6 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.LastModified = item.LastModified == rhs.LastModified;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1258,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SkyrimGroupBinaryWriteTranslation Instance = new SkyrimGroupBinaryWriteTranslation();
+        public static readonly SkyrimGroupBinaryWriteTranslation Instance = new SkyrimGroupBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
             ISkyrimGroupGetter<T> item,
@@ -1279,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes<T>(
             ISkyrimGroupGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
@@ -1314,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write<T>(
             MutagenWriter writer,
             ISkyrimGroupGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             using (HeaderExport.Group(
@@ -1334,7 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             throw new NotImplementedException();
         }
@@ -1344,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class SkyrimGroupBinaryCreateTranslation<T>
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
-        public readonly static SkyrimGroupBinaryCreateTranslation<T> Instance = new SkyrimGroupBinaryCreateTranslation<T>();
+        public static readonly SkyrimGroupBinaryCreateTranslation<T> Instance = new SkyrimGroupBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
             ISkyrimGroup<T> item,
@@ -1366,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1401,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary<T, T_ErrMask>(
             this ISkyrimGroupGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
@@ -1453,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1499,7 +1498,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkyrimGroupGetter<T> SkyrimGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SkyrimGroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1523,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkyrimGroupGetter<T> SkyrimGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SkyrimGroupFactory(
                 stream: new OverlayStream(slice, package),
@@ -1538,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

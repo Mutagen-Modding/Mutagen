@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static BookData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookData();
             ((BookDataSetterCommon)((IBookDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BookData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IBookData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BookDataSetterCommon)((IBookDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IBookData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Oblivion
             BookData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.Value = item.Value.EqualsWithin(rhs.Value);
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BookDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BookDataBinaryWriteTranslation Instance = new BookDataBinaryWriteTranslation();
+        public static readonly BookDataBinaryWriteTranslation Instance = new BookDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBookDataGetter item,
@@ -1120,12 +1119,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IBookDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1137,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBookDataGetter)item,
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class BookDataBinaryCreateTranslation
     {
-        public readonly static BookDataBinaryCreateTranslation Instance = new BookDataBinaryCreateTranslation();
+        public static readonly BookDataBinaryCreateTranslation Instance = new BookDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBookData item,
@@ -1176,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IBookDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1220,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1251,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IBookDataGetter BookDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1269,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IBookDataGetter BookDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BookDataFactory(
                 stream: new OverlayStream(slice, package),

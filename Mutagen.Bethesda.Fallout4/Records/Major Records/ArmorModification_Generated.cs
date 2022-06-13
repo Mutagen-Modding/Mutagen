@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ArmorModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ArmorModification CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ArmorModification();
             ((ArmorModificationSetterCommon)((IArmorModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ArmorModification item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IArmorModificationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ArmorModificationSetterCommon)((IArmorModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IArmorModificationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IArmorModificationInternal>(
                 record: item,
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAObjectModificationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ArmorModification)item,
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ArmorModification)item,
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ArmorModification)item,
@@ -985,7 +985,6 @@ namespace Mutagen.Bethesda.Fallout4
             ArmorModification.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1522,7 +1521,7 @@ namespace Mutagen.Bethesda.Fallout4
         AObjectModificationBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ArmorModificationBinaryWriteTranslation Instance = new ArmorModificationBinaryWriteTranslation();
+        public new static readonly ArmorModificationBinaryWriteTranslation Instance = new ArmorModificationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IArmorModificationGetter item,
@@ -1536,7 +1535,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IArmorModificationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1562,7 +1561,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IArmorModificationGetter)item,
@@ -1573,7 +1572,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAObjectModificationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IArmorModificationGetter)item,
@@ -1584,7 +1583,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IArmorModificationGetter)item,
@@ -1595,7 +1594,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IArmorModificationGetter)item,
@@ -1607,7 +1606,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ArmorModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
     {
-        public new readonly static ArmorModificationBinaryCreateTranslation Instance = new ArmorModificationBinaryCreateTranslation();
+        public new static readonly ArmorModificationBinaryCreateTranslation Instance = new ArmorModificationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OMOD;
         public static void FillBinaryStructs(
@@ -1656,7 +1655,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ArmorModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1685,7 +1684,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IArmorModificationGetter ArmorModificationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new ArmorModificationBinaryOverlay(
@@ -1712,7 +1711,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IArmorModificationGetter ArmorModificationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ArmorModificationFactory(
                 stream: new OverlayStream(slice, package),

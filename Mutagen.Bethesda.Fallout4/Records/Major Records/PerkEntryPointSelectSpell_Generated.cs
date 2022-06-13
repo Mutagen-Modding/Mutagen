@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PerkEntryPointSelectSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointSelectSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static PerkEntryPointSelectSpell CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkEntryPointSelectSpell();
             ((PerkEntryPointSelectSpellSetterCommon)((IPerkEntryPointSelectSpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkEntryPointSelectSpell item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPerkEntryPointSelectSpell item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkEntryPointSelectSpellSetterCommon)((IPerkEntryPointSelectSpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPerkEntryPointSelectSpell item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAPerkEntryPointEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointSelectSpell)item,
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointSelectSpell)item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Fallout4
             PerkEntryPointSelectSpell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Spell = item.Spell.Equals(rhs.Spell);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1086,7 +1085,7 @@ namespace Mutagen.Bethesda.Fallout4
         APerkEntryPointEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkEntryPointSelectSpellBinaryWriteTranslation Instance = new PerkEntryPointSelectSpellBinaryWriteTranslation();
+        public new static readonly PerkEntryPointSelectSpellBinaryWriteTranslation Instance = new PerkEntryPointSelectSpellBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkEntryPointSelectSpellGetter item,
@@ -1103,7 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPerkEntryPointSelectSpellGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1117,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkEntryPointSelectSpellGetter)item,
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAPerkEntryPointEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointSelectSpellGetter)item,
@@ -1139,7 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointSelectSpellGetter)item,
@@ -1151,7 +1150,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PerkEntryPointSelectSpellBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
-        public new readonly static PerkEntryPointSelectSpellBinaryCreateTranslation Instance = new PerkEntryPointSelectSpellBinaryCreateTranslation();
+        public new static readonly PerkEntryPointSelectSpellBinaryCreateTranslation Instance = new PerkEntryPointSelectSpellBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkEntryPointSelectSpell item,
@@ -1200,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PerkEntryPointSelectSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointSelectSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1228,7 +1227,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPerkEntryPointSelectSpellGetter PerkEntryPointSelectSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkEntryPointSelectSpellBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1246,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPerkEntryPointSelectSpellGetter PerkEntryPointSelectSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkEntryPointSelectSpellFactory(
                 stream: new OverlayStream(slice, package),

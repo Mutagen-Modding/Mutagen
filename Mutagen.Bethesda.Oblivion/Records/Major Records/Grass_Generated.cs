@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Grass CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Grass();
             ((GrassSetterCommon)((IGrassGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Grass item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -689,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IGrassInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IGrassInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IGrassInternal>(
                 record: item,
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Grass)item,
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Grass)item,
@@ -900,7 +900,6 @@ namespace Mutagen.Bethesda.Oblivion
             Grass.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1369,12 +1368,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GrassBinaryWriteTranslation Instance = new GrassBinaryWriteTranslation();
+        public new static readonly GrassBinaryWriteTranslation Instance = new GrassBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IGrassGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1399,7 +1398,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IGrassGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1427,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -1438,7 +1437,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -1449,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -1461,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class GrassBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
+        public new static readonly GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GRAS;
         public static void FillBinaryStructs(
@@ -1480,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1544,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1578,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IGrassGetter GrassFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new GrassBinaryOverlay(
@@ -1605,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IGrassGetter GrassFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return GrassFactory(
                 stream: new OverlayStream(slice, package),
@@ -1620,7 +1619,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -6,23 +6,22 @@ public readonly struct TypedParseParams
 {
     public readonly RecordTypeConverter? RecordTypeConverter;
     public readonly int? LengthOverride;
-    public readonly bool ShortCircuit;
-
-    public const bool DefaultShortCircuit = true;
+    private readonly bool _doNotShortCircuit;
+    public bool ShortCircuit => !_doNotShortCircuit;
 
     public TypedParseParams(
         int? lengthOverride, 
         RecordTypeConverter? recordTypeConverter,
-        bool shortCircuit)
+        bool doNotShortCircuit)
     {
         LengthOverride = lengthOverride;
         RecordTypeConverter = recordTypeConverter;
-        ShortCircuit = shortCircuit;
+        _doNotShortCircuit = doNotShortCircuit;
     }
 
     public static implicit operator TypedParseParams(RecordTypeConverter? converter)
     {
-        return new TypedParseParams(lengthOverride: null, converter, shortCircuit: DefaultShortCircuit);
+        return new TypedParseParams(lengthOverride: null, converter, doNotShortCircuit: default);
     }
 
     public static TypedParseParams FromLengthOverride(int? lengthOverride)
@@ -30,60 +29,58 @@ public readonly struct TypedParseParams
         return new TypedParseParams(
             lengthOverride: lengthOverride,
             recordTypeConverter: null,
-            shortCircuit: DefaultShortCircuit);
+            doNotShortCircuit: default);
     }
 }
 
 public static class TypedParseParamsExt
 {
-    public static RecordTypeConverter? Combine(this TypedParseParams? lhs, RecordTypeConverter? rhs)
+    public static RecordTypeConverter? Combine(this TypedParseParams lhs, RecordTypeConverter? rhs)
     {
-        if (lhs?.RecordTypeConverter == null) return rhs;
+        if (lhs.RecordTypeConverter == null) return rhs;
         if (rhs == null) return null;
         throw new NotImplementedException();
     }
         
-    public static TypedParseParams With(this TypedParseParams? param, RecordTypeConverter conv)
+    public static TypedParseParams With(this TypedParseParams param, RecordTypeConverter conv)
     {
         return new TypedParseParams(
-            lengthOverride: param?.LengthOverride,
+            lengthOverride: param.LengthOverride,
             recordTypeConverter: conv, 
-            shortCircuit: TypedParseParams.DefaultShortCircuit);
+            doNotShortCircuit: default);
     }
 
-    public static TypedParseParams With(this TypedParseParams? param, RecordTypeConverter conv, int? lengthOverride)
+    public static TypedParseParams With(this TypedParseParams param, RecordTypeConverter conv, int? lengthOverride)
     {
         return new TypedParseParams(
             lengthOverride: lengthOverride,
             recordTypeConverter: conv, 
-            shortCircuit: TypedParseParams.DefaultShortCircuit);
+            doNotShortCircuit: default);
     }
 
-    public static TypedParseParams With(this TypedParseParams? param, int? lengthOverride)
+    public static TypedParseParams With(this TypedParseParams param, int? lengthOverride)
     {
         return new TypedParseParams(
             lengthOverride: lengthOverride,
-            recordTypeConverter: param?.RecordTypeConverter,
-            shortCircuit: TypedParseParams.DefaultShortCircuit);
+            recordTypeConverter: param.RecordTypeConverter, 
+            doNotShortCircuit: default);
     }
 
-    public static TypedParseParams DoNotShortCircuit(this TypedParseParams? param)
+    public static TypedParseParams DoNotShortCircuit(this TypedParseParams param)
     {
         return new TypedParseParams(
-            lengthOverride: param?.LengthOverride,
-            recordTypeConverter: param?.RecordTypeConverter, 
-            shortCircuit: false);
+            lengthOverride: param.LengthOverride,
+            recordTypeConverter: param.RecordTypeConverter, 
+            doNotShortCircuit: true);
     }
 
-    public static RecordType ConvertToStandard(this TypedParseParams? converter, RecordType rec)
+    public static RecordType ConvertToStandard(this TypedParseParams converter, RecordType rec)
     {
-        if (converter == null) return rec;
-        return converter.Value.RecordTypeConverter.ConvertToStandard(rec);
+        return converter.RecordTypeConverter.ConvertToStandard(rec);
     }
         
-    public static RecordType ConvertToCustom(this TypedParseParams? converter, RecordType rec)
+    public static RecordType ConvertToCustom(this TypedParseParams converter, RecordType rec)
     {
-        if (converter == null) return rec;
-        return converter.Value.RecordTypeConverter.ConvertToCustom(rec);
+        return converter.RecordTypeConverter.ConvertToCustom(rec);
     }
 }

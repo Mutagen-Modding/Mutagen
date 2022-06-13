@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ObjectTemplate<T> CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ObjectTemplate<T>();
             ((ObjectTemplateSetterCommon<T>)((IObjectTemplateGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ObjectTemplate<T> item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary<T>(
             this IObjectTemplate<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
             where T : struct, Enum
         {
             ((ObjectTemplateSetterCommon<T>)((IObjectTemplateGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IObjectTemplate<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -703,7 +703,6 @@ namespace Mutagen.Bethesda.Fallout4
             ObjectTemplate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.IsEditorOnly = item.IsEditorOnly == rhs.IsEditorOnly;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.AddonIndex = item.AddonIndex == rhs.AddonIndex;
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectTemplateBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ObjectTemplateBinaryWriteTranslation Instance = new ObjectTemplateBinaryWriteTranslation();
+        public static readonly ObjectTemplateBinaryWriteTranslation Instance = new ObjectTemplateBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
             IObjectTemplateGetter<T> item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes<T>(
             IObjectTemplateGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
             where T : struct, Enum
         {
             BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write<T>(
             MutagenWriter writer,
             IObjectTemplateGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
             where T : struct, Enum
         {
             WriteEmbedded(
@@ -1218,7 +1217,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             throw new NotImplementedException();
         }
@@ -1228,7 +1227,7 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class ObjectTemplateBinaryCreateTranslation<T>
         where T : struct, Enum
     {
-        public readonly static ObjectTemplateBinaryCreateTranslation<T> Instance = new ObjectTemplateBinaryCreateTranslation<T>();
+        public static readonly ObjectTemplateBinaryCreateTranslation<T> Instance = new ObjectTemplateBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
             IObjectTemplate<T> item,
@@ -1243,7 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1293,7 +1292,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary<T>(
             this IObjectTemplateGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
             where T : struct, Enum
         {
             ((ObjectTemplateBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
@@ -1340,7 +1339,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ObjectTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1389,7 +1388,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectTemplateGetter<T> ObjectTemplateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ObjectTemplateBinaryOverlay<T>(
                 bytes: stream.RemainingMemory,
@@ -1407,7 +1406,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IObjectTemplateGetter<T> ObjectTemplateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ObjectTemplateFactory(
                 stream: new OverlayStream(slice, package),
@@ -1422,7 +1421,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

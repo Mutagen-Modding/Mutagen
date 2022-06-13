@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SkyrimModHeader CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SkyrimModHeader();
             ((SkyrimModHeaderSetterCommon)((ISkyrimModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1004,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SkyrimModHeader item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimModHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SkyrimModHeaderSetterCommon)((ISkyrimModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISkyrimModHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
@@ -1436,7 +1436,6 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimModHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.FormID = item.FormID == rhs.FormID;
             ret.Version = item.Version == rhs.Version;
@@ -1951,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SkyrimModHeaderBinaryWriteTranslation Instance = new SkyrimModHeaderBinaryWriteTranslation();
+        public static readonly SkyrimModHeaderBinaryWriteTranslation Instance = new SkyrimModHeaderBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISkyrimModHeaderGetter item,
@@ -1970,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             ISkyrimModHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             var StatsItem = item.Stats;
             ((ModStatsBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
@@ -2003,7 +2002,7 @@ namespace Mutagen.Bethesda.Skyrim
                 items: item.OverriddenForms,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2035,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ISkyrimModHeaderGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2054,7 +2053,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISkyrimModHeaderGetter)item,
@@ -2066,7 +2065,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SkyrimModHeaderBinaryCreateTranslation
     {
-        public readonly static SkyrimModHeaderBinaryCreateTranslation Instance = new SkyrimModHeaderBinaryCreateTranslation();
+        public static readonly SkyrimModHeaderBinaryCreateTranslation Instance = new SkyrimModHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISkyrimModHeader item,
@@ -2088,7 +2087,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2181,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2226,7 +2225,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2289,7 +2288,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkyrimModHeaderGetter SkyrimModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SkyrimModHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -2313,7 +2312,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkyrimModHeaderGetter SkyrimModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SkyrimModHeaderFactory(
                 stream: new OverlayStream(slice, package),
@@ -2328,7 +2327,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

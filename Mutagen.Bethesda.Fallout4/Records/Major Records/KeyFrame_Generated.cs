@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((KeyFrameBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static KeyFrame CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new KeyFrame();
             ((KeyFrameSetterCommon)((IKeyFrameGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out KeyFrame item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IKeyFrame item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((KeyFrameSetterCommon)((IKeyFrameGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IKeyFrame item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Fallout4
             KeyFrame.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Time = item.Time.EqualsWithin(rhs.Time);
             ret.Value = item.Value.EqualsWithin(rhs.Value);
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class KeyFrameBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static KeyFrameBinaryWriteTranslation Instance = new KeyFrameBinaryWriteTranslation();
+        public static readonly KeyFrameBinaryWriteTranslation Instance = new KeyFrameBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IKeyFrameGetter item,
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IKeyFrameGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1009,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IKeyFrameGetter)item,
@@ -1021,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class KeyFrameBinaryCreateTranslation
     {
-        public readonly static KeyFrameBinaryCreateTranslation Instance = new KeyFrameBinaryCreateTranslation();
+        public static readonly KeyFrameBinaryCreateTranslation Instance = new KeyFrameBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IKeyFrame item,
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IKeyFrameGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((KeyFrameBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1086,7 +1085,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((KeyFrameBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IKeyFrameGetter KeyFrameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new KeyFrameBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IKeyFrameGetter KeyFrameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return KeyFrameFactory(
                 stream: new OverlayStream(slice, package),

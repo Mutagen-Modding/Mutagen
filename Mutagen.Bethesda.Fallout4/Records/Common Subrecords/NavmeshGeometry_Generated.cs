@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshGeometryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static NavmeshGeometry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavmeshGeometry();
             ((NavmeshGeometrySetterCommon)((INavmeshGeometryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavmeshGeometry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1631,7 +1631,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INavmeshGeometry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavmeshGeometrySetterCommon)((INavmeshGeometryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1791,12 +1791,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INavmeshGeometry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.NVNM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1831,7 +1831,6 @@ namespace Mutagen.Bethesda.Fallout4
             NavmeshGeometry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NavmeshVersion = item.NavmeshVersion == rhs.NavmeshVersion;
             ret.Magic = item.Magic == rhs.Magic;
             ret.Parent = MaskItemExt.Factory(item.Parent.GetEqualsMask(rhs.Parent, include), include);
@@ -2492,7 +2491,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavmeshGeometryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavmeshGeometryBinaryWriteTranslation Instance = new NavmeshGeometryBinaryWriteTranslation();
+        public static readonly NavmeshGeometryBinaryWriteTranslation Instance = new NavmeshGeometryBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavmeshGeometryGetter item,
@@ -2512,7 +2511,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.Triangles,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshTriangleGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshTriangleGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2524,7 +2523,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.EdgeLinks,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IEdgeLinkGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IEdgeLinkGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((EdgeLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2536,7 +2535,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.DoorTriangles,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IDoorTriangleGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IDoorTriangleGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((DoorTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2558,7 +2557,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.Waypoints,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshWaypointGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshWaypointGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshWaypointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2598,12 +2597,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INavmeshGeometryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.NVNM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2615,7 +2614,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavmeshGeometryGetter)item,
@@ -2627,7 +2626,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NavmeshGeometryBinaryCreateTranslation
     {
-        public readonly static NavmeshGeometryBinaryCreateTranslation Instance = new NavmeshGeometryBinaryCreateTranslation();
+        public static readonly NavmeshGeometryBinaryCreateTranslation Instance = new NavmeshGeometryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavmeshGeometry item,
@@ -2695,7 +2694,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this INavmeshGeometryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshGeometryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2740,7 +2739,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshGeometryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2809,7 +2808,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavmeshGeometryGetter NavmeshGeometryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavmeshGeometryBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -2833,7 +2832,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavmeshGeometryGetter NavmeshGeometryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavmeshGeometryFactory(
                 stream: new OverlayStream(slice, package),

@@ -153,7 +153,7 @@ partial class TerminalBinaryWriteTranslation
             writer: writer,
             items: item.MarkerParameters,
             recordType: RecordTypes.SNAM,
-            transl: (MutagenWriter subWriter, IFurnitureMarkerParametersGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IFurnitureMarkerParametersGetter subItem, TypedWriteParams conv) =>
             {
                 var Item = subItem;
                 ((FurnitureMarkerParametersBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(

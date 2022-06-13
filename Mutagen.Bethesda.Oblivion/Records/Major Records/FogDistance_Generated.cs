@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FogDistanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static FogDistance CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FogDistance();
             ((FogDistanceSetterCommon)((IFogDistanceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FogDistance item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IFogDistance item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FogDistanceSetterCommon)((IFogDistanceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IFogDistance item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.FNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Oblivion
             FogDistance.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DayNear = item.DayNear.EqualsWithin(rhs.DayNear);
             ret.DayFar = item.DayFar.EqualsWithin(rhs.DayFar);
             ret.NightNear = item.NightNear.EqualsWithin(rhs.NightNear);
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FogDistanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FogDistanceBinaryWriteTranslation Instance = new FogDistanceBinaryWriteTranslation();
+        public static readonly FogDistanceBinaryWriteTranslation Instance = new FogDistanceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFogDistanceGetter item,
@@ -1118,12 +1117,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IFogDistanceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.FNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFogDistanceGetter)item,
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class FogDistanceBinaryCreateTranslation
     {
-        public readonly static FogDistanceBinaryCreateTranslation Instance = new FogDistanceBinaryCreateTranslation();
+        public static readonly FogDistanceBinaryCreateTranslation Instance = new FogDistanceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFogDistance item,
@@ -1170,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IFogDistanceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FogDistanceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FogDistanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1245,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IFogDistanceGetter FogDistanceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FogDistanceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1263,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IFogDistanceGetter FogDistanceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FogDistanceFactory(
                 stream: new OverlayStream(slice, package),

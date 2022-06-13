@@ -1,9 +1,10 @@
-﻿using Loqui;
+using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog.StructuredStrings;
+using System.ComponentModel;
 
 namespace Mutagen.Bethesda.UnitTests.Placeholders;
 
@@ -64,7 +65,7 @@ public class TestMajorRecord : ITestMajorRecord
 
     public IFormLink<IOtherTestMajorRecordGetter> FormLink { get; } = new FormLink<IOtherTestMajorRecordGetter>();
     public object BinaryWriteTranslator { get; } = null!;
-    public void WriteToBinary(MutagenWriter writer, TypedWriteParams? translationParams = null)
+    public void WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams = default)
     {
         throw new NotImplementedException();
     }

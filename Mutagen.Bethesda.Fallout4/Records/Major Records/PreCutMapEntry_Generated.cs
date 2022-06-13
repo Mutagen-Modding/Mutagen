@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreCutMapEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PreCutMapEntry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PreCutMapEntry();
             ((PreCutMapEntrySetterCommon)((IPreCutMapEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PreCutMapEntry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPreCutMapEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PreCutMapEntrySetterCommon)((IPreCutMapEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPreCutMapEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -866,7 +866,6 @@ namespace Mutagen.Bethesda.Fallout4
             PreCutMapEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Triangles = item.Triangles.CollectionEqualsHelper(
                 rhs.Triangles,
@@ -1103,7 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PreCutMapEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PreCutMapEntryBinaryWriteTranslation Instance = new PreCutMapEntryBinaryWriteTranslation();
+        public static readonly PreCutMapEntryBinaryWriteTranslation Instance = new PreCutMapEntryBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPreCutMapEntryGetter item,
@@ -1122,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPreCutMapEntryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPreCutMapEntryGetter)item,
@@ -1144,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PreCutMapEntryBinaryCreateTranslation
     {
-        public readonly static PreCutMapEntryBinaryCreateTranslation Instance = new PreCutMapEntryBinaryCreateTranslation();
+        public static readonly PreCutMapEntryBinaryCreateTranslation Instance = new PreCutMapEntryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPreCutMapEntry item,
@@ -1169,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPreCutMapEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreCutMapEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreCutMapEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1246,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPreCutMapEntryGetter PreCutMapEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PreCutMapEntryBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1264,7 +1263,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPreCutMapEntryGetter PreCutMapEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PreCutMapEntryFactory(
                 stream: new OverlayStream(slice, package),

@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static DialogResponseData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogResponseData();
             ((DialogResponseDataSetterCommon)((IDialogResponseDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogResponseData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDialogResponseData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogResponseDataSetterCommon)((IDialogResponseDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -862,12 +862,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IDialogResponseData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.TRDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -902,7 +902,6 @@ namespace Mutagen.Bethesda.Oblivion
             DialogResponseData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Emotion = item.Emotion == rhs.Emotion;
             ret.EmotionValue = item.EmotionValue == rhs.EmotionValue;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1154,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DialogResponseDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DialogResponseDataBinaryWriteTranslation Instance = new DialogResponseDataBinaryWriteTranslation();
+        public static readonly DialogResponseDataBinaryWriteTranslation Instance = new DialogResponseDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDialogResponseDataGetter item,
@@ -1175,12 +1174,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IDialogResponseDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.TRDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1192,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogResponseDataGetter)item,
@@ -1204,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class DialogResponseDataBinaryCreateTranslation
     {
-        public readonly static DialogResponseDataBinaryCreateTranslation Instance = new DialogResponseDataBinaryCreateTranslation();
+        public static readonly DialogResponseDataBinaryCreateTranslation Instance = new DialogResponseDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDialogResponseData item,
@@ -1230,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IDialogResponseDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1274,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1306,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IDialogResponseDataGetter DialogResponseDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogResponseDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1324,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IDialogResponseDataGetter DialogResponseDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogResponseDataFactory(
                 stream: new OverlayStream(slice, package),

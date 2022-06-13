@@ -20,7 +20,7 @@ public class MutagenXmlModule : XmlTranslationModule
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
             args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
-            args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
+            args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend)}");
             args.Add($"ErrorMaskBuilder? errorMask");
             args.Add($"{nameof(TranslationCrystal)}? translationMask");
         }
@@ -32,7 +32,7 @@ public class MutagenXmlModule : XmlTranslationModule
                            $"{this.TranslationWriteClass(obj.BaseClass)}.WriteToNode{ModuleNickname}"))
                 {
                     args.Add($"item: item");
-                    args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
+                    args.AddPassArg($"{XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend)}");
                     args.Add($"errorMask: errorMask");
                     args.Add($"translationMask: translationMask");
                 }
@@ -68,7 +68,7 @@ public class MutagenXmlModule : XmlTranslationModule
                         sb: sb,
                         objGen: obj,
                         typeGen: field,
-                        writerAccessor: $"{XmlTranslationModule.XElementLine.GetParameterName(obj)}",
+                        writerAccessor: $"{XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend)}",
                         itemAccessor: Accessor.FromType(field, "item"),
                         errorMaskAccessor: $"errorMask",
                         translationMaskAccessor: "translationMask",
@@ -190,7 +190,7 @@ public class MutagenXmlModule : XmlTranslationModule
                        $"protected static void FillPrivateElement{ModuleNickname}"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
+                args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend)}");
                 args.Add("string name");
                 args.Add($"ErrorMaskBuilder? errorMask");
                 args.Add($"{nameof(TranslationCrystal)}? translationMask");
@@ -232,7 +232,7 @@ public class MutagenXmlModule : XmlTranslationModule
                                             sb: sb,
                                             objGen: obj,
                                             typeGen: subField.Field,
-                                            nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
+                                            nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend).Result,
                                             itemAccessor: Accessor.FromType(subField.Field, "item"),
                                             translationMaskAccessor: "translationMask",
                                             errorMaskAccessor: $"errorMask");
@@ -260,7 +260,7 @@ public class MutagenXmlModule : XmlTranslationModule
                                         sb: sb,
                                         objGen: obj,
                                         typeGen: field,
-                                        nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
+                                        nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend).Result,
                                         itemAccessor: Accessor.FromType(field, "item"),
                                         translationMaskAccessor: "translationMask",
                                         errorMaskAccessor: $"errorMask");
@@ -279,7 +279,7 @@ public class MutagenXmlModule : XmlTranslationModule
                                        $"{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.FillPrivateElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                             {
                                 args.Add("item: item");
-                                args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
+                                args.AddPassArg($"{XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend)}");
                                 args.Add("name: name");
                                 args.Add("errorMask: errorMask");
                                 if (this.TranslationMaskParameter)
@@ -302,7 +302,7 @@ public class MutagenXmlModule : XmlTranslationModule
                    $"public static void FillPublicElement{ModuleNickname}"))
         {
             args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-            args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
+            args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend)}");
             args.Add("string name");
             args.Add($"ErrorMaskBuilder? errorMask");
             args.Add($"{nameof(TranslationCrystal)}? translationMask");
@@ -336,7 +336,7 @@ public class MutagenXmlModule : XmlTranslationModule
                                         sb: sb,
                                         objGen: obj,
                                         typeGen: subField.Field,
-                                        nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
+                                        nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend).Result,
                                         itemAccessor: Accessor.FromType(subField.Field, "item"),
                                         translationMaskAccessor: "translationMask",
                                         errorMaskAccessor: $"errorMask");
@@ -364,7 +364,7 @@ public class MutagenXmlModule : XmlTranslationModule
                                     sb: sb,
                                     objGen: obj,
                                     typeGen: field,
-                                    nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
+                                    nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend).Result,
                                     itemAccessor: Accessor.FromType(field, "item"),
                                     translationMaskAccessor: "translationMask",
                                     errorMaskAccessor: $"errorMask");
@@ -383,7 +383,7 @@ public class MutagenXmlModule : XmlTranslationModule
                                    $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement{ModuleNickname}"))
                         {
                             args.Add("item: item");
-                            args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
+                            args.AddPassArg($"{XmlTranslationModule.XElementLine.GetParameterName(obj, Context.Backend)}");
                             args.Add("name: name");
                             args.Add("errorMask: errorMask");
                             if (this.TranslationMaskParameter)

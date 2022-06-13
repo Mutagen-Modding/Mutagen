@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ProjectedDecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ProjectedDecal CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ProjectedDecal();
             ((ProjectedDecalSetterCommon)((IProjectedDecalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ProjectedDecal item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IProjectedDecal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ProjectedDecalSetterCommon)((IProjectedDecalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IProjectedDecal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XPDD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
             ProjectedDecal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.WidthScale = item.WidthScale.EqualsWithin(rhs.WidthScale);
             ret.HeightScale = item.HeightScale.EqualsWithin(rhs.HeightScale);
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ProjectedDecalBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ProjectedDecalBinaryWriteTranslation Instance = new ProjectedDecalBinaryWriteTranslation();
+        public static readonly ProjectedDecalBinaryWriteTranslation Instance = new ProjectedDecalBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IProjectedDecalGetter item,
@@ -1010,12 +1009,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IProjectedDecalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XPDD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1027,7 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IProjectedDecalGetter)item,
@@ -1039,7 +1038,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ProjectedDecalBinaryCreateTranslation
     {
-        public readonly static ProjectedDecalBinaryCreateTranslation Instance = new ProjectedDecalBinaryCreateTranslation();
+        public static readonly ProjectedDecalBinaryCreateTranslation Instance = new ProjectedDecalBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IProjectedDecal item,
@@ -1060,7 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IProjectedDecalGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ProjectedDecalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ProjectedDecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1133,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IProjectedDecalGetter ProjectedDecalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ProjectedDecalBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1151,7 +1150,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IProjectedDecalGetter ProjectedDecalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ProjectedDecalFactory(
                 stream: new OverlayStream(slice, package),

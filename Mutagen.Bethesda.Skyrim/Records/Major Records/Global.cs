@@ -28,7 +28,7 @@ public partial class Global : GlobalCustomParsing.IGlobalCommon
 
     public static Global CreateFromBinary(
         MutagenFrame frame,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         return GlobalCustomParsing.Create<Global>(
             frame,
@@ -78,7 +78,7 @@ abstract partial class GlobalBinaryOverlay
     public static IGlobalGetter GlobalFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var majorFrame = package.MetaData.Constants.MajorRecord(stream.RemainingMemory);
         var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);

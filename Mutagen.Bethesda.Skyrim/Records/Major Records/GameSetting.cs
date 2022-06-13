@@ -17,7 +17,7 @@ public partial class GameSetting : IGameSettingCommon
 
     public static GameSetting CreateFromBinary(
         MutagenFrame frame,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var majorMeta = frame.GetMajorRecordHeader();
         var settingType = GameSettingUtility.GetGameSettingType(frame.GetMemory(checked((int)majorMeta.TotalLength)), frame.MetaData.Constants);
@@ -46,7 +46,7 @@ partial class GameSettingBinaryOverlay
     public static IGameSettingGetter GameSettingFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingMemory, package.MetaData.Constants);
         if (settingType.Failed)

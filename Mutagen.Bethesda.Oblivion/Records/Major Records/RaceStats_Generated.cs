@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static RaceStats CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RaceStats();
             ((RaceStatsSetterCommon)((IRaceStatsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RaceStats item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRaceStats item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IRaceStats item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -994,7 +994,6 @@ namespace Mutagen.Bethesda.Oblivion
             RaceStats.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Strength = item.Strength == rhs.Strength;
             ret.Intelligence = item.Intelligence == rhs.Intelligence;
             ret.Willpower = item.Willpower == rhs.Willpower;
@@ -1288,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RaceStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RaceStatsBinaryWriteTranslation Instance = new RaceStatsBinaryWriteTranslation();
+        public static readonly RaceStatsBinaryWriteTranslation Instance = new RaceStatsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRaceStatsGetter item,
@@ -1307,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IRaceStatsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1317,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRaceStatsGetter)item,
@@ -1329,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class RaceStatsBinaryCreateTranslation
     {
-        public readonly static RaceStatsBinaryCreateTranslation Instance = new RaceStatsBinaryCreateTranslation();
+        public static readonly RaceStatsBinaryCreateTranslation Instance = new RaceStatsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRaceStats item,
@@ -1356,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRaceStatsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1400,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1435,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRaceStatsGetter RaceStatsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RaceStatsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1452,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRaceStatsGetter RaceStatsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RaceStatsFactory(
                 stream: new OverlayStream(slice, package),

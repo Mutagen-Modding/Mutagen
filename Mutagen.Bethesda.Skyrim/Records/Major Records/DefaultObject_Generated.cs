@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DefaultObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DefaultObject CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DefaultObject();
             ((DefaultObjectSetterCommon)((IDefaultObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DefaultObject item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDefaultObject item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DefaultObjectSetterCommon)((IDefaultObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IDefaultObject item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -788,7 +788,6 @@ namespace Mutagen.Bethesda.Skyrim
             DefaultObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Use = item.Use == rhs.Use;
             ret.Object = item.Object.Equals(rhs.Object);
         }
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DefaultObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DefaultObjectBinaryWriteTranslation Instance = new DefaultObjectBinaryWriteTranslation();
+        public static readonly DefaultObjectBinaryWriteTranslation Instance = new DefaultObjectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDefaultObjectGetter item,
@@ -1016,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IDefaultObjectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1026,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDefaultObjectGetter)item,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class DefaultObjectBinaryCreateTranslation
     {
-        public readonly static DefaultObjectBinaryCreateTranslation Instance = new DefaultObjectBinaryCreateTranslation();
+        public static readonly DefaultObjectBinaryCreateTranslation Instance = new DefaultObjectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDefaultObject item,
@@ -1059,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDefaultObjectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DefaultObjectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DefaultObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1133,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDefaultObjectGetter DefaultObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DefaultObjectBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1150,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDefaultObjectGetter DefaultObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DefaultObjectFactory(
                 stream: new OverlayStream(slice, package),

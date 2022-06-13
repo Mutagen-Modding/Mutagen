@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HavokDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static HavokData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HavokData();
             ((HavokDataSetterCommon)((IHavokDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out HavokData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IHavokData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -780,12 +780,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IHavokData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.HNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -820,7 +820,6 @@ namespace Mutagen.Bethesda.Oblivion
             HavokData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Material = item.Material == rhs.Material;
             ret.Friction = item.Friction == rhs.Friction;
             ret.Restitution = item.Restitution == rhs.Restitution;
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class HavokDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static HavokDataBinaryWriteTranslation Instance = new HavokDataBinaryWriteTranslation();
+        public static readonly HavokDataBinaryWriteTranslation Instance = new HavokDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IHavokDataGetter item,
@@ -1061,12 +1060,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IHavokDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1078,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHavokDataGetter)item,
@@ -1090,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class HavokDataBinaryCreateTranslation
     {
-        public readonly static HavokDataBinaryCreateTranslation Instance = new HavokDataBinaryCreateTranslation();
+        public static readonly HavokDataBinaryCreateTranslation Instance = new HavokDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IHavokData item,
@@ -1114,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IHavokDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HavokDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1158,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HavokDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IHavokDataGetter HavokDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HavokDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1206,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IHavokDataGetter HavokDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return HavokDataFactory(
                 stream: new OverlayStream(slice, package),

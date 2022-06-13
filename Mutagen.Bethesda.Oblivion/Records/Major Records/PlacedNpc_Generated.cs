@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static PlacedNpc CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedNpc();
             ((PlacedNpcSetterCommon)((IPlacedNpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedNpc item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPlacedNpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedNpcSetterCommon)((IPlacedNpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IPlacedNpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IPlacedNpcInternal>(
                 record: item,
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedNpc)item,
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedNpc)item,
@@ -1257,7 +1257,6 @@ namespace Mutagen.Bethesda.Oblivion
             PlacedNpc.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Base = item.Base.Equals(rhs.Base);
             ret.XPCIFluff = MemorySliceExt.Equal(item.XPCIFluff, rhs.XPCIFluff);
             ret.FULLFluff = MemorySliceExt.Equal(item.FULLFluff, rhs.FULLFluff);
@@ -1928,12 +1927,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PlacedNpcBinaryWriteTranslation Instance = new PlacedNpcBinaryWriteTranslation();
+        public new static readonly PlacedNpcBinaryWriteTranslation Instance = new PlacedNpcBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IPlacedNpcGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1996,7 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IPlacedNpcGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2024,7 +2023,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedNpcGetter)item,
@@ -2035,7 +2034,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedNpcGetter)item,
@@ -2046,7 +2045,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedNpcGetter)item,
@@ -2058,7 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class PlacedNpcBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
+        public new static readonly PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ACHR;
         public static void FillBinaryStructs(
@@ -2077,7 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2188,7 +2187,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2254,7 +2253,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPlacedNpcGetter PlacedNpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new PlacedNpcBinaryOverlay(
@@ -2281,7 +2280,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPlacedNpcGetter PlacedNpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedNpcFactory(
                 stream: new OverlayStream(slice, package),
@@ -2296,7 +2295,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

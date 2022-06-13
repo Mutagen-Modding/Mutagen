@@ -174,7 +174,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             });
         var gameRelease = new APILine(
             nicknameKey: "GameRelease",
-            resolver: (obj) => $"{ModModule.ReleaseEnumName(obj)} release",
+            resolver: (obj, context) => $"{ModModule.ReleaseEnumName(obj)} release",
             when: (obj, dir) =>
             {
                 if (dir == TranslationDirection.Writer) return false;
@@ -183,7 +183,19 @@ public class PluginTranslationModule : BinaryTranslationModule
             });
         var typedWriteParams = new APILine(
             "TypedWriteParams",
-            $"{nameof(TypedWriteParams)}? translationParams = null",
+            (o, c) =>
+            {
+                switch (c)
+                {
+                    case Context.Class:
+                    case Context.MixIn:
+                        return $"{nameof(TypedWriteParams)} translationParams = default";
+                    case Context.Backend:
+                        return $"{nameof(TypedWriteParams)} translationParams";
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(c), c, null);
+                }
+            },
             when: (obj, dir) =>
             {
                 return dir == TranslationDirection.Writer 
@@ -191,7 +203,19 @@ public class PluginTranslationModule : BinaryTranslationModule
             });
         var typedParseParams = new APILine(
             "TypedParseParams",
-            $"{nameof(TypedParseParams)}? translationParams = null",
+            (o, c) =>
+            {
+                switch (c)
+                {
+                    case Context.Class:
+                    case Context.MixIn:
+                        return $"{nameof(TypedParseParams)} translationParams = default";
+                    case Context.Backend:
+                        return $"{nameof(TypedParseParams)} translationParams";
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(c), c, null);
+                }
+            },
             when: (obj, dir) =>
             {
                 return dir == TranslationDirection.Reader
@@ -552,7 +576,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                        $"public{obj.NewOverride()}static {await this.ObjectReturn(obj, maskReturn: false)} {CreateFromPrefix}{TranslationTerm}"))
             {
                 foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(obj,
-                             TranslationDirection.Reader,
+                             TranslationDirection.Reader, 
+                             Context.Class,
                              this.DoErrorMasks ? new APILine(ErrorMaskKey, "ErrorMaskBuilder? errorMask") : null,
                              this.DoErrorMasks ? new APILine(TranslationMaskKey, $"{nameof(TranslationCrystal)}? translationMask", (o, i) => this.TranslationMaskParameter) : null))
                 {
@@ -569,11 +594,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                                $"{Loqui.Generation.Utility.Await(await AsyncImport(obj))}{obj.CommonClassInstance("ret", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.{CopyInFromPrefix}{TranslationTerm}"))
                     {
                         args.Add("item: ret");
-                        foreach (var arg in this.MainAPI.PassArgs(obj, TranslationDirection.Reader))
+                        foreach (var arg in this.MainAPI.PassArgs(obj, TranslationDirection.Reader, Context.Class, Context.Backend))
                         {
                             args.Add(arg);
                         }
-                        foreach (var arg in this.MainAPI.InternalPassArgs(obj, TranslationDirection.Reader))
+                        foreach (var arg in this.MainAPI.InternalPassArgs(obj, TranslationDirection.Reader, Context.Class, Context.Backend))
                         {
                             args.Add(arg);
                         }
@@ -786,7 +811,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     args.Add($"GroupMask? importMask");
                 }
-                args.Add($"{nameof(TypedParseParams)}? translationParams = null");
+                args.Add($"{nameof(TypedParseParams)} translationParams = default");
             }
             using (sb.CurlyBrace())
             {
@@ -1121,7 +1146,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(
                                  obj,
-                                 TranslationDirection.Reader,
+                                 TranslationDirection.Reader, 
+                                 Context.Backend,
                                  new APILine(ItemKey, $"{obj.Interface(getter: false, internalInterface: true)} item"),
                                  new APILine(NextRecordTypeKey, $"{nameof(RecordType)} nextRecordType"),
                                  new APILine(ContentLengthKey, $"int contentLength")))
@@ -1423,7 +1449,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     args.Add("Dictionary<RecordType, int>? recordParseCount");
                 }
-                args.Add($"{nameof(TypedParseParams)}? translationParams = null");
+                args.Add($"{nameof(TypedParseParams)} translationParams = default");
             }
             using (sb.CurlyBrace())
             {
@@ -1825,7 +1851,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         "translationParams",
                                         $"{ReaderMemberName}.MetaData.Constants.Release",
                                         $"{ReaderMemberName}.MetaData.FormVersion"));
-                                    args.Add("translationParams?.LengthOverride");
+                                    args.Add("translationParams.LengthOverride");
                                 }
                             }
                         }
@@ -2042,7 +2068,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 if (transl.DoTranslationInterface(obj))
                 {
-                    await transl.GenerateTranslationInterfaceImplementation(obj, sb);
+                    await transl.GenerateTranslationInterfaceImplementation(obj, sb, Context.Class);
                 }
             }
 
@@ -2354,7 +2380,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         args.Add($"ReadOnlyMemorySlice<byte> slice");
                         args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
-                        args.Add($"{nameof(TypedParseParams)}? translationParams = null");
+                        args.Add($"{nameof(TypedParseParams)} translationParams = default");
                     }
                     using (sb.CurlyBrace())
                     {
@@ -2426,7 +2452,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     args.Add($"int finalPos");
                 }
-                args.Add($"{nameof(TypedParseParams)}? translationParams = null");
+                args.Add($"{nameof(TypedParseParams)} translationParams = default");
             }
         }
         using (sb.CurlyBrace())
@@ -2686,7 +2712,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         args.Add("majorReference: ret");
                     }
-                    args.Add($"stream: stream");
+                    args.AddPassArg($"stream");
                     if (obj.GetObjectType() != ObjectType.Mod)
                     {
                         if (obj.IsTypelessStruct())
@@ -2697,7 +2723,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             args.AddPassArg($"finalPos");
                         }
-                        args.Add($"offset: offset");
+                        args.AddPassArg($"offset");
                         args.AddPassArg($"translationParams");
                     }
                     else
@@ -2861,7 +2887,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     args.AddPassArg(writerNameToUse);
                     args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
-                    args.Add($"overflowRecord: translationParams?.{nameof(TypedWriteParams.OverflowRecordType)}");
+                    args.Add($"overflowRecord: translationParams.{nameof(TypedWriteParams.OverflowRecordType)}");
                     args.Add("out var writerToUse");
                 }
 
@@ -3089,7 +3115,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     args.Add($"GroupMask? importMask");
                 }
-                args.Add($"{nameof(TypedWriteParams)}? translationParams{(obj.GetObjectType() == ObjectType.Mod ? " = null" : null)}");
+                args.Add($"{nameof(TypedWriteParams)} translationParams{(obj.GetObjectType() == ObjectType.Mod ? " = default" : null)}");
             }
             using (sb.CurlyBrace())
             {

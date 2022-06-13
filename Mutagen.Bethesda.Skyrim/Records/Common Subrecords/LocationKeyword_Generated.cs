@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LocationKeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationKeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static LocationKeyword CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationKeyword();
             ((LocationKeywordSetterCommon)((ILocationKeywordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationKeyword item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationKeyword item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationKeywordSetterCommon)((ILocationKeywordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILocationKeyword item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationKeyword)item,
@@ -720,7 +720,6 @@ namespace Mutagen.Bethesda.Skyrim
             LocationKeyword.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Link = item.Link.Equals(rhs.Link);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -971,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationKeywordBinaryWriteTranslation Instance = new LocationKeywordBinaryWriteTranslation();
+        public new static readonly LocationKeywordBinaryWriteTranslation Instance = new LocationKeywordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationKeywordGetter item,
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILocationKeywordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -995,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationKeywordGetter)item,
@@ -1006,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IALocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationKeywordGetter)item,
@@ -1018,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LocationKeywordBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
-        public new readonly static LocationKeywordBinaryCreateTranslation Instance = new LocationKeywordBinaryCreateTranslation();
+        public new static readonly LocationKeywordBinaryCreateTranslation Instance = new LocationKeywordBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationKeyword item,
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LocationKeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationKeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1092,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationKeywordGetter LocationKeywordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationKeywordBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationKeywordGetter LocationKeywordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationKeywordFactory(
                 stream: new OverlayStream(slice, package),

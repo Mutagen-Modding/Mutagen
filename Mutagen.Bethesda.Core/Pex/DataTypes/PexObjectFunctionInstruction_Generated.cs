@@ -749,7 +749,6 @@ namespace Mutagen.Bethesda.Pex
             PexObjectFunctionInstruction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.OpCode = item.OpCode == rhs.OpCode;
             ret.Arguments = item.Arguments.CollectionEqualsHelper(
                 rhs.Arguments,

@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FindMatchingRefFromEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static FindMatchingRefFromEvent CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FindMatchingRefFromEvent();
             ((FindMatchingRefFromEventSetterCommon)((IFindMatchingRefFromEventGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FindMatchingRefFromEvent item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFindMatchingRefFromEvent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FindMatchingRefFromEventSetterCommon)((IFindMatchingRefFromEventGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IFindMatchingRefFromEvent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -791,7 +791,6 @@ namespace Mutagen.Bethesda.Skyrim
             FindMatchingRefFromEvent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FromEvent = item.FromEvent == rhs.FromEvent;
             ret.EventData = MemorySliceExt.Equal(item.EventData, rhs.EventData);
         }
@@ -1016,12 +1015,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FindMatchingRefFromEventBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FindMatchingRefFromEventBinaryWriteTranslation Instance = new FindMatchingRefFromEventBinaryWriteTranslation();
+        public static readonly FindMatchingRefFromEventBinaryWriteTranslation Instance = new FindMatchingRefFromEventBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFindMatchingRefFromEventGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             RecordTypeBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1036,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IFindMatchingRefFromEventGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1047,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFindMatchingRefFromEventGetter)item,
@@ -1059,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class FindMatchingRefFromEventBinaryCreateTranslation
     {
-        public readonly static FindMatchingRefFromEventBinaryCreateTranslation Instance = new FindMatchingRefFromEventBinaryCreateTranslation();
+        public static readonly FindMatchingRefFromEventBinaryCreateTranslation Instance = new FindMatchingRefFromEventBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFindMatchingRefFromEvent item,
@@ -1074,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IFindMatchingRefFromEventGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FindMatchingRefFromEventBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FindMatchingRefFromEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IFindMatchingRefFromEventGetter FindMatchingRefFromEventFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FindMatchingRefFromEventBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1206,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IFindMatchingRefFromEventGetter FindMatchingRefFromEventFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FindMatchingRefFromEventFactory(
                 stream: new OverlayStream(slice, package),
@@ -1221,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -3355,8 +3355,8 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new OblivionMod(modKey: frame.MetaData.ModKey);
                 ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                     item: ret,
-                    importMask: importMask,
-                    frame: frame);
+                    frame: frame,
+                    importMask: importMask);
                 return ret;
             }
             catch (Exception ex)
@@ -4005,8 +4005,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                importMask: importMask,
-                frame: frame);
+                frame: frame,
+                importMask: importMask);
         }
 
         public static void CopyInFromBinary(
@@ -5080,7 +5080,6 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
             ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
@@ -10368,13 +10367,13 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionModBinaryWriteTranslation
     {
-        public readonly static OblivionModBinaryWriteTranslation Instance = new OblivionModBinaryWriteTranslation();
+        public static readonly OblivionModBinaryWriteTranslation Instance = new OblivionModBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IOblivionModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             if (importMask?.GameSettings ?? true)
             {
@@ -11022,8 +11021,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Write(
                 item: (IOblivionModGetter)item,
-                importMask: importMask,
                 writer: writer,
+                importMask: importMask,
                 param: param,
                 modKey: modKey);
         }
@@ -11032,7 +11031,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class OblivionModBinaryCreateTranslation
     {
-        public readonly static OblivionModBinaryCreateTranslation Instance = new OblivionModBinaryCreateTranslation();
+        public static readonly OblivionModBinaryCreateTranslation Instance = new OblivionModBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IOblivionMod item,
@@ -11046,7 +11045,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType nextRecordType,
             int contentLength,
             GroupMask? importMask,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -11865,8 +11864,8 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = item.ModKey;
             OblivionModBinaryWriteTranslation.Instance.Write(
                 item: item,
-                importMask: importMask,
                 writer: writer,
+                importMask: importMask,
                 param: param,
                 modKey: modKey);
         }
@@ -12338,7 +12337,7 @@ namespace Mutagen.Bethesda.Oblivion
             int offset,
             RecordType type,
             PreviousParse lastParsed,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

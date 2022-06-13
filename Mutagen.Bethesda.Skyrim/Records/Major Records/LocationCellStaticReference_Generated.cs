@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellStaticReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LocationCellStaticReference CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationCellStaticReference();
             ((LocationCellStaticReferenceSetterCommon)((ILocationCellStaticReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationCellStaticReference item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationCellStaticReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationCellStaticReferenceSetterCommon)((ILocationCellStaticReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILocationCellStaticReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -878,7 +878,6 @@ namespace Mutagen.Bethesda.Skyrim
             LocationCellStaticReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LocationRefType = item.LocationRefType.Equals(rhs.LocationRefType);
             ret.Marker = item.Marker.Equals(rhs.Marker);
             ret.Location = item.Location.Equals(rhs.Location);
@@ -1119,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationCellStaticReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocationCellStaticReferenceBinaryWriteTranslation Instance = new LocationCellStaticReferenceBinaryWriteTranslation();
+        public static readonly LocationCellStaticReferenceBinaryWriteTranslation Instance = new LocationCellStaticReferenceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationCellStaticReferenceGetter item,
@@ -1143,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILocationCellStaticReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationCellStaticReferenceGetter)item,
@@ -1165,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LocationCellStaticReferenceBinaryCreateTranslation
     {
-        public readonly static LocationCellStaticReferenceBinaryCreateTranslation Instance = new LocationCellStaticReferenceBinaryCreateTranslation();
+        public static readonly LocationCellStaticReferenceBinaryCreateTranslation Instance = new LocationCellStaticReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationCellStaticReference item,
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILocationCellStaticReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellStaticReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1235,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellStaticReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1266,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationCellStaticReferenceGetter LocationCellStaticReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationCellStaticReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1283,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationCellStaticReferenceGetter LocationCellStaticReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationCellStaticReferenceFactory(
                 stream: new OverlayStream(slice, package),

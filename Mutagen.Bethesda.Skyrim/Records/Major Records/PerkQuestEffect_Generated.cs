@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkQuestEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkQuestEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PerkQuestEffect CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkQuestEffect();
             ((PerkQuestEffectSetterCommon)((IPerkQuestEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkQuestEffect item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkQuestEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkQuestEffectSetterCommon)((IPerkQuestEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPerkQuestEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -794,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkQuestEffect)item,
@@ -829,7 +829,6 @@ namespace Mutagen.Bethesda.Skyrim
             PerkQuestEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.Stage = item.Stage == rhs.Stage;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
@@ -1116,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkQuestEffectBinaryWriteTranslation Instance = new PerkQuestEffectBinaryWriteTranslation();
+        public new static readonly PerkQuestEffectBinaryWriteTranslation Instance = new PerkQuestEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkQuestEffectGetter item,
@@ -1137,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPerkQuestEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1151,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkQuestEffectGetter)item,
@@ -1162,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkQuestEffectGetter)item,
@@ -1174,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PerkQuestEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
     {
-        public new readonly static PerkQuestEffectBinaryCreateTranslation Instance = new PerkQuestEffectBinaryCreateTranslation();
+        public new static readonly PerkQuestEffectBinaryCreateTranslation Instance = new PerkQuestEffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkQuestEffect item,
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkQuestEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkQuestEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1255,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkQuestEffectGetter PerkQuestEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkQuestEffectBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1273,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkQuestEffectGetter PerkQuestEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkQuestEffectFactory(
                 stream: new OverlayStream(slice, package),

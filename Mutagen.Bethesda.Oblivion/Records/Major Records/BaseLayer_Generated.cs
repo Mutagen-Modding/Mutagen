@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static BaseLayer CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BaseLayer();
             ((BaseLayerSetterCommon)((IBaseLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BaseLayer item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IBaseLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IBaseLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -770,7 +770,6 @@ namespace Mutagen.Bethesda.Oblivion
             BaseLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Header = EqualsMaskHelper.EqualsHelper(
                 item.Header,
                 rhs.Header,
@@ -1007,12 +1006,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BaseLayerBinaryWriteTranslation Instance = new BaseLayerBinaryWriteTranslation();
+        public static readonly BaseLayerBinaryWriteTranslation Instance = new BaseLayerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IBaseLayerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             if (item.Header is {} HeaderItem)
             {
@@ -1026,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write(
             MutagenWriter writer,
             IBaseLayerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1037,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBaseLayerGetter)item,
@@ -1049,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class BaseLayerBinaryCreateTranslation
     {
-        public readonly static BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
+        public static readonly BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBaseLayer item,
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IBaseLayerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BaseLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1138,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1169,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IBaseLayerGetter BaseLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BaseLayerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1187,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IBaseLayerGetter BaseLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BaseLayerFactory(
                 stream: new OverlayStream(slice, package),
@@ -1202,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

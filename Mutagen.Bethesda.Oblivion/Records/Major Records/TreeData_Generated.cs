@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TreeDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static TreeData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TreeData();
             ((TreeDataSetterCommon)((ITreeDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TreeData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ITreeData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TreeDataSetterCommon)((ITreeDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -965,12 +965,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ITreeData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1005,7 +1005,6 @@ namespace Mutagen.Bethesda.Oblivion
             TreeData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LeafCurvature = item.LeafCurvature.EqualsWithin(rhs.LeafCurvature);
             ret.MinimumLeafAngle = item.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle);
             ret.MaximumLeafAngle = item.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle);
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class TreeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TreeDataBinaryWriteTranslation Instance = new TreeDataBinaryWriteTranslation();
+        public static readonly TreeDataBinaryWriteTranslation Instance = new TreeDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITreeDataGetter item,
@@ -1332,12 +1331,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ITreeDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1349,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITreeDataGetter)item,
@@ -1361,7 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class TreeDataBinaryCreateTranslation
     {
-        public readonly static TreeDataBinaryCreateTranslation Instance = new TreeDataBinaryCreateTranslation();
+        public static readonly TreeDataBinaryCreateTranslation Instance = new TreeDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITreeData item,
@@ -1388,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ITreeDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TreeDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1432,7 +1431,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TreeDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1467,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ITreeDataGetter TreeDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TreeDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1485,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ITreeDataGetter TreeDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TreeDataFactory(
                 stream: new OverlayStream(slice, package),

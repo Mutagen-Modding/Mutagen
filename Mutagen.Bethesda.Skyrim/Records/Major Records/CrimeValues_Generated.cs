@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CrimeValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CrimeValues CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CrimeValues();
             ((CrimeValuesSetterCommon)((ICrimeValuesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CrimeValues item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICrimeValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CrimeValuesSetterCommon)((ICrimeValuesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1085,12 +1085,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICrimeValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CRVA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1125,7 +1125,6 @@ namespace Mutagen.Bethesda.Skyrim
             CrimeValues.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Arrest = item.Arrest == rhs.Arrest;
             ret.AttackOnSight = item.AttackOnSight == rhs.AttackOnSight;
@@ -1463,7 +1462,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CrimeValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CrimeValuesBinaryWriteTranslation Instance = new CrimeValuesBinaryWriteTranslation();
+        public static readonly CrimeValuesBinaryWriteTranslation Instance = new CrimeValuesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICrimeValuesGetter item,
@@ -1492,12 +1491,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICrimeValuesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CRVA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1509,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICrimeValuesGetter)item,
@@ -1521,7 +1520,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CrimeValuesBinaryCreateTranslation
     {
-        public readonly static CrimeValuesBinaryCreateTranslation Instance = new CrimeValuesBinaryCreateTranslation();
+        public static readonly CrimeValuesBinaryCreateTranslation Instance = new CrimeValuesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICrimeValues item,
@@ -1560,7 +1559,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICrimeValuesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CrimeValuesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1604,7 +1603,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CrimeValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1642,7 +1641,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICrimeValuesGetter CrimeValuesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CrimeValuesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1667,7 +1666,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICrimeValuesGetter CrimeValuesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CrimeValuesFactory(
                 stream: new OverlayStream(slice, package),

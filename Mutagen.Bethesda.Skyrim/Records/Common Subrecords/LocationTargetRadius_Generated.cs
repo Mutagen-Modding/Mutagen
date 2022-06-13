@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationTargetRadiusBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LocationTargetRadius CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationTargetRadius();
             ((LocationTargetRadiusSetterCommon)((ILocationTargetRadiusGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationTargetRadius item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationTargetRadius item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationTargetRadiusSetterCommon)((ILocationTargetRadiusGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILocationTargetRadius item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -784,7 +784,6 @@ namespace Mutagen.Bethesda.Skyrim
             LocationTargetRadius.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Target = MaskItemExt.Factory(item.Target.GetEqualsMask(rhs.Target, include), include);
             ret.Radius = item.Radius == rhs.Radius;
         }
@@ -1023,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationTargetRadiusBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocationTargetRadiusBinaryWriteTranslation Instance = new LocationTargetRadiusBinaryWriteTranslation();
+        public static readonly LocationTargetRadiusBinaryWriteTranslation Instance = new LocationTargetRadiusBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationTargetRadiusGetter item,
@@ -1051,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILocationTargetRadiusGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationTargetRadiusGetter)item,
@@ -1073,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LocationTargetRadiusBinaryCreateTranslation
     {
-        public readonly static LocationTargetRadiusBinaryCreateTranslation Instance = new LocationTargetRadiusBinaryCreateTranslation();
+        public static readonly LocationTargetRadiusBinaryCreateTranslation Instance = new LocationTargetRadiusBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationTargetRadius item,
@@ -1100,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILocationTargetRadiusGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationTargetRadiusBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1145,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationTargetRadiusBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1177,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationTargetRadiusGetter LocationTargetRadiusFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationTargetRadiusBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationTargetRadiusGetter LocationTargetRadiusFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationTargetRadiusFactory(
                 stream: new OverlayStream(slice, package),

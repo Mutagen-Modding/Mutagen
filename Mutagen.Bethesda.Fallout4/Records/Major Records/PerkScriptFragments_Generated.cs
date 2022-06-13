@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PerkScriptFragments CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkScriptFragments();
             ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkScriptFragments item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPerkScriptFragments item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPerkScriptFragments item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -903,7 +903,6 @@ namespace Mutagen.Bethesda.Fallout4
             PerkScriptFragments.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ExtraBindDataVersion = item.ExtraBindDataVersion == rhs.ExtraBindDataVersion;
             ret.Script = MaskItemExt.Factory(item.Script.GetEqualsMask(rhs.Script, include), include);
             ret.Fragments = item.Fragments.CollectionEqualsHelper(
@@ -1189,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PerkScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PerkScriptFragmentsBinaryWriteTranslation Instance = new PerkScriptFragmentsBinaryWriteTranslation();
+        public static readonly PerkScriptFragmentsBinaryWriteTranslation Instance = new PerkScriptFragmentsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkScriptFragmentsGetter item,
@@ -1200,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPerkScriptFragmentsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkScriptFragmentsGetter)item,
@@ -1222,7 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PerkScriptFragmentsBinaryCreateTranslation
     {
-        public readonly static PerkScriptFragmentsBinaryCreateTranslation Instance = new PerkScriptFragmentsBinaryCreateTranslation();
+        public static readonly PerkScriptFragmentsBinaryCreateTranslation Instance = new PerkScriptFragmentsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkScriptFragments item,
@@ -1241,7 +1240,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPerkScriptFragmentsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1286,7 +1285,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1313,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPerkScriptFragmentsGetter PerkScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkScriptFragmentsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1329,7 +1328,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPerkScriptFragmentsGetter PerkScriptFragmentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkScriptFragmentsFactory(
                 stream: new OverlayStream(slice, package),

@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceDepthOfFieldBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ImageSpaceDepthOfField CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceDepthOfField();
             ((ImageSpaceDepthOfFieldSetterCommon)((IImageSpaceDepthOfFieldGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpaceDepthOfField item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceDepthOfField item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceDepthOfFieldSetterCommon)((IImageSpaceDepthOfFieldGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -937,12 +937,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IImageSpaceDepthOfField item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -977,7 +977,6 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpaceDepthOfField.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Strength = item.Strength.EqualsWithin(rhs.Strength);
             ret.Distance = item.Distance.EqualsWithin(rhs.Distance);
@@ -1258,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceDepthOfFieldBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new ImageSpaceDepthOfFieldBinaryWriteTranslation();
+        public static readonly ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new ImageSpaceDepthOfFieldBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceDepthOfFieldGetter item,
@@ -1314,12 +1313,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IImageSpaceDepthOfFieldGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1331,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceDepthOfFieldGetter)item,
@@ -1343,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ImageSpaceDepthOfFieldBinaryCreateTranslation
     {
-        public readonly static ImageSpaceDepthOfFieldBinaryCreateTranslation Instance = new ImageSpaceDepthOfFieldBinaryCreateTranslation();
+        public static readonly ImageSpaceDepthOfFieldBinaryCreateTranslation Instance = new ImageSpaceDepthOfFieldBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IImageSpaceDepthOfField item,
@@ -1385,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IImageSpaceDepthOfFieldGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceDepthOfFieldBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1429,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceDepthOfFieldBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1473,7 +1472,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceDepthOfFieldGetter ImageSpaceDepthOfFieldFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceDepthOfFieldBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1494,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceDepthOfFieldGetter ImageSpaceDepthOfFieldFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceDepthOfFieldFactory(
                 stream: new OverlayStream(slice, package),

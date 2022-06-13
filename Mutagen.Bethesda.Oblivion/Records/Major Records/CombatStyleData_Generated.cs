@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1579,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static CombatStyleData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleData();
             ((CombatStyleDataSetterCommon)((ICombatStyleDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CombatStyleData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICombatStyleData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CombatStyleDataSetterCommon)((ICombatStyleDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2062,12 +2062,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ICombatStyleData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CSTD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2102,7 +2102,6 @@ namespace Mutagen.Bethesda.Oblivion
             CombatStyleData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.DodgePercentChance = item.DodgePercentChance == rhs.DodgePercentChance;
             ret.LeftRightPercentChance = item.LeftRightPercentChance == rhs.LeftRightPercentChance;
@@ -2807,7 +2806,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CombatStyleDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CombatStyleDataBinaryWriteTranslation Instance = new CombatStyleDataBinaryWriteTranslation();
+        public static readonly CombatStyleDataBinaryWriteTranslation Instance = new CombatStyleDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICombatStyleDataGetter item,
@@ -2940,12 +2939,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ICombatStyleDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CSTD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2957,7 +2956,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICombatStyleDataGetter)item,
@@ -2969,7 +2968,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class CombatStyleDataBinaryCreateTranslation
     {
-        public readonly static CombatStyleDataBinaryCreateTranslation Instance = new CombatStyleDataBinaryCreateTranslation();
+        public static readonly CombatStyleDataBinaryCreateTranslation Instance = new CombatStyleDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICombatStyleData item,
@@ -3064,7 +3063,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ICombatStyleDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -3108,7 +3107,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3180,7 +3179,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICombatStyleDataGetter CombatStyleDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -3217,7 +3216,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICombatStyleDataGetter CombatStyleDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CombatStyleDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TransientTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static TransientType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TransientType();
             ((TransientTypeSetterCommon)((ITransientTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TransientType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ITransientType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TransientTypeSetterCommon)((ITransientTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -830,12 +830,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ITransientType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.TNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -870,7 +870,6 @@ namespace Mutagen.Bethesda.Fallout4
             TransientType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FormType = item.FormType == rhs.FormType;
             ret.Links = item.Links.CollectionEqualsHelper(
                 rhs.Links,
@@ -1112,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TransientTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TransientTypeBinaryWriteTranslation Instance = new TransientTypeBinaryWriteTranslation();
+        public static readonly TransientTypeBinaryWriteTranslation Instance = new TransientTypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITransientTypeGetter item,
@@ -1122,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Links,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1133,12 +1132,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ITransientTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.TNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1150,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITransientTypeGetter)item,
@@ -1162,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class TransientTypeBinaryCreateTranslation
     {
-        public readonly static TransientTypeBinaryCreateTranslation Instance = new TransientTypeBinaryCreateTranslation();
+        public static readonly TransientTypeBinaryCreateTranslation Instance = new TransientTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITransientType item,
@@ -1186,7 +1185,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ITransientTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TransientTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1231,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TransientTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1263,7 +1262,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITransientTypeGetter TransientTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TransientTypeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1281,7 +1280,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITransientTypeGetter TransientTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TransientTypeFactory(
                 stream: new OverlayStream(slice, package),

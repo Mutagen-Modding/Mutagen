@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static SoundItem CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundItem();
             ((SoundItemSetterCommon)((ISoundItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundItem item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISoundItem item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundItemSetterCommon)((ISoundItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ISoundItem item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Oblivion
             SoundItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Chance = item.Chance == rhs.Chance;
         }
@@ -1017,12 +1016,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SoundItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundItemBinaryWriteTranslation Instance = new SoundItemBinaryWriteTranslation();
+        public static readonly SoundItemBinaryWriteTranslation Instance = new SoundItemBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISoundItemGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1037,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ISoundItemGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1048,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundItemGetter)item,
@@ -1060,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class SoundItemBinaryCreateTranslation
     {
-        public readonly static SoundItemBinaryCreateTranslation Instance = new SoundItemBinaryCreateTranslation();
+        public static readonly SoundItemBinaryCreateTranslation Instance = new SoundItemBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundItem item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ISoundItemGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISoundItemGetter SoundItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundItemBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1208,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISoundItemGetter SoundItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundItemFactory(
                 stream: new OverlayStream(slice, package),
@@ -1223,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

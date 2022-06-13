@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => SpellLeveledBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpellLeveledBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static SpellLeveled CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SpellLeveled();
             ((SpellLeveledSetterCommon)((ISpellLeveledGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SpellLeveled item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISpellLeveledInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SpellLeveledSetterCommon)((ISpellLeveledGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ISpellLeveledInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ISpellLeveledInternal>(
                 record: item,
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             ISpellInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SpellLeveled)item,
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SpellLeveled)item,
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SpellLeveled)item,
@@ -788,7 +788,6 @@ namespace Mutagen.Bethesda.Oblivion
             SpellLeveled.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1239,12 +1238,12 @@ namespace Mutagen.Bethesda.Oblivion
         SpellBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SpellLeveledBinaryWriteTranslation Instance = new SpellLeveledBinaryWriteTranslation();
+        public new static readonly SpellLeveledBinaryWriteTranslation Instance = new SpellLeveledBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             ISpellLeveledGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1270,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISpellLeveledGetter)item,
@@ -1281,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             ISpellGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISpellLeveledGetter)item,
@@ -1292,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISpellLeveledGetter)item,
@@ -1303,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISpellLeveledGetter)item,
@@ -1315,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class SpellLeveledBinaryCreateTranslation : SpellBinaryCreateTranslation
     {
-        public new readonly static SpellLeveledBinaryCreateTranslation Instance = new SpellLeveledBinaryCreateTranslation();
+        public new static readonly SpellLeveledBinaryCreateTranslation Instance = new SpellLeveledBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVSP;
         public static void FillBinaryStructs(
@@ -1363,7 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => SpellLeveledBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpellLeveledBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1392,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISpellLeveledGetter SpellLeveledFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new SpellLeveledBinaryOverlay(
@@ -1419,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISpellLeveledGetter SpellLeveledFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SpellLeveledFactory(
                 stream: new OverlayStream(slice, package),

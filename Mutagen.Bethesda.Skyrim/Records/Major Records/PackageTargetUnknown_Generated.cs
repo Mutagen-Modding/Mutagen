@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PackageTargetUnknownBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageTargetUnknownBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PackageTargetUnknown CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageTargetUnknown();
             ((PackageTargetUnknownSetterCommon)((IPackageTargetUnknownGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageTargetUnknown item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPackageTargetUnknown item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageTargetUnknownSetterCommon)((IPackageTargetUnknownGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPackageTargetUnknown item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IAPackageTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PackageTargetUnknown)item,
@@ -713,7 +713,6 @@ namespace Mutagen.Bethesda.Skyrim
             PackageTargetUnknown.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -965,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PackageTargetUnknownBinaryWriteTranslation Instance = new PackageTargetUnknownBinaryWriteTranslation();
+        public new static readonly PackageTargetUnknownBinaryWriteTranslation Instance = new PackageTargetUnknownBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPackageTargetUnknownGetter item,
@@ -980,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPackageTargetUnknownGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -990,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageTargetUnknownGetter)item,
@@ -1001,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IAPackageTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPackageTargetUnknownGetter)item,
@@ -1013,7 +1012,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PackageTargetUnknownBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
     {
-        public new readonly static PackageTargetUnknownBinaryCreateTranslation Instance = new PackageTargetUnknownBinaryCreateTranslation();
+        public new static readonly PackageTargetUnknownBinaryCreateTranslation Instance = new PackageTargetUnknownBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageTargetUnknown item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PackageTargetUnknownBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageTargetUnknownBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1089,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageTargetUnknownGetter PackageTargetUnknownFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageTargetUnknownBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1106,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageTargetUnknownGetter PackageTargetUnknownFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageTargetUnknownFactory(
                 stream: new OverlayStream(slice, package),

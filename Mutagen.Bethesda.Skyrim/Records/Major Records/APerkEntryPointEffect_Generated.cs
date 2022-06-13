@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => APerkEntryPointEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APerkEntryPointEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAPerkEntryPointEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((APerkEntryPointEffectSetterCommon)((IAPerkEntryPointEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -714,14 +714,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAPerkEntryPointEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (APerkEntryPointEffect)item,
@@ -756,7 +756,6 @@ namespace Mutagen.Bethesda.Skyrim
             APerkEntryPointEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EntryPoint = item.EntryPoint == rhs.EntryPoint;
             ret.PerkConditionTabCount = item.PerkConditionTabCount == rhs.PerkConditionTabCount;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1028,7 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static APerkEntryPointEffectBinaryWriteTranslation Instance = new APerkEntryPointEffectBinaryWriteTranslation();
+        public new static readonly APerkEntryPointEffectBinaryWriteTranslation Instance = new APerkEntryPointEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAPerkEntryPointEffectGetter item,
@@ -1047,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IAPerkEntryPointEffectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1074,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             IAPerkEntryPointEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAPerkEntryPointEffectGetter)item,
@@ -1099,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAPerkEntryPointEffectGetter)item,
@@ -1111,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class APerkEntryPointEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
     {
-        public new readonly static APerkEntryPointEffectBinaryCreateTranslation Instance = new APerkEntryPointEffectBinaryCreateTranslation();
+        public new static readonly APerkEntryPointEffectBinaryCreateTranslation Instance = new APerkEntryPointEffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAPerkEntryPointEffect item,
@@ -1133,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1198,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => APerkEntryPointEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APerkEntryPointEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1238,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

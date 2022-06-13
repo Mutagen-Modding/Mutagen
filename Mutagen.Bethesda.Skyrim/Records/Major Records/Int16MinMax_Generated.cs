@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Int16MinMaxBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Int16MinMax CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Int16MinMax();
             ((Int16MinMaxSetterCommon)((IInt16MinMaxGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Int16MinMax item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IInt16MinMax item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((Int16MinMaxSetterCommon)((IInt16MinMaxGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IInt16MinMax item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Skyrim
             Int16MinMax.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Min = item.Min == rhs.Min;
             ret.Max = item.Max == rhs.Max;
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Int16MinMaxBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static Int16MinMaxBinaryWriteTranslation Instance = new Int16MinMaxBinaryWriteTranslation();
+        public static readonly Int16MinMaxBinaryWriteTranslation Instance = new Int16MinMaxBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IInt16MinMaxGetter item,
@@ -995,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IInt16MinMaxGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1005,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IInt16MinMaxGetter)item,
@@ -1017,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class Int16MinMaxBinaryCreateTranslation
     {
-        public readonly static Int16MinMaxBinaryCreateTranslation Instance = new Int16MinMaxBinaryCreateTranslation();
+        public static readonly Int16MinMaxBinaryCreateTranslation Instance = new Int16MinMaxBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IInt16MinMax item,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IInt16MinMaxGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Int16MinMaxBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1082,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Int16MinMaxBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1111,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IInt16MinMaxGetter Int16MinMaxFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Int16MinMaxBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IInt16MinMaxGetter Int16MinMaxFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return Int16MinMaxFactory(
                 stream: new OverlayStream(slice, package),

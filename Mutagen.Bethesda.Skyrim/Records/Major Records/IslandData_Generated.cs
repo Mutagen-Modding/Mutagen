@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IslandDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static IslandData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IslandData();
             ((IslandDataSetterCommon)((IIslandDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out IslandData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IIslandData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IslandDataSetterCommon)((IIslandDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IIslandData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1002,7 +1002,6 @@ namespace Mutagen.Bethesda.Skyrim
             IslandData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Min = item.Min.Equals(rhs.Min);
             ret.Max = item.Max.Equals(rhs.Max);
             ret.Triangles = item.Triangles.CollectionEqualsHelper(
@@ -1292,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IslandDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static IslandDataBinaryWriteTranslation Instance = new IslandDataBinaryWriteTranslation();
+        public static readonly IslandDataBinaryWriteTranslation Instance = new IslandDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IIslandDataGetter item,
@@ -1319,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IIslandDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1329,7 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIslandDataGetter)item,
@@ -1341,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class IslandDataBinaryCreateTranslation
     {
-        public readonly static IslandDataBinaryCreateTranslation Instance = new IslandDataBinaryCreateTranslation();
+        public static readonly IslandDataBinaryCreateTranslation Instance = new IslandDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IIslandData item,
@@ -1372,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IIslandDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IslandDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1416,7 +1415,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IslandDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1453,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIslandDataGetter IslandDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IslandDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1472,7 +1471,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIslandDataGetter IslandDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return IslandDataFactory(
                 stream: new OverlayStream(slice, package),

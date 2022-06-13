@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExternalAliasLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ExternalAliasLocation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ExternalAliasLocation();
             ((ExternalAliasLocationSetterCommon)((IExternalAliasLocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ExternalAliasLocation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IExternalAliasLocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ExternalAliasLocationSetterCommon)((IExternalAliasLocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IExternalAliasLocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
             ExternalAliasLocation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.AliasID = item.AliasID == rhs.AliasID;
         }
@@ -1017,12 +1016,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ExternalAliasLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ExternalAliasLocationBinaryWriteTranslation Instance = new ExternalAliasLocationBinaryWriteTranslation();
+        public static readonly ExternalAliasLocationBinaryWriteTranslation Instance = new ExternalAliasLocationBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IExternalAliasLocationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1037,7 +1036,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IExternalAliasLocationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1048,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IExternalAliasLocationGetter)item,
@@ -1060,7 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ExternalAliasLocationBinaryCreateTranslation
     {
-        public readonly static ExternalAliasLocationBinaryCreateTranslation Instance = new ExternalAliasLocationBinaryCreateTranslation();
+        public static readonly ExternalAliasLocationBinaryCreateTranslation Instance = new ExternalAliasLocationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IExternalAliasLocation item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IExternalAliasLocationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExternalAliasLocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExternalAliasLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IExternalAliasLocationGetter ExternalAliasLocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ExternalAliasLocationBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1208,7 +1207,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IExternalAliasLocationGetter ExternalAliasLocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ExternalAliasLocationFactory(
                 stream: new OverlayStream(slice, package),
@@ -1223,7 +1222,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

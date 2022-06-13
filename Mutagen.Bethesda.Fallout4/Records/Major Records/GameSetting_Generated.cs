@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => GameSettingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GameSettingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IGameSettingInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GameSettingSetterCommon)((IGameSettingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -697,14 +697,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IGameSettingInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GameSetting)item,
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GameSetting)item,
@@ -750,7 +750,6 @@ namespace Mutagen.Bethesda.Fallout4
             GameSetting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1123,12 +1122,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GameSettingBinaryWriteTranslation Instance = new GameSettingBinaryWriteTranslation();
+        public new static readonly GameSettingBinaryWriteTranslation Instance = new GameSettingBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IGameSettingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1154,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGameSettingGetter)item,
@@ -1165,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGameSettingGetter)item,
@@ -1176,7 +1175,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGameSettingGetter)item,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class GameSettingBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static GameSettingBinaryCreateTranslation Instance = new GameSettingBinaryCreateTranslation();
+        public new static readonly GameSettingBinaryCreateTranslation Instance = new GameSettingBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
     }
@@ -1227,7 +1226,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => GameSettingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GameSettingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

@@ -931,7 +931,6 @@ namespace Mutagen.Bethesda.Pex
             PexObjectProperty.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.TypeName = string.Equals(item.TypeName, rhs.TypeName);
             ret.DocString = string.Equals(item.DocString, rhs.DocString);

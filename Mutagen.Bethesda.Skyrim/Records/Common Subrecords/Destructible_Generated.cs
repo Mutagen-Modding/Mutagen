@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructibleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Destructible CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Destructible();
             ((DestructibleSetterCommon)((IDestructibleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Destructible item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDestructible item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DestructibleSetterCommon)((IDestructibleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IDestructible item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -888,7 +888,6 @@ namespace Mutagen.Bethesda.Skyrim
             Destructible.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -1169,12 +1168,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DestructibleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DestructibleBinaryWriteTranslation Instance = new DestructibleBinaryWriteTranslation();
+        public static readonly DestructibleBinaryWriteTranslation Instance = new DestructibleBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDestructibleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             if (item.Data is {} DataItem)
             {
@@ -1186,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDestructionStageGetter>.Instance.Write(
                 writer: writer,
                 items: item.Stages,
-                transl: (MutagenWriter subWriter, IDestructionStageGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IDestructionStageGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((DestructionStageBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1199,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IDestructibleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDestructibleGetter)item,
@@ -1222,7 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class DestructibleBinaryCreateTranslation
     {
-        public readonly static DestructibleBinaryCreateTranslation Instance = new DestructibleBinaryCreateTranslation();
+        public static readonly DestructibleBinaryCreateTranslation Instance = new DestructibleBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDestructible item,
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1276,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDestructibleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructibleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1321,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructibleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1353,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDestructibleGetter DestructibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DestructibleBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1371,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDestructibleGetter DestructibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DestructibleFactory(
                 stream: new OverlayStream(slice, package),
@@ -1386,7 +1385,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

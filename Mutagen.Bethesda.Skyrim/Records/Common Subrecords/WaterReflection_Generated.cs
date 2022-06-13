@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterReflectionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WaterReflection CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WaterReflection();
             ((WaterReflectionSetterCommon)((IWaterReflectionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WaterReflection item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWaterReflection item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WaterReflectionSetterCommon)((IWaterReflectionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -801,12 +801,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IWaterReflection item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XPWR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -841,7 +841,6 @@ namespace Mutagen.Bethesda.Skyrim
             WaterReflection.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Water = item.Water.Equals(rhs.Water);
             ret.Type = item.Type == rhs.Type;
@@ -1067,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WaterReflectionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WaterReflectionBinaryWriteTranslation Instance = new WaterReflectionBinaryWriteTranslation();
+        public static readonly WaterReflectionBinaryWriteTranslation Instance = new WaterReflectionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWaterReflectionGetter item,
@@ -1088,12 +1087,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IWaterReflectionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XPWR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWaterReflectionGetter)item,
@@ -1117,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class WaterReflectionBinaryCreateTranslation
     {
-        public readonly static WaterReflectionBinaryCreateTranslation Instance = new WaterReflectionBinaryCreateTranslation();
+        public static readonly WaterReflectionBinaryCreateTranslation Instance = new WaterReflectionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWaterReflection item,
@@ -1145,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWaterReflectionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterReflectionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterReflectionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1220,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWaterReflectionGetter WaterReflectionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WaterReflectionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1241,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWaterReflectionGetter WaterReflectionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WaterReflectionFactory(
                 stream: new OverlayStream(slice, package),

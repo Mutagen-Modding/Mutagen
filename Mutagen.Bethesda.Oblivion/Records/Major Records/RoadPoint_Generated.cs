@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static RoadPoint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RoadPoint();
             ((RoadPointSetterCommon)((IRoadPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RoadPoint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRoadPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IRoadPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -895,7 +895,6 @@ namespace Mutagen.Bethesda.Oblivion
             RoadPoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Point = item.Point.Equals(rhs.Point);
             ret.NumConnectionsFluffBytes = MemoryExtensions.SequenceEqual(item.NumConnectionsFluffBytes.Span, rhs.NumConnectionsFluffBytes.Span);
             ret.Connections = item.Connections.CollectionEqualsHelper(
@@ -1145,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RoadPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RoadPointBinaryWriteTranslation Instance = new RoadPointBinaryWriteTranslation();
+        public static readonly RoadPointBinaryWriteTranslation Instance = new RoadPointBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRoadPointGetter item,
@@ -1166,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IRoadPointGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1176,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRoadPointGetter)item,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class RoadPointBinaryCreateTranslation
     {
-        public readonly static RoadPointBinaryCreateTranslation Instance = new RoadPointBinaryCreateTranslation();
+        public static readonly RoadPointBinaryCreateTranslation Instance = new RoadPointBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRoadPoint item,
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRoadPointGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RoadPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1257,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRoadPointGetter RoadPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RoadPointBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1308,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRoadPointGetter RoadPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RoadPointFactory(
                 stream: new OverlayStream(slice, package),

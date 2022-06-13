@@ -791,7 +791,6 @@ namespace Mutagen.Bethesda.Pex
             PexObjectVariableData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VariableType = item.VariableType == rhs.VariableType;
             ret.StringValue = string.Equals(item.StringValue, rhs.StringValue);
             ret.IntValue = item.IntValue == rhs.IntValue;

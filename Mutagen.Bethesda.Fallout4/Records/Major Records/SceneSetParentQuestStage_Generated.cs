@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneSetParentQuestStageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static SceneSetParentQuestStage CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SceneSetParentQuestStage();
             ((SceneSetParentQuestStageSetterCommon)((ISceneSetParentQuestStageGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SceneSetParentQuestStage item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISceneSetParentQuestStage item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SceneSetParentQuestStageSetterCommon)((ISceneSetParentQuestStageGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISceneSetParentQuestStage item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SCQS),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
             SceneSetParentQuestStage.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.OnBegin = item.OnBegin == rhs.OnBegin;
             ret.OnEnd = item.OnEnd == rhs.OnEnd;
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SceneSetParentQuestStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SceneSetParentQuestStageBinaryWriteTranslation Instance = new SceneSetParentQuestStageBinaryWriteTranslation();
+        public static readonly SceneSetParentQuestStageBinaryWriteTranslation Instance = new SceneSetParentQuestStageBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISceneSetParentQuestStageGetter item,
@@ -1006,12 +1005,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ISceneSetParentQuestStageGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SCQS),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1023,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISceneSetParentQuestStageGetter)item,
@@ -1035,7 +1034,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SceneSetParentQuestStageBinaryCreateTranslation
     {
-        public readonly static SceneSetParentQuestStageBinaryCreateTranslation Instance = new SceneSetParentQuestStageBinaryCreateTranslation();
+        public static readonly SceneSetParentQuestStageBinaryCreateTranslation Instance = new SceneSetParentQuestStageBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISceneSetParentQuestStage item,
@@ -1056,7 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ISceneSetParentQuestStageGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneSetParentQuestStageBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1100,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneSetParentQuestStageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1129,7 +1128,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneSetParentQuestStageGetter SceneSetParentQuestStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SceneSetParentQuestStageBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneSetParentQuestStageGetter SceneSetParentQuestStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SceneSetParentQuestStageFactory(
                 stream: new OverlayStream(slice, package),

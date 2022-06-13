@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Effect CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Effect();
             ((EffectSetterCommon)((IEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Effect item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EffectSetterCommon)((IEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -932,7 +932,6 @@ namespace Mutagen.Bethesda.Fallout4
             Effect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.BaseEffect = item.BaseEffect.Equals(rhs.BaseEffect);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
@@ -1232,12 +1231,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class EffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EffectBinaryWriteTranslation Instance = new EffectBinaryWriteTranslation();
+        public static readonly EffectBinaryWriteTranslation Instance = new EffectBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IEffectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1253,7 +1252,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1266,7 +1265,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1277,7 +1276,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEffectGetter)item,
@@ -1289,7 +1288,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class EffectBinaryCreateTranslation
     {
-        public readonly static EffectBinaryCreateTranslation Instance = new EffectBinaryCreateTranslation();
+        public static readonly EffectBinaryCreateTranslation Instance = new EffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEffect item,
@@ -1304,7 +1303,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1349,7 +1348,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IEffectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EffectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1394,7 +1393,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1430,7 +1429,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IEffectGetter EffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EffectBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1448,7 +1447,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IEffectGetter EffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return EffectFactory(
                 stream: new OverlayStream(slice, package),
@@ -1463,7 +1462,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

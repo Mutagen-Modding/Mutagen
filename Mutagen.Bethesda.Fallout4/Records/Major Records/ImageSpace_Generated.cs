@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ImageSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ImageSpace CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpace();
             ((ImageSpaceSetterCommon)((IImageSpaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpace item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IImageSpaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceSetterCommon)((IImageSpaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IImageSpaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IImageSpaceInternal>(
                 record: item,
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ImageSpace)item,
@@ -1804,7 +1804,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ImageSpace)item,
@@ -1839,7 +1839,6 @@ namespace Mutagen.Bethesda.Fallout4
             ImageSpace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.HdrEyeAdaptSpeed = item.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed);
             ret.HdrTonemapE = item.HdrTonemapE.EqualsWithin(rhs.HdrTonemapE);
             ret.HdrBloomThreshold = item.HdrBloomThreshold.EqualsWithin(rhs.HdrBloomThreshold);
@@ -2596,7 +2595,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ImageSpaceBinaryWriteTranslation Instance = new ImageSpaceBinaryWriteTranslation();
+        public new static readonly ImageSpaceBinaryWriteTranslation Instance = new ImageSpaceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceGetter item,
@@ -2610,7 +2609,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IImageSpaceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2760,7 +2759,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IImageSpaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2788,7 +2787,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceGetter)item,
@@ -2799,7 +2798,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImageSpaceGetter)item,
@@ -2810,7 +2809,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImageSpaceGetter)item,
@@ -2822,7 +2821,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ImageSpaceBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ImageSpaceBinaryCreateTranslation Instance = new ImageSpaceBinaryCreateTranslation();
+        public new static readonly ImageSpaceBinaryCreateTranslation Instance = new ImageSpaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IMGS;
         public static void FillBinaryStructs(
@@ -2841,7 +2840,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2974,7 +2973,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ImageSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3130,7 +3129,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IImageSpaceGetter ImageSpaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceFactory(
                 stream: new OverlayStream(slice, package),
@@ -3145,7 +3144,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static OblivionGroup<T> CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new OblivionGroup<T>();
             ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out OblivionGroup<T> item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary<T>(
             this IOblivionGroup<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
             ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IOblivionGroup<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.GroupParse(
                 record: item,
@@ -892,7 +892,6 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.LastModified = item.LastModified == rhs.LastModified;
             ret.RecordCache = EqualsMaskHelper.CacheEqualsHelper(
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static OblivionGroupBinaryWriteTranslation Instance = new OblivionGroupBinaryWriteTranslation();
+        public static readonly OblivionGroupBinaryWriteTranslation Instance = new OblivionGroupBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
             IOblivionGroupGetter<T> item,
@@ -1257,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteRecordTypes<T>(
             IOblivionGroupGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
@@ -1292,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write<T>(
             MutagenWriter writer,
             IOblivionGroupGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
             using (HeaderExport.Group(
@@ -1312,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             throw new NotImplementedException();
         }
@@ -1322,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class OblivionGroupBinaryCreateTranslation<T>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
-        public readonly static OblivionGroupBinaryCreateTranslation<T> Instance = new OblivionGroupBinaryCreateTranslation<T>();
+        public static readonly OblivionGroupBinaryCreateTranslation<T> Instance = new OblivionGroupBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
             IOblivionGroup<T> item,
@@ -1343,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1378,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary<T, T_ErrMask>(
             this IOblivionGroupGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_ErrMask : OblivionMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
@@ -1430,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1475,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IOblivionGroupGetter<T> OblivionGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new OblivionGroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1499,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IOblivionGroupGetter<T> OblivionGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return OblivionGroupFactory(
                 stream: new OverlayStream(slice, package),
@@ -1514,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

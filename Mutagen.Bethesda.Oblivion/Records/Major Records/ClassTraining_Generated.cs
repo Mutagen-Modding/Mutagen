@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClassTrainingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static ClassTraining CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ClassTraining();
             ((ClassTrainingSetterCommon)((IClassTrainingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ClassTraining item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IClassTraining item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ClassTrainingSetterCommon)((IClassTrainingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IClassTraining item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -810,7 +810,6 @@ namespace Mutagen.Bethesda.Oblivion
             ClassTraining.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.TrainedSkill = item.TrainedSkill == rhs.TrainedSkill;
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1034,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClassTrainingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ClassTrainingBinaryWriteTranslation Instance = new ClassTrainingBinaryWriteTranslation();
+        public static readonly ClassTrainingBinaryWriteTranslation Instance = new ClassTrainingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IClassTrainingGetter item,
@@ -1051,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IClassTrainingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IClassTrainingGetter)item,
@@ -1073,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class ClassTrainingBinaryCreateTranslation
     {
-        public readonly static ClassTrainingBinaryCreateTranslation Instance = new ClassTrainingBinaryCreateTranslation();
+        public static readonly ClassTrainingBinaryCreateTranslation Instance = new ClassTrainingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IClassTraining item,
@@ -1097,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IClassTrainingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClassTrainingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClassTrainingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1171,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IClassTrainingGetter ClassTrainingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ClassTrainingBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IClassTrainingGetter ClassTrainingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ClassTrainingFactory(
                 stream: new OverlayStream(slice, package),

@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectSplineBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PlacedObjectSpline CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObjectSpline();
             ((PlacedObjectSplineSetterCommon)((IPlacedObjectSplineGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedObjectSpline item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPlacedObjectSpline item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedObjectSplineSetterCommon)((IPlacedObjectSplineGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -907,12 +907,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPlacedObjectSpline item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XBSD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -947,7 +947,6 @@ namespace Mutagen.Bethesda.Fallout4
             PlacedObjectSpline.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Slack = item.Slack.EqualsWithin(rhs.Slack);
             ret.Thickness = item.Thickness.EqualsWithin(rhs.Thickness);
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedObjectSplineBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PlacedObjectSplineBinaryWriteTranslation Instance = new PlacedObjectSplineBinaryWriteTranslation();
+        public static readonly PlacedObjectSplineBinaryWriteTranslation Instance = new PlacedObjectSplineBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedObjectSplineGetter item,
@@ -1241,12 +1240,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPlacedObjectSplineGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XBSD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1258,7 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedObjectSplineGetter)item,
@@ -1270,7 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PlacedObjectSplineBinaryCreateTranslation
     {
-        public readonly static PlacedObjectSplineBinaryCreateTranslation Instance = new PlacedObjectSplineBinaryCreateTranslation();
+        public static readonly PlacedObjectSplineBinaryCreateTranslation Instance = new PlacedObjectSplineBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPlacedObjectSpline item,
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPlacedObjectSplineGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectSplineBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1343,7 +1342,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectSplineBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1379,7 +1378,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectSplineGetter PlacedObjectSplineFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObjectSplineBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1400,7 +1399,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedObjectSplineGetter PlacedObjectSplineFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedObjectSplineFactory(
                 stream: new OverlayStream(slice, package),

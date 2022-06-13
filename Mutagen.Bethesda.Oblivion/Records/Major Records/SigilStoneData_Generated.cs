@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SigilStoneDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static SigilStoneData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SigilStoneData();
             ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SigilStoneData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISigilStoneData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -783,12 +783,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ISigilStoneData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -823,7 +823,6 @@ namespace Mutagen.Bethesda.Oblivion
             SigilStoneData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Uses = item.Uses == rhs.Uses;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
@@ -1047,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SigilStoneDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SigilStoneDataBinaryWriteTranslation Instance = new SigilStoneDataBinaryWriteTranslation();
+        public static readonly SigilStoneDataBinaryWriteTranslation Instance = new SigilStoneDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISigilStoneDataGetter item,
@@ -1063,12 +1062,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ISigilStoneDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1080,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISigilStoneDataGetter)item,
@@ -1092,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class SigilStoneDataBinaryCreateTranslation
     {
-        public readonly static SigilStoneDataBinaryCreateTranslation Instance = new SigilStoneDataBinaryCreateTranslation();
+        public static readonly SigilStoneDataBinaryCreateTranslation Instance = new SigilStoneDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISigilStoneData item,
@@ -1114,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ISigilStoneDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SigilStoneDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1158,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SigilStoneDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISigilStoneDataGetter SigilStoneDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SigilStoneDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1206,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISigilStoneDataGetter SigilStoneDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SigilStoneDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SeasonalIngredientProductionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static SeasonalIngredientProduction CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SeasonalIngredientProduction();
             ((SeasonalIngredientProductionSetterCommon)((ISeasonalIngredientProductionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SeasonalIngredientProduction item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISeasonalIngredientProduction item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SeasonalIngredientProductionSetterCommon)((ISeasonalIngredientProductionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ISeasonalIngredientProduction item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PFPC),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Oblivion
             SeasonalIngredientProduction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Spring = item.Spring == rhs.Spring;
             ret.Summer = item.Summer == rhs.Summer;
             ret.Fall = item.Fall == rhs.Fall;
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SeasonalIngredientProductionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SeasonalIngredientProductionBinaryWriteTranslation Instance = new SeasonalIngredientProductionBinaryWriteTranslation();
+        public static readonly SeasonalIngredientProductionBinaryWriteTranslation Instance = new SeasonalIngredientProductionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISeasonalIngredientProductionGetter item,
@@ -1110,12 +1109,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ISeasonalIngredientProductionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PFPC),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1127,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISeasonalIngredientProductionGetter)item,
@@ -1139,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class SeasonalIngredientProductionBinaryCreateTranslation
     {
-        public readonly static SeasonalIngredientProductionBinaryCreateTranslation Instance = new SeasonalIngredientProductionBinaryCreateTranslation();
+        public static readonly SeasonalIngredientProductionBinaryCreateTranslation Instance = new SeasonalIngredientProductionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISeasonalIngredientProduction item,
@@ -1162,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ISeasonalIngredientProductionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SeasonalIngredientProductionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1206,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SeasonalIngredientProductionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISeasonalIngredientProductionGetter SeasonalIngredientProductionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SeasonalIngredientProductionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1255,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ISeasonalIngredientProductionGetter SeasonalIngredientProductionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SeasonalIngredientProductionFactory(
                 stream: new OverlayStream(slice, package),

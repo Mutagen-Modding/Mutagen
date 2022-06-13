@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Decal CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Decal();
             ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Decal item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDecal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1077,12 +1077,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IDecal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DODT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1117,7 +1117,6 @@ namespace Mutagen.Bethesda.Skyrim
             Decal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MinWidth = item.MinWidth.EqualsWithin(rhs.MinWidth);
             ret.MaxWidth = item.MaxWidth.EqualsWithin(rhs.MaxWidth);
             ret.MinHeight = item.MinHeight.EqualsWithin(rhs.MinHeight);
@@ -1453,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DecalBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DecalBinaryWriteTranslation Instance = new DecalBinaryWriteTranslation();
+        public static readonly DecalBinaryWriteTranslation Instance = new DecalBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDecalGetter item,
@@ -1494,12 +1493,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IDecalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DODT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1511,7 +1510,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDecalGetter)item,
@@ -1523,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class DecalBinaryCreateTranslation
     {
-        public readonly static DecalBinaryCreateTranslation Instance = new DecalBinaryCreateTranslation();
+        public static readonly DecalBinaryCreateTranslation Instance = new DecalBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDecal item,
@@ -1555,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDecalGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DecalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1599,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1637,7 +1636,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDecalGetter DecalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DecalBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1655,7 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDecalGetter DecalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DecalFactory(
                 stream: new OverlayStream(slice, package),

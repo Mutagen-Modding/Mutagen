@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => EyesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EyesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Eyes CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Eyes();
             ((EyesSetterCommon)((IEyesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Eyes item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IEyesInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EyesSetterCommon)((IEyesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IEyesInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IEyesInternal>(
                 record: item,
@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Eyes)item,
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Eyes)item,
@@ -963,7 +963,6 @@ namespace Mutagen.Bethesda.Skyrim
             Eyes.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Flags = item.Flags == rhs.Flags;
@@ -1380,12 +1379,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static EyesBinaryWriteTranslation Instance = new EyesBinaryWriteTranslation();
+        public new static readonly EyesBinaryWriteTranslation Instance = new EyesBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IEyesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1412,7 +1411,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IEyesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1440,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEyesGetter)item,
@@ -1451,7 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IEyesGetter)item,
@@ -1462,7 +1461,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IEyesGetter)item,
@@ -1474,7 +1473,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class EyesBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static EyesBinaryCreateTranslation Instance = new EyesBinaryCreateTranslation();
+        public new static readonly EyesBinaryCreateTranslation Instance = new EyesBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EYES;
         public static void FillBinaryStructs(
@@ -1493,7 +1492,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1570,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => EyesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EyesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1616,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEyesGetter EyesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new EyesBinaryOverlay(
@@ -1643,7 +1642,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEyesGetter EyesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return EyesFactory(
                 stream: new OverlayStream(slice, package),
@@ -1658,7 +1657,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

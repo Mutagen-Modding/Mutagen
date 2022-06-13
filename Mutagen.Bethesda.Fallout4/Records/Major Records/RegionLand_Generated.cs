@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => RegionLandBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionLandBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static RegionLand CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionLand();
             ((RegionLandSetterCommon)((IRegionLandGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RegionLand item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IRegionLand item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionLandSetterCommon)((IRegionLandGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IRegionLand item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IRegionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (RegionLand)item,
@@ -777,7 +777,6 @@ namespace Mutagen.Bethesda.Fallout4
             RegionLand.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LodDisplayDistanceMultiplier = item.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier);
             ret.OcclusionAccuracyDist = item.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1053,12 +1052,12 @@ namespace Mutagen.Bethesda.Fallout4
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static RegionLandBinaryWriteTranslation Instance = new RegionLandBinaryWriteTranslation();
+        public new static readonly RegionLandBinaryWriteTranslation Instance = new RegionLandBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRegionLandGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             RegionDataBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1077,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IRegionLandGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionLandGetter)item,
@@ -1099,7 +1098,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IRegionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRegionLandGetter)item,
@@ -1111,7 +1110,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class RegionLandBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
-        public new readonly static RegionLandBinaryCreateTranslation Instance = new RegionLandBinaryCreateTranslation();
+        public new static readonly RegionLandBinaryCreateTranslation Instance = new RegionLandBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRegionLand item,
@@ -1126,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => RegionLandBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionLandBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRegionLandGetter RegionLandFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionLandBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1243,7 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRegionLandGetter RegionLandFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionLandFactory(
                 stream: new OverlayStream(slice, package),
@@ -1258,7 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

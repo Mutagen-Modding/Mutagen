@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TerminalHolotapeEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static TerminalHolotapeEntry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TerminalHolotapeEntry();
             ((TerminalHolotapeEntrySetterCommon)((ITerminalHolotapeEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TerminalHolotapeEntry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ITerminalHolotapeEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TerminalHolotapeEntrySetterCommon)((ITerminalHolotapeEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -759,12 +759,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ITerminalHolotapeEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CNTO),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
             TerminalHolotapeEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Holotape = item.Holotape.Equals(rhs.Holotape);
             ret.Count = item.Count == rhs.Count;
         }
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TerminalHolotapeEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TerminalHolotapeEntryBinaryWriteTranslation Instance = new TerminalHolotapeEntryBinaryWriteTranslation();
+        public static readonly TerminalHolotapeEntryBinaryWriteTranslation Instance = new TerminalHolotapeEntryBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITerminalHolotapeEntryGetter item,
@@ -1025,12 +1024,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ITerminalHolotapeEntryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CNTO),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITerminalHolotapeEntryGetter)item,
@@ -1054,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class TerminalHolotapeEntryBinaryCreateTranslation
     {
-        public readonly static TerminalHolotapeEntryBinaryCreateTranslation Instance = new TerminalHolotapeEntryBinaryCreateTranslation();
+        public static readonly TerminalHolotapeEntryBinaryCreateTranslation Instance = new TerminalHolotapeEntryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITerminalHolotapeEntry item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ITerminalHolotapeEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TerminalHolotapeEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1120,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TerminalHolotapeEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITerminalHolotapeEntryGetter TerminalHolotapeEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TerminalHolotapeEntryBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITerminalHolotapeEntryGetter TerminalHolotapeEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TerminalHolotapeEntryFactory(
                 stream: new OverlayStream(slice, package),

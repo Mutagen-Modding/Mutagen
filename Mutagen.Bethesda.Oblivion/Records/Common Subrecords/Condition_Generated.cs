@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static Condition CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var nextRecord = HeaderTranslation.GetNextSubrecordType(
                 reader: frame.Reader,
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Condition item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICondition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -988,12 +988,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ICondition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CTDA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1028,7 +1028,6 @@ namespace Mutagen.Bethesda.Oblivion
             Condition.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
@@ -1322,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ConditionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ConditionBinaryWriteTranslation Instance = new ConditionBinaryWriteTranslation();
+        public static readonly ConditionBinaryWriteTranslation Instance = new ConditionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IConditionGetter item,
@@ -1362,12 +1361,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IConditionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CTDA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1379,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IConditionGetter)item,
@@ -1391,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class ConditionBinaryCreateTranslation
     {
-        public readonly static ConditionBinaryCreateTranslation Instance = new ConditionBinaryCreateTranslation();
+        public static readonly ConditionBinaryCreateTranslation Instance = new ConditionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICondition item,
@@ -1425,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IConditionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1469,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1507,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IConditionGetter ConditionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var nextRecord = translationParams.ConvertToCustom(stream.GetSubrecordHeader().RecordType);
             switch (nextRecord.TypeInt)
@@ -1537,7 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IConditionGetter ConditionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ConditionFactory(
                 stream: new OverlayStream(slice, package),

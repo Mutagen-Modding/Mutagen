@@ -23,7 +23,7 @@ public partial class Global : GlobalCustomParsing.IGlobalCommon
 
     public static Global CreateFromBinary(
         MutagenFrame frame,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         return GlobalCustomParsing.Create<Global>(
             frame,
@@ -73,7 +73,7 @@ abstract partial class GlobalBinaryOverlay
     public static IGlobalGetter GlobalFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var majorFrame = package.MetaData.Constants.MajorRecord(stream.RemainingMemory);
         var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);
@@ -82,15 +82,18 @@ abstract partial class GlobalBinaryOverlay
             case GlobalInt.TRIGGER_CHAR:
                 return GlobalIntBinaryOverlay.GlobalIntFactory(
                     stream,
-                    package);
+                    package,
+                    translationParams);
             case GlobalShort.TRIGGER_CHAR:
                 return GlobalShortBinaryOverlay.GlobalShortFactory(
                     stream,
-                    package);
+                    package,
+                    translationParams);
             case GlobalFloat.TRIGGER_CHAR:
                 return GlobalFloatBinaryOverlay.GlobalFloatFactory(
                     stream,
-                    package);
+                    package,
+                    translationParams);
             default:
                 throw new ArgumentException($"Unknown trigger char: {globalChar}");
         }

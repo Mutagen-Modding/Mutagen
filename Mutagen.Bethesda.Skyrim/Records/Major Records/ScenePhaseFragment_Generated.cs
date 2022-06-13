@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScenePhaseFragmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ScenePhaseFragment CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScenePhaseFragment();
             ((ScenePhaseFragmentSetterCommon)((IScenePhaseFragmentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScenePhaseFragment item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IScenePhaseFragment item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScenePhaseFragmentSetterCommon)((IScenePhaseFragmentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IScenePhaseFragment item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -883,7 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
             ScenePhaseFragment.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Index = item.Index == rhs.Index;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScenePhaseFragmentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ScenePhaseFragmentBinaryWriteTranslation Instance = new ScenePhaseFragmentBinaryWriteTranslation();
+        public static readonly ScenePhaseFragmentBinaryWriteTranslation Instance = new ScenePhaseFragmentBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScenePhaseFragmentGetter item,
@@ -1160,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IScenePhaseFragmentGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1170,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScenePhaseFragmentGetter)item,
@@ -1182,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ScenePhaseFragmentBinaryCreateTranslation
     {
-        public readonly static ScenePhaseFragmentBinaryCreateTranslation Instance = new ScenePhaseFragmentBinaryCreateTranslation();
+        public static readonly ScenePhaseFragmentBinaryCreateTranslation Instance = new ScenePhaseFragmentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScenePhaseFragment item,
@@ -1212,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IScenePhaseFragmentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScenePhaseFragmentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1256,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScenePhaseFragmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1294,7 +1293,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScenePhaseFragmentGetter ScenePhaseFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScenePhaseFragmentBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1313,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScenePhaseFragmentGetter ScenePhaseFragmentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScenePhaseFragmentFactory(
                 stream: new OverlayStream(slice, package),

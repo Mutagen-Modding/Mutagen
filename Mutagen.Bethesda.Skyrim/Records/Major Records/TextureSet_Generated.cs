@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static TextureSet CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TextureSet();
             ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TextureSet item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITextureSetInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ITextureSetInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ITextureSetInternal>(
                 record: item,
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (TextureSet)item,
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (TextureSet)item,
@@ -1288,7 +1288,6 @@ namespace Mutagen.Bethesda.Skyrim
             TextureSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Diffuse = string.Equals(item.Diffuse, rhs.Diffuse);
             ret.NormalOrGloss = string.Equals(item.NormalOrGloss, rhs.NormalOrGloss);
@@ -1909,12 +1908,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static TextureSetBinaryWriteTranslation Instance = new TextureSetBinaryWriteTranslation();
+        public new static readonly TextureSetBinaryWriteTranslation Instance = new TextureSetBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ITextureSetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1982,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ITextureSetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2010,7 +2009,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -2021,7 +2020,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -2032,7 +2031,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -2044,7 +2043,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class TextureSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
+        public new static readonly TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TXST;
         public static void FillBinaryStructs(
@@ -2063,7 +2062,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2197,7 +2196,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2271,7 +2270,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ITextureSetGetter TextureSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new TextureSetBinaryOverlay(
@@ -2298,7 +2297,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ITextureSetGetter TextureSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TextureSetFactory(
                 stream: new OverlayStream(slice, package),
@@ -2313,7 +2312,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

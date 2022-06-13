@@ -4932,7 +4932,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -4942,7 +4942,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Npc CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Npc();
             ((NpcSetterCommon)((INpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -4957,7 +4957,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Npc item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -5388,7 +5388,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -5852,7 +5852,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<INpcInternal>(
                 record: item,
@@ -5865,7 +5865,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Npc)item,
@@ -5876,7 +5876,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Npc)item,
@@ -5911,7 +5911,6 @@ namespace Mutagen.Bethesda.Fallout4
             Npc.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -8577,7 +8576,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
+        public new static readonly NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcGetter item,
@@ -8591,7 +8590,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             INpcGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -8639,7 +8638,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
                 writer: writer,
                 items: item.Factions,
-                transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RankPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -8685,7 +8684,7 @@ namespace Mutagen.Bethesda.Fallout4
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -8713,7 +8712,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAttackGetter>.Instance.Write(
                 writer: writer,
                 items: item.Attacks,
-                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -8750,7 +8749,7 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.Perks,
                 counterType: RecordTypes.PRKZ,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((PerkPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -8762,7 +8761,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.Properties,
                 recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
-                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -8783,7 +8782,7 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.Items,
                 counterType: RecordTypes.COCT,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -8823,7 +8822,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -8836,7 +8835,7 @@ namespace Mutagen.Bethesda.Fallout4
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -8846,7 +8845,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.AttachParentSlots,
                 recordType: translationParams.ConvertToCustom(RecordTypes.APPR),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -8858,7 +8857,7 @@ namespace Mutagen.Bethesda.Fallout4
                 counterType: RecordTypes.OBTE,
                 counterLength: 4,
                 endMarker: RecordTypes.STOP,
-                transl: (MutagenWriter subWriter, IObjectTemplateGetter<Npc.Property> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IObjectTemplateGetter<Npc.Property> subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ObjectTemplateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<Npc.Property>(
@@ -8893,7 +8892,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -8950,7 +8949,7 @@ namespace Mutagen.Bethesda.Fallout4
                 counterType: RecordTypes.CS2H,
                 counterLength: 4,
                 endMarker: RecordTypes.CS2E,
-                transl: (MutagenWriter subWriter, INpcSoundGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INpcSoundGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NpcSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -9001,7 +9000,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INpcFaceTintingLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.FaceTintingLayers,
-                transl: (MutagenWriter subWriter, INpcFaceTintingLayerGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INpcFaceTintingLayerGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NpcFaceTintingLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -9022,7 +9021,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INpcFaceMorphGetter>.Instance.Write(
                 writer: writer,
                 items: item.FaceMorphs,
-                transl: (MutagenWriter subWriter, INpcFaceMorphGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INpcFaceMorphGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NpcFaceMorphBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -9084,7 +9083,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INpcGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -9112,7 +9111,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcGetter)item,
@@ -9123,7 +9122,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcGetter)item,
@@ -9134,7 +9133,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcGetter)item,
@@ -9146,7 +9145,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NpcBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
+        public new static readonly NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NPC_;
         public static void FillBinaryStructs(
@@ -9165,7 +9164,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -9771,7 +9770,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -10150,7 +10149,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcGetter NpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new NpcBinaryOverlay(
@@ -10177,7 +10176,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcGetter NpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcFactory(
                 stream: new OverlayStream(slice, package),
@@ -10192,7 +10191,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

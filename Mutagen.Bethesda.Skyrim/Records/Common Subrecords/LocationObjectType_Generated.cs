@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LocationObjectTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationObjectTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static LocationObjectType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationObjectType();
             ((LocationObjectTypeSetterCommon)((ILocationObjectTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationObjectType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationObjectType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationObjectTypeSetterCommon)((ILocationObjectTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILocationObjectType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationObjectType)item,
@@ -704,7 +704,6 @@ namespace Mutagen.Bethesda.Skyrim
             LocationObjectType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -954,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationObjectTypeBinaryWriteTranslation Instance = new LocationObjectTypeBinaryWriteTranslation();
+        public new static readonly LocationObjectTypeBinaryWriteTranslation Instance = new LocationObjectTypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationObjectTypeGetter item,
@@ -969,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILocationObjectTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -979,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationObjectTypeGetter)item,
@@ -990,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IALocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationObjectTypeGetter)item,
@@ -1002,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LocationObjectTypeBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
-        public new readonly static LocationObjectTypeBinaryCreateTranslation Instance = new LocationObjectTypeBinaryCreateTranslation();
+        public new static readonly LocationObjectTypeBinaryCreateTranslation Instance = new LocationObjectTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationObjectType item,
@@ -1049,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LocationObjectTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationObjectTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1077,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationObjectTypeGetter LocationObjectTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationObjectTypeBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1094,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationObjectTypeGetter LocationObjectTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationObjectTypeFactory(
                 stream: new OverlayStream(slice, package),

@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AColorRecordDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAColorRecordData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AColorRecordDataSetterCommon)((IAColorRecordDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAColorRecordData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -670,7 +670,6 @@ namespace Mutagen.Bethesda.Fallout4
             AColorRecordData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -852,19 +851,19 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AColorRecordDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AColorRecordDataBinaryWriteTranslation Instance = new AColorRecordDataBinaryWriteTranslation();
+        public static readonly AColorRecordDataBinaryWriteTranslation Instance = new AColorRecordDataBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IAColorRecordDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAColorRecordDataGetter)item,
@@ -876,7 +875,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class AColorRecordDataBinaryCreateTranslation
     {
-        public readonly static AColorRecordDataBinaryCreateTranslation Instance = new AColorRecordDataBinaryCreateTranslation();
+        public static readonly AColorRecordDataBinaryCreateTranslation Instance = new AColorRecordDataBinaryCreateTranslation();
 
     }
 
@@ -889,7 +888,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IAColorRecordDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AColorRecordDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -933,7 +932,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AColorRecordDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

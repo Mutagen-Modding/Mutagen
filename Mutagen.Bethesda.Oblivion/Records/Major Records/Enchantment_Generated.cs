@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => EnchantmentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnchantmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Enchantment CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Enchantment();
             ((EnchantmentSetterCommon)((IEnchantmentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Enchantment item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IEnchantmentInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EnchantmentSetterCommon)((IEnchantmentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IEnchantmentInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IEnchantmentInternal>(
                 record: item,
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Enchantment)item,
@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Enchantment)item,
@@ -1019,7 +1019,6 @@ namespace Mutagen.Bethesda.Oblivion
             Enchantment.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
@@ -1509,12 +1508,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static EnchantmentBinaryWriteTranslation Instance = new EnchantmentBinaryWriteTranslation();
+        public new static readonly EnchantmentBinaryWriteTranslation Instance = new EnchantmentBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IEnchantmentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1535,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
-                transl: (MutagenWriter subWriter, IEffectGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IEffectGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((EffectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1548,7 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IEnchantmentGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1576,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEnchantmentGetter)item,
@@ -1587,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IEnchantmentGetter)item,
@@ -1598,7 +1597,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IEnchantmentGetter)item,
@@ -1610,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class EnchantmentBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static EnchantmentBinaryCreateTranslation Instance = new EnchantmentBinaryCreateTranslation();
+        public new static readonly EnchantmentBinaryCreateTranslation Instance = new EnchantmentBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ENCH;
         public static void FillBinaryStructs(
@@ -1629,7 +1628,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1706,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => EnchantmentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnchantmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1748,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnchantmentGetter EnchantmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new EnchantmentBinaryOverlay(
@@ -1775,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnchantmentGetter EnchantmentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return EnchantmentFactory(
                 stream: new OverlayStream(slice, package),
@@ -1790,7 +1789,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

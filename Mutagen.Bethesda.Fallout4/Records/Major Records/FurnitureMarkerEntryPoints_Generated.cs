@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerEntryPointsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static FurnitureMarkerEntryPoints CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FurnitureMarkerEntryPoints();
             ((FurnitureMarkerEntryPointsSetterCommon)((IFurnitureMarkerEntryPointsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FurnitureMarkerEntryPoints item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFurnitureMarkerEntryPoints item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FurnitureMarkerEntryPointsSetterCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IFurnitureMarkerEntryPoints item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.FNPR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
             FurnitureMarkerEntryPoints.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Points = item.Points == rhs.Points;
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FurnitureMarkerEntryPointsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FurnitureMarkerEntryPointsBinaryWriteTranslation Instance = new FurnitureMarkerEntryPointsBinaryWriteTranslation();
+        public static readonly FurnitureMarkerEntryPointsBinaryWriteTranslation Instance = new FurnitureMarkerEntryPointsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFurnitureMarkerEntryPointsGetter item,
@@ -1012,12 +1011,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IFurnitureMarkerEntryPointsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.FNPR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1029,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFurnitureMarkerEntryPointsGetter)item,
@@ -1041,7 +1040,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class FurnitureMarkerEntryPointsBinaryCreateTranslation
     {
-        public readonly static FurnitureMarkerEntryPointsBinaryCreateTranslation Instance = new FurnitureMarkerEntryPointsBinaryCreateTranslation();
+        public static readonly FurnitureMarkerEntryPointsBinaryCreateTranslation Instance = new FurnitureMarkerEntryPointsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFurnitureMarkerEntryPoints item,
@@ -1066,7 +1065,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IFurnitureMarkerEntryPointsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerEntryPointsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerEntryPointsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1139,7 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFurnitureMarkerEntryPointsGetter FurnitureMarkerEntryPointsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FurnitureMarkerEntryPointsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFurnitureMarkerEntryPointsGetter FurnitureMarkerEntryPointsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FurnitureMarkerEntryPointsFactory(
                 stream: new OverlayStream(slice, package),

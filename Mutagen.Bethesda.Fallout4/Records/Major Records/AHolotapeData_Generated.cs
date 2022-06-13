@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AHolotapeDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAHolotapeData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AHolotapeDataSetterCommon)((IAHolotapeDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAHolotapeData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -678,7 +678,6 @@ namespace Mutagen.Bethesda.Fallout4
             AHolotapeData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -860,19 +859,19 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AHolotapeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AHolotapeDataBinaryWriteTranslation Instance = new AHolotapeDataBinaryWriteTranslation();
+        public static readonly AHolotapeDataBinaryWriteTranslation Instance = new AHolotapeDataBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IAHolotapeDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAHolotapeDataGetter)item,
@@ -884,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class AHolotapeDataBinaryCreateTranslation
     {
-        public readonly static AHolotapeDataBinaryCreateTranslation Instance = new AHolotapeDataBinaryCreateTranslation();
+        public static readonly AHolotapeDataBinaryCreateTranslation Instance = new AHolotapeDataBinaryCreateTranslation();
 
     }
 
@@ -897,7 +896,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IAHolotapeDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AHolotapeDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -942,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AHolotapeDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

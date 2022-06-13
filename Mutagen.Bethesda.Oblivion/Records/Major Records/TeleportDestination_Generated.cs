@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TeleportDestinationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static TeleportDestination CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TeleportDestination();
             ((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TeleportDestination item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ITeleportDestination item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -799,12 +799,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ITeleportDestination item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XTEL),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -839,7 +839,6 @@ namespace Mutagen.Bethesda.Oblivion
             TeleportDestination.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Destination = item.Destination.Equals(rhs.Destination);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class TeleportDestinationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
+        public static readonly TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITeleportDestinationGetter item,
@@ -1084,12 +1083,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ITeleportDestinationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XTEL),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1101,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITeleportDestinationGetter)item,
@@ -1113,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class TeleportDestinationBinaryCreateTranslation
     {
-        public readonly static TeleportDestinationBinaryCreateTranslation Instance = new TeleportDestinationBinaryCreateTranslation();
+        public static readonly TeleportDestinationBinaryCreateTranslation Instance = new TeleportDestinationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITeleportDestination item,
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ITeleportDestinationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TeleportDestinationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1180,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TeleportDestinationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ITeleportDestinationGetter TeleportDestinationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TeleportDestinationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1228,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ITeleportDestinationGetter TeleportDestinationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TeleportDestinationFactory(
                 stream: new OverlayStream(slice, package),

@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => GameSettingUIntBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GameSettingUIntBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static GameSettingUInt CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GameSettingUInt();
             ((GameSettingUIntSetterCommon)((IGameSettingUIntGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out GameSettingUInt item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IGameSettingUIntInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GameSettingUIntSetterCommon)((IGameSettingUIntGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IGameSettingUIntInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IGameSettingUIntInternal>(
                 record: item,
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IGameSettingInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GameSettingUInt)item,
@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GameSettingUInt)item,
@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GameSettingUInt)item,
@@ -849,7 +849,6 @@ namespace Mutagen.Bethesda.Fallout4
             GameSettingUInt.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1320,12 +1319,12 @@ namespace Mutagen.Bethesda.Fallout4
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GameSettingUIntBinaryWriteTranslation Instance = new GameSettingUIntBinaryWriteTranslation();
+        public new static readonly GameSettingUIntBinaryWriteTranslation Instance = new GameSettingUIntBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IGameSettingUIntGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1340,7 +1339,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IGameSettingUIntGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1368,7 +1367,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGameSettingUIntGetter)item,
@@ -1379,7 +1378,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IGameSettingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGameSettingUIntGetter)item,
@@ -1390,7 +1389,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGameSettingUIntGetter)item,
@@ -1401,7 +1400,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGameSettingUIntGetter)item,
@@ -1413,7 +1412,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class GameSettingUIntBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
-        public new readonly static GameSettingUIntBinaryCreateTranslation Instance = new GameSettingUIntBinaryCreateTranslation();
+        public new static readonly GameSettingUIntBinaryCreateTranslation Instance = new GameSettingUIntBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GMST;
         public static void FillBinaryStructs(
@@ -1432,7 +1431,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1490,7 +1489,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => GameSettingUIntBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GameSettingUIntBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1523,7 +1522,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IGameSettingUIntGetter GameSettingUIntFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new GameSettingUIntBinaryOverlay(
@@ -1550,7 +1549,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IGameSettingUIntGetter GameSettingUIntFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return GameSettingUIntFactory(
                 stream: new OverlayStream(slice, package),
@@ -1565,7 +1564,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

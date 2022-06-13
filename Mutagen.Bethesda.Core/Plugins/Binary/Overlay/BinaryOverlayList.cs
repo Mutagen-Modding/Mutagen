@@ -26,14 +26,14 @@ internal abstract class BinaryOverlayList
     public static IReadOnlyList<T> FactoryByArray<T>(
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
         int[] locs)
     {
         return new BinaryOverlayRecordListByLocationArray<T>(
             mem,
             package,
-            translationParams?.RecordTypeConverter,
+            translationParams.RecordTypeConverter,
             getter,
             locs);
     }
@@ -162,7 +162,7 @@ internal abstract class BinaryOverlayList
         int countLength,
         RecordTriggerSpecs trigger,
         RecordType countType,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
         bool skipHeader = true)
     {
@@ -203,7 +203,7 @@ internal abstract class BinaryOverlayList
                     constants: package.MetaData.Constants.SubConstants,
                     trigger: trigger,
                     skipHeader: skipHeader,
-                    translationParams: translationParams?.RecordTypeConverter));
+                    translationParams: translationParams.RecordTypeConverter));
         }
     }
 
@@ -213,7 +213,7 @@ internal abstract class BinaryOverlayList
         int countLength,
         RecordType trigger,
         RecordType countType,
-        TypedParseParams? translationParams,
+        TypedParseParams translationParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
         bool skipHeader = true)
     {
@@ -254,7 +254,7 @@ internal abstract class BinaryOverlayList
                     constants: package.MetaData.Constants.SubConstants,
                     trigger: trigger,
                     skipHeader: skipHeader,
-                    translationParams: translationParams?.RecordTypeConverter));
+                    translationParams: translationParams.RecordTypeConverter));
         }
     }
 
@@ -491,7 +491,7 @@ internal abstract class BinaryOverlayList
         private BinaryOverlayFactoryPackage _package;
         private ReadOnlyMemorySlice<byte> _mem;
         private PluginBinaryOverlay.SpanRecordFactory<T> _getter;
-        private TypedParseParams? _recordTypeConverter;
+        private RecordTypeConverter? _recordTypeConverter;
 
         public BinaryOverlayRecordListByLocationArray(
             ReadOnlyMemorySlice<byte> mem,

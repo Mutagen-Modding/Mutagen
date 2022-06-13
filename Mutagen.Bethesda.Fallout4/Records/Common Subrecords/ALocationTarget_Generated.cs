@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ALocationTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ALocationTargetSetterCommon)((IALocationTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -678,7 +678,6 @@ namespace Mutagen.Bethesda.Fallout4
             ALocationTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -860,19 +859,19 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ALocationTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ALocationTargetBinaryWriteTranslation Instance = new ALocationTargetBinaryWriteTranslation();
+        public static readonly ALocationTargetBinaryWriteTranslation Instance = new ALocationTargetBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IALocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IALocationTargetGetter)item,
@@ -884,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ALocationTargetBinaryCreateTranslation
     {
-        public readonly static ALocationTargetBinaryCreateTranslation Instance = new ALocationTargetBinaryCreateTranslation();
+        public static readonly ALocationTargetBinaryCreateTranslation Instance = new ALocationTargetBinaryCreateTranslation();
 
     }
 
@@ -897,7 +896,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IALocationTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ALocationTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -942,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ALocationTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

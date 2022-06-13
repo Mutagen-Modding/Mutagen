@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PathGridPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static PathGridPoint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PathGridPoint();
             ((PathGridPointSetterCommon)((IPathGridPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PathGridPoint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPathGridPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IPathGridPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -932,7 +932,6 @@ namespace Mutagen.Bethesda.Oblivion
             PathGridPoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Point = item.Point.Equals(rhs.Point);
             ret.NumConnections = item.NumConnections == rhs.NumConnections;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PathGridPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PathGridPointBinaryWriteTranslation Instance = new PathGridPointBinaryWriteTranslation();
+        public static readonly PathGridPointBinaryWriteTranslation Instance = new PathGridPointBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPathGridPointGetter item,
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IPathGridPointGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1224,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPathGridPointGetter)item,
@@ -1236,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class PathGridPointBinaryCreateTranslation
     {
-        public readonly static PathGridPointBinaryCreateTranslation Instance = new PathGridPointBinaryCreateTranslation();
+        public static readonly PathGridPointBinaryCreateTranslation Instance = new PathGridPointBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPathGridPoint item,
@@ -1258,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IPathGridPointGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PathGridPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1302,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PathGridPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1332,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPathGridPointGetter PathGridPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PathGridPointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1349,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPathGridPointGetter PathGridPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PathGridPointFactory(
                 stream: new OverlayStream(slice, package),

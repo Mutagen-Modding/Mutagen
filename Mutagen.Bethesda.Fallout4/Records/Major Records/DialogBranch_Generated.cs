@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DialogBranchBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogBranchBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static DialogBranch CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogBranch();
             ((DialogBranchSetterCommon)((IDialogBranchGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogBranch item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDialogBranchInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogBranchSetterCommon)((IDialogBranchGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDialogBranchInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IDialogBranchInternal>(
                 record: item,
@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DialogBranch)item,
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DialogBranch)item,
@@ -970,7 +970,6 @@ namespace Mutagen.Bethesda.Fallout4
             DialogBranch.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.Category = item.Category == rhs.Category;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1414,12 +1413,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DialogBranchBinaryWriteTranslation Instance = new DialogBranchBinaryWriteTranslation();
+        public new static readonly DialogBranchBinaryWriteTranslation Instance = new DialogBranchBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDialogBranchGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1448,7 +1447,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IDialogBranchGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1476,7 +1475,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogBranchGetter)item,
@@ -1487,7 +1486,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDialogBranchGetter)item,
@@ -1498,7 +1497,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDialogBranchGetter)item,
@@ -1510,7 +1509,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DialogBranchBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static DialogBranchBinaryCreateTranslation Instance = new DialogBranchBinaryCreateTranslation();
+        public new static readonly DialogBranchBinaryCreateTranslation Instance = new DialogBranchBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DLBR;
         public static void FillBinaryStructs(
@@ -1529,7 +1528,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1610,7 +1609,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DialogBranchBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogBranchBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1655,7 +1654,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDialogBranchGetter DialogBranchFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new DialogBranchBinaryOverlay(
@@ -1682,7 +1681,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDialogBranchGetter DialogBranchFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogBranchFactory(
                 stream: new OverlayStream(slice, package),
@@ -1697,7 +1696,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

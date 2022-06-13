@@ -682,7 +682,6 @@ namespace Mutagen.Bethesda.Pex
             PexObjectNamedFunction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FunctionName = string.Equals(item.FunctionName, rhs.FunctionName);
             ret.Function = MaskItemExt.Factory(item.Function.GetEqualsMask(rhs.Function, include), include);
         }

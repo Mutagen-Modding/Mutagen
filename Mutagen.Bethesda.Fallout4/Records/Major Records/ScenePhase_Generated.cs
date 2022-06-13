@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScenePhaseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -724,7 +724,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ScenePhase CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScenePhase();
             ((ScenePhaseSetterCommon)((IScenePhaseGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScenePhase item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IScenePhase item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScenePhaseSetterCommon)((IScenePhaseGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IScenePhase item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1146,7 +1146,6 @@ namespace Mutagen.Bethesda.Fallout4
             ScenePhase.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.StartConditions = item.StartConditions.CollectionEqualsHelper(
                 rhs.StartConditions,
@@ -1534,12 +1533,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ScenePhaseBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ScenePhaseBinaryWriteTranslation Instance = new ScenePhaseBinaryWriteTranslation();
+        public static readonly ScenePhaseBinaryWriteTranslation Instance = new ScenePhaseBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IScenePhaseGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.HNAM)) { }
             StringBinaryTranslation.Instance.WriteNullable(
@@ -1601,7 +1600,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IScenePhaseGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1612,7 +1611,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScenePhaseGetter)item,
@@ -1624,7 +1623,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ScenePhaseBinaryCreateTranslation
     {
-        public readonly static ScenePhaseBinaryCreateTranslation Instance = new ScenePhaseBinaryCreateTranslation();
+        public static readonly ScenePhaseBinaryCreateTranslation Instance = new ScenePhaseBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScenePhase item,
@@ -1639,7 +1638,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1736,7 +1735,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IScenePhaseGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScenePhaseBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1781,7 +1780,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScenePhaseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1844,7 +1843,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScenePhaseGetter ScenePhaseFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScenePhaseBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1862,7 +1861,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IScenePhaseGetter ScenePhaseFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScenePhaseFactory(
                 stream: new OverlayStream(slice, package),
@@ -1877,7 +1876,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

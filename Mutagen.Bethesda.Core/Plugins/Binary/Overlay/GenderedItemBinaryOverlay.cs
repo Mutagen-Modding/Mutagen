@@ -128,8 +128,8 @@ internal static class GenderedItemBinaryOverlay
         BinaryOverlayFactoryPackage package,
         RecordType male,
         RecordType female,
-        Func<OverlayStream, BinaryOverlayFactoryPackage, TypedParseParams?, T> creator,
-        TypedParseParams? translationParams = null)
+        Func<OverlayStream, BinaryOverlayFactoryPackage, TypedParseParams, T> creator,
+        TypedParseParams translationParams = default)
         where T : class
     {
         var initialPos = stream.Position;

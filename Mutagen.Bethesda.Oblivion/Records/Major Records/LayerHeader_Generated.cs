@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LayerHeader CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LayerHeader();
             ((LayerHeaderSetterCommon)((ILayerHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LayerHeader item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILayerHeaderInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LayerHeaderSetterCommon)((ILayerHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -807,12 +807,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILayerHeaderInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.BTXT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -847,7 +847,6 @@ namespace Mutagen.Bethesda.Oblivion
             LayerHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Texture = item.Texture.Equals(rhs.Texture);
             ret.Quadrant = item.Quadrant == rhs.Quadrant;
             ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
@@ -1087,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LayerHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LayerHeaderBinaryWriteTranslation Instance = new LayerHeaderBinaryWriteTranslation();
+        public static readonly LayerHeaderBinaryWriteTranslation Instance = new LayerHeaderBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILayerHeaderGetter item,
@@ -1106,12 +1105,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILayerHeaderGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.BTXT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILayerHeaderGetter)item,
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LayerHeaderBinaryCreateTranslation
     {
-        public readonly static LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
+        public static readonly LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILayerHeaderInternal item,
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILayerHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1204,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1234,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILayerHeaderGetter LayerHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LayerHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILayerHeaderGetter LayerHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LayerHeaderFactory(
                 stream: new OverlayStream(slice, package),

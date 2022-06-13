@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => CameraShotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CameraShotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static CameraShot CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CameraShot();
             ((CameraShotSetterCommon)((ICameraShotGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CameraShot item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1373,7 +1373,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ICameraShotInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CameraShotSetterCommon)((ICameraShotGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ICameraShotInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ICameraShotInternal>(
                 record: item,
@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CameraShot)item,
@@ -1589,7 +1589,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CameraShot)item,
@@ -1624,7 +1624,6 @@ namespace Mutagen.Bethesda.Fallout4
             CameraShot.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -2334,7 +2333,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CameraShotBinaryWriteTranslation Instance = new CameraShotBinaryWriteTranslation();
+        public new static readonly CameraShotBinaryWriteTranslation Instance = new CameraShotBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICameraShotGetter item,
@@ -2348,7 +2347,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             ICameraShotGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2364,7 +2363,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2436,7 +2435,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ICameraShotGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2464,7 +2463,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICameraShotGetter)item,
@@ -2475,7 +2474,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICameraShotGetter)item,
@@ -2486,7 +2485,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICameraShotGetter)item,
@@ -2498,7 +2497,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class CameraShotBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static CameraShotBinaryCreateTranslation Instance = new CameraShotBinaryCreateTranslation();
+        public new static readonly CameraShotBinaryCreateTranslation Instance = new CameraShotBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CAMS;
         public static void FillBinaryStructs(
@@ -2517,7 +2516,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2631,7 +2630,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => CameraShotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CameraShotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2738,7 +2737,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICameraShotGetter CameraShotFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new CameraShotBinaryOverlay(
@@ -2765,7 +2764,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICameraShotGetter CameraShotFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CameraShotFactory(
                 stream: new OverlayStream(slice, package),
@@ -2780,7 +2779,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

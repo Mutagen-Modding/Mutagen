@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => CollectionAliasBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CollectionAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static CollectionAlias CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CollectionAlias();
             ((CollectionAliasSetterCommon)((ICollectionAliasGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CollectionAlias item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ICollectionAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CollectionAliasSetterCommon)((ICollectionAliasGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ICollectionAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAQuestAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CollectionAlias)item,
@@ -761,7 +761,6 @@ namespace Mutagen.Bethesda.Fallout4
             CollectionAlias.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.AliasID = item.AliasID == rhs.AliasID;
             ret.MaxInitialFillCount = item.MaxInitialFillCount == rhs.MaxInitialFillCount;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1029,12 +1028,12 @@ namespace Mutagen.Bethesda.Fallout4
         AQuestAliasBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CollectionAliasBinaryWriteTranslation Instance = new CollectionAliasBinaryWriteTranslation();
+        public new static readonly CollectionAliasBinaryWriteTranslation Instance = new CollectionAliasBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ICollectionAliasGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1049,7 +1048,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ICollectionAliasGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1060,7 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICollectionAliasGetter)item,
@@ -1071,7 +1070,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAQuestAliasGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICollectionAliasGetter)item,
@@ -1083,7 +1082,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class CollectionAliasBinaryCreateTranslation : AQuestAliasBinaryCreateTranslation
     {
-        public new readonly static CollectionAliasBinaryCreateTranslation Instance = new CollectionAliasBinaryCreateTranslation();
+        public new static readonly CollectionAliasBinaryCreateTranslation Instance = new CollectionAliasBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICollectionAlias item,
@@ -1098,7 +1097,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => CollectionAliasBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CollectionAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1192,7 +1191,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICollectionAliasGetter CollectionAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CollectionAliasBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICollectionAliasGetter CollectionAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CollectionAliasFactory(
                 stream: new OverlayStream(slice, package),
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

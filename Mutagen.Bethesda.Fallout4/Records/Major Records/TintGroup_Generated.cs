@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static TintGroup CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintGroup();
             ((TintGroupSetterCommon)((ITintGroupGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TintGroup item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ITintGroup item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TintGroupSetterCommon)((ITintGroupGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ITintGroup item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -970,7 +970,6 @@ namespace Mutagen.Bethesda.Fallout4
             TintGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Options = item.Options.CollectionEqualsHelper(
                 rhs.Options,
@@ -1240,12 +1239,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TintGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TintGroupBinaryWriteTranslation Instance = new TintGroupBinaryWriteTranslation();
+        public static readonly TintGroupBinaryWriteTranslation Instance = new TintGroupBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ITintGroupGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1256,7 +1255,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintTemplateOptionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Options,
-                transl: (MutagenWriter subWriter, ITintTemplateOptionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ITintTemplateOptionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((TintTemplateOptionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1273,7 +1272,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ITintGroupGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1284,7 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITintGroupGetter)item,
@@ -1296,7 +1295,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class TintGroupBinaryCreateTranslation
     {
-        public readonly static TintGroupBinaryCreateTranslation Instance = new TintGroupBinaryCreateTranslation();
+        public static readonly TintGroupBinaryCreateTranslation Instance = new TintGroupBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITintGroup item,
@@ -1311,7 +1310,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1360,7 +1359,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ITintGroupGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1405,7 +1404,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1449,7 +1448,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITintGroupGetter TintGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintGroupBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1467,7 +1466,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITintGroupGetter TintGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TintGroupFactory(
                 stream: new OverlayStream(slice, package),
@@ -1482,7 +1481,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PackageFlagsOverride CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageFlagsOverride();
             ((PackageFlagsOverrideSetterCommon)((IPackageFlagsOverrideGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageFlagsOverride item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPackageFlagsOverride item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageFlagsOverrideSetterCommon)((IPackageFlagsOverrideGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -899,12 +899,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPackageFlagsOverride item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PFO2),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -939,7 +939,6 @@ namespace Mutagen.Bethesda.Fallout4
             PackageFlagsOverride.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SetFlags = item.SetFlags == rhs.SetFlags;
             ret.ClearFlags = item.ClearFlags == rhs.ClearFlags;
             ret.SetInterruptFlags = item.SetInterruptFlags == rhs.SetInterruptFlags;
@@ -1205,7 +1204,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PackageFlagsOverrideBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PackageFlagsOverrideBinaryWriteTranslation Instance = new PackageFlagsOverrideBinaryWriteTranslation();
+        public static readonly PackageFlagsOverrideBinaryWriteTranslation Instance = new PackageFlagsOverrideBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPackageFlagsOverrideGetter item,
@@ -1239,12 +1238,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPackageFlagsOverrideGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PFO2),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1256,7 +1255,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageFlagsOverrideGetter)item,
@@ -1268,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PackageFlagsOverrideBinaryCreateTranslation
     {
-        public readonly static PackageFlagsOverrideBinaryCreateTranslation Instance = new PackageFlagsOverrideBinaryCreateTranslation();
+        public static readonly PackageFlagsOverrideBinaryCreateTranslation Instance = new PackageFlagsOverrideBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageFlagsOverride item,
@@ -1303,7 +1302,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPackageFlagsOverrideGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1347,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1380,7 +1379,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageFlagsOverrideGetter PackageFlagsOverrideFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageFlagsOverrideBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1398,7 +1397,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageFlagsOverrideGetter PackageFlagsOverrideFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageFlagsOverrideFactory(
                 stream: new OverlayStream(slice, package),

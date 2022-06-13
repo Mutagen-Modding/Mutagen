@@ -787,7 +787,6 @@ namespace Mutagen.Bethesda.Pex
             DebugPropertyGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectName = string.Equals(item.ObjectName, rhs.ObjectName);
             ret.GroupName = string.Equals(item.GroupName, rhs.GroupName);
             ret.PropertyNames = item.PropertyNames.CollectionEqualsHelper(

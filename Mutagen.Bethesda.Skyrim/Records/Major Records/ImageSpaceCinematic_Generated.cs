@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceCinematicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ImageSpaceCinematic CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceCinematic();
             ((ImageSpaceCinematicSetterCommon)((IImageSpaceCinematicGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpaceCinematic item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceCinematic item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceCinematicSetterCommon)((IImageSpaceCinematicGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -780,12 +780,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IImageSpaceCinematic item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -820,7 +820,6 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpaceCinematic.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Saturation = item.Saturation.EqualsWithin(rhs.Saturation);
             ret.Brightness = item.Brightness.EqualsWithin(rhs.Brightness);
             ret.Contrast = item.Contrast.EqualsWithin(rhs.Contrast);
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceCinematicBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ImageSpaceCinematicBinaryWriteTranslation Instance = new ImageSpaceCinematicBinaryWriteTranslation();
+        public static readonly ImageSpaceCinematicBinaryWriteTranslation Instance = new ImageSpaceCinematicBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceCinematicGetter item,
@@ -1064,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IImageSpaceCinematicGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceCinematicGetter)item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ImageSpaceCinematicBinaryCreateTranslation
     {
-        public readonly static ImageSpaceCinematicBinaryCreateTranslation Instance = new ImageSpaceCinematicBinaryCreateTranslation();
+        public static readonly ImageSpaceCinematicBinaryCreateTranslation Instance = new ImageSpaceCinematicBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IImageSpaceCinematic item,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IImageSpaceCinematicGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceCinematicBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceCinematicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1189,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceCinematicGetter ImageSpaceCinematicFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceCinematicBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceCinematicGetter ImageSpaceCinematicFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceCinematicFactory(
                 stream: new OverlayStream(slice, package),

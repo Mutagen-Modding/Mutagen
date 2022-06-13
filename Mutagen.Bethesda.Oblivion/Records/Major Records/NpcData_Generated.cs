@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static NpcData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcData();
             ((NpcDataSetterCommon)((INpcDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this INpcData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcDataSetterCommon)((INpcDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1779,12 +1779,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             INpcData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1819,7 +1819,6 @@ namespace Mutagen.Bethesda.Oblivion
             NpcData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Armorer = item.Armorer == rhs.Armorer;
             ret.Athletics = item.Athletics == rhs.Athletics;
             ret.Blade = item.Blade == rhs.Blade;
@@ -2421,7 +2420,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class NpcDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcDataBinaryWriteTranslation Instance = new NpcDataBinaryWriteTranslation();
+        public static readonly NpcDataBinaryWriteTranslation Instance = new NpcDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcDataGetter item,
@@ -2462,12 +2461,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             INpcDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2479,7 +2478,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcDataGetter)item,
@@ -2491,7 +2490,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class NpcDataBinaryCreateTranslation
     {
-        public readonly static NpcDataBinaryCreateTranslation Instance = new NpcDataBinaryCreateTranslation();
+        public static readonly NpcDataBinaryCreateTranslation Instance = new NpcDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcData item,
@@ -2540,7 +2539,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this INpcDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2584,7 +2583,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2641,7 +2640,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static INpcDataGetter NpcDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -2659,7 +2658,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static INpcDataGetter NpcDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogSetParentQuestStageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static DialogSetParentQuestStage CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogSetParentQuestStage();
             ((DialogSetParentQuestStageSetterCommon)((IDialogSetParentQuestStageGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogSetParentQuestStage item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDialogSetParentQuestStage item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogSetParentQuestStageSetterCommon)((IDialogSetParentQuestStageGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDialogSetParentQuestStage item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.TIQS),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
             DialogSetParentQuestStage.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.OnBegin = item.OnBegin == rhs.OnBegin;
             ret.OnEnd = item.OnEnd == rhs.OnEnd;
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DialogSetParentQuestStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DialogSetParentQuestStageBinaryWriteTranslation Instance = new DialogSetParentQuestStageBinaryWriteTranslation();
+        public static readonly DialogSetParentQuestStageBinaryWriteTranslation Instance = new DialogSetParentQuestStageBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDialogSetParentQuestStageGetter item,
@@ -1006,12 +1005,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IDialogSetParentQuestStageGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.TIQS),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1023,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogSetParentQuestStageGetter)item,
@@ -1035,7 +1034,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DialogSetParentQuestStageBinaryCreateTranslation
     {
-        public readonly static DialogSetParentQuestStageBinaryCreateTranslation Instance = new DialogSetParentQuestStageBinaryCreateTranslation();
+        public static readonly DialogSetParentQuestStageBinaryCreateTranslation Instance = new DialogSetParentQuestStageBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDialogSetParentQuestStage item,
@@ -1056,7 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IDialogSetParentQuestStageGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogSetParentQuestStageBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1100,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogSetParentQuestStageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1129,7 +1128,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDialogSetParentQuestStageGetter DialogSetParentQuestStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogSetParentQuestStageBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDialogSetParentQuestStageGetter DialogSetParentQuestStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogSetParentQuestStageFactory(
                 stream: new OverlayStream(slice, package),

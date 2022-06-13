@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkEntryPointSetTextBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointSetTextBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PerkEntryPointSetText CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkEntryPointSetText();
             ((PerkEntryPointSetTextSetterCommon)((IPerkEntryPointSetTextGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkEntryPointSetText item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkEntryPointSetText item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkEntryPointSetTextSetterCommon)((IPerkEntryPointSetTextGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPerkEntryPointSetText item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IAPerkEntryPointEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointSetText)item,
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointSetText)item,
@@ -760,7 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
             PerkEntryPointSetText.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Text = object.Equals(item.Text, rhs.Text);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1071,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkEntryPointSetTextBinaryWriteTranslation Instance = new PerkEntryPointSetTextBinaryWriteTranslation();
+        public new static readonly PerkEntryPointSetTextBinaryWriteTranslation Instance = new PerkEntryPointSetTextBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkEntryPointSetTextGetter item,
@@ -1090,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPerkEntryPointSetTextGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkEntryPointSetTextGetter)item,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IAPerkEntryPointEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointSetTextGetter)item,
@@ -1126,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointSetTextGetter)item,
@@ -1138,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PerkEntryPointSetTextBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
-        public new readonly static PerkEntryPointSetTextBinaryCreateTranslation Instance = new PerkEntryPointSetTextBinaryCreateTranslation();
+        public new static readonly PerkEntryPointSetTextBinaryCreateTranslation Instance = new PerkEntryPointSetTextBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkEntryPointSetText item,
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkEntryPointSetTextBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointSetTextBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1221,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkEntryPointSetTextGetter PerkEntryPointSetTextFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkEntryPointSetTextBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1241,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkEntryPointSetTextGetter PerkEntryPointSetTextFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkEntryPointSetTextFactory(
                 stream: new OverlayStream(slice, package),

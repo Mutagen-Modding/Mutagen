@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ShoutWordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ShoutWord CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ShoutWord();
             ((ShoutWordSetterCommon)((IShoutWordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ShoutWord item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IShoutWord item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ShoutWordSetterCommon)((IShoutWordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -804,12 +804,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IShoutWord item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -844,7 +844,6 @@ namespace Mutagen.Bethesda.Skyrim
             ShoutWord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Word = item.Word.Equals(rhs.Word);
             ret.Spell = item.Spell.Equals(rhs.Spell);
             ret.RecoveryTime = item.RecoveryTime.EqualsWithin(rhs.RecoveryTime);
@@ -1070,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ShoutWordBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ShoutWordBinaryWriteTranslation Instance = new ShoutWordBinaryWriteTranslation();
+        public static readonly ShoutWordBinaryWriteTranslation Instance = new ShoutWordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IShoutWordGetter item,
@@ -1090,12 +1089,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IShoutWordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1107,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IShoutWordGetter)item,
@@ -1119,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ShoutWordBinaryCreateTranslation
     {
-        public readonly static ShoutWordBinaryCreateTranslation Instance = new ShoutWordBinaryCreateTranslation();
+        public static readonly ShoutWordBinaryCreateTranslation Instance = new ShoutWordBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IShoutWord item,
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IShoutWordGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ShoutWordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1186,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ShoutWordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1216,7 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IShoutWordGetter ShoutWordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ShoutWordBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1234,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IShoutWordGetter ShoutWordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ShoutWordFactory(
                 stream: new OverlayStream(slice, package),

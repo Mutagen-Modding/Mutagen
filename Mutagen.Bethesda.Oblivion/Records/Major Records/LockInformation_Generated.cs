@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LockInformation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LockInformation();
             ((LockInformationSetterCommon)((ILockInformationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LockInformation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILockInformation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -841,12 +841,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILockInformation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XLOC),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -881,7 +881,6 @@ namespace Mutagen.Bethesda.Oblivion
             LockInformation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Key = item.Key.Equals(rhs.Key);
@@ -1120,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LockInformationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
+        public static readonly LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILockInformationGetter item,
@@ -1142,12 +1141,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILockInformationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XLOC),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILockInformationGetter)item,
@@ -1171,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LockInformationBinaryCreateTranslation
     {
-        public readonly static LockInformationBinaryCreateTranslation Instance = new LockInformationBinaryCreateTranslation();
+        public static readonly LockInformationBinaryCreateTranslation Instance = new LockInformationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILockInformation item,
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILockInformationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockInformationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1241,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1272,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILockInformationGetter LockInformationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LockInformationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILockInformationGetter LockInformationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LockInformationFactory(
                 stream: new OverlayStream(slice, package),

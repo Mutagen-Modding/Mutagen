@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LocationFallbackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationFallbackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static LocationFallback CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationFallback();
             ((LocationFallbackSetterCommon)((ILocationFallbackGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationFallback item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationFallback item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationFallbackSetterCommon)((ILocationFallbackGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILocationFallback item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationFallback)item,
@@ -748,7 +748,6 @@ namespace Mutagen.Bethesda.Skyrim
             LocationFallback.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Data = item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1012,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationFallbackBinaryWriteTranslation Instance = new LocationFallbackBinaryWriteTranslation();
+        public new static readonly LocationFallbackBinaryWriteTranslation Instance = new LocationFallbackBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationFallbackGetter item,
@@ -1028,7 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILocationFallbackGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationFallbackGetter)item,
@@ -1049,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IALocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationFallbackGetter)item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LocationFallbackBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
-        public new readonly static LocationFallbackBinaryCreateTranslation Instance = new LocationFallbackBinaryCreateTranslation();
+        public new static readonly LocationFallbackBinaryCreateTranslation Instance = new LocationFallbackBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationFallback item,
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LocationFallbackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationFallbackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1138,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationFallbackGetter LocationFallbackFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationFallbackBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationFallbackGetter LocationFallbackFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationFallbackFactory(
                 stream: new OverlayStream(slice, package),

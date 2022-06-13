@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static CellBlock CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CellBlock();
             ((CellBlockSetterCommon)((ICellBlockGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CellBlock item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICellBlock item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CellBlockSetterCommon)((ICellBlockGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ICellBlock item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.GroupParse(
                 record: item,
@@ -1321,7 +1321,6 @@ namespace Mutagen.Bethesda.Oblivion
             CellBlock.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified == rhs.LastModified;
@@ -1743,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CellBlockBinaryWriteTranslation Instance = new CellBlockBinaryWriteTranslation();
+        public static readonly CellBlockBinaryWriteTranslation Instance = new CellBlockBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICellBlockGetter item,
@@ -1760,12 +1759,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteRecordTypes(
             ICellBlockGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ICellSubBlockGetter>.Instance.Write(
                 writer: writer,
                 items: item.SubBlocks,
-                transl: (MutagenWriter subWriter, ICellSubBlockGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ICellSubBlockGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((CellSubBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1778,7 +1777,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ICellBlockGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Group(
                 writer: writer,
@@ -1797,7 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICellBlockGetter)item,
@@ -1809,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class CellBlockBinaryCreateTranslation
     {
-        public readonly static CellBlockBinaryCreateTranslation Instance = new CellBlockBinaryCreateTranslation();
+        public static readonly CellBlockBinaryCreateTranslation Instance = new CellBlockBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICellBlock item,
@@ -1828,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1861,7 +1860,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ICellBlockGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1912,7 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1943,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICellBlockGetter CellBlockFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CellBlockBinaryOverlay(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1967,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICellBlockGetter CellBlockFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CellBlockFactory(
                 stream: new OverlayStream(slice, package),
@@ -1982,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

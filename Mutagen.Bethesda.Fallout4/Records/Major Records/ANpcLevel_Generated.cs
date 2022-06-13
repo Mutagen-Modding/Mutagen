@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcLevelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IANpcLevel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ANpcLevelSetterCommon)((IANpcLevelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IANpcLevel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -670,7 +670,6 @@ namespace Mutagen.Bethesda.Fallout4
             ANpcLevel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -852,19 +851,19 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ANpcLevelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ANpcLevelBinaryWriteTranslation Instance = new ANpcLevelBinaryWriteTranslation();
+        public static readonly ANpcLevelBinaryWriteTranslation Instance = new ANpcLevelBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IANpcLevelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IANpcLevelGetter)item,
@@ -876,7 +875,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ANpcLevelBinaryCreateTranslation
     {
-        public readonly static ANpcLevelBinaryCreateTranslation Instance = new ANpcLevelBinaryCreateTranslation();
+        public static readonly ANpcLevelBinaryCreateTranslation Instance = new ANpcLevelBinaryCreateTranslation();
 
     }
 
@@ -889,7 +888,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IANpcLevelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcLevelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -933,7 +932,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcLevelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static CombatStyle CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyle();
             ((CombatStyleSetterCommon)((ICombatStyleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CombatStyle item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICombatStyleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICombatStyleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ICombatStyleInternal>(
                 record: item,
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CombatStyle)item,
@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CombatStyle)item,
@@ -1588,7 +1588,6 @@ namespace Mutagen.Bethesda.Skyrim
             CombatStyle.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.OffensiveMult = item.OffensiveMult.EqualsWithin(rhs.OffensiveMult);
             ret.DefensiveMult = item.DefensiveMult.EqualsWithin(rhs.DefensiveMult);
             ret.GroupOffensiveMult = item.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult);
@@ -2322,7 +2321,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CombatStyleBinaryWriteTranslation Instance = new CombatStyleBinaryWriteTranslation();
+        public new static readonly CombatStyleBinaryWriteTranslation Instance = new CombatStyleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICombatStyleGetter item,
@@ -2336,7 +2335,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             ICombatStyleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2420,7 +2419,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICombatStyleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2448,7 +2447,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICombatStyleGetter)item,
@@ -2459,7 +2458,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICombatStyleGetter)item,
@@ -2470,7 +2469,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICombatStyleGetter)item,
@@ -2482,7 +2481,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CombatStyleBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
+        public new static readonly CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CSTY;
         public static void FillBinaryStructs(
@@ -2501,7 +2500,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2614,7 +2613,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2720,7 +2719,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICombatStyleGetter CombatStyleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new CombatStyleBinaryOverlay(
@@ -2747,7 +2746,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICombatStyleGetter CombatStyleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CombatStyleFactory(
                 stream: new OverlayStream(slice, package),
@@ -2762,7 +2761,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

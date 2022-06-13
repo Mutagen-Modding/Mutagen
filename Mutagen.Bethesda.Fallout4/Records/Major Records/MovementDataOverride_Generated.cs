@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementDataOverrideBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MovementDataOverride CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MovementDataOverride();
             ((MovementDataOverrideSetterCommon)((IMovementDataOverrideGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MovementDataOverride item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMovementDataOverride item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MovementDataOverrideSetterCommon)((IMovementDataOverrideGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMovementDataOverride item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -811,7 +811,6 @@ namespace Mutagen.Bethesda.Fallout4
             MovementDataOverride.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MovementType = item.MovementType.Equals(rhs.MovementType);
             ret.MovementData = EqualsMaskHelper.EqualsHelper(
                 item.MovementData,
@@ -1059,12 +1058,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MovementDataOverrideBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MovementDataOverrideBinaryWriteTranslation Instance = new MovementDataOverrideBinaryWriteTranslation();
+        public static readonly MovementDataOverrideBinaryWriteTranslation Instance = new MovementDataOverrideBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMovementDataOverrideGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1085,7 +1084,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMovementDataOverrideGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1096,7 +1095,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMovementDataOverrideGetter)item,
@@ -1108,7 +1107,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MovementDataOverrideBinaryCreateTranslation
     {
-        public readonly static MovementDataOverrideBinaryCreateTranslation Instance = new MovementDataOverrideBinaryCreateTranslation();
+        public static readonly MovementDataOverrideBinaryCreateTranslation Instance = new MovementDataOverrideBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMovementDataOverride item,
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1158,7 +1157,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMovementDataOverrideGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementDataOverrideBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementDataOverrideBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1235,7 +1234,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMovementDataOverrideGetter MovementDataOverrideFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MovementDataOverrideBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1253,7 +1252,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMovementDataOverrideGetter MovementDataOverrideFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MovementDataOverrideFactory(
                 stream: new OverlayStream(slice, package),
@@ -1268,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMeshDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NavigationMeshData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationMeshData();
             ((NavigationMeshDataSetterCommon)((INavigationMeshDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavigationMeshData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INavigationMeshData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavigationMeshDataSetterCommon)((INavigationMeshDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1485,12 +1485,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             INavigationMeshData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.NVNM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1525,7 +1525,6 @@ namespace Mutagen.Bethesda.Skyrim
             NavigationMeshData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NavmeshVersion = item.NavmeshVersion == rhs.NavmeshVersion;
             ret.Magic = item.Magic == rhs.Magic;
             ret.Parent = MaskItemExt.Factory(item.Parent.GetEqualsMask(rhs.Parent, include), include);
@@ -2051,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavigationMeshDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavigationMeshDataBinaryWriteTranslation Instance = new NavigationMeshDataBinaryWriteTranslation();
+        public static readonly NavigationMeshDataBinaryWriteTranslation Instance = new NavigationMeshDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavigationMeshDataGetter item,
@@ -2071,7 +2070,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Triangles,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshTriangleGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshTriangleGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2083,7 +2082,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.EdgeLinks,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IEdgeLinkGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IEdgeLinkGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((EdgeLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2095,7 +2094,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.DoorTriangles,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IDoorTriangleGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IDoorTriangleGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((DoorTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2166,12 +2165,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             INavigationMeshDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.NVNM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2183,7 +2182,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavigationMeshDataGetter)item,
@@ -2195,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class NavigationMeshDataBinaryCreateTranslation
     {
-        public readonly static NavigationMeshDataBinaryCreateTranslation Instance = new NavigationMeshDataBinaryCreateTranslation();
+        public static readonly NavigationMeshDataBinaryCreateTranslation Instance = new NavigationMeshDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavigationMeshData item,
@@ -2262,7 +2261,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INavigationMeshDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMeshDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2307,7 +2306,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMeshDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2362,7 +2361,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INavigationMeshDataGetter NavigationMeshDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationMeshDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -2383,7 +2382,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INavigationMeshDataGetter NavigationMeshDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavigationMeshDataFactory(
                 stream: new OverlayStream(slice, package),

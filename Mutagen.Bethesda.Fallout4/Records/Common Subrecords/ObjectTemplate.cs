@@ -152,7 +152,7 @@ partial class ObjectTemplateBinaryWriteTranslation
             writer: writer,
             items: item.Keywords,
             countLengthLength: 1,
-            transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
             {
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: subWriter,

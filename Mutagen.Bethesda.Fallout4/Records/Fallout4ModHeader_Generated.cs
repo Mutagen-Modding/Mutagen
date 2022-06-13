@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Fallout4ModHeader CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Fallout4ModHeader();
             ((Fallout4ModHeaderSetterCommon)((IFallout4ModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Fallout4ModHeader item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFallout4ModHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((Fallout4ModHeaderSetterCommon)((IFallout4ModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IFallout4ModHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
@@ -1603,7 +1603,6 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4ModHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.FormID = item.FormID == rhs.FormID;
             ret.Version = item.Version == rhs.Version;
@@ -2201,7 +2200,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static Fallout4ModHeaderBinaryWriteTranslation Instance = new Fallout4ModHeaderBinaryWriteTranslation();
+        public static readonly Fallout4ModHeaderBinaryWriteTranslation Instance = new Fallout4ModHeaderBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFallout4ModHeaderGetter item,
@@ -2220,7 +2219,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IFallout4ModHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             var StatsItem = item.Stats;
             ((ModStatsBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
@@ -2253,7 +2252,7 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.OverriddenForms,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2266,7 +2265,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITransientTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.TransientTypes,
-                transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((TransientTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2300,7 +2299,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IFallout4ModHeaderGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2319,7 +2318,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFallout4ModHeaderGetter)item,
@@ -2331,7 +2330,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class Fallout4ModHeaderBinaryCreateTranslation
     {
-        public readonly static Fallout4ModHeaderBinaryCreateTranslation Instance = new Fallout4ModHeaderBinaryCreateTranslation();
+        public static readonly Fallout4ModHeaderBinaryCreateTranslation Instance = new Fallout4ModHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFallout4ModHeader item,
@@ -2353,7 +2352,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2462,7 +2461,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IFallout4ModHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2507,7 +2506,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2575,7 +2574,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFallout4ModHeaderGetter Fallout4ModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Fallout4ModHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -2599,7 +2598,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFallout4ModHeaderGetter Fallout4ModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return Fallout4ModHeaderFactory(
                 stream: new OverlayStream(slice, package),
@@ -2614,7 +2613,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -40,7 +40,7 @@ partial class AudioEffectChainBinaryCreateTranslation
     private static bool TryCreateFromBinary(
         MutagenFrame frame,
         out AAudioEffect item,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var knam = frame.ReadSubrecord();
         var type = (Types)knam.AsUInt32();
@@ -71,7 +71,7 @@ partial class AudioEffectChainBinaryWriteTranslation
         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAAudioEffectGetter>.Instance.Write(
             writer: writer,
             items: item.Effects,
-            transl: (MutagenWriter subWriter, IAAudioEffectGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IAAudioEffectGetter subItem, TypedWriteParams conv) =>
             {
                 using (HeaderExport.Subrecord(subWriter, RecordTypes.KNAM))
                 {
@@ -109,7 +109,7 @@ partial class AudioEffectChainBinaryOverlay
     public static IAAudioEffectGetter AudioEffectFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? parseParams = null)
+        TypedParseParams parseParams = default)
     {
         var knam = stream.ReadSubrecord();
         var type = (AudioEffectChainBinaryCreateTranslation.Types)knam.AsUInt32();

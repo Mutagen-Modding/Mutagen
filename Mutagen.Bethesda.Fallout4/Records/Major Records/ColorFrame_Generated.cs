@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ColorFrameBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static ColorFrame CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ColorFrame();
             ((ColorFrameSetterCommon)((IColorFrameGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ColorFrame item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IColorFrame item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ColorFrameSetterCommon)((IColorFrameGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IColorFrame item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -773,7 +773,6 @@ namespace Mutagen.Bethesda.Fallout4
             ColorFrame.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Time = item.Time.EqualsWithin(rhs.Time);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
         }
@@ -983,7 +982,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ColorFrameBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ColorFrameBinaryWriteTranslation Instance = new ColorFrameBinaryWriteTranslation();
+        public static readonly ColorFrameBinaryWriteTranslation Instance = new ColorFrameBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IColorFrameGetter item,
@@ -1001,7 +1000,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IColorFrameGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1011,7 +1010,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IColorFrameGetter)item,
@@ -1023,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ColorFrameBinaryCreateTranslation
     {
-        public readonly static ColorFrameBinaryCreateTranslation Instance = new ColorFrameBinaryCreateTranslation();
+        public static readonly ColorFrameBinaryCreateTranslation Instance = new ColorFrameBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IColorFrame item,
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IColorFrameGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ColorFrameBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ColorFrameBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1117,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IColorFrameGetter ColorFrameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ColorFrameBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x14),
@@ -1134,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IColorFrameGetter ColorFrameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ColorFrameFactory(
                 stream: new OverlayStream(slice, package),

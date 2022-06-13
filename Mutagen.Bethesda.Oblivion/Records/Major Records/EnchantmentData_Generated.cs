@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnchantmentDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static EnchantmentData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EnchantmentData();
             ((EnchantmentDataSetterCommon)((IEnchantmentDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EnchantmentData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IEnchantmentData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EnchantmentDataSetterCommon)((IEnchantmentDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IEnchantmentData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ENIT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Oblivion
             EnchantmentData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
             ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EnchantmentDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EnchantmentDataBinaryWriteTranslation Instance = new EnchantmentDataBinaryWriteTranslation();
+        public static readonly EnchantmentDataBinaryWriteTranslation Instance = new EnchantmentDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEnchantmentDataGetter item,
@@ -1116,12 +1115,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IEnchantmentDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ENIT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1133,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEnchantmentDataGetter)item,
@@ -1145,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class EnchantmentDataBinaryCreateTranslation
     {
-        public readonly static EnchantmentDataBinaryCreateTranslation Instance = new EnchantmentDataBinaryCreateTranslation();
+        public static readonly EnchantmentDataBinaryCreateTranslation Instance = new EnchantmentDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEnchantmentData item,
@@ -1172,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IEnchantmentDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnchantmentDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1216,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnchantmentDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1247,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnchantmentDataGetter EnchantmentDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EnchantmentDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1265,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnchantmentDataGetter EnchantmentDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return EnchantmentDataFactory(
                 stream: new OverlayStream(slice, package),

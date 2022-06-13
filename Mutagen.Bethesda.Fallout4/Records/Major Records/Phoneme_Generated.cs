@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PhonemeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1790,7 +1790,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Phoneme CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Phoneme();
             ((PhonemeSetterCommon)((IPhonemeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Phoneme item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPhoneme item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PhonemeSetterCommon)((IPhonemeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2304,7 +2304,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPhoneme item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -2340,7 +2340,6 @@ namespace Mutagen.Bethesda.Fallout4
             Phoneme.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.IY = item.IY.EqualsWithin(rhs.IY);
             ret.IH = item.IH.EqualsWithin(rhs.IH);
@@ -3138,7 +3137,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PhonemeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PhonemeBinaryWriteTranslation Instance = new PhonemeBinaryWriteTranslation();
+        public static readonly PhonemeBinaryWriteTranslation Instance = new PhonemeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPhonemeGetter item,
@@ -3149,7 +3148,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPhonemeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -3159,7 +3158,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPhonemeGetter)item,
@@ -3171,7 +3170,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PhonemeBinaryCreateTranslation
     {
-        public readonly static PhonemeBinaryCreateTranslation Instance = new PhonemeBinaryCreateTranslation();
+        public static readonly PhonemeBinaryCreateTranslation Instance = new PhonemeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPhoneme item,
@@ -3190,7 +3189,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPhonemeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PhonemeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -3234,7 +3233,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PhonemeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3261,7 +3260,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPhonemeGetter PhonemeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PhonemeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -3277,7 +3276,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPhonemeGetter PhonemeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PhonemeFactory(
                 stream: new OverlayStream(slice, package),

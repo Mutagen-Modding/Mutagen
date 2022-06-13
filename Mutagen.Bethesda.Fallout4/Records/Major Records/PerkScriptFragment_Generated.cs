@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFragmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PerkScriptFragment CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkScriptFragment();
             ((PerkScriptFragmentSetterCommon)((IPerkScriptFragmentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkScriptFragment item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPerkScriptFragment item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkScriptFragmentSetterCommon)((IPerkScriptFragmentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPerkScriptFragment item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -883,7 +883,6 @@ namespace Mutagen.Bethesda.Fallout4
             PerkScriptFragment.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PerkScriptFragmentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PerkScriptFragmentBinaryWriteTranslation Instance = new PerkScriptFragmentBinaryWriteTranslation();
+        public static readonly PerkScriptFragmentBinaryWriteTranslation Instance = new PerkScriptFragmentBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkScriptFragmentGetter item,
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPerkScriptFragmentGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkScriptFragmentGetter)item,
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PerkScriptFragmentBinaryCreateTranslation
     {
-        public readonly static PerkScriptFragmentBinaryCreateTranslation Instance = new PerkScriptFragmentBinaryCreateTranslation();
+        public static readonly PerkScriptFragmentBinaryCreateTranslation Instance = new PerkScriptFragmentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkScriptFragment item,
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPerkScriptFragmentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFragmentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1251,7 +1250,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkScriptFragmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1289,7 +1288,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPerkScriptFragmentGetter PerkScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkScriptFragmentBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1308,7 +1307,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPerkScriptFragmentGetter PerkScriptFragmentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkScriptFragmentFactory(
                 stream: new OverlayStream(slice, package),

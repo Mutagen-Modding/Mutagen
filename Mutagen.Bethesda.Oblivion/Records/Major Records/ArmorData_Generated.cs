@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static ArmorData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ArmorData();
             ((ArmorDataSetterCommon)((IArmorDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ArmorData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IArmorData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ArmorDataSetterCommon)((IArmorDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -820,12 +820,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IArmorData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -860,7 +860,6 @@ namespace Mutagen.Bethesda.Oblivion
             ArmorData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ArmorValue = item.ArmorValue.EqualsWithin(rhs.ArmorValue);
             ret.Value = item.Value == rhs.Value;
             ret.Health = item.Health == rhs.Health;
@@ -1098,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ArmorDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ArmorDataBinaryWriteTranslation Instance = new ArmorDataBinaryWriteTranslation();
+        public static readonly ArmorDataBinaryWriteTranslation Instance = new ArmorDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IArmorDataGetter item,
@@ -1130,12 +1129,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IArmorDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IArmorDataGetter)item,
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class ArmorDataBinaryCreateTranslation
     {
-        public readonly static ArmorDataBinaryCreateTranslation Instance = new ArmorDataBinaryCreateTranslation();
+        public static readonly ArmorDataBinaryCreateTranslation Instance = new ArmorDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IArmorData item,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IArmorDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1232,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1266,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IArmorDataGetter ArmorDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ArmorDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1284,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IArmorDataGetter ArmorDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ArmorDataFactory(
                 stream: new OverlayStream(slice, package),

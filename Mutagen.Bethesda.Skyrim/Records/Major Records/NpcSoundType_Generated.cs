@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcSoundTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NpcSoundType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcSoundType();
             ((NpcSoundTypeSetterCommon)((INpcSoundTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcSoundType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INpcSoundType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcSoundTypeSetterCommon)((INpcSoundTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             INpcSoundType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -870,7 +870,6 @@ namespace Mutagen.Bethesda.Skyrim
             NpcSoundType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
@@ -1121,12 +1120,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcSoundTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcSoundTypeBinaryWriteTranslation Instance = new NpcSoundTypeBinaryWriteTranslation();
+        public static readonly NpcSoundTypeBinaryWriteTranslation Instance = new NpcSoundTypeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             INpcSoundTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<NpcSoundType.SoundType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1136,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INpcSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                transl: (MutagenWriter subWriter, INpcSoundGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INpcSoundGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NpcSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             INpcSoundTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1160,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcSoundTypeGetter)item,
@@ -1172,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class NpcSoundTypeBinaryCreateTranslation
     {
-        public readonly static NpcSoundTypeBinaryCreateTranslation Instance = new NpcSoundTypeBinaryCreateTranslation();
+        public static readonly NpcSoundTypeBinaryCreateTranslation Instance = new NpcSoundTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcSoundType item,
@@ -1187,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1229,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INpcSoundTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcSoundTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1274,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcSoundTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1306,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INpcSoundTypeGetter NpcSoundTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcSoundTypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1324,7 +1323,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INpcSoundTypeGetter NpcSoundTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcSoundTypeFactory(
                 stream: new OverlayStream(slice, package),
@@ -1339,7 +1338,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

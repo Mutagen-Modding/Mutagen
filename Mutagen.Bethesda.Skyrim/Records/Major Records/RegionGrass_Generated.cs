@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionGrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static RegionGrass CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionGrass();
             ((RegionGrassSetterCommon)((IRegionGrassGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RegionGrass item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRegionGrass item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionGrassSetterCommon)((IRegionGrassGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IRegionGrass item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -788,7 +788,6 @@ namespace Mutagen.Bethesda.Skyrim
             RegionGrass.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Grass = item.Grass.Equals(rhs.Grass);
             ret.Unknown = item.Unknown == rhs.Unknown;
         }
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionGrassBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RegionGrassBinaryWriteTranslation Instance = new RegionGrassBinaryWriteTranslation();
+        public static readonly RegionGrassBinaryWriteTranslation Instance = new RegionGrassBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRegionGrassGetter item,
@@ -1014,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IRegionGrassGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1024,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionGrassGetter)item,
@@ -1036,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class RegionGrassBinaryCreateTranslation
     {
-        public readonly static RegionGrassBinaryCreateTranslation Instance = new RegionGrassBinaryCreateTranslation();
+        public static readonly RegionGrassBinaryCreateTranslation Instance = new RegionGrassBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRegionGrass item,
@@ -1057,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IRegionGrassGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionGrassBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1102,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionGrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1131,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRegionGrassGetter RegionGrassFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionGrassBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRegionGrassGetter RegionGrassFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionGrassFactory(
                 stream: new OverlayStream(slice, package),

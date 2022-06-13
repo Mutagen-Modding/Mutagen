@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => SoundDescriptorAutoweaponDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundDescriptorAutoweaponDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static SoundDescriptorAutoweaponData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundDescriptorAutoweaponData();
             ((SoundDescriptorAutoweaponDataSetterCommon)((ISoundDescriptorAutoweaponDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundDescriptorAutoweaponData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISoundDescriptorAutoweaponData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundDescriptorAutoweaponDataSetterCommon)((ISoundDescriptorAutoweaponDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISoundDescriptorAutoweaponData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IASoundDescriptor item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundDescriptorAutoweaponData)item,
@@ -720,7 +720,6 @@ namespace Mutagen.Bethesda.Fallout4
             SoundDescriptorAutoweaponData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.BaseDescriptor = item.BaseDescriptor.Equals(rhs.BaseDescriptor);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -971,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         ASoundDescriptorBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoundDescriptorAutoweaponDataBinaryWriteTranslation Instance = new SoundDescriptorAutoweaponDataBinaryWriteTranslation();
+        public new static readonly SoundDescriptorAutoweaponDataBinaryWriteTranslation Instance = new SoundDescriptorAutoweaponDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISoundDescriptorAutoweaponDataGetter item,
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ISoundDescriptorAutoweaponDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -995,7 +994,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundDescriptorAutoweaponDataGetter)item,
@@ -1006,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IASoundDescriptorGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundDescriptorAutoweaponDataGetter)item,
@@ -1018,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SoundDescriptorAutoweaponDataBinaryCreateTranslation : ASoundDescriptorBinaryCreateTranslation
     {
-        public new readonly static SoundDescriptorAutoweaponDataBinaryCreateTranslation Instance = new SoundDescriptorAutoweaponDataBinaryCreateTranslation();
+        public new static readonly SoundDescriptorAutoweaponDataBinaryCreateTranslation Instance = new SoundDescriptorAutoweaponDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundDescriptorAutoweaponData item,
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => SoundDescriptorAutoweaponDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundDescriptorAutoweaponDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1092,7 +1091,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundDescriptorAutoweaponDataGetter SoundDescriptorAutoweaponDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundDescriptorAutoweaponDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundDescriptorAutoweaponDataGetter SoundDescriptorAutoweaponDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundDescriptorAutoweaponDataFactory(
                 stream: new OverlayStream(slice, package),

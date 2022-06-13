@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static FurnitureMarker CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FurnitureMarker();
             ((FurnitureMarkerSetterCommon)((IFurnitureMarkerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FurnitureMarker item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -724,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFurnitureMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FurnitureMarkerSetterCommon)((IFurnitureMarkerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IFurnitureMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -889,7 +889,6 @@ namespace Mutagen.Bethesda.Skyrim
             FurnitureMarker.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Enabled = item.Enabled == rhs.Enabled;
             ret.DisabledEntryPoints = EqualsMaskHelper.EqualsHelper(
                 item.DisabledEntryPoints,
@@ -1199,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FurnitureMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FurnitureMarkerBinaryWriteTranslation Instance = new FurnitureMarkerBinaryWriteTranslation();
+        public static readonly FurnitureMarkerBinaryWriteTranslation Instance = new FurnitureMarkerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFurnitureMarkerGetter item,
@@ -1226,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IFurnitureMarkerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1236,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFurnitureMarkerGetter)item,
@@ -1248,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class FurnitureMarkerBinaryCreateTranslation
     {
-        public readonly static FurnitureMarkerBinaryCreateTranslation Instance = new FurnitureMarkerBinaryCreateTranslation();
+        public static readonly FurnitureMarkerBinaryCreateTranslation Instance = new FurnitureMarkerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFurnitureMarker item,
@@ -1274,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IFurnitureMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1319,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1350,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IFurnitureMarkerGetter FurnitureMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FurnitureMarkerBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xD),
@@ -1367,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IFurnitureMarkerGetter FurnitureMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FurnitureMarkerFactory(
                 stream: new OverlayStream(slice, package),

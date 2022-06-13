@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DualCastDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DualCastDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static DualCastData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DualCastData();
             ((DualCastDataSetterCommon)((IDualCastDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DualCastData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDualCastDataInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DualCastDataSetterCommon)((IDualCastDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDualCastDataInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IDualCastDataInternal>(
                 record: item,
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DualCastData)item,
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DualCastData)item,
@@ -779,7 +779,6 @@ namespace Mutagen.Bethesda.Fallout4
             DualCastData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1154,12 +1153,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DualCastDataBinaryWriteTranslation Instance = new DualCastDataBinaryWriteTranslation();
+        public new static readonly DualCastDataBinaryWriteTranslation Instance = new DualCastDataBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             IDualCastDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1185,7 +1184,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDualCastDataGetter)item,
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDualCastDataGetter)item,
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDualCastDataGetter)item,
@@ -1219,7 +1218,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DualCastDataBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static DualCastDataBinaryCreateTranslation Instance = new DualCastDataBinaryCreateTranslation();
+        public new static readonly DualCastDataBinaryCreateTranslation Instance = new DualCastDataBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DUAL;
         public static void FillBinaryStructs(
@@ -1267,7 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DualCastDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DualCastDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1296,7 +1295,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDualCastDataGetter DualCastDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new DualCastDataBinaryOverlay(
@@ -1323,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDualCastDataGetter DualCastDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DualCastDataFactory(
                 stream: new OverlayStream(slice, package),

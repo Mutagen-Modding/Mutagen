@@ -192,7 +192,7 @@ partial class WeatherBinaryCreateTranslation
         Dictionary<RecordType, int>? recordParseCount,
         RecordType nextRecordType,
         int contentLength,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         if (nextRecordType == RecordTypes.EDID)
         {
@@ -486,7 +486,7 @@ partial class WeatherBinaryOverlay
         int offset,
         RecordType type,
         PreviousParse lastParsed,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         if (type == RecordTypes.EDID)
         {

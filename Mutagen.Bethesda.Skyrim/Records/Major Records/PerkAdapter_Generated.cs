@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PerkAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkAdapter();
             ((PerkAdapterSetterCommon)((IPerkAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkAdapterSetterCommon)((IPerkAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -698,12 +698,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPerkAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VMAD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IAVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkAdapter)item,
@@ -749,7 +749,6 @@ namespace Mutagen.Bethesda.Skyrim
             PerkAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ScriptFragments = EqualsMaskHelper.EqualsHelper(
                 item.ScriptFragments,
                 rhs.ScriptFragments,
@@ -1039,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkAdapterBinaryWriteTranslation Instance = new PerkAdapterBinaryWriteTranslation();
+        public new static readonly PerkAdapterBinaryWriteTranslation Instance = new PerkAdapterBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkAdapterGetter item,
@@ -1069,12 +1068,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPerkAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VMAD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1086,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkAdapterGetter)item,
@@ -1097,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkAdapterGetter)item,
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PerkAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public new readonly static PerkAdapterBinaryCreateTranslation Instance = new PerkAdapterBinaryCreateTranslation();
+        public new static readonly PerkAdapterBinaryCreateTranslation Instance = new PerkAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkAdapter item,
@@ -1164,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1197,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkAdapterGetter PerkAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkAdapterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1215,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkAdapterGetter PerkAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkAdapterFactory(
                 stream: new OverlayStream(slice, package),

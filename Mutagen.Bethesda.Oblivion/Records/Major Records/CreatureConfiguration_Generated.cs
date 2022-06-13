@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureConfigurationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static CreatureConfiguration CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CreatureConfiguration();
             ((CreatureConfigurationSetterCommon)((ICreatureConfigurationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CreatureConfiguration item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICreatureConfiguration item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CreatureConfigurationSetterCommon)((ICreatureConfigurationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -928,12 +928,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ICreatureConfiguration item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ACBS),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -968,7 +968,6 @@ namespace Mutagen.Bethesda.Oblivion
             CreatureConfiguration.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
             ret.Fatigue = item.Fatigue == rhs.Fatigue;
@@ -1248,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CreatureConfigurationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CreatureConfigurationBinaryWriteTranslation Instance = new CreatureConfigurationBinaryWriteTranslation();
+        public static readonly CreatureConfigurationBinaryWriteTranslation Instance = new CreatureConfigurationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICreatureConfigurationGetter item,
@@ -1269,12 +1268,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ICreatureConfigurationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ACBS),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1286,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICreatureConfigurationGetter)item,
@@ -1298,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class CreatureConfigurationBinaryCreateTranslation
     {
-        public readonly static CreatureConfigurationBinaryCreateTranslation Instance = new CreatureConfigurationBinaryCreateTranslation();
+        public static readonly CreatureConfigurationBinaryCreateTranslation Instance = new CreatureConfigurationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICreatureConfiguration item,
@@ -1326,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ICreatureConfigurationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureConfigurationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1370,7 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureConfigurationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1404,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICreatureConfigurationGetter CreatureConfigurationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CreatureConfigurationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1422,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ICreatureConfigurationGetter CreatureConfigurationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CreatureConfigurationFactory(
                 stream: new OverlayStream(slice, package),

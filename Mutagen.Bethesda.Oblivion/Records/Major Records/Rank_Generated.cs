@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static Rank CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Rank();
             ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Rank item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRank item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IRank item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -832,7 +832,6 @@ namespace Mutagen.Bethesda.Oblivion
             Rank.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.RankNumber = item.RankNumber == rhs.RankNumber;
             ret.Name = GenderedItem.EqualityMaskHelper(
                 lhs: item.Name,
@@ -1078,12 +1077,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RankBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RankBinaryWriteTranslation Instance = new RankBinaryWriteTranslation();
+        public static readonly RankBinaryWriteTranslation Instance = new RankBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRankGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IRankGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1116,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRankGetter)item,
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class RankBinaryCreateTranslation
     {
-        public readonly static RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
+        public static readonly RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRank item,
@@ -1143,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1192,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRankGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1236,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1275,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRankGetter RankFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RankBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1293,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRankGetter RankFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RankFactory(
                 stream: new OverlayStream(slice, package),
@@ -1308,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

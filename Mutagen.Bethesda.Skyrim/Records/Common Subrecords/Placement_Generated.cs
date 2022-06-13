@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Placement CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Placement();
             ((PlacementSetterCommon)((IPlacementGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Placement item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacementSetterCommon)((IPlacementGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -746,12 +746,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -786,7 +786,6 @@ namespace Mutagen.Bethesda.Skyrim
             Placement.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
         }
@@ -996,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PlacementBinaryWriteTranslation Instance = new PlacementBinaryWriteTranslation();
+        public static readonly PlacementBinaryWriteTranslation Instance = new PlacementBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacementGetter item,
@@ -1013,12 +1012,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPlacementGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1030,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacementGetter)item,
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PlacementBinaryCreateTranslation
     {
-        public readonly static PlacementBinaryCreateTranslation Instance = new PlacementBinaryCreateTranslation();
+        public static readonly PlacementBinaryCreateTranslation Instance = new PlacementBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPlacement item,
@@ -1063,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPlacementGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1107,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1136,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPlacementGetter PlacementFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacementBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1154,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPlacementGetter PlacementFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacementFactory(
                 stream: new OverlayStream(slice, package),

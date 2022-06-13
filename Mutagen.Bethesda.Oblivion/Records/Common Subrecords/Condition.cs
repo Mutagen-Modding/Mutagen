@@ -18,7 +18,7 @@ public partial class Condition
     static Condition CustomRecordTypeTrigger(
         MutagenFrame frame,
         RecordType recordType, 
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var pos = frame.PositionWithOffset;
         var span = frame.ReadSpan(0x1A);
@@ -75,7 +75,7 @@ partial class ConditionBinaryOverlay
         OverlayStream stream,
         RecordType recordType,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var rawBytes = stream.ReadSpan(0x1A);
         byte[] newBytes = new byte[rawBytes.Length + 4];

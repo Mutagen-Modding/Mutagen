@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EdgeLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static EdgeLink CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EdgeLink();
             ((EdgeLinkSetterCommon)((IEdgeLinkGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EdgeLink item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IEdgeLink item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EdgeLinkSetterCommon)((IEdgeLinkGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IEdgeLink item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -825,7 +825,6 @@ namespace Mutagen.Bethesda.Skyrim
             EdgeLink.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Mesh = item.Mesh.Equals(rhs.Mesh);
             ret.TriangleIndex = item.TriangleIndex == rhs.TriangleIndex;
@@ -1050,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EdgeLinkBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EdgeLinkBinaryWriteTranslation Instance = new EdgeLinkBinaryWriteTranslation();
+        public static readonly EdgeLinkBinaryWriteTranslation Instance = new EdgeLinkBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEdgeLinkGetter item,
@@ -1066,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IEdgeLinkGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1076,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEdgeLinkGetter)item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class EdgeLinkBinaryCreateTranslation
     {
-        public readonly static EdgeLinkBinaryCreateTranslation Instance = new EdgeLinkBinaryCreateTranslation();
+        public static readonly EdgeLinkBinaryCreateTranslation Instance = new EdgeLinkBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEdgeLink item,
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IEdgeLinkGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EdgeLinkBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EdgeLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1185,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEdgeLinkGetter EdgeLinkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EdgeLinkBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xA),
@@ -1202,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEdgeLinkGetter EdgeLinkFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return EdgeLinkFactory(
                 stream: new OverlayStream(slice, package),

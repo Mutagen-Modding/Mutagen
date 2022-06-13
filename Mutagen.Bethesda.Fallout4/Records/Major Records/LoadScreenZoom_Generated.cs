@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenZoomBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static LoadScreenZoom CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LoadScreenZoom();
             ((LoadScreenZoomSetterCommon)((ILoadScreenZoomGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LoadScreenZoom item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILoadScreenZoom item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LoadScreenZoomSetterCommon)((ILoadScreenZoomGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILoadScreenZoom item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Fallout4
             LoadScreenZoom.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Min = item.Min.EqualsWithin(rhs.Min);
             ret.Max = item.Max.EqualsWithin(rhs.Max);
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LoadScreenZoomBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LoadScreenZoomBinaryWriteTranslation Instance = new LoadScreenZoomBinaryWriteTranslation();
+        public static readonly LoadScreenZoomBinaryWriteTranslation Instance = new LoadScreenZoomBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILoadScreenZoomGetter item,
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILoadScreenZoomGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1009,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILoadScreenZoomGetter)item,
@@ -1021,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LoadScreenZoomBinaryCreateTranslation
     {
-        public readonly static LoadScreenZoomBinaryCreateTranslation Instance = new LoadScreenZoomBinaryCreateTranslation();
+        public static readonly LoadScreenZoomBinaryCreateTranslation Instance = new LoadScreenZoomBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILoadScreenZoom item,
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ILoadScreenZoomGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenZoomBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1086,7 +1085,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenZoomBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILoadScreenZoomGetter LoadScreenZoomFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LoadScreenZoomBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILoadScreenZoomGetter LoadScreenZoomFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LoadScreenZoomFactory(
                 stream: new OverlayStream(slice, package),

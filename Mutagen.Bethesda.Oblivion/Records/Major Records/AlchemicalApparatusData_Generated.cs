@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlchemicalApparatusDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static AlchemicalApparatusData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AlchemicalApparatusData();
             ((AlchemicalApparatusDataSetterCommon)((IAlchemicalApparatusDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AlchemicalApparatusData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAlchemicalApparatusData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AlchemicalApparatusDataSetterCommon)((IAlchemicalApparatusDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -821,12 +821,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IAlchemicalApparatusData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -861,7 +861,6 @@ namespace Mutagen.Bethesda.Oblivion
             AlchemicalApparatusData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
@@ -1099,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AlchemicalApparatusDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AlchemicalApparatusDataBinaryWriteTranslation Instance = new AlchemicalApparatusDataBinaryWriteTranslation();
+        public static readonly AlchemicalApparatusDataBinaryWriteTranslation Instance = new AlchemicalApparatusDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAlchemicalApparatusDataGetter item,
@@ -1121,12 +1120,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IAlchemicalApparatusDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1138,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAlchemicalApparatusDataGetter)item,
@@ -1150,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class AlchemicalApparatusDataBinaryCreateTranslation
     {
-        public readonly static AlchemicalApparatusDataBinaryCreateTranslation Instance = new AlchemicalApparatusDataBinaryCreateTranslation();
+        public static readonly AlchemicalApparatusDataBinaryCreateTranslation Instance = new AlchemicalApparatusDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAlchemicalApparatusData item,
@@ -1175,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAlchemicalApparatusDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlchemicalApparatusDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1219,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlchemicalApparatusDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1250,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IAlchemicalApparatusDataGetter AlchemicalApparatusDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AlchemicalApparatusDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1268,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IAlchemicalApparatusDataGetter AlchemicalApparatusDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AlchemicalApparatusDataFactory(
                 stream: new OverlayStream(slice, package),

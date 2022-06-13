@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => BodyPartDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyPartDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static BodyPartData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BodyPartData();
             ((BodyPartDataSetterCommon)((IBodyPartDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BodyPartData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBodyPartDataInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BodyPartDataSetterCommon)((IBodyPartDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IBodyPartDataInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IBodyPartDataInternal>(
                 record: item,
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BodyPartData)item,
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BodyPartData)item,
@@ -998,7 +998,6 @@ namespace Mutagen.Bethesda.Skyrim
             BodyPartData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1479,12 +1478,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static BodyPartDataBinaryWriteTranslation Instance = new BodyPartDataBinaryWriteTranslation();
+        public new static readonly BodyPartDataBinaryWriteTranslation Instance = new BodyPartDataBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IBodyPartDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1500,7 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBodyPartGetter>.Instance.Write(
                 writer: writer,
                 items: item.Parts,
-                transl: (MutagenWriter subWriter, IBodyPartGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IBodyPartGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((BodyPartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1513,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IBodyPartDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1541,7 +1540,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBodyPartDataGetter)item,
@@ -1552,7 +1551,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBodyPartDataGetter)item,
@@ -1563,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBodyPartDataGetter)item,
@@ -1575,7 +1574,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class BodyPartDataBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static BodyPartDataBinaryCreateTranslation Instance = new BodyPartDataBinaryCreateTranslation();
+        public new static readonly BodyPartDataBinaryCreateTranslation Instance = new BodyPartDataBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BPTD;
         public static void FillBinaryStructs(
@@ -1594,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1664,7 +1663,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => BodyPartDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyPartDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1695,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IBodyPartDataGetter BodyPartDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new BodyPartDataBinaryOverlay(
@@ -1722,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IBodyPartDataGetter BodyPartDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BodyPartDataFactory(
                 stream: new OverlayStream(slice, package),
@@ -1737,7 +1736,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

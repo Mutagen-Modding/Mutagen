@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static AttackData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AttackData();
             ((AttackDataSetterCommon)((IAttackDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AttackData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAttackData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AttackDataSetterCommon)((IAttackDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1092,12 +1092,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAttackData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ATKD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1132,7 +1132,6 @@ namespace Mutagen.Bethesda.Fallout4
             AttackData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DamageMult = item.DamageMult.EqualsWithin(rhs.DamageMult);
             ret.Chance = item.Chance.EqualsWithin(rhs.Chance);
             ret.Spell = item.Spell.Equals(rhs.Spell);
@@ -1469,7 +1468,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AttackDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AttackDataBinaryWriteTranslation Instance = new AttackDataBinaryWriteTranslation();
+        public static readonly AttackDataBinaryWriteTranslation Instance = new AttackDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAttackDataGetter item,
@@ -1512,12 +1511,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IAttackDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ATKD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1529,7 +1528,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAttackDataGetter)item,
@@ -1541,7 +1540,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class AttackDataBinaryCreateTranslation
     {
-        public readonly static AttackDataBinaryCreateTranslation Instance = new AttackDataBinaryCreateTranslation();
+        public static readonly AttackDataBinaryCreateTranslation Instance = new AttackDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAttackData item,
@@ -1573,7 +1572,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IAttackDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1618,7 +1617,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1656,7 +1655,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IAttackDataGetter AttackDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AttackDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1674,7 +1673,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IAttackDataGetter AttackDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AttackDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VirtualMachineAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static VirtualMachineAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new VirtualMachineAdapter();
             ((VirtualMachineAdapterSetterCommon)((IVirtualMachineAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out VirtualMachineAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((VirtualMachineAdapterSetterCommon)((IVirtualMachineAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -634,12 +634,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VMAD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (VirtualMachineAdapter)item,
@@ -685,7 +685,6 @@ namespace Mutagen.Bethesda.Fallout4
             VirtualMachineAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -927,17 +926,17 @@ namespace Mutagen.Bethesda.Fallout4
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static VirtualMachineAdapterBinaryWriteTranslation Instance = new VirtualMachineAdapterBinaryWriteTranslation();
+        public new static readonly VirtualMachineAdapterBinaryWriteTranslation Instance = new VirtualMachineAdapterBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             IVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VMAD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
@@ -949,7 +948,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IVirtualMachineAdapterGetter)item,
@@ -960,7 +959,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IVirtualMachineAdapterGetter)item,
@@ -972,7 +971,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class VirtualMachineAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public new readonly static VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
+        public new static readonly VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IVirtualMachineAdapter item,
@@ -1019,7 +1018,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VirtualMachineAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1046,7 +1045,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IVirtualMachineAdapterGetter VirtualMachineAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new VirtualMachineAdapterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IVirtualMachineAdapterGetter VirtualMachineAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return VirtualMachineAdapterFactory(
                 stream: new OverlayStream(slice, package),

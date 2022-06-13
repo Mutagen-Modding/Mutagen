@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => MagicEffectSummonCreatureArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectSummonCreatureArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static MagicEffectSummonCreatureArchetype CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectSummonCreatureArchetype();
             ((MagicEffectSummonCreatureArchetypeSetterCommon)((IMagicEffectSummonCreatureArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MagicEffectSummonCreatureArchetype item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMagicEffectSummonCreatureArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MagicEffectSummonCreatureArchetypeSetterCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMagicEffectSummonCreatureArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMagicEffectArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MagicEffectSummonCreatureArchetype)item,
@@ -673,7 +673,6 @@ namespace Mutagen.Bethesda.Fallout4
             MagicEffectSummonCreatureArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -944,12 +943,12 @@ namespace Mutagen.Bethesda.Fallout4
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MagicEffectSummonCreatureArchetypeBinaryWriteTranslation Instance = new MagicEffectSummonCreatureArchetypeBinaryWriteTranslation();
+        public new static readonly MagicEffectSummonCreatureArchetypeBinaryWriteTranslation Instance = new MagicEffectSummonCreatureArchetypeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             IMagicEffectSummonCreatureArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
                 item: item,
@@ -959,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMagicEffectSummonCreatureArchetypeGetter)item,
@@ -970,7 +969,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMagicEffectArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMagicEffectSummonCreatureArchetypeGetter)item,
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MagicEffectSummonCreatureArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
-        public new readonly static MagicEffectSummonCreatureArchetypeBinaryCreateTranslation Instance = new MagicEffectSummonCreatureArchetypeBinaryCreateTranslation();
+        public new static readonly MagicEffectSummonCreatureArchetypeBinaryCreateTranslation Instance = new MagicEffectSummonCreatureArchetypeBinaryCreateTranslation();
 
     }
 
@@ -1020,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => MagicEffectSummonCreatureArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectSummonCreatureArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1047,7 +1046,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectSummonCreatureArchetypeGetter MagicEffectSummonCreatureArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectSummonCreatureArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1063,7 +1062,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectSummonCreatureArchetypeGetter MagicEffectSummonCreatureArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MagicEffectSummonCreatureArchetypeFactory(
                 stream: new OverlayStream(slice, package),

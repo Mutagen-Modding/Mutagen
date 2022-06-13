@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DialogResponsesUnknownData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogResponsesUnknownData();
             ((DialogResponsesUnknownDataSetterCommon)((IDialogResponsesUnknownDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogResponsesUnknownData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDialogResponsesUnknownData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogResponsesUnknownDataSetterCommon)((IDialogResponsesUnknownDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IDialogResponsesUnknownData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -843,7 +843,6 @@ namespace Mutagen.Bethesda.Skyrim
             DialogResponsesUnknownData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
             ret.QNAM = item.QNAM.Equals(rhs.QNAM);
             ret.NEXT = item.NEXT == rhs.NEXT;
@@ -1082,12 +1081,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogResponsesUnknownDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DialogResponsesUnknownDataBinaryWriteTranslation Instance = new DialogResponsesUnknownDataBinaryWriteTranslation();
+        public static readonly DialogResponsesUnknownDataBinaryWriteTranslation Instance = new DialogResponsesUnknownDataBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDialogResponsesUnknownDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1106,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IDialogResponsesUnknownDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1117,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogResponsesUnknownDataGetter)item,
@@ -1129,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class DialogResponsesUnknownDataBinaryCreateTranslation
     {
-        public readonly static DialogResponsesUnknownDataBinaryCreateTranslation Instance = new DialogResponsesUnknownDataBinaryCreateTranslation();
+        public static readonly DialogResponsesUnknownDataBinaryCreateTranslation Instance = new DialogResponsesUnknownDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDialogResponsesUnknownData item,
@@ -1144,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1185,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDialogResponsesUnknownDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1230,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1269,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDialogResponsesUnknownDataGetter DialogResponsesUnknownDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogResponsesUnknownDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1287,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDialogResponsesUnknownDataGetter DialogResponsesUnknownDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogResponsesUnknownDataFactory(
                 stream: new OverlayStream(slice, package),
@@ -1302,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

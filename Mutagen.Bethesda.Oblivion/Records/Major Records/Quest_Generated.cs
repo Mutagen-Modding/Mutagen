@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => QuestBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Quest CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Quest();
             ((QuestSetterCommon)((IQuestGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Quest item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IQuestInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestSetterCommon)((IQuestGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IQuestInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IQuestInternal>(
                 record: item,
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Quest)item,
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Quest)item,
@@ -1337,7 +1337,6 @@ namespace Mutagen.Bethesda.Oblivion
             Quest.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Script = item.Script.Equals(rhs.Script);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
@@ -1962,12 +1961,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static QuestBinaryWriteTranslation Instance = new QuestBinaryWriteTranslation();
+        public new static readonly QuestBinaryWriteTranslation Instance = new QuestBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IQuestGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1997,7 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2008,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestStageGetter>.Instance.Write(
                 writer: writer,
                 items: item.Stages,
-                transl: (MutagenWriter subWriter, IQuestStageGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IQuestStageGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((QuestStageBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2019,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestTargetGetter>.Instance.Write(
                 writer: writer,
                 items: item.Targets,
-                transl: (MutagenWriter subWriter, IQuestTargetGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IQuestTargetGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((QuestTargetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2032,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IQuestGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2060,7 +2059,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestGetter)item,
@@ -2071,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IQuestGetter)item,
@@ -2082,7 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IQuestGetter)item,
@@ -2094,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class QuestBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static QuestBinaryCreateTranslation Instance = new QuestBinaryCreateTranslation();
+        public new static readonly QuestBinaryCreateTranslation Instance = new QuestBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.QUST;
         public static void FillBinaryStructs(
@@ -2113,7 +2112,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2224,7 +2223,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => QuestBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2276,7 +2275,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IQuestGetter QuestFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new QuestBinaryOverlay(
@@ -2303,7 +2302,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IQuestGetter QuestFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestFactory(
                 stream: new OverlayStream(slice, package),
@@ -2318,7 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

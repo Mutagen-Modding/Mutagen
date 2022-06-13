@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static BodyTemplate CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BodyTemplate();
             ((BodyTemplateSetterCommon)((IBodyTemplateGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BodyTemplate item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBodyTemplate item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BodyTemplateSetterCommon)((IBodyTemplateGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -831,12 +831,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IBodyTemplate item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.Combine(BodyTemplate_Registration.Get(frame.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -871,7 +871,6 @@ namespace Mutagen.Bethesda.Skyrim
             BodyTemplate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
             ret.Flags = item.Flags == rhs.Flags;
             ret.ArmorType = item.ArmorType == rhs.ArmorType;
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BodyTemplateBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BodyTemplateBinaryWriteTranslation Instance = new BodyTemplateBinaryWriteTranslation();
+        public static readonly BodyTemplateBinaryWriteTranslation Instance = new BodyTemplateBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBodyTemplateGetter item,
@@ -1138,12 +1137,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IBodyTemplateGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.Combine(BodyTemplate_Registration.Get(writer.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBodyTemplateGetter)item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class BodyTemplateBinaryCreateTranslation
     {
-        public readonly static BodyTemplateBinaryCreateTranslation Instance = new BodyTemplateBinaryCreateTranslation();
+        public static readonly BodyTemplateBinaryCreateTranslation Instance = new BodyTemplateBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBodyTemplate item,
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IBodyTemplateGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyTemplateBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1245,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1283,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IBodyTemplateGetter BodyTemplateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BodyTemplateBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1301,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IBodyTemplateGetter BodyTemplateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BodyTemplateFactory(
                 stream: new OverlayStream(slice, package),

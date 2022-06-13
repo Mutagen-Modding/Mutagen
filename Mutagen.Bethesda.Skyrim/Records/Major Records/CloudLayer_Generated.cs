@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CloudLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CloudLayer CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CloudLayer();
             ((CloudLayerSetterCommon)((ICloudLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CloudLayer item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICloudLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CloudLayerSetterCommon)((ICloudLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICloudLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -916,7 +916,6 @@ namespace Mutagen.Bethesda.Skyrim
             CloudLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Enabled = item.Enabled == rhs.Enabled;
             ret.XSpeed = item.XSpeed.EqualsWithin(rhs.XSpeed);
             ret.YSpeed = item.YSpeed.EqualsWithin(rhs.YSpeed);
@@ -1248,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CloudLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CloudLayerBinaryWriteTranslation Instance = new CloudLayerBinaryWriteTranslation();
+        public static readonly CloudLayerBinaryWriteTranslation Instance = new CloudLayerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICloudLayerGetter item,
@@ -1259,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICloudLayerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1269,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICloudLayerGetter)item,
@@ -1281,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CloudLayerBinaryCreateTranslation
     {
-        public readonly static CloudLayerBinaryCreateTranslation Instance = new CloudLayerBinaryCreateTranslation();
+        public static readonly CloudLayerBinaryCreateTranslation Instance = new CloudLayerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICloudLayer item,
@@ -1300,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICloudLayerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CloudLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1344,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CloudLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1371,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICloudLayerGetter CloudLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CloudLayerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1387,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICloudLayerGetter CloudLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CloudLayerFactory(
                 stream: new OverlayStream(slice, package),

@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static MagicEffectEnhanceWeaponArchetype CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectEnhanceWeaponArchetype();
             ((MagicEffectEnhanceWeaponArchetypeSetterCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MagicEffectEnhanceWeaponArchetype item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMagicEffectEnhanceWeaponArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MagicEffectEnhanceWeaponArchetypeSetterCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMagicEffectEnhanceWeaponArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMagicEffectArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MagicEffectEnhanceWeaponArchetype)item,
@@ -673,7 +673,6 @@ namespace Mutagen.Bethesda.Fallout4
             MagicEffectEnhanceWeaponArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -944,12 +943,12 @@ namespace Mutagen.Bethesda.Fallout4
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation Instance = new MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation();
+        public new static readonly MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation Instance = new MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             IMagicEffectEnhanceWeaponArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
                 item: item,
@@ -959,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMagicEffectEnhanceWeaponArchetypeGetter)item,
@@ -970,7 +969,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMagicEffectArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMagicEffectEnhanceWeaponArchetypeGetter)item,
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
-        public new readonly static MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation Instance = new MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation();
+        public new static readonly MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation Instance = new MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation();
 
     }
 
@@ -1020,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1047,7 +1046,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectEnhanceWeaponArchetypeGetter MagicEffectEnhanceWeaponArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectEnhanceWeaponArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1063,7 +1062,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMagicEffectEnhanceWeaponArchetypeGetter MagicEffectEnhanceWeaponArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MagicEffectEnhanceWeaponArchetypeFactory(
                 stream: new OverlayStream(slice, package),

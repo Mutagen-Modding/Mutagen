@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledCreatureEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LeveledCreatureEntry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LeveledCreatureEntry();
             ((LeveledCreatureEntrySetterCommon)((ILeveledCreatureEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LeveledCreatureEntry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILeveledCreatureEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LeveledCreatureEntrySetterCommon)((ILeveledCreatureEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -874,12 +874,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILeveledCreatureEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.LVLO),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -914,7 +914,6 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledCreatureEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Reference = item.Reference.Equals(rhs.Reference);
@@ -1175,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LeveledCreatureEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LeveledCreatureEntryBinaryWriteTranslation Instance = new LeveledCreatureEntryBinaryWriteTranslation();
+        public static readonly LeveledCreatureEntryBinaryWriteTranslation Instance = new LeveledCreatureEntryBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILeveledCreatureEntryGetter item,
@@ -1193,12 +1192,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILeveledCreatureEntryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.LVLO),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILeveledCreatureEntryGetter)item,
@@ -1222,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LeveledCreatureEntryBinaryCreateTranslation
     {
-        public readonly static LeveledCreatureEntryBinaryCreateTranslation Instance = new LeveledCreatureEntryBinaryCreateTranslation();
+        public static readonly LeveledCreatureEntryBinaryCreateTranslation Instance = new LeveledCreatureEntryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILeveledCreatureEntry item,
@@ -1248,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILeveledCreatureEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledCreatureEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1293,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledCreatureEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1325,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILeveledCreatureEntryGetter LeveledCreatureEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LeveledCreatureEntryBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1343,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILeveledCreatureEntryGetter LeveledCreatureEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LeveledCreatureEntryFactory(
                 stream: new OverlayStream(slice, package),

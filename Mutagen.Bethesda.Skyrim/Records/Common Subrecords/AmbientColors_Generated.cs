@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AmbientColors CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AmbientColors();
             ((AmbientColorsSetterCommon)((IAmbientColorsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AmbientColors item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAmbientColors item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AmbientColorsSetterCommon)((IAmbientColorsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1004,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAmbientColors item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1040,7 +1040,6 @@ namespace Mutagen.Bethesda.Skyrim
             AmbientColors.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.DirectionalXPlus = item.DirectionalXPlus.ColorOnlyEquals(rhs.DirectionalXPlus);
             ret.DirectionalXMinus = item.DirectionalXMinus.ColorOnlyEquals(rhs.DirectionalXMinus);
@@ -1349,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AmbientColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AmbientColorsBinaryWriteTranslation Instance = new AmbientColorsBinaryWriteTranslation();
+        public static readonly AmbientColorsBinaryWriteTranslation Instance = new AmbientColorsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAmbientColorsGetter item,
@@ -1387,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IAmbientColorsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1397,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAmbientColorsGetter)item,
@@ -1409,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class AmbientColorsBinaryCreateTranslation
     {
-        public readonly static AmbientColorsBinaryCreateTranslation Instance = new AmbientColorsBinaryCreateTranslation();
+        public static readonly AmbientColorsBinaryCreateTranslation Instance = new AmbientColorsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAmbientColors item,
@@ -1441,7 +1440,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAmbientColorsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1485,7 +1484,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1522,7 +1521,7 @@ namespace Mutagen.Bethesda.Skyrim
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AmbientColorsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
@@ -1542,7 +1541,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAmbientColorsGetter AmbientColorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AmbientColorsFactory(
                 stream: new OverlayStream(slice, package),

@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ShaderParticleGeometryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ShaderParticleGeometryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ShaderParticleGeometry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ShaderParticleGeometry();
             ((ShaderParticleGeometrySetterCommon)((IShaderParticleGeometryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ShaderParticleGeometry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IShaderParticleGeometryInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ShaderParticleGeometrySetterCommon)((IShaderParticleGeometryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IShaderParticleGeometryInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IShaderParticleGeometryInternal>(
                 record: item,
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ShaderParticleGeometry)item,
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ShaderParticleGeometry)item,
@@ -1347,7 +1347,6 @@ namespace Mutagen.Bethesda.Skyrim
             ShaderParticleGeometry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.GravityVelocity = item.GravityVelocity.EqualsWithin(rhs.GravityVelocity);
             ret.RotationVelocity = item.RotationVelocity.EqualsWithin(rhs.RotationVelocity);
             ret.ParticleSizeX = item.ParticleSizeX.EqualsWithin(rhs.ParticleSizeX);
@@ -1922,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ShaderParticleGeometryBinaryWriteTranslation Instance = new ShaderParticleGeometryBinaryWriteTranslation();
+        public new static readonly ShaderParticleGeometryBinaryWriteTranslation Instance = new ShaderParticleGeometryBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IShaderParticleGeometryGetter item,
@@ -1936,7 +1935,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IShaderParticleGeometryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1989,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IShaderParticleGeometryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2017,7 +2016,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IShaderParticleGeometryGetter)item,
@@ -2028,7 +2027,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IShaderParticleGeometryGetter)item,
@@ -2039,7 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IShaderParticleGeometryGetter)item,
@@ -2051,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ShaderParticleGeometryBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ShaderParticleGeometryBinaryCreateTranslation Instance = new ShaderParticleGeometryBinaryCreateTranslation();
+        public new static readonly ShaderParticleGeometryBinaryCreateTranslation Instance = new ShaderParticleGeometryBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SPGD;
         public static void FillBinaryStructs(
@@ -2070,7 +2069,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2155,7 +2154,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ShaderParticleGeometryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ShaderParticleGeometryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2250,7 +2249,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IShaderParticleGeometryGetter ShaderParticleGeometryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new ShaderParticleGeometryBinaryOverlay(
@@ -2277,7 +2276,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IShaderParticleGeometryGetter ShaderParticleGeometryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ShaderParticleGeometryFactory(
                 stream: new OverlayStream(slice, package),
@@ -2292,7 +2291,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

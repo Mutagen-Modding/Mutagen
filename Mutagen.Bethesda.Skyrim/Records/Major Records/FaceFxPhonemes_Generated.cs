@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceFxPhonemesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static FaceFxPhonemes CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FaceFxPhonemes();
             ((FaceFxPhonemesSetterCommon)((IFaceFxPhonemesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FaceFxPhonemes item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFaceFxPhonemes item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FaceFxPhonemesSetterCommon)((IFaceFxPhonemesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IFaceFxPhonemes item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1536,7 +1536,6 @@ namespace Mutagen.Bethesda.Skyrim
             FaceFxPhonemes.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ForceNames = item.ForceNames == rhs.ForceNames;
             ret.Aah_LipBigAah = EqualsMaskHelper.EqualsHelper(
                 item.Aah_LipBigAah,
@@ -2500,7 +2499,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FaceFxPhonemesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FaceFxPhonemesBinaryWriteTranslation Instance = new FaceFxPhonemesBinaryWriteTranslation();
+        public static readonly FaceFxPhonemesBinaryWriteTranslation Instance = new FaceFxPhonemesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFaceFxPhonemesGetter item,
@@ -2511,7 +2510,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IFaceFxPhonemesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -2521,7 +2520,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFaceFxPhonemesGetter)item,
@@ -2533,7 +2532,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class FaceFxPhonemesBinaryCreateTranslation
     {
-        public readonly static FaceFxPhonemesBinaryCreateTranslation Instance = new FaceFxPhonemesBinaryCreateTranslation();
+        public static readonly FaceFxPhonemesBinaryCreateTranslation Instance = new FaceFxPhonemesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFaceFxPhonemes item,
@@ -2552,7 +2551,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IFaceFxPhonemesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceFxPhonemesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2596,7 +2595,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceFxPhonemesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2623,7 +2622,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IFaceFxPhonemesGetter FaceFxPhonemesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FaceFxPhonemesBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -2639,7 +2638,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IFaceFxPhonemesGetter FaceFxPhonemesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FaceFxPhonemesFactory(
                 stream: new OverlayStream(slice, package),

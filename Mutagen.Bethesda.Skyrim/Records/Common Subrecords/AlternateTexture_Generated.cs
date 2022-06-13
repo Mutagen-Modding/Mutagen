@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlternateTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AlternateTexture CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AlternateTexture();
             ((AlternateTextureSetterCommon)((IAlternateTextureGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AlternateTexture item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAlternateTexture item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AlternateTextureSetterCommon)((IAlternateTextureGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAlternateTexture item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -839,7 +839,6 @@ namespace Mutagen.Bethesda.Skyrim
             AlternateTexture.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.NewTexture = item.NewTexture.Equals(rhs.NewTexture);
             ret.Index = item.Index == rhs.Index;
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AlternateTextureBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AlternateTextureBinaryWriteTranslation Instance = new AlternateTextureBinaryWriteTranslation();
+        public static readonly AlternateTextureBinaryWriteTranslation Instance = new AlternateTextureBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAlternateTextureGetter item,
@@ -1083,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IAlternateTextureGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAlternateTextureGetter)item,
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class AlternateTextureBinaryCreateTranslation
     {
-        public readonly static AlternateTextureBinaryCreateTranslation Instance = new AlternateTextureBinaryCreateTranslation();
+        public static readonly AlternateTextureBinaryCreateTranslation Instance = new AlternateTextureBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAlternateTexture item,
@@ -1129,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAlternateTextureGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlternateTextureBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1174,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlternateTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlternateTextureGetter AlternateTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AlternateTextureBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlternateTextureGetter AlternateTextureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AlternateTextureFactory(
                 stream: new OverlayStream(slice, package),

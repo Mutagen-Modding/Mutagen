@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IconsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Icons CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Icons();
             ((IconsSetterCommon)((IIconsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Icons item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IIcons item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IconsSetterCommon)((IIconsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IIcons item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -785,7 +785,6 @@ namespace Mutagen.Bethesda.Fallout4
             Icons.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.InventoryImage = string.Equals(item.InventoryImage, rhs.InventoryImage);
             ret.MessageIcon = string.Equals(item.MessageIcon, rhs.MessageIcon);
         }
@@ -1003,12 +1002,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class IconsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static IconsBinaryWriteTranslation Instance = new IconsBinaryWriteTranslation();
+        public static readonly IconsBinaryWriteTranslation Instance = new IconsBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IIconsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1025,7 +1024,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IIconsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1036,7 +1035,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIconsGetter)item,
@@ -1048,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class IconsBinaryCreateTranslation
     {
-        public readonly static IconsBinaryCreateTranslation Instance = new IconsBinaryCreateTranslation();
+        public static readonly IconsBinaryCreateTranslation Instance = new IconsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IIcons item,
@@ -1063,7 +1062,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1102,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IIconsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IconsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1146,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IconsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1181,7 +1180,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IIconsGetter IconsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IconsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1199,7 +1198,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IIconsGetter IconsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return IconsFactory(
                 stream: new OverlayStream(slice, package),
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

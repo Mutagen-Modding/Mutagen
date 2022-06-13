@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => AStoryManagerNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AStoryManagerNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAStoryManagerNodeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AStoryManagerNodeSetterCommon)((IAStoryManagerNodeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -935,14 +935,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAStoryManagerNodeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AStoryManagerNode)item,
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AStoryManagerNode)item,
@@ -988,7 +988,6 @@ namespace Mutagen.Bethesda.Fallout4
             AStoryManagerNode.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.PreviousSibling = item.PreviousSibling.Equals(rhs.PreviousSibling);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
@@ -1449,12 +1448,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AStoryManagerNodeBinaryWriteTranslation Instance = new AStoryManagerNodeBinaryWriteTranslation();
+        public new static readonly AStoryManagerNodeBinaryWriteTranslation Instance = new AStoryManagerNodeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IAStoryManagerNodeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1473,7 +1472,7 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1486,7 +1485,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             IAStoryManagerNodeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
@@ -1509,7 +1508,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAStoryManagerNodeGetter)item,
@@ -1520,7 +1519,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAStoryManagerNodeGetter)item,
@@ -1531,7 +1530,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAStoryManagerNodeGetter)item,
@@ -1543,7 +1542,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class AStoryManagerNodeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static AStoryManagerNodeBinaryCreateTranslation Instance = new AStoryManagerNodeBinaryCreateTranslation();
+        public new static readonly AStoryManagerNodeBinaryCreateTranslation Instance = new AStoryManagerNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
         public static ParseResult FillBinaryRecordTypes(
@@ -1553,7 +1552,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1631,7 +1630,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => AStoryManagerNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AStoryManagerNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1672,7 +1671,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

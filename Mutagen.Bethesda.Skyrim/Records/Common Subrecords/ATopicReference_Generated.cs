@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ATopicReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IATopicReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ATopicReferenceSetterCommon)((IATopicReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IATopicReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -685,7 +685,6 @@ namespace Mutagen.Bethesda.Skyrim
             ATopicReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -867,17 +866,17 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ATopicReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ATopicReferenceBinaryWriteTranslation Instance = new ATopicReferenceBinaryWriteTranslation();
+        public static readonly ATopicReferenceBinaryWriteTranslation Instance = new ATopicReferenceBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IATopicReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PDTO),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
             }
@@ -886,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IATopicReferenceGetter)item,
@@ -898,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ATopicReferenceBinaryCreateTranslation
     {
-        public readonly static ATopicReferenceBinaryCreateTranslation Instance = new ATopicReferenceBinaryCreateTranslation();
+        public static readonly ATopicReferenceBinaryCreateTranslation Instance = new ATopicReferenceBinaryCreateTranslation();
 
     }
 
@@ -911,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IATopicReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ATopicReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -956,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ATopicReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

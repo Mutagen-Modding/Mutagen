@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueSkillBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ActorValueSkill CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActorValueSkill();
             ((ActorValueSkillSetterCommon)((IActorValueSkillGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ActorValueSkill item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IActorValueSkill item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ActorValueSkillSetterCommon)((IActorValueSkillGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IActorValueSkill item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.AVSK),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Skyrim
             ActorValueSkill.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.UseMult = item.UseMult.EqualsWithin(rhs.UseMult);
             ret.OffsetMult = item.OffsetMult.EqualsWithin(rhs.OffsetMult);
             ret.ImproveMult = item.ImproveMult.EqualsWithin(rhs.ImproveMult);
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActorValueSkillBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ActorValueSkillBinaryWriteTranslation Instance = new ActorValueSkillBinaryWriteTranslation();
+        public static readonly ActorValueSkillBinaryWriteTranslation Instance = new ActorValueSkillBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IActorValueSkillGetter item,
@@ -1118,12 +1117,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IActorValueSkillGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.AVSK),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IActorValueSkillGetter)item,
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ActorValueSkillBinaryCreateTranslation
     {
-        public readonly static ActorValueSkillBinaryCreateTranslation Instance = new ActorValueSkillBinaryCreateTranslation();
+        public static readonly ActorValueSkillBinaryCreateTranslation Instance = new ActorValueSkillBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IActorValueSkill item,
@@ -1170,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IActorValueSkillGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueSkillBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueSkillBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1245,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IActorValueSkillGetter ActorValueSkillFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActorValueSkillBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1263,7 +1262,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IActorValueSkillGetter ActorValueSkillFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ActorValueSkillFactory(
                 stream: new OverlayStream(slice, package),

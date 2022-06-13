@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DamageTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static DamageType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DamageType();
             ((DamageTypeSetterCommon)((IDamageTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DamageType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDamageTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DamageTypeSetterCommon)((IDamageTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDamageTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IDamageTypeInternal>(
                 record: item,
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IADamageTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DamageType)item,
@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DamageType)item,
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DamageType)item,
@@ -931,7 +931,6 @@ namespace Mutagen.Bethesda.Fallout4
             DamageType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DamageTypes = item.DamageTypes.CollectionEqualsHelper(
                 rhs.DamageTypes,
                 (l, r) => object.Equals(l, r),
@@ -1442,12 +1441,12 @@ namespace Mutagen.Bethesda.Fallout4
         ADamageTypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DamageTypeBinaryWriteTranslation Instance = new DamageTypeBinaryWriteTranslation();
+        public new static readonly DamageTypeBinaryWriteTranslation Instance = new DamageTypeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDamageTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1457,7 +1456,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.DamageTypes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDamageTypeTargetGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDamageTypeTargetGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1468,7 +1467,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IDamageTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1496,7 +1495,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDamageTypeGetter)item,
@@ -1507,7 +1506,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IADamageTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDamageTypeGetter)item,
@@ -1518,7 +1517,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDamageTypeGetter)item,
@@ -1529,7 +1528,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDamageTypeGetter)item,
@@ -1541,7 +1540,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DamageTypeBinaryCreateTranslation : ADamageTypeBinaryCreateTranslation
     {
-        public new readonly static DamageTypeBinaryCreateTranslation Instance = new DamageTypeBinaryCreateTranslation();
+        public new static readonly DamageTypeBinaryCreateTranslation Instance = new DamageTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DMGT;
         public static void FillBinaryStructs(
@@ -1560,7 +1559,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1623,7 +1622,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DamageTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1653,7 +1652,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDamageTypeGetter DamageTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new DamageTypeBinaryOverlay(
@@ -1680,7 +1679,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDamageTypeGetter DamageTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DamageTypeFactory(
                 stream: new OverlayStream(slice, package),
@@ -1695,7 +1694,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static MapData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MapData();
             ((MapDataSetterCommon)((IMapDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MapData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IMapData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MapDataSetterCommon)((IMapDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -780,12 +780,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IMapData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -820,7 +820,6 @@ namespace Mutagen.Bethesda.Oblivion
             MapData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.UsableDimensions = item.UsableDimensions.Equals(rhs.UsableDimensions);
             ret.CellCoordinatesNWCell = item.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell);
             ret.CellCoordinatesSECell = item.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell);
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MapDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MapDataBinaryWriteTranslation Instance = new MapDataBinaryWriteTranslation();
+        public static readonly MapDataBinaryWriteTranslation Instance = new MapDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMapDataGetter item,
@@ -1064,12 +1063,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IMapDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMapDataGetter)item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class MapDataBinaryCreateTranslation
     {
-        public readonly static MapDataBinaryCreateTranslation Instance = new MapDataBinaryCreateTranslation();
+        public static readonly MapDataBinaryCreateTranslation Instance = new MapDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMapData item,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IMapDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1189,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IMapDataGetter MapDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MapDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IMapDataGetter MapDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MapDataFactory(
                 stream: new OverlayStream(slice, package),

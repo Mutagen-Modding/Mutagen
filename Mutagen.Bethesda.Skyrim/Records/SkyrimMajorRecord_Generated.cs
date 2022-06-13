@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1088,14 +1088,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SkyrimMajorRecord)item,
@@ -1130,7 +1130,6 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FormVersion = item.FormVersion == rhs.FormVersion;
             ret.Version2 = item.Version2 == rhs.Version2;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1511,7 +1510,7 @@ namespace Mutagen.Bethesda.Skyrim
         MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SkyrimMajorRecordBinaryWriteTranslation Instance = new SkyrimMajorRecordBinaryWriteTranslation();
+        public new static readonly SkyrimMajorRecordBinaryWriteTranslation Instance = new SkyrimMajorRecordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISkyrimMajorRecordGetter item,
@@ -1527,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
@@ -1548,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISkyrimMajorRecordGetter)item,
@@ -1559,7 +1558,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISkyrimMajorRecordGetter)item,
@@ -1571,7 +1570,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SkyrimMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
     {
-        public new readonly static SkyrimMajorRecordBinaryCreateTranslation Instance = new SkyrimMajorRecordBinaryCreateTranslation();
+        public new static readonly SkyrimMajorRecordBinaryCreateTranslation Instance = new SkyrimMajorRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
         public static void FillBinaryStructs(
@@ -1628,7 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

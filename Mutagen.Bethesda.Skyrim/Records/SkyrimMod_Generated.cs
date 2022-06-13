@@ -6193,9 +6193,9 @@ namespace Mutagen.Bethesda.Skyrim
                     release: release);
                 ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                     item: ret,
+                    frame: frame,
                     release: release,
-                    importMask: importMask,
-                    frame: frame);
+                    importMask: importMask);
                 return ret;
             }
             catch (Exception ex)
@@ -6969,9 +6969,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
+                frame: frame,
                 release: release,
-                importMask: importMask,
-                frame: frame);
+                importMask: importMask);
         }
 
         public static void CopyInFromBinary(
@@ -9004,7 +9004,6 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
             ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
             ret.Keywords = MaskItemExt.Factory(item.Keywords.GetEqualsMask(rhs.Keywords, include), include);
@@ -18942,13 +18941,13 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimModBinaryWriteTranslation
     {
-        public readonly static SkyrimModBinaryWriteTranslation Instance = new SkyrimModBinaryWriteTranslation();
+        public static readonly SkyrimModBinaryWriteTranslation Instance = new SkyrimModBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISkyrimModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             if (importMask?.GameSettings ?? true)
             {
@@ -20223,8 +20222,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Write(
                 item: (ISkyrimModGetter)item,
-                importMask: importMask,
                 writer: writer,
+                importMask: importMask,
                 param: param,
                 modKey: modKey);
         }
@@ -20233,7 +20232,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SkyrimModBinaryCreateTranslation
     {
-        public readonly static SkyrimModBinaryCreateTranslation Instance = new SkyrimModBinaryCreateTranslation();
+        public static readonly SkyrimModBinaryCreateTranslation Instance = new SkyrimModBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISkyrimMod item,
@@ -20247,7 +20246,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType nextRecordType,
             int contentLength,
             GroupMask? importMask,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -21864,8 +21863,8 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = item.ModKey;
             SkyrimModBinaryWriteTranslation.Instance.Write(
                 item: item,
-                importMask: importMask,
                 writer: writer,
+                importMask: importMask,
                 param: param,
                 modKey: modKey);
         }
@@ -22647,7 +22646,7 @@ namespace Mutagen.Bethesda.Skyrim
             int offset,
             RecordType type,
             PreviousParse lastParsed,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFacePartsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NpcFaceParts CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcFaceParts();
             ((NpcFacePartsSetterCommon)((INpcFacePartsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcFaceParts item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INpcFaceParts item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcFacePartsSetterCommon)((INpcFacePartsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             INpcFaceParts item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.NAMA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Skyrim
             NpcFaceParts.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Nose = item.Nose == rhs.Nose;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Eyes = item.Eyes == rhs.Eyes;
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcFacePartsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcFacePartsBinaryWriteTranslation Instance = new NpcFacePartsBinaryWriteTranslation();
+        public static readonly NpcFacePartsBinaryWriteTranslation Instance = new NpcFacePartsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcFacePartsGetter item,
@@ -1110,12 +1109,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             INpcFacePartsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.NAMA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1127,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcFacePartsGetter)item,
@@ -1139,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class NpcFacePartsBinaryCreateTranslation
     {
-        public readonly static NpcFacePartsBinaryCreateTranslation Instance = new NpcFacePartsBinaryCreateTranslation();
+        public static readonly NpcFacePartsBinaryCreateTranslation Instance = new NpcFacePartsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcFaceParts item,
@@ -1162,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INpcFacePartsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFacePartsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1206,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFacePartsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INpcFacePartsGetter NpcFacePartsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcFacePartsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1255,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static INpcFacePartsGetter NpcFacePartsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcFacePartsFactory(
                 stream: new OverlayStream(slice, package),

@@ -121,7 +121,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         MutagenFrame reader,
         BinaryMasterParseRecordDelegate<T> transl,
         RecordTriggerSpecs? triggeringRecord = null,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var ret = new ExtendedList<T>();
         while (!reader.Complete)
@@ -154,7 +154,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         MutagenFrame reader,
         RecordType triggeringRecord,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null,
+        TypedParseParams translationParams = default,
         bool skipHeader = false)
     {
         var ret = new ExtendedList<T>();
@@ -187,7 +187,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         MutagenFrame reader,
         RecordType triggeringRecord,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var frames = new List<MutagenFrame>();
         triggeringRecord = translationParams.ConvertToCustom(triggeringRecord);
@@ -224,7 +224,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         RecordType triggeringRecord,
         bool thread,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         if (thread)
         {
@@ -279,7 +279,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         MutagenFrame reader,
         BinaryMasterParseDelegate<T> transl,
         RecordTriggerSpecs triggeringRecord,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var ret = new ExtendedList<T>();
         while (!reader.Complete)
@@ -310,7 +310,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var ret = new ExtendedList<T>();
         while (!reader.Complete)
@@ -331,7 +331,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         MutagenFrame reader,
         int amount,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var ret = new ExtendedList<T>();
         for (int i = 0; i < amount; i++)
@@ -349,7 +349,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         int amount,
         RecordType triggeringRecord,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         if (amount == 0) return new ExtendedList<T>();
         var subHeader = reader.GetSubrecordHeader();
@@ -387,7 +387,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         RecordType countRecord,
         int countLengthLength,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var subHeader = reader.GetSubrecord();
         var recType = subHeader.RecordType;
@@ -500,7 +500,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         int amount,
         RecordType triggeringRecord,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var ret = new ExtendedList<T>();
         if (amount == 0) return ret;
@@ -538,7 +538,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         RecordType countRecord,
         int countLengthLength,
         BinaryMasterParseDelegate<T> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var subHeader = reader.GetSubrecord();
         var recType = subHeader.RecordType;
@@ -645,7 +645,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         int countLengthLength,
         BinaryMasterParseDelegate<T> transl,
         RecordTriggerSpecs triggeringRecord,
-        TypedParseParams? translationParams = null,
+        TypedParseParams translationParams = default,
         bool nullIfZero = true)
     {
         var subHeader = reader.GetSubrecord();
@@ -683,7 +683,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         int amount,
         BinaryMasterParseDelegate<T> transl,
         RecordTriggerSpecs? triggeringRecord = null,
-        TypedParseParams? translationParams = null,
+        TypedParseParams translationParams = default,
         bool nullIfZero = false)
     {
         if (amount == 0 && nullIfZero) return Enumerable.Empty<T>();
@@ -719,7 +719,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         MutagenWriter writer,
         IEnumerable<T>? items,
         BinaryMasterWriteDelegate<T> transl,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         if (items == null) return;
         foreach (var item in items)
@@ -798,7 +798,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         RecordType recordType,
         RecordType overflowRecord,
         BinaryMasterWriteDelegate<T> transl,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         if (items == null) return;
         try
@@ -835,7 +835,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         IReadOnlyList<T>? items,
         RecordType recordType,
         BinaryMasterWriteDelegate<T> transl,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         if (items == null) return;
         try
@@ -869,7 +869,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         RecordType recordType,
         int countLengthLength,
         BinaryMasterWriteDelegate<T> transl,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         if (items == null) return;
         try
@@ -916,7 +916,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         IReadOnlyList<T>? items,
         int countLengthLength,
         BinaryMasterWriteDelegate<T> transl,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         if (items == null) return;
         try
@@ -1039,7 +1039,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         byte counterLength,
         bool subRecordPerItem = false,
         bool writeCounterIfNull = false,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         if (items == null)
         {
@@ -1168,7 +1168,7 @@ internal class PluginListAsyncBinaryTranslation<T>
     public delegate Task<TryGet<T>> BinarySubParseDelegate(MutagenFrame reader);
     public delegate Task<TryGet<T>> BinaryMasterParseDelegate(
         MutagenFrame reader,
-        TypedParseParams? translationParams);
+        TypedParseParams translationParams);
     public delegate Task<TryGet<T>> BinarySubParseRecordDelegate(
         MutagenFrame reader,
         RecordType header);
@@ -1214,7 +1214,7 @@ internal class PluginListAsyncBinaryTranslation<T>
         MutagenFrame reader,
         RecordType triggeringRecord,
         BinaryMasterParseDelegate transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var ret = new ExtendedList<T>();
         while (!reader.Complete && !reader.Reader.Complete)
@@ -1272,7 +1272,7 @@ internal class PluginListAsyncBinaryTranslation<T>
         MutagenFrame reader,
         RecordType triggeringRecord,
         BinaryMasterParseDelegate transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         var tasks = new List<Task<TryGet<T>>>();
         while (!reader.Complete && !reader.Reader.Complete)
@@ -1325,7 +1325,7 @@ internal class PluginListAsyncBinaryTranslation<T>
         RecordType triggeringRecord,
         BinaryMasterParseDelegate transl,
         bool thread,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
     {
         IEnumerable<T> items;
         if (thread)

@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AObjectModPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary<T>(
             this IAObjectModProperty<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
             where T : struct, Enum
         {
             ((AObjectModPropertySetterCommon<T>)((IAObjectModPropertyGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAObjectModProperty<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -497,7 +497,6 @@ namespace Mutagen.Bethesda.Fallout4
             AObjectModProperty.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Property = EqualityComparer<T>.Default.Equals(item.Property, rhs.Property);
             ret.Step = item.Step.EqualsWithin(rhs.Step);
         }
@@ -712,7 +711,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AObjectModPropertyBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AObjectModPropertyBinaryWriteTranslation Instance = new AObjectModPropertyBinaryWriteTranslation();
+        public static readonly AObjectModPropertyBinaryWriteTranslation Instance = new AObjectModPropertyBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
             IAObjectModPropertyGetter<T> item,
@@ -731,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write<T>(
             MutagenWriter writer,
             IAObjectModPropertyGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
             where T : struct, Enum
         {
             WriteEmbedded(
@@ -742,7 +741,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             throw new NotImplementedException();
         }
@@ -752,7 +751,7 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class AObjectModPropertyBinaryCreateTranslation<T>
         where T : struct, Enum
     {
-        public readonly static AObjectModPropertyBinaryCreateTranslation<T> Instance = new AObjectModPropertyBinaryCreateTranslation<T>();
+        public static readonly AObjectModPropertyBinaryCreateTranslation<T> Instance = new AObjectModPropertyBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
             IAObjectModProperty<T> item,
@@ -775,7 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary<T>(
             this IAObjectModPropertyGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
             where T : struct, Enum
         {
             ((AObjectModPropertyBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
@@ -822,7 +821,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AObjectModPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

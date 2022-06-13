@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static MapMarker CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MapMarker();
             ((MapMarkerSetterCommon)((IMapMarkerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MapMarker item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMapMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MapMarkerSetterCommon)((IMapMarkerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -835,7 +835,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IMapMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -872,7 +872,6 @@ namespace Mutagen.Bethesda.Skyrim
             MapMarker.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Type = item.Type == rhs.Type;
@@ -1100,12 +1099,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MapMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MapMarkerBinaryWriteTranslation Instance = new MapMarkerBinaryWriteTranslation();
+        public static readonly MapMarkerBinaryWriteTranslation Instance = new MapMarkerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMapMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IMapMarkerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1139,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMapMarkerGetter)item,
@@ -1151,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class MapMarkerBinaryCreateTranslation
     {
-        public readonly static MapMarkerBinaryCreateTranslation Instance = new MapMarkerBinaryCreateTranslation();
+        public static readonly MapMarkerBinaryCreateTranslation Instance = new MapMarkerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMapMarker item,
@@ -1166,7 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IMapMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapMarkerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1257,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1304,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMapMarkerGetter MapMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MapMarkerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1322,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMapMarkerGetter MapMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MapMarkerFactory(
                 stream: new OverlayStream(slice, package),
@@ -1337,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -1777,7 +1777,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LightBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1787,7 +1787,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Light CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Light();
             ((LightSetterCommon)((ILightGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Light item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -2143,7 +2143,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILightInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LightSetterCommon)((ILightGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2382,7 +2382,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILightInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILightInternal>(
                 record: item,
@@ -2395,7 +2395,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Light)item,
@@ -2406,7 +2406,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Light)item,
@@ -2441,7 +2441,6 @@ namespace Mutagen.Bethesda.Fallout4
             Light.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -3546,7 +3545,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LightBinaryWriteTranslation Instance = new LightBinaryWriteTranslation();
+        public new static readonly LightBinaryWriteTranslation Instance = new LightBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILightGetter item,
@@ -3560,7 +3559,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             ILightGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -3595,7 +3594,7 @@ namespace Mutagen.Bethesda.Fallout4
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3612,7 +3611,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.Properties,
                 recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
-                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -3711,7 +3710,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILightGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -3739,7 +3738,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILightGetter)item,
@@ -3750,7 +3749,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILightGetter)item,
@@ -3761,7 +3760,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILightGetter)item,
@@ -3773,7 +3772,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LightBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static LightBinaryCreateTranslation Instance = new LightBinaryCreateTranslation();
+        public new static readonly LightBinaryCreateTranslation Instance = new LightBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LIGH;
         public static void FillBinaryStructs(
@@ -3792,7 +3791,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3985,7 +3984,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LightBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -4151,7 +4150,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILightGetter LightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LightBinaryOverlay(
@@ -4178,7 +4177,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILightGetter LightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LightFactory(
                 stream: new OverlayStream(slice, package),
@@ -4193,7 +4192,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

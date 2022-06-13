@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SimpleModel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SimpleModel();
             ((SimpleModelSetterCommon)((ISimpleModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SimpleModel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISimpleModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SimpleModelSetterCommon)((ISimpleModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISimpleModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -808,7 +808,6 @@ namespace Mutagen.Bethesda.Skyrim
             SimpleModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
             ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
         }
@@ -1029,12 +1028,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SimpleModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SimpleModelBinaryWriteTranslation Instance = new SimpleModelBinaryWriteTranslation();
+        public static readonly SimpleModelBinaryWriteTranslation Instance = new SimpleModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISimpleModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1050,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             ISimpleModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISimpleModelGetter)item,
@@ -1073,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SimpleModelBinaryCreateTranslation
     {
-        public readonly static SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
+        public static readonly SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISimpleModel item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1124,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISimpleModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1169,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1204,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISimpleModelGetter SimpleModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SimpleModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1222,7 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISimpleModelGetter SimpleModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SimpleModelFactory(
                 stream: new OverlayStream(slice, package),
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

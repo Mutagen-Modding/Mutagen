@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClothingDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static ClothingData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ClothingData();
             ((ClothingDataSetterCommon)((IClothingDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ClothingData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IClothingData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ClothingDataSetterCommon)((IClothingDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -746,12 +746,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IClothingData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -786,7 +786,6 @@ namespace Mutagen.Bethesda.Oblivion
             ClothingData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
@@ -996,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClothingDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ClothingDataBinaryWriteTranslation Instance = new ClothingDataBinaryWriteTranslation();
+        public static readonly ClothingDataBinaryWriteTranslation Instance = new ClothingDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IClothingDataGetter item,
@@ -1011,12 +1010,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IClothingDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1028,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IClothingDataGetter)item,
@@ -1040,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class ClothingDataBinaryCreateTranslation
     {
-        public readonly static ClothingDataBinaryCreateTranslation Instance = new ClothingDataBinaryCreateTranslation();
+        public static readonly ClothingDataBinaryCreateTranslation Instance = new ClothingDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IClothingData item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IClothingDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClothingDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClothingDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1134,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IClothingDataGetter ClothingDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ClothingDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IClothingDataGetter ClothingDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ClothingDataFactory(
                 stream: new OverlayStream(slice, package),

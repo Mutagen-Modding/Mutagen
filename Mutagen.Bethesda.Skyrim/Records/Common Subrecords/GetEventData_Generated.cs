@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => GetEventDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static GetEventData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GetEventData();
             ((GetEventDataSetterCommon)((IGetEventDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out GetEventData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IGetEventData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IGetEventData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GetEventData)item,
@@ -810,7 +810,6 @@ namespace Mutagen.Bethesda.Skyrim
             GetEventData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EventFunction = item.EventFunction == rhs.EventFunction;
             ret.EventMember = item.EventMember == rhs.EventMember;
             ret.Parameter3 = item.Parameter3.Equals(rhs.Parameter3);
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GetEventDataBinaryWriteTranslation Instance = new GetEventDataBinaryWriteTranslation();
+        public new static readonly GetEventDataBinaryWriteTranslation Instance = new GetEventDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IGetEventDataGetter item,
@@ -1130,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IGetEventDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1140,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGetEventDataGetter)item,
@@ -1151,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IConditionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGetEventDataGetter)item,
@@ -1163,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class GetEventDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
-        public new readonly static GetEventDataBinaryCreateTranslation Instance = new GetEventDataBinaryCreateTranslation();
+        public new static readonly GetEventDataBinaryCreateTranslation Instance = new GetEventDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IGetEventData item,
@@ -1221,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => GetEventDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1257,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IGetEventDataGetter GetEventDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GetEventDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1274,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IGetEventDataGetter GetEventDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return GetEventDataFactory(
                 stream: new OverlayStream(slice, package),

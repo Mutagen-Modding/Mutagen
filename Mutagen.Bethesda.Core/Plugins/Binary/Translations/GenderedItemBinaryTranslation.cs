@@ -182,7 +182,7 @@ internal class GenderedItemBinaryTranslation
         RecordType maleMarker,
         RecordType femaleMarker,
         BinaryMasterParseDelegate<TItem> transl,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
         where TItem : class
     {
         TItem? male = default, female = default;

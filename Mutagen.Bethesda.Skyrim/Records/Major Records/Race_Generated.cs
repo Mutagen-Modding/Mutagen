@@ -4016,7 +4016,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -4026,7 +4026,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Race CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Race();
             ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -4041,7 +4041,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Race item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -4421,7 +4421,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -4819,7 +4819,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IRaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
                 record: item,
@@ -4832,7 +4832,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Race)item,
@@ -4843,7 +4843,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Race)item,
@@ -4878,7 +4878,6 @@ namespace Mutagen.Bethesda.Skyrim
             Race.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.ActorEffect = item.ActorEffect.CollectionEqualsHelper(
@@ -7046,7 +7045,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
+        public new static readonly RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRaceGetter item,
@@ -7063,7 +7062,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IRaceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -7088,7 +7087,7 @@ namespace Mutagen.Bethesda.Skyrim
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7107,7 +7106,7 @@ namespace Mutagen.Bethesda.Skyrim
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7242,7 +7241,7 @@ namespace Mutagen.Bethesda.Skyrim
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
-                transl: (MutagenWriter subWriter, ISimpleModelGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ISimpleModelGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -7267,7 +7266,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Voices,
                 recordType: RecordTypes.VTCK,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IVoiceTypeGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IVoiceTypeGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7277,7 +7276,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.DecapitateArmors,
                 recordType: RecordTypes.DNAM,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IArmorGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IArmorGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7287,7 +7286,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.DefaultHairColors,
                 recordType: RecordTypes.HCLF,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7312,7 +7311,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAttackGetter>.Instance.Write(
                 writer: writer,
                 items: item.Attacks,
-                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -7327,7 +7326,7 @@ namespace Mutagen.Bethesda.Skyrim
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
-                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -7341,7 +7340,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Hairs,
                 recordType: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7351,7 +7350,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Eyes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ENAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyesGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyesGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7368,7 +7367,7 @@ namespace Mutagen.Bethesda.Skyrim
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
-                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -7404,7 +7403,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRaceMovementTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.MovementTypes,
-                transl: (MutagenWriter subWriter, IRaceMovementTypeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRaceMovementTypeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RaceMovementTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -7420,7 +7419,7 @@ namespace Mutagen.Bethesda.Skyrim
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.EquipmentSlots,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IEquipTypeGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEquipTypeGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7469,7 +7468,7 @@ namespace Mutagen.Bethesda.Skyrim
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
                 femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
-                transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -7570,7 +7569,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IRaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -7598,7 +7597,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -7609,7 +7608,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -7620,7 +7619,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -7632,7 +7631,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class RaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
+        public new static readonly RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.RACE;
         public static void FillBinaryStructs(
@@ -7654,7 +7653,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -8129,7 +8128,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -8545,7 +8544,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRaceGetter RaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new RaceBinaryOverlay(
@@ -8572,7 +8571,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRaceGetter RaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RaceFactory(
                 stream: new OverlayStream(slice, package),
@@ -8587,7 +8586,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

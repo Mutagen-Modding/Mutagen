@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelatedWatersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static RelatedWaters CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RelatedWaters();
             ((RelatedWatersSetterCommon)((IRelatedWatersGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RelatedWaters item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRelatedWaters item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -812,12 +812,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IRelatedWaters item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.GNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -852,7 +852,6 @@ namespace Mutagen.Bethesda.Oblivion
             RelatedWaters.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.RelatedWaterDaytime = item.RelatedWaterDaytime.Equals(rhs.RelatedWaterDaytime);
             ret.RelatedWaterNighttime = item.RelatedWaterNighttime.Equals(rhs.RelatedWaterNighttime);
             ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater.Equals(rhs.RelatedWaterUnderwater);
@@ -1079,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RelatedWatersBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RelatedWatersBinaryWriteTranslation Instance = new RelatedWatersBinaryWriteTranslation();
+        public static readonly RelatedWatersBinaryWriteTranslation Instance = new RelatedWatersBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRelatedWatersGetter item,
@@ -1099,12 +1098,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IRelatedWatersGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.GNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1116,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRelatedWatersGetter)item,
@@ -1128,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class RelatedWatersBinaryCreateTranslation
     {
-        public readonly static RelatedWatersBinaryCreateTranslation Instance = new RelatedWatersBinaryCreateTranslation();
+        public static readonly RelatedWatersBinaryCreateTranslation Instance = new RelatedWatersBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRelatedWaters item,
@@ -1150,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRelatedWatersGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelatedWatersBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1195,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelatedWatersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRelatedWatersGetter RelatedWatersFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RelatedWatersBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1243,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRelatedWatersGetter RelatedWatersFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RelatedWatersFactory(
                 stream: new OverlayStream(slice, package),

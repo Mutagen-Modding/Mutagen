@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceTintBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ImageSpaceTint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceTint();
             ((ImageSpaceTintSetterCommon)((IImageSpaceTintGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpaceTint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceTint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceTintSetterCommon)((IImageSpaceTintGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -744,12 +744,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IImageSpaceTint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.TNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -784,7 +784,6 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpaceTint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Amount = item.Amount.EqualsWithin(rhs.Amount);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
         }
@@ -994,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceTintBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ImageSpaceTintBinaryWriteTranslation Instance = new ImageSpaceTintBinaryWriteTranslation();
+        public static readonly ImageSpaceTintBinaryWriteTranslation Instance = new ImageSpaceTintBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceTintGetter item,
@@ -1012,12 +1011,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IImageSpaceTintGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.TNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1029,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceTintGetter)item,
@@ -1041,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ImageSpaceTintBinaryCreateTranslation
     {
-        public readonly static ImageSpaceTintBinaryCreateTranslation Instance = new ImageSpaceTintBinaryCreateTranslation();
+        public static readonly ImageSpaceTintBinaryCreateTranslation Instance = new ImageSpaceTintBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IImageSpaceTint item,
@@ -1062,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IImageSpaceTintGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceTintBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1106,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceTintBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceTintGetter ImageSpaceTintFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceTintBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceTintGetter ImageSpaceTintFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceTintFactory(
                 stream: new OverlayStream(slice, package),

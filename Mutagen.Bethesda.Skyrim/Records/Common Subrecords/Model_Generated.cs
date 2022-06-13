@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Model CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Model();
             ((ModelSetterCommon)((IModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Model item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISimpleModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Model)item,
@@ -813,7 +813,6 @@ namespace Mutagen.Bethesda.Skyrim
             Model.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.AlternateTextures = item.AlternateTextures.CollectionEqualsHelper(
                 rhs.AlternateTextures,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1116,12 +1115,12 @@ namespace Mutagen.Bethesda.Skyrim
         SimpleModelBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
+        public new static readonly ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             SimpleModelBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
                 items: item.AlternateTextures,
                 recordType: translationParams.ConvertToCustom(RecordTypes.MODS),
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((AlternateTextureBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1145,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1156,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IModelGetter)item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISimpleModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IModelGetter)item,
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ModelBinaryCreateTranslation : SimpleModelBinaryCreateTranslation
     {
-        public new readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
+        public new static readonly ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
             IModel item,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1280,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IModelGetter ModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1298,7 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IModelGetter ModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ModelFactory(
                 stream: new OverlayStream(slice, package),
@@ -1313,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

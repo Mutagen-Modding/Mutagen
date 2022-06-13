@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => BendableSplineBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BendableSplineBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static BendableSpline CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BendableSpline();
             ((BendableSplineSetterCommon)((IBendableSplineGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BendableSpline item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IBendableSplineInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BendableSplineSetterCommon)((IBendableSplineGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IBendableSplineInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IBendableSplineInternal>(
                 record: item,
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BendableSpline)item,
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BendableSpline)item,
@@ -1193,7 +1193,6 @@ namespace Mutagen.Bethesda.Fallout4
             BendableSpline.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
                 item.ObjectBounds,
                 rhs.ObjectBounds,
@@ -1732,7 +1731,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static BendableSplineBinaryWriteTranslation Instance = new BendableSplineBinaryWriteTranslation();
+        public new static readonly BendableSplineBinaryWriteTranslation Instance = new BendableSplineBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBendableSplineGetter item,
@@ -1746,7 +1745,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IBendableSplineGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1789,7 +1788,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IBendableSplineGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1817,7 +1816,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBendableSplineGetter)item,
@@ -1828,7 +1827,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBendableSplineGetter)item,
@@ -1839,7 +1838,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBendableSplineGetter)item,
@@ -1851,7 +1850,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class BendableSplineBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static BendableSplineBinaryCreateTranslation Instance = new BendableSplineBinaryCreateTranslation();
+        public new static readonly BendableSplineBinaryCreateTranslation Instance = new BendableSplineBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BNDS;
         public static void FillBinaryStructs(
@@ -1870,7 +1869,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1953,7 +1952,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => BendableSplineBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BendableSplineBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2022,7 +2021,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IBendableSplineGetter BendableSplineFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new BendableSplineBinaryOverlay(
@@ -2049,7 +2048,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IBendableSplineGetter BendableSplineFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BendableSplineFactory(
                 stream: new OverlayStream(slice, package),
@@ -2064,7 +2063,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

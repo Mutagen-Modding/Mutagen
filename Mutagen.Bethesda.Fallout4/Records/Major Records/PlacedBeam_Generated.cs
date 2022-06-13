@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PlacedBeamBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedBeamBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static PlacedBeam CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedBeam();
             ((PlacedBeamSetterCommon)((IPlacedBeamGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedBeam item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPlacedBeamInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedBeamSetterCommon)((IPlacedBeamGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPlacedBeamInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IPlacedBeamInternal>(
                 record: item,
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedBeam)item,
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedBeam)item,
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedBeam)item,
@@ -950,7 +950,6 @@ namespace Mutagen.Bethesda.Fallout4
             PlacedBeam.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Projectile = item.Projectile.Equals(rhs.Projectile);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1476,7 +1475,7 @@ namespace Mutagen.Bethesda.Fallout4
         APlacedTrapBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PlacedBeamBinaryWriteTranslation Instance = new PlacedBeamBinaryWriteTranslation();
+        public new static readonly PlacedBeamBinaryWriteTranslation Instance = new PlacedBeamBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedBeamGetter item,
@@ -1490,7 +1489,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPlacedBeamGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1516,7 +1515,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedBeamGetter)item,
@@ -1527,7 +1526,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAPlacedTrapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedBeamGetter)item,
@@ -1538,7 +1537,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedBeamGetter)item,
@@ -1549,7 +1548,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedBeamGetter)item,
@@ -1561,7 +1560,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PlacedBeamBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
-        public new readonly static PlacedBeamBinaryCreateTranslation Instance = new PlacedBeamBinaryCreateTranslation();
+        public new static readonly PlacedBeamBinaryCreateTranslation Instance = new PlacedBeamBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PBEA;
         public static void FillBinaryStructs(
@@ -1610,7 +1609,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PlacedBeamBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedBeamBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1639,7 +1638,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedBeamGetter PlacedBeamFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new PlacedBeamBinaryOverlay(
@@ -1666,7 +1665,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedBeamGetter PlacedBeamFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedBeamFactory(
                 stream: new OverlayStream(slice, package),

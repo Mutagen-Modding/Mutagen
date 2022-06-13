@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static AIPackageLocation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIPackageLocation();
             ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AIPackageLocation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAIPackageLocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -796,12 +796,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IAIPackageLocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PLDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -836,7 +836,6 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageLocation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AIPackageLocationBinaryWriteTranslation Instance = new AIPackageLocationBinaryWriteTranslation();
+        public static readonly AIPackageLocationBinaryWriteTranslation Instance = new AIPackageLocationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAIPackageLocationGetter item,
@@ -1082,12 +1081,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IAIPackageLocationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PLDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1099,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAIPackageLocationGetter)item,
@@ -1111,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class AIPackageLocationBinaryCreateTranslation
     {
-        public readonly static AIPackageLocationBinaryCreateTranslation Instance = new AIPackageLocationBinaryCreateTranslation();
+        public static readonly AIPackageLocationBinaryCreateTranslation Instance = new AIPackageLocationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAIPackageLocation item,
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAIPackageLocationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageLocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1180,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IAIPackageLocationGetter AIPackageLocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIPackageLocationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1228,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IAIPackageLocationGetter AIPackageLocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AIPackageLocationFactory(
                 stream: new OverlayStream(slice, package),

@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ReverbParametersBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ReverbParametersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ReverbParameters CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ReverbParameters();
             ((ReverbParametersSetterCommon)((IReverbParametersGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ReverbParameters item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IReverbParametersInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ReverbParametersSetterCommon)((IReverbParametersGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IReverbParametersInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IReverbParametersInternal>(
                 record: item,
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ReverbParameters)item,
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ReverbParameters)item,
@@ -1286,7 +1286,6 @@ namespace Mutagen.Bethesda.Skyrim
             ReverbParameters.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DecayMilliseconds = item.DecayMilliseconds == rhs.DecayMilliseconds;
             ret.HfReferenceHertz = item.HfReferenceHertz == rhs.HfReferenceHertz;
             ret.RoomFilter = item.RoomFilter == rhs.RoomFilter;
@@ -1843,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ReverbParametersBinaryWriteTranslation Instance = new ReverbParametersBinaryWriteTranslation();
+        public new static readonly ReverbParametersBinaryWriteTranslation Instance = new ReverbParametersBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IReverbParametersGetter item,
@@ -1857,7 +1856,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IReverbParametersGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1893,7 +1892,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IReverbParametersGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1921,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IReverbParametersGetter)item,
@@ -1932,7 +1931,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IReverbParametersGetter)item,
@@ -1943,7 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IReverbParametersGetter)item,
@@ -1955,7 +1954,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ReverbParametersBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ReverbParametersBinaryCreateTranslation Instance = new ReverbParametersBinaryCreateTranslation();
+        public new static readonly ReverbParametersBinaryCreateTranslation Instance = new ReverbParametersBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REVB;
         public static void FillBinaryStructs(
@@ -1974,7 +1973,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2051,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ReverbParametersBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ReverbParametersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2142,7 +2141,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IReverbParametersGetter ReverbParametersFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new ReverbParametersBinaryOverlay(
@@ -2169,7 +2168,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IReverbParametersGetter ReverbParametersFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ReverbParametersFactory(
                 stream: new OverlayStream(slice, package),
@@ -2184,7 +2183,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

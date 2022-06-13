@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AAudioEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AAudioEffectSetterCommon)((IAAudioEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -707,7 +707,6 @@ namespace Mutagen.Bethesda.Fallout4
             AAudioEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Enabled = item.Enabled == rhs.Enabled;
         }
         
@@ -903,7 +902,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AAudioEffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AAudioEffectBinaryWriteTranslation Instance = new AAudioEffectBinaryWriteTranslation();
+        public static readonly AAudioEffectBinaryWriteTranslation Instance = new AAudioEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAAudioEffectGetter item,
@@ -915,7 +914,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             IAAudioEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -925,7 +924,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAAudioEffectGetter)item,
@@ -937,7 +936,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class AAudioEffectBinaryCreateTranslation
     {
-        public readonly static AAudioEffectBinaryCreateTranslation Instance = new AAudioEffectBinaryCreateTranslation();
+        public static readonly AAudioEffectBinaryCreateTranslation Instance = new AAudioEffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAAudioEffect item,
@@ -959,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IAAudioEffectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AAudioEffectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1003,7 +1002,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AAudioEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

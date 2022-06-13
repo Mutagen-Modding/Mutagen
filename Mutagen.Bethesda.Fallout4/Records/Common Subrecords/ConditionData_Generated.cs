@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IConditionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ConditionDataSetterCommon)((IConditionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -804,7 +804,6 @@ namespace Mutagen.Bethesda.Fallout4
             ConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.RunOnType = item.RunOnType == rhs.RunOnType;
             ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
@@ -1029,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ConditionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ConditionDataBinaryWriteTranslation Instance = new ConditionDataBinaryWriteTranslation();
+        public static readonly ConditionDataBinaryWriteTranslation Instance = new ConditionDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IConditionDataGetter item,
@@ -1040,7 +1039,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             IConditionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1050,7 +1049,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IConditionDataGetter)item,
@@ -1062,7 +1061,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ConditionDataBinaryCreateTranslation
     {
-        public readonly static ConditionDataBinaryCreateTranslation Instance = new ConditionDataBinaryCreateTranslation();
+        public static readonly ConditionDataBinaryCreateTranslation Instance = new ConditionDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IConditionData item,
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IConditionDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1126,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

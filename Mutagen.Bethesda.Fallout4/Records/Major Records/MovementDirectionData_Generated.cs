@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementDirectionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MovementDirectionData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MovementDirectionData();
             ((MovementDirectionDataSetterCommon)((IMovementDirectionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MovementDirectionData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMovementDirectionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MovementDirectionDataSetterCommon)((IMovementDirectionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMovementDirectionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -846,7 +846,6 @@ namespace Mutagen.Bethesda.Fallout4
             MovementDirectionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unused1 = item.Unused1 == rhs.Unused1;
             ret.Walk = item.Walk.EqualsWithin(rhs.Walk);
             ret.Run = item.Run.EqualsWithin(rhs.Run);
@@ -1084,7 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MovementDirectionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MovementDirectionDataBinaryWriteTranslation Instance = new MovementDirectionDataBinaryWriteTranslation();
+        public static readonly MovementDirectionDataBinaryWriteTranslation Instance = new MovementDirectionDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMovementDirectionDataGetter item,
@@ -1103,7 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMovementDirectionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1113,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMovementDirectionDataGetter)item,
@@ -1125,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MovementDirectionDataBinaryCreateTranslation
     {
-        public readonly static MovementDirectionDataBinaryCreateTranslation Instance = new MovementDirectionDataBinaryCreateTranslation();
+        public static readonly MovementDirectionDataBinaryCreateTranslation Instance = new MovementDirectionDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMovementDirectionData item,
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMovementDirectionDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementDirectionDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1192,7 +1191,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MovementDirectionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1223,7 +1222,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMovementDirectionDataGetter MovementDirectionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MovementDirectionDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1240,7 +1239,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMovementDirectionDataGetter MovementDirectionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MovementDirectionDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PackageEvent CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageEvent();
             ((PackageEventSetterCommon)((IPackageEventGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageEvent item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPackageEvent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageEventSetterCommon)((IPackageEventGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -840,7 +840,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPackageEvent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -877,7 +877,6 @@ namespace Mutagen.Bethesda.Fallout4
             PackageEvent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Idle = item.Idle.Equals(rhs.Idle);
             ret.Topics = item.Topics.CollectionEqualsHelper(
                 rhs.Topics,
@@ -1126,12 +1125,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PackageEventBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PackageEventBinaryWriteTranslation Instance = new PackageEventBinaryWriteTranslation();
+        public static readonly PackageEventBinaryWriteTranslation Instance = new PackageEventBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IPackageEventGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1158,7 +1157,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPackageEventGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1169,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageEventGetter)item,
@@ -1181,7 +1180,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PackageEventBinaryCreateTranslation
     {
-        public readonly static PackageEventBinaryCreateTranslation Instance = new PackageEventBinaryCreateTranslation();
+        public static readonly PackageEventBinaryCreateTranslation Instance = new PackageEventBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageEvent item,
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1235,7 +1234,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPackageEventGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageEventBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1280,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1319,7 +1318,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageEventGetter PackageEventFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageEventBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1337,7 +1336,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageEventGetter PackageEventFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageEventFactory(
                 stream: new OverlayStream(slice, package),
@@ -1352,7 +1351,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

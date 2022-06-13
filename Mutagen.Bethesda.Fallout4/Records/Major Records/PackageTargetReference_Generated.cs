@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PackageTargetReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageTargetReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static PackageTargetReference CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageTargetReference();
             ((PackageTargetReferenceSetterCommon)((IPackageTargetReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageTargetReference item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPackageTargetReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageTargetReferenceSetterCommon)((IPackageTargetReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPackageTargetReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAPackageTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PackageTargetReference)item,
@@ -729,7 +729,6 @@ namespace Mutagen.Bethesda.Fallout4
             PackageTargetReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Reference = item.Reference.Equals(rhs.Reference);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
         APackageTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PackageTargetReferenceBinaryWriteTranslation Instance = new PackageTargetReferenceBinaryWriteTranslation();
+        public new static readonly PackageTargetReferenceBinaryWriteTranslation Instance = new PackageTargetReferenceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPackageTargetReferenceGetter item,
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPackageTargetReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1009,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageTargetReferenceGetter)item,
@@ -1020,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAPackageTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPackageTargetReferenceGetter)item,
@@ -1032,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PackageTargetReferenceBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
     {
-        public new readonly static PackageTargetReferenceBinaryCreateTranslation Instance = new PackageTargetReferenceBinaryCreateTranslation();
+        public new static readonly PackageTargetReferenceBinaryCreateTranslation Instance = new PackageTargetReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageTargetReference item,
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PackageTargetReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageTargetReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageTargetReferenceGetter PackageTargetReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageTargetReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1126,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageTargetReferenceGetter PackageTargetReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageTargetReferenceFactory(
                 stream: new OverlayStream(slice, package),

@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageIdlesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PackageIdles CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageIdles();
             ((PackageIdlesSetterCommon)((IPackageIdlesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageIdles item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPackageIdles item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageIdlesSetterCommon)((IPackageIdlesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPackageIdles item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -909,7 +909,6 @@ namespace Mutagen.Bethesda.Skyrim
             PackageIdles.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.TimerSetting = item.TimerSetting.EqualsWithin(rhs.TimerSetting);
             ret.Animations = item.Animations.CollectionEqualsHelper(
@@ -1165,12 +1164,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageIdlesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PackageIdlesBinaryWriteTranslation Instance = new PackageIdlesBinaryWriteTranslation();
+        public static readonly PackageIdlesBinaryWriteTranslation Instance = new PackageIdlesBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IPackageIdlesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPackageIdlesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageIdlesGetter)item,
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PackageIdlesBinaryCreateTranslation
     {
-        public readonly static PackageIdlesBinaryCreateTranslation Instance = new PackageIdlesBinaryCreateTranslation();
+        public static readonly PackageIdlesBinaryCreateTranslation Instance = new PackageIdlesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageIdles item,
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1305,7 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPackageIdlesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageIdlesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1350,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageIdlesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1397,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageIdlesGetter PackageIdlesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageIdlesBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1415,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPackageIdlesGetter PackageIdlesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageIdlesFactory(
                 stream: new OverlayStream(slice, package),
@@ -1430,7 +1429,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

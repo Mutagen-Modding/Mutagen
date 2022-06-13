@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static Model CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Model();
             ((ModelSetterCommon)((IModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Model item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -829,7 +829,6 @@ namespace Mutagen.Bethesda.Oblivion
             Model.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
             ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
             ret.Hashes = MemorySliceExt.Equal(item.Hashes, rhs.Hashes);
@@ -1064,12 +1063,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
+        public static readonly ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1089,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1100,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IModelGetter)item,
@@ -1112,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class ModelBinaryCreateTranslation
     {
-        public readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
+        public static readonly ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IModel item,
@@ -1127,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1169,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IModelGetter ModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1270,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IModelGetter ModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ModelFactory(
                 stream: new OverlayStream(slice, package),
@@ -1285,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

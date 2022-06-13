@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandscapeMPCDBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static LandscapeMPCD CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LandscapeMPCD();
             ((LandscapeMPCDSetterCommon)((ILandscapeMPCDGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LandscapeMPCD item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILandscapeMPCD item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LandscapeMPCDSetterCommon)((ILandscapeMPCDGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -708,12 +708,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILandscapeMPCD item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MPCD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -748,7 +748,6 @@ namespace Mutagen.Bethesda.Fallout4
             LandscapeMPCD.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MPCD = MemoryExtensions.SequenceEqual(item.MPCD.Span, rhs.MPCD.Span);
         }
         
@@ -944,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LandscapeMPCDBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LandscapeMPCDBinaryWriteTranslation Instance = new LandscapeMPCDBinaryWriteTranslation();
+        public static readonly LandscapeMPCDBinaryWriteTranslation Instance = new LandscapeMPCDBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILandscapeMPCDGetter item,
@@ -958,12 +957,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILandscapeMPCDGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MPCD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -975,7 +974,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILandscapeMPCDGetter)item,
@@ -987,7 +986,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LandscapeMPCDBinaryCreateTranslation
     {
-        public readonly static LandscapeMPCDBinaryCreateTranslation Instance = new LandscapeMPCDBinaryCreateTranslation();
+        public static readonly LandscapeMPCDBinaryCreateTranslation Instance = new LandscapeMPCDBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILandscapeMPCD item,
@@ -1007,7 +1006,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ILandscapeMPCDGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandscapeMPCDBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1051,7 +1050,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandscapeMPCDBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1082,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILandscapeMPCDGetter LandscapeMPCDFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LandscapeMPCDBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1099,7 +1098,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILandscapeMPCDGetter LandscapeMPCDFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LandscapeMPCDFactory(
                 stream: new OverlayStream(slice, package),

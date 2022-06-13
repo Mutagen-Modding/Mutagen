@@ -28,7 +28,7 @@ partial class SceneScriptFragmentsBinaryWriteTranslation
             writer: writer,
             items: item.PhaseFragments,
             countLengthLength: 2,
-            transl: (MutagenWriter subWriter, IScenePhaseFragmentGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IScenePhaseFragmentGetter subItem, TypedWriteParams conv) =>
             {
                 var Item = subItem;
                 ((ScenePhaseFragmentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(

@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ASoundDescriptorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IASoundDescriptor item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ASoundDescriptorSetterCommon)((IASoundDescriptorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IASoundDescriptor item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -678,7 +678,6 @@ namespace Mutagen.Bethesda.Fallout4
             ASoundDescriptor.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -860,19 +859,19 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ASoundDescriptorBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ASoundDescriptorBinaryWriteTranslation Instance = new ASoundDescriptorBinaryWriteTranslation();
+        public static readonly ASoundDescriptorBinaryWriteTranslation Instance = new ASoundDescriptorBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IASoundDescriptorGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IASoundDescriptorGetter)item,
@@ -884,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ASoundDescriptorBinaryCreateTranslation
     {
-        public readonly static ASoundDescriptorBinaryCreateTranslation Instance = new ASoundDescriptorBinaryCreateTranslation();
+        public static readonly ASoundDescriptorBinaryCreateTranslation Instance = new ASoundDescriptorBinaryCreateTranslation();
 
     }
 
@@ -897,7 +896,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IASoundDescriptorGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ASoundDescriptorBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -942,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ASoundDescriptorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

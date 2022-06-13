@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AnimationChangeThresholdsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AnimationChangeThresholds CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AnimationChangeThresholds();
             ((AnimationChangeThresholdsSetterCommon)((IAnimationChangeThresholdsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AnimationChangeThresholds item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAnimationChangeThresholds item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AnimationChangeThresholdsSetterCommon)((IAnimationChangeThresholdsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -780,12 +780,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAnimationChangeThresholds item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.INAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -820,7 +820,6 @@ namespace Mutagen.Bethesda.Skyrim
             AnimationChangeThresholds.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Directional = item.Directional.EqualsWithin(rhs.Directional);
             ret.MovementSpeed = item.MovementSpeed.EqualsWithin(rhs.MovementSpeed);
             ret.RotationSpeed = item.RotationSpeed.EqualsWithin(rhs.RotationSpeed);
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AnimationChangeThresholdsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AnimationChangeThresholdsBinaryWriteTranslation Instance = new AnimationChangeThresholdsBinaryWriteTranslation();
+        public static readonly AnimationChangeThresholdsBinaryWriteTranslation Instance = new AnimationChangeThresholdsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAnimationChangeThresholdsGetter item,
@@ -1064,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IAnimationChangeThresholdsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.INAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAnimationChangeThresholdsGetter)item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class AnimationChangeThresholdsBinaryCreateTranslation
     {
-        public readonly static AnimationChangeThresholdsBinaryCreateTranslation Instance = new AnimationChangeThresholdsBinaryCreateTranslation();
+        public static readonly AnimationChangeThresholdsBinaryCreateTranslation Instance = new AnimationChangeThresholdsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAnimationChangeThresholds item,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAnimationChangeThresholdsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AnimationChangeThresholdsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AnimationChangeThresholdsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1189,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAnimationChangeThresholdsGetter AnimationChangeThresholdsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AnimationChangeThresholdsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAnimationChangeThresholdsGetter AnimationChangeThresholdsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AnimationChangeThresholdsFactory(
                 stream: new OverlayStream(slice, package),

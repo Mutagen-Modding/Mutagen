@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherVolumetricLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeatherVolumetricLighting CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherVolumetricLighting();
             ((WeatherVolumetricLightingSetterCommon)((IWeatherVolumetricLightingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherVolumetricLighting item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherVolumetricLighting item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherVolumetricLightingSetterCommon)((IWeatherVolumetricLightingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -857,12 +857,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IWeatherVolumetricLighting item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.HNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -897,7 +897,6 @@ namespace Mutagen.Bethesda.Skyrim
             WeatherVolumetricLighting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sunrise = item.Sunrise.Equals(rhs.Sunrise);
             ret.Day = item.Day.Equals(rhs.Day);
             ret.Sunset = item.Sunset.Equals(rhs.Sunset);
@@ -1139,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherVolumetricLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherVolumetricLightingBinaryWriteTranslation Instance = new WeatherVolumetricLightingBinaryWriteTranslation();
+        public static readonly WeatherVolumetricLightingBinaryWriteTranslation Instance = new WeatherVolumetricLightingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherVolumetricLightingGetter item,
@@ -1162,12 +1161,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IWeatherVolumetricLightingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherVolumetricLightingGetter)item,
@@ -1191,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class WeatherVolumetricLightingBinaryCreateTranslation
     {
-        public readonly static WeatherVolumetricLightingBinaryCreateTranslation Instance = new WeatherVolumetricLightingBinaryCreateTranslation();
+        public static readonly WeatherVolumetricLightingBinaryCreateTranslation Instance = new WeatherVolumetricLightingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherVolumetricLighting item,
@@ -1214,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeatherVolumetricLightingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherVolumetricLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1259,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherVolumetricLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherVolumetricLightingGetter WeatherVolumetricLightingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherVolumetricLightingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1308,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherVolumetricLightingGetter WeatherVolumetricLightingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherVolumetricLightingFactory(
                 stream: new OverlayStream(slice, package),

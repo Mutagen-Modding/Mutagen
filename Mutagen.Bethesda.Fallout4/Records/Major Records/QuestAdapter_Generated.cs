@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static QuestAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestAdapter();
             ((QuestAdapterSetterCommon)((IQuestAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out QuestAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IQuestAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestAdapterSetterCommon)((IQuestAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1003,12 +1003,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IQuestAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VMAD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (QuestAdapter)item,
@@ -1054,7 +1054,6 @@ namespace Mutagen.Bethesda.Fallout4
             QuestAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.ExtraBindDataVersion = item.ExtraBindDataVersion == rhs.ExtraBindDataVersion;
             ret.Script = MaskItemExt.Factory(item.Script.GetEqualsMask(rhs.Script, include), include);
@@ -1467,7 +1466,7 @@ namespace Mutagen.Bethesda.Fallout4
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static QuestAdapterBinaryWriteTranslation Instance = new QuestAdapterBinaryWriteTranslation();
+        public new static readonly QuestAdapterBinaryWriteTranslation Instance = new QuestAdapterBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IQuestAdapterGetter item,
@@ -1549,12 +1548,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IQuestAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VMAD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1566,7 +1565,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestAdapterGetter)item,
@@ -1577,7 +1576,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IQuestAdapterGetter)item,
@@ -1589,7 +1588,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class QuestAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public new readonly static QuestAdapterBinaryCreateTranslation Instance = new QuestAdapterBinaryCreateTranslation();
+        public new static readonly QuestAdapterBinaryCreateTranslation Instance = new QuestAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IQuestAdapter item,
@@ -1671,7 +1670,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1719,7 +1718,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IQuestAdapterGetter QuestAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestAdapterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1742,7 +1741,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IQuestAdapterGetter QuestAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestAdapterFactory(
                 stream: new OverlayStream(slice, package),

@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshWaypointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static NavmeshWaypoint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavmeshWaypoint();
             ((NavmeshWaypointSetterCommon)((INavmeshWaypointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavmeshWaypoint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INavmeshWaypoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavmeshWaypointSetterCommon)((INavmeshWaypointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INavmeshWaypoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -809,7 +809,6 @@ namespace Mutagen.Bethesda.Fallout4
             NavmeshWaypoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Location = item.Location.Equals(rhs.Location);
             ret.TriangleIndex = item.TriangleIndex == rhs.TriangleIndex;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1033,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavmeshWaypointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavmeshWaypointBinaryWriteTranslation Instance = new NavmeshWaypointBinaryWriteTranslation();
+        public static readonly NavmeshWaypointBinaryWriteTranslation Instance = new NavmeshWaypointBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavmeshWaypointGetter item,
@@ -1049,7 +1048,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INavmeshWaypointGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1059,7 +1058,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavmeshWaypointGetter)item,
@@ -1071,7 +1070,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NavmeshWaypointBinaryCreateTranslation
     {
-        public readonly static NavmeshWaypointBinaryCreateTranslation Instance = new NavmeshWaypointBinaryCreateTranslation();
+        public static readonly NavmeshWaypointBinaryCreateTranslation Instance = new NavmeshWaypointBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavmeshWaypoint item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this INavmeshWaypointGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshWaypointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1137,7 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshWaypointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavmeshWaypointGetter NavmeshWaypointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavmeshWaypointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x12),
@@ -1184,7 +1183,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INavmeshWaypointGetter NavmeshWaypointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavmeshWaypointFactory(
                 stream: new OverlayStream(slice, package),

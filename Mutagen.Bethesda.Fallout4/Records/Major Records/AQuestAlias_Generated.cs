@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AQuestAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAQuestAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AQuestAliasSetterCommon)((IAQuestAliasGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAQuestAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -685,7 +685,6 @@ namespace Mutagen.Bethesda.Fallout4
             AQuestAlias.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -867,19 +866,19 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AQuestAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AQuestAliasBinaryWriteTranslation Instance = new AQuestAliasBinaryWriteTranslation();
+        public static readonly AQuestAliasBinaryWriteTranslation Instance = new AQuestAliasBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IAQuestAliasGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAQuestAliasGetter)item,
@@ -891,7 +890,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class AQuestAliasBinaryCreateTranslation
     {
-        public readonly static AQuestAliasBinaryCreateTranslation Instance = new AQuestAliasBinaryCreateTranslation();
+        public static readonly AQuestAliasBinaryCreateTranslation Instance = new AQuestAliasBinaryCreateTranslation();
 
     }
 
@@ -904,7 +903,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IAQuestAliasGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AQuestAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -949,7 +948,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AQuestAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

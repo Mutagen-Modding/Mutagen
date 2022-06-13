@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BoundingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Bounding CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Bounding();
             ((BoundingSetterCommon)((IBoundingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Bounding item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IBounding item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BoundingSetterCommon)((IBoundingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IBounding item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -957,7 +957,6 @@ namespace Mutagen.Bethesda.Fallout4
             Bounding.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Width = item.Width.EqualsWithin(rhs.Width);
             ret.Height = item.Height.EqualsWithin(rhs.Height);
             ret.Position = item.Position.Equals(rhs.Position);
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BoundingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BoundingBinaryWriteTranslation Instance = new BoundingBinaryWriteTranslation();
+        public static readonly BoundingBinaryWriteTranslation Instance = new BoundingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBoundingGetter item,
@@ -1269,7 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IBoundingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1279,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBoundingGetter)item,
@@ -1291,7 +1290,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class BoundingBinaryCreateTranslation
     {
-        public readonly static BoundingBinaryCreateTranslation Instance = new BoundingBinaryCreateTranslation();
+        public static readonly BoundingBinaryCreateTranslation Instance = new BoundingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBounding item,
@@ -1317,7 +1316,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IBoundingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BoundingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1361,7 +1360,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BoundingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1395,7 +1394,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IBoundingGetter BoundingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BoundingBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x24),
@@ -1412,7 +1411,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IBoundingGetter BoundingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BoundingFactory(
                 stream: new OverlayStream(slice, package),

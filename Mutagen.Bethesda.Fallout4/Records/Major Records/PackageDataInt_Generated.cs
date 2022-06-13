@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PackageDataIntBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageDataIntBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static PackageDataInt CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageDataInt();
             ((PackageDataIntSetterCommon)((IPackageDataIntGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageDataInt item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPackageDataInt item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageDataIntSetterCommon)((IPackageDataIntGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPackageDataInt item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAPackageData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PackageDataInt)item,
@@ -731,7 +731,6 @@ namespace Mutagen.Bethesda.Fallout4
             PackageDataInt.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4
         APackageDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PackageDataIntBinaryWriteTranslation Instance = new PackageDataIntBinaryWriteTranslation();
+        public new static readonly PackageDataIntBinaryWriteTranslation Instance = new PackageDataIntBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPackageDataIntGetter item,
@@ -996,7 +995,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPackageDataIntGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageDataIntGetter)item,
@@ -1021,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAPackageDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPackageDataIntGetter)item,
@@ -1033,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PackageDataIntBinaryCreateTranslation : APackageDataBinaryCreateTranslation
     {
-        public new readonly static PackageDataIntBinaryCreateTranslation Instance = new PackageDataIntBinaryCreateTranslation();
+        public new static readonly PackageDataIntBinaryCreateTranslation Instance = new PackageDataIntBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageDataInt item,
@@ -1077,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => PackageDataIntBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageDataIntBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1104,7 +1103,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageDataIntGetter PackageDataIntFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageDataIntBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1122,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPackageDataIntGetter PackageDataIntFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageDataIntFactory(
                 stream: new OverlayStream(slice, package),

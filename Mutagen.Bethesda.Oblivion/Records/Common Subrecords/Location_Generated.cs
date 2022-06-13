@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static Location CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Location();
             ((LocationSetterCommon)((ILocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Location item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationSetterCommon)((ILocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -775,7 +775,6 @@ namespace Mutagen.Bethesda.Oblivion
             Location.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
         }
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocationBinaryWriteTranslation Instance = new LocationBinaryWriteTranslation();
+        public static readonly LocationBinaryWriteTranslation Instance = new LocationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationGetter item,
@@ -1002,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILocationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1012,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationGetter)item,
@@ -1024,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LocationBinaryCreateTranslation
     {
-        public readonly static LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
+        public static readonly LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocation item,
@@ -1045,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILocationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1089,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1118,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILocationGetter LocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x18),
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILocationGetter LocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationFactory(
                 stream: new OverlayStream(slice, package),

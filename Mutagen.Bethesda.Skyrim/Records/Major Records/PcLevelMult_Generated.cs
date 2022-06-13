@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PcLevelMultBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PcLevelMult CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PcLevelMult();
             ((PcLevelMultSetterCommon)((IPcLevelMultGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PcLevelMult item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPcLevelMult item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PcLevelMultSetterCommon)((IPcLevelMultGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPcLevelMult item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IANpcLevel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PcLevelMult)item,
@@ -703,7 +703,6 @@ namespace Mutagen.Bethesda.Skyrim
             PcLevelMult.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LevelMult = item.LevelMult.EqualsWithin(rhs.LevelMult);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -949,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcLevelBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PcLevelMultBinaryWriteTranslation Instance = new PcLevelMultBinaryWriteTranslation();
+        public new static readonly PcLevelMultBinaryWriteTranslation Instance = new PcLevelMultBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPcLevelMultGetter item,
@@ -960,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPcLevelMultGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -970,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPcLevelMultGetter)item,
@@ -981,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IANpcLevelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPcLevelMultGetter)item,
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PcLevelMultBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
     {
-        public new readonly static PcLevelMultBinaryCreateTranslation Instance = new PcLevelMultBinaryCreateTranslation();
+        public new static readonly PcLevelMultBinaryCreateTranslation Instance = new PcLevelMultBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPcLevelMult item,
@@ -1037,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PcLevelMultBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPcLevelMultGetter PcLevelMultFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PcLevelMultBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1080,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPcLevelMultGetter PcLevelMultFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PcLevelMultFactory(
                 stream: new OverlayStream(slice, package),

@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static ScriptMetaSummary CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptMetaSummary();
             ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptMetaSummary item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IScriptMetaSummary item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -852,12 +852,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IScriptMetaSummary item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SCHR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -892,7 +892,6 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptMetaSummary.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.RefCount = item.RefCount == rhs.RefCount;
             ret.CompiledSize = item.CompiledSize == rhs.CompiledSize;
@@ -1140,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptMetaSummaryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ScriptMetaSummaryBinaryWriteTranslation Instance = new ScriptMetaSummaryBinaryWriteTranslation();
+        public static readonly ScriptMetaSummaryBinaryWriteTranslation Instance = new ScriptMetaSummaryBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScriptMetaSummaryGetter item,
@@ -1174,12 +1173,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SCHR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1191,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptMetaSummaryGetter)item,
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class ScriptMetaSummaryBinaryCreateTranslation
     {
-        public readonly static ScriptMetaSummaryBinaryCreateTranslation Instance = new ScriptMetaSummaryBinaryCreateTranslation();
+        public static readonly ScriptMetaSummaryBinaryCreateTranslation Instance = new ScriptMetaSummaryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptMetaSummary item,
@@ -1235,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IScriptMetaSummaryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1279,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1314,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IScriptMetaSummaryGetter ScriptMetaSummaryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptMetaSummaryBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1332,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IScriptMetaSummaryGetter ScriptMetaSummaryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptMetaSummaryFactory(
                 stream: new OverlayStream(slice, package),

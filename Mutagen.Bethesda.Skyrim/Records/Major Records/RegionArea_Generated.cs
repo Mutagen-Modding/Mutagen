@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionAreaBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static RegionArea CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionArea();
             ((RegionAreaSetterCommon)((IRegionAreaGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RegionArea item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRegionArea item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionAreaSetterCommon)((IRegionAreaGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IRegionArea item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -861,7 +861,6 @@ namespace Mutagen.Bethesda.Skyrim
             RegionArea.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EdgeFallOff = item.EdgeFallOff == rhs.EdgeFallOff;
             ret.RegionPointListData = item.RegionPointListData.CollectionEqualsHelper(
                 rhs.RegionPointListData,
@@ -1111,12 +1110,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionAreaBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RegionAreaBinaryWriteTranslation Instance = new RegionAreaBinaryWriteTranslation();
+        public static readonly RegionAreaBinaryWriteTranslation Instance = new RegionAreaBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRegionAreaGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IRegionAreaGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1143,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionAreaGetter)item,
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class RegionAreaBinaryCreateTranslation
     {
-        public readonly static RegionAreaBinaryCreateTranslation Instance = new RegionAreaBinaryCreateTranslation();
+        public static readonly RegionAreaBinaryCreateTranslation Instance = new RegionAreaBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRegionArea item,
@@ -1170,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1209,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IRegionAreaGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionAreaBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1253,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionAreaBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1285,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRegionAreaGetter RegionAreaFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionAreaBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1303,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IRegionAreaGetter RegionAreaFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionAreaFactory(
                 stream: new OverlayStream(slice, package),
@@ -1318,7 +1317,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

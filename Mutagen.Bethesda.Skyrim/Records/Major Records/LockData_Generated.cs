@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LockData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LockData();
             ((LockDataSetterCommon)((ILockDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LockData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILockData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LockDataSetterCommon)((ILockDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -886,12 +886,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILockData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XLOC),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -926,7 +926,6 @@ namespace Mutagen.Bethesda.Skyrim
             LockData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Key = item.Key.Equals(rhs.Key);
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LockDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LockDataBinaryWriteTranslation Instance = new LockDataBinaryWriteTranslation();
+        public static readonly LockDataBinaryWriteTranslation Instance = new LockDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILockDataGetter item,
@@ -1207,12 +1206,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILockDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XLOC),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1224,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILockDataGetter)item,
@@ -1236,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LockDataBinaryCreateTranslation
     {
-        public readonly static LockDataBinaryCreateTranslation Instance = new LockDataBinaryCreateTranslation();
+        public static readonly LockDataBinaryCreateTranslation Instance = new LockDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILockData item,
@@ -1264,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILockDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1309,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1341,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILockDataGetter LockDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LockDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1359,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILockDataGetter LockDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LockDataFactory(
                 stream: new OverlayStream(slice, package),

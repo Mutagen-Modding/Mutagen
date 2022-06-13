@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static RegionSound CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionSound();
             ((RegionSoundSetterCommon)((IRegionSoundGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RegionSound item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IRegionSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IRegionSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -826,7 +826,6 @@ namespace Mutagen.Bethesda.Fallout4
             RegionSound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Chance = item.Chance.EqualsWithin(rhs.Chance);
@@ -1051,7 +1050,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RegionSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RegionSoundBinaryWriteTranslation Instance = new RegionSoundBinaryWriteTranslation();
+        public static readonly RegionSoundBinaryWriteTranslation Instance = new RegionSoundBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRegionSoundGetter item,
@@ -1072,7 +1071,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IRegionSoundGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1082,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionSoundGetter)item,
@@ -1094,7 +1093,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class RegionSoundBinaryCreateTranslation
     {
-        public readonly static RegionSoundBinaryCreateTranslation Instance = new RegionSoundBinaryCreateTranslation();
+        public static readonly RegionSoundBinaryCreateTranslation Instance = new RegionSoundBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRegionSound item,
@@ -1118,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IRegionSoundGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1163,7 +1162,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1193,7 +1192,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRegionSoundGetter RegionSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionSoundBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IRegionSoundGetter RegionSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionSoundFactory(
                 stream: new OverlayStream(slice, package),

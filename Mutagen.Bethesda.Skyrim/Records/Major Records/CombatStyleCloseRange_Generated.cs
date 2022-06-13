@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleCloseRangeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CombatStyleCloseRange CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleCloseRange();
             ((CombatStyleCloseRangeSetterCommon)((ICombatStyleCloseRangeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CombatStyleCloseRange item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICombatStyleCloseRange item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CombatStyleCloseRangeSetterCommon)((ICombatStyleCloseRangeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -862,12 +862,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICombatStyleCloseRange item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CSCR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -902,7 +902,6 @@ namespace Mutagen.Bethesda.Skyrim
             CombatStyleCloseRange.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.CircleMult = item.CircleMult.EqualsWithin(rhs.CircleMult);
             ret.FallbackMult = item.FallbackMult.EqualsWithin(rhs.FallbackMult);
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleCloseRangeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CombatStyleCloseRangeBinaryWriteTranslation Instance = new CombatStyleCloseRangeBinaryWriteTranslation();
+        public static readonly CombatStyleCloseRangeBinaryWriteTranslation Instance = new CombatStyleCloseRangeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICombatStyleCloseRangeGetter item,
@@ -1181,12 +1180,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICombatStyleCloseRangeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CSCR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1198,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICombatStyleCloseRangeGetter)item,
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CombatStyleCloseRangeBinaryCreateTranslation
     {
-        public readonly static CombatStyleCloseRangeBinaryCreateTranslation Instance = new CombatStyleCloseRangeBinaryCreateTranslation();
+        public static readonly CombatStyleCloseRangeBinaryCreateTranslation Instance = new CombatStyleCloseRangeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICombatStyleCloseRange item,
@@ -1238,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICombatStyleCloseRangeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleCloseRangeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1282,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleCloseRangeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1314,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICombatStyleCloseRangeGetter CombatStyleCloseRangeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleCloseRangeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1335,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICombatStyleCloseRangeGetter CombatStyleCloseRangeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CombatStyleCloseRangeFactory(
                 stream: new OverlayStream(slice, package),

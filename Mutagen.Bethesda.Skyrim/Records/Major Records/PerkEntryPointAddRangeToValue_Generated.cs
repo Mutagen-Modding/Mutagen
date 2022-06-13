@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkEntryPointAddRangeToValueBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointAddRangeToValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PerkEntryPointAddRangeToValue CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkEntryPointAddRangeToValue();
             ((PerkEntryPointAddRangeToValueSetterCommon)((IPerkEntryPointAddRangeToValueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkEntryPointAddRangeToValue item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkEntryPointAddRangeToValue item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkEntryPointAddRangeToValueSetterCommon)((IPerkEntryPointAddRangeToValueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IPerkEntryPointAddRangeToValue item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IAPerkEntryPointEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointAddRangeToValue)item,
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointAddRangeToValue)item,
@@ -795,7 +795,6 @@ namespace Mutagen.Bethesda.Skyrim
             PerkEntryPointAddRangeToValue.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.From = item.From.EqualsWithin(rhs.From);
             ret.To = item.To.EqualsWithin(rhs.To);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1120,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkEntryPointAddRangeToValueBinaryWriteTranslation Instance = new PerkEntryPointAddRangeToValueBinaryWriteTranslation();
+        public new static readonly PerkEntryPointAddRangeToValueBinaryWriteTranslation Instance = new PerkEntryPointAddRangeToValueBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkEntryPointAddRangeToValueGetter item,
@@ -1140,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IPerkEntryPointAddRangeToValueGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1154,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkEntryPointAddRangeToValueGetter)item,
@@ -1165,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IAPerkEntryPointEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointAddRangeToValueGetter)item,
@@ -1176,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointAddRangeToValueGetter)item,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class PerkEntryPointAddRangeToValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
-        public new readonly static PerkEntryPointAddRangeToValueBinaryCreateTranslation Instance = new PerkEntryPointAddRangeToValueBinaryCreateTranslation();
+        public new static readonly PerkEntryPointAddRangeToValueBinaryCreateTranslation Instance = new PerkEntryPointAddRangeToValueBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkEntryPointAddRangeToValue item,
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkEntryPointAddRangeToValueBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointAddRangeToValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1266,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkEntryPointAddRangeToValueGetter PerkEntryPointAddRangeToValueFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkEntryPointAddRangeToValueBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1284,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IPerkEntryPointAddRangeToValueGetter PerkEntryPointAddRangeToValueFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkEntryPointAddRangeToValueFactory(
                 stream: new OverlayStream(slice, package),

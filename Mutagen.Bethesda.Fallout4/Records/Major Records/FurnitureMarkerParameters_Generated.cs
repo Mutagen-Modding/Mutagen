@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerParametersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static FurnitureMarkerParameters CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FurnitureMarkerParameters();
             ((FurnitureMarkerParametersSetterCommon)((IFurnitureMarkerParametersGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FurnitureMarkerParameters item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFurnitureMarkerParameters item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FurnitureMarkerParametersSetterCommon)((IFurnitureMarkerParametersGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IFurnitureMarkerParameters item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -987,7 +987,6 @@ namespace Mutagen.Bethesda.Fallout4
             FurnitureMarkerParameters.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Offset = item.Offset.Equals(rhs.Offset);
             ret.RotationZ = item.RotationZ.EqualsWithin(rhs.RotationZ);
@@ -1270,7 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FurnitureMarkerParametersBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FurnitureMarkerParametersBinaryWriteTranslation Instance = new FurnitureMarkerParametersBinaryWriteTranslation();
+        public static readonly FurnitureMarkerParametersBinaryWriteTranslation Instance = new FurnitureMarkerParametersBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFurnitureMarkerParametersGetter item,
@@ -1304,7 +1303,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IFurnitureMarkerParametersGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1314,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFurnitureMarkerParametersGetter)item,
@@ -1326,7 +1325,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class FurnitureMarkerParametersBinaryCreateTranslation
     {
-        public readonly static FurnitureMarkerParametersBinaryCreateTranslation Instance = new FurnitureMarkerParametersBinaryCreateTranslation();
+        public static readonly FurnitureMarkerParametersBinaryCreateTranslation Instance = new FurnitureMarkerParametersBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFurnitureMarkerParameters item,
@@ -1364,7 +1363,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IFurnitureMarkerParametersGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerParametersBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1409,7 +1408,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerParametersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1443,7 +1442,7 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FurnitureMarkerParametersBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
@@ -1467,7 +1466,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFurnitureMarkerParametersGetter FurnitureMarkerParametersFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FurnitureMarkerParametersFactory(
                 stream: new OverlayStream(slice, package),

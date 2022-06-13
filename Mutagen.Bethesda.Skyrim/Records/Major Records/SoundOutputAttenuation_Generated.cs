@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputAttenuationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SoundOutputAttenuation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundOutputAttenuation();
             ((SoundOutputAttenuationSetterCommon)((ISoundOutputAttenuationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundOutputAttenuation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISoundOutputAttenuation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundOutputAttenuationSetterCommon)((ISoundOutputAttenuationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -870,12 +870,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISoundOutputAttenuation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ANAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -910,7 +910,6 @@ namespace Mutagen.Bethesda.Skyrim
             SoundOutputAttenuation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.MinDistance = item.MinDistance.EqualsWithin(rhs.MinDistance);
             ret.MaxDistance = item.MaxDistance.EqualsWithin(rhs.MaxDistance);
@@ -1162,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundOutputAttenuationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundOutputAttenuationBinaryWriteTranslation Instance = new SoundOutputAttenuationBinaryWriteTranslation();
+        public static readonly SoundOutputAttenuationBinaryWriteTranslation Instance = new SoundOutputAttenuationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISoundOutputAttenuationGetter item,
@@ -1186,12 +1185,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ISoundOutputAttenuationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ANAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundOutputAttenuationGetter)item,
@@ -1215,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SoundOutputAttenuationBinaryCreateTranslation
     {
-        public readonly static SoundOutputAttenuationBinaryCreateTranslation Instance = new SoundOutputAttenuationBinaryCreateTranslation();
+        public static readonly SoundOutputAttenuationBinaryCreateTranslation Instance = new SoundOutputAttenuationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundOutputAttenuation item,
@@ -1239,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISoundOutputAttenuationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputAttenuationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1283,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputAttenuationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1315,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISoundOutputAttenuationGetter SoundOutputAttenuationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundOutputAttenuationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1333,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISoundOutputAttenuationGetter SoundOutputAttenuationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundOutputAttenuationFactory(
                 stream: new OverlayStream(slice, package),

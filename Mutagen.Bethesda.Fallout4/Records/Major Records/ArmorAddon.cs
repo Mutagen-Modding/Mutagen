@@ -120,7 +120,7 @@ partial class ArmorAddonBinaryWriteTranslation
             writer.Write(genderInt);
         }
         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBoneGetter>.Instance.Write(writer, bones,
-            transl: (MutagenWriter subWriter, IBoneGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IBoneGetter subItem, TypedWriteParams conv) =>
             {
                 var Item = subItem;
                 ((BoneBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(

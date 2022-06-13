@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocalVariableDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LocalVariableData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocalVariableData();
             ((LocalVariableDataSetterCommon)((ILocalVariableDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocalVariableData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILocalVariableData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocalVariableDataSetterCommon)((ILocalVariableDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -825,12 +825,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILocalVariableData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SLSD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -865,7 +865,6 @@ namespace Mutagen.Bethesda.Oblivion
             LocalVariableData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             ret.Flags = item.Flags == rhs.Flags;
@@ -1103,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LocalVariableDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocalVariableDataBinaryWriteTranslation Instance = new LocalVariableDataBinaryWriteTranslation();
+        public static readonly LocalVariableDataBinaryWriteTranslation Instance = new LocalVariableDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocalVariableDataGetter item,
@@ -1123,12 +1122,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILocalVariableDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SLSD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1140,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocalVariableDataGetter)item,
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LocalVariableDataBinaryCreateTranslation
     {
-        public readonly static LocalVariableDataBinaryCreateTranslation Instance = new LocalVariableDataBinaryCreateTranslation();
+        public static readonly LocalVariableDataBinaryCreateTranslation Instance = new LocalVariableDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocalVariableData item,
@@ -1177,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILocalVariableDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocalVariableDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1221,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocalVariableDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILocalVariableDataGetter LocalVariableDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocalVariableDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1270,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILocalVariableDataGetter LocalVariableDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocalVariableDataFactory(
                 stream: new OverlayStream(slice, package),

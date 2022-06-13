@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LogEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LogEntry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LogEntry();
             ((LogEntrySetterCommon)((ILogEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LogEntry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILogEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LogEntrySetterCommon)((ILogEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILogEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -962,7 +962,6 @@ namespace Mutagen.Bethesda.Oblivion
             LogEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -1282,12 +1281,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LogEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LogEntryBinaryWriteTranslation Instance = new LogEntryBinaryWriteTranslation();
+        public static readonly LogEntryBinaryWriteTranslation Instance = new LogEntryBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILogEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<LogEntry.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1297,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1322,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILogEntryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1333,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILogEntryGetter)item,
@@ -1345,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LogEntryBinaryCreateTranslation
     {
-        public readonly static LogEntryBinaryCreateTranslation Instance = new LogEntryBinaryCreateTranslation();
+        public static readonly LogEntryBinaryCreateTranslation Instance = new LogEntryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILogEntry item,
@@ -1360,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1420,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILogEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LogEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1465,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LogEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1502,7 +1501,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILogEntryGetter LogEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LogEntryBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1520,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILogEntryGetter LogEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LogEntryFactory(
                 stream: new OverlayStream(slice, package),
@@ -1535,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

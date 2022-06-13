@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SplineConnectionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static SplineConnection CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SplineConnection();
             ((SplineConnectionSetterCommon)((ISplineConnectionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SplineConnection item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISplineConnection item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SplineConnectionSetterCommon)((ISplineConnectionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -759,12 +759,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISplineConnection item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XPLK),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
             SplineConnection.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Unknown = item.Unknown == rhs.Unknown;
         }
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SplineConnectionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SplineConnectionBinaryWriteTranslation Instance = new SplineConnectionBinaryWriteTranslation();
+        public static readonly SplineConnectionBinaryWriteTranslation Instance = new SplineConnectionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISplineConnectionGetter item,
@@ -1025,12 +1024,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ISplineConnectionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XPLK),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISplineConnectionGetter)item,
@@ -1054,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SplineConnectionBinaryCreateTranslation
     {
-        public readonly static SplineConnectionBinaryCreateTranslation Instance = new SplineConnectionBinaryCreateTranslation();
+        public static readonly SplineConnectionBinaryCreateTranslation Instance = new SplineConnectionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISplineConnection item,
@@ -1075,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ISplineConnectionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SplineConnectionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1120,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SplineConnectionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISplineConnectionGetter SplineConnectionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SplineConnectionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISplineConnectionGetter SplineConnectionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SplineConnectionFactory(
                 stream: new OverlayStream(slice, package),

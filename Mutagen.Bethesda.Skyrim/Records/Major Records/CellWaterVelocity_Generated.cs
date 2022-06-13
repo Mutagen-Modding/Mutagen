@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellWaterVelocityBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CellWaterVelocity CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CellWaterVelocity();
             ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CellWaterVelocity item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICellWaterVelocity item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -825,12 +825,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICellWaterVelocity item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XWCU),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -865,7 +865,6 @@ namespace Mutagen.Bethesda.Skyrim
             CellWaterVelocity.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Offset = item.Offset.Equals(rhs.Offset);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Angle = item.Angle.Equals(rhs.Angle);
@@ -1103,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellWaterVelocityBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CellWaterVelocityBinaryWriteTranslation Instance = new CellWaterVelocityBinaryWriteTranslation();
+        public static readonly CellWaterVelocityBinaryWriteTranslation Instance = new CellWaterVelocityBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICellWaterVelocityGetter item,
@@ -1124,12 +1123,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICellWaterVelocityGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XWCU),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICellWaterVelocityGetter)item,
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CellWaterVelocityBinaryCreateTranslation
     {
-        public readonly static CellWaterVelocityBinaryCreateTranslation Instance = new CellWaterVelocityBinaryCreateTranslation();
+        public static readonly CellWaterVelocityBinaryCreateTranslation Instance = new CellWaterVelocityBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICellWaterVelocity item,
@@ -1176,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICellWaterVelocityGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellWaterVelocityBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1220,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellWaterVelocityBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1254,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICellWaterVelocityGetter CellWaterVelocityFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CellWaterVelocityBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1271,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICellWaterVelocityGetter CellWaterVelocityFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CellWaterVelocityFactory(
                 stream: new OverlayStream(slice, package),

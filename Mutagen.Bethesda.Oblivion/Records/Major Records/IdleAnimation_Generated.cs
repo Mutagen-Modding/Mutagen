@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IdleAnimationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static IdleAnimation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IdleAnimation();
             ((IdleAnimationSetterCommon)((IIdleAnimationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out IdleAnimation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IIdleAnimationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IdleAnimationSetterCommon)((IIdleAnimationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IIdleAnimationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IIdleAnimationInternal>(
                 record: item,
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (IdleAnimation)item,
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (IdleAnimation)item,
@@ -1126,7 +1126,6 @@ namespace Mutagen.Bethesda.Oblivion
             IdleAnimation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1670,12 +1669,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static IdleAnimationBinaryWriteTranslation Instance = new IdleAnimationBinaryWriteTranslation();
+        public new static readonly IdleAnimationBinaryWriteTranslation Instance = new IdleAnimationBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IIdleAnimationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1691,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1708,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 items: item.RelatedIdleAnimations,
                 recordType: translationParams.ConvertToCustom(RecordTypes.DATA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IIdleAnimationGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IIdleAnimationGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1719,7 +1718,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IIdleAnimationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1747,7 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIdleAnimationGetter)item,
@@ -1758,7 +1757,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IIdleAnimationGetter)item,
@@ -1769,7 +1768,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IIdleAnimationGetter)item,
@@ -1781,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class IdleAnimationBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static IdleAnimationBinaryCreateTranslation Instance = new IdleAnimationBinaryCreateTranslation();
+        public new static readonly IdleAnimationBinaryCreateTranslation Instance = new IdleAnimationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IDLE;
         public static void FillBinaryStructs(
@@ -1800,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1889,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IdleAnimationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1925,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IIdleAnimationGetter IdleAnimationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new IdleAnimationBinaryOverlay(
@@ -1952,7 +1951,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IIdleAnimationGetter IdleAnimationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return IdleAnimationFactory(
                 stream: new OverlayStream(slice, package),
@@ -1967,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

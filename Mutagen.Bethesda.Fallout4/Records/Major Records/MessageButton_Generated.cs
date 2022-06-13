@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MessageButtonBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MessageButton CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MessageButton();
             ((MessageButtonSetterCommon)((IMessageButtonGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MessageButton item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMessageButton item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MessageButtonSetterCommon)((IMessageButtonGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMessageButton item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -875,7 +875,6 @@ namespace Mutagen.Bethesda.Fallout4
             MessageButton.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Text = object.Equals(item.Text, rhs.Text);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -1127,12 +1126,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MessageButtonBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MessageButtonBinaryWriteTranslation Instance = new MessageButtonBinaryWriteTranslation();
+        public static readonly MessageButtonBinaryWriteTranslation Instance = new MessageButtonBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMessageButtonGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1143,7 +1142,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1156,7 +1155,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMessageButtonGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMessageButtonGetter)item,
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MessageButtonBinaryCreateTranslation
     {
-        public readonly static MessageButtonBinaryCreateTranslation Instance = new MessageButtonBinaryCreateTranslation();
+        public static readonly MessageButtonBinaryCreateTranslation Instance = new MessageButtonBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMessageButton item,
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1236,7 +1235,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMessageButtonGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MessageButtonBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1281,7 +1280,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MessageButtonBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1313,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMessageButtonGetter MessageButtonFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MessageButtonBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1331,7 +1330,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMessageButtonGetter MessageButtonFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MessageButtonFactory(
                 stream: new OverlayStream(slice, package),
@@ -1346,7 +1345,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

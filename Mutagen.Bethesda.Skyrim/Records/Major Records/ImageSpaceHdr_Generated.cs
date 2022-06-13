@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceHdrBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ImageSpaceHdr CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceHdr();
             ((ImageSpaceHdrSetterCommon)((IImageSpaceHdrGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpaceHdr item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceHdr item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceHdrSetterCommon)((IImageSpaceHdrGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1002,12 +1002,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IImageSpaceHdr item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.HNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1042,7 +1042,6 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpaceHdr.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EyeAdaptSpeed = item.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed);
             ret.BloomBlurRadius = item.BloomBlurRadius.EqualsWithin(rhs.BloomBlurRadius);
             ret.BloomThreshold = item.BloomThreshold.EqualsWithin(rhs.BloomThreshold);
@@ -1350,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceHdrBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ImageSpaceHdrBinaryWriteTranslation Instance = new ImageSpaceHdrBinaryWriteTranslation();
+        public static readonly ImageSpaceHdrBinaryWriteTranslation Instance = new ImageSpaceHdrBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceHdrGetter item,
@@ -1388,12 +1387,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IImageSpaceHdrGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1405,7 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceHdrGetter)item,
@@ -1417,7 +1416,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ImageSpaceHdrBinaryCreateTranslation
     {
-        public readonly static ImageSpaceHdrBinaryCreateTranslation Instance = new ImageSpaceHdrBinaryCreateTranslation();
+        public static readonly ImageSpaceHdrBinaryCreateTranslation Instance = new ImageSpaceHdrBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IImageSpaceHdr item,
@@ -1445,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IImageSpaceHdrGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceHdrBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1489,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceHdrBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1525,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceHdrGetter ImageSpaceHdrFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceHdrBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1543,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceHdrGetter ImageSpaceHdrFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceHdrFactory(
                 stream: new OverlayStream(slice, package),

@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleMeleeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CombatStyleMelee CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleMelee();
             ((CombatStyleMeleeSetterCommon)((ICombatStyleMeleeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CombatStyleMelee item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICombatStyleMelee item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CombatStyleMeleeSetterCommon)((ICombatStyleMeleeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1010,12 +1010,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICombatStyleMelee item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CSME),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1050,7 +1050,6 @@ namespace Mutagen.Bethesda.Skyrim
             CombatStyleMelee.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.AttackStaggeredMult = item.AttackStaggeredMult.EqualsWithin(rhs.AttackStaggeredMult);
             ret.PowerAttackStaggeredMult = item.PowerAttackStaggeredMult.EqualsWithin(rhs.PowerAttackStaggeredMult);
@@ -1359,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleMeleeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CombatStyleMeleeBinaryWriteTranslation Instance = new CombatStyleMeleeBinaryWriteTranslation();
+        public static readonly CombatStyleMeleeBinaryWriteTranslation Instance = new CombatStyleMeleeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICombatStyleMeleeGetter item,
@@ -1397,12 +1396,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICombatStyleMeleeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CSME),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1414,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICombatStyleMeleeGetter)item,
@@ -1426,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CombatStyleMeleeBinaryCreateTranslation
     {
-        public readonly static CombatStyleMeleeBinaryCreateTranslation Instance = new CombatStyleMeleeBinaryCreateTranslation();
+        public static readonly CombatStyleMeleeBinaryCreateTranslation Instance = new CombatStyleMeleeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICombatStyleMelee item,
@@ -1458,7 +1457,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICombatStyleMeleeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleMeleeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1502,7 +1501,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleMeleeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1538,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICombatStyleMeleeGetter CombatStyleMeleeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleMeleeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1559,7 +1558,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICombatStyleMeleeGetter CombatStyleMeleeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CombatStyleMeleeFactory(
                 stream: new OverlayStream(slice, package),

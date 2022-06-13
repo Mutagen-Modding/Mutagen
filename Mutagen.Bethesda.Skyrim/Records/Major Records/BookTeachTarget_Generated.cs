@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookTeachTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBookTeachTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BookTeachTargetSetterCommon)((IBookTeachTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IBookTeachTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -678,7 +678,6 @@ namespace Mutagen.Bethesda.Skyrim
             BookTeachTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -860,19 +859,19 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BookTeachTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BookTeachTargetBinaryWriteTranslation Instance = new BookTeachTargetBinaryWriteTranslation();
+        public static readonly BookTeachTargetBinaryWriteTranslation Instance = new BookTeachTargetBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IBookTeachTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBookTeachTargetGetter)item,
@@ -884,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class BookTeachTargetBinaryCreateTranslation
     {
-        public readonly static BookTeachTargetBinaryCreateTranslation Instance = new BookTeachTargetBinaryCreateTranslation();
+        public static readonly BookTeachTargetBinaryCreateTranslation Instance = new BookTeachTargetBinaryCreateTranslation();
 
     }
 
@@ -897,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IBookTeachTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookTeachTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -942,7 +941,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookTeachTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

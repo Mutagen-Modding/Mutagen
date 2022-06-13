@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static DistantLODData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DistantLODData();
             ((DistantLODDataSetterCommon)((IDistantLODDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DistantLODData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDistantLODData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -780,12 +780,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IDistantLODData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XLOD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -820,7 +820,6 @@ namespace Mutagen.Bethesda.Oblivion
             DistantLODData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown0 = item.Unknown0.EqualsWithin(rhs.Unknown0);
             ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
             ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DistantLODDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DistantLODDataBinaryWriteTranslation Instance = new DistantLODDataBinaryWriteTranslation();
+        public static readonly DistantLODDataBinaryWriteTranslation Instance = new DistantLODDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDistantLODDataGetter item,
@@ -1064,12 +1063,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IDistantLODDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XLOD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDistantLODDataGetter)item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class DistantLODDataBinaryCreateTranslation
     {
-        public readonly static DistantLODDataBinaryCreateTranslation Instance = new DistantLODDataBinaryCreateTranslation();
+        public static readonly DistantLODDataBinaryCreateTranslation Instance = new DistantLODDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDistantLODData item,
@@ -1115,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IDistantLODDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLODDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1189,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IDistantLODDataGetter DistantLODDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DistantLODDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IDistantLODDataGetter DistantLODDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DistantLODDataFactory(
                 stream: new OverlayStream(slice, package),

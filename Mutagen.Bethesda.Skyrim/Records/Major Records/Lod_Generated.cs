@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LodBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Lod CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Lod();
             ((LodSetterCommon)((ILodGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Lod item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILod item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LodSetterCommon)((ILodGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -997,12 +997,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILod item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1037,7 +1037,6 @@ namespace Mutagen.Bethesda.Skyrim
             Lod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Level0 = string.Equals(item.Level0, rhs.Level0);
             ret.Level0Extra = MemorySliceExt.Equal(item.Level0Extra, rhs.Level0Extra);
             ret.Level1 = string.Equals(item.Level1, rhs.Level1);
@@ -1375,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LodBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LodBinaryWriteTranslation Instance = new LodBinaryWriteTranslation();
+        public static readonly LodBinaryWriteTranslation Instance = new LodBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILodGetter item,
@@ -1402,12 +1401,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILodGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1419,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILodGetter)item,
@@ -1431,7 +1430,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LodBinaryCreateTranslation
     {
-        public readonly static LodBinaryCreateTranslation Instance = new LodBinaryCreateTranslation();
+        public static readonly LodBinaryCreateTranslation Instance = new LodBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILod item,
@@ -1457,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILodGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LodBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1501,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LodBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1528,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILodGetter LodFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LodBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1546,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILodGetter LodFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LodFactory(
                 stream: new OverlayStream(slice, package),

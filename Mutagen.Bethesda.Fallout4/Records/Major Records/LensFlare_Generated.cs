@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LensFlareBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LensFlareBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static LensFlare CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LensFlare();
             ((LensFlareSetterCommon)((ILensFlareGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LensFlare item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILensFlareInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LensFlareSetterCommon)((ILensFlareGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILensFlareInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILensFlareInternal>(
                 record: item,
@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LensFlare)item,
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LensFlare)item,
@@ -989,7 +989,6 @@ namespace Mutagen.Bethesda.Fallout4
             LensFlare.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ColorInfluence = item.ColorInfluence.EqualsWithin(rhs.ColorInfluence);
             ret.FadeDistanceRadiusScale = item.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale);
             ret.Sprites = item.Sprites.CollectionEqualsHelper(
@@ -1456,12 +1455,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LensFlareBinaryWriteTranslation Instance = new LensFlareBinaryWriteTranslation();
+        public new static readonly LensFlareBinaryWriteTranslation Instance = new LensFlareBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILensFlareGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1480,7 +1479,7 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.Sprites,
                 counterType: RecordTypes.LFSP,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, ILensFlareSpriteGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILensFlareSpriteGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LensFlareSpriteBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1493,7 +1492,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILensFlareGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1521,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILensFlareGetter)item,
@@ -1532,7 +1531,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILensFlareGetter)item,
@@ -1543,7 +1542,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILensFlareGetter)item,
@@ -1555,7 +1554,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LensFlareBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
+        public new static readonly LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LENS;
         public static void FillBinaryStructs(
@@ -1574,7 +1573,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1651,7 +1650,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LensFlareBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LensFlareBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1689,7 +1688,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILensFlareGetter LensFlareFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LensFlareBinaryOverlay(
@@ -1716,7 +1715,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILensFlareGetter LensFlareFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LensFlareFactory(
                 stream: new OverlayStream(slice, package),
@@ -1731,7 +1730,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

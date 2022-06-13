@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GrassDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static GrassData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GrassData();
             ((GrassDataSetterCommon)((IGrassDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out GrassData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IGrassData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GrassDataSetterCommon)((IGrassDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1113,12 +1113,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IGrassData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1153,7 +1153,6 @@ namespace Mutagen.Bethesda.Oblivion
             GrassData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Density = item.Density == rhs.Density;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
             ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
@@ -1503,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class GrassDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static GrassDataBinaryWriteTranslation Instance = new GrassDataBinaryWriteTranslation();
+        public static readonly GrassDataBinaryWriteTranslation Instance = new GrassDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IGrassDataGetter item,
@@ -1540,12 +1539,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IGrassDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1557,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGrassDataGetter)item,
@@ -1569,7 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class GrassDataBinaryCreateTranslation
     {
-        public readonly static GrassDataBinaryCreateTranslation Instance = new GrassDataBinaryCreateTranslation();
+        public static readonly GrassDataBinaryCreateTranslation Instance = new GrassDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IGrassData item,
@@ -1604,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IGrassDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GrassDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1648,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GrassDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1687,7 +1686,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IGrassDataGetter GrassDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GrassDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1705,7 +1704,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IGrassDataGetter GrassDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return GrassDataFactory(
                 stream: new OverlayStream(slice, package),

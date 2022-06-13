@@ -17,7 +17,7 @@ public partial class GameSetting : IGameSettingCommon
 
     public static GameSetting CreateFromBinary(
         MutagenFrame frame,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var majorMeta = frame.GetMajorRecordHeader();
         var settingType = GameSettingUtility.GetGameSettingType(frame.GetMemory(checked((int)majorMeta.TotalLength)), frame.MetaData.Constants);
@@ -44,7 +44,7 @@ internal partial class GameSettingBinaryOverlay
     public static IGameSettingGetter GameSettingFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingMemory, package.MetaData.Constants);
         if (settingType.Failed)
@@ -54,11 +54,11 @@ internal partial class GameSettingBinaryOverlay
         switch (settingType.Value)
         {
             case GameSettingType.Float:
-                return GameSettingFloatBinaryOverlay.GameSettingFloatFactory(stream, package);
+                return GameSettingFloatBinaryOverlay.GameSettingFloatFactory(stream, package, default);
             case GameSettingType.Int:
-                return GameSettingIntBinaryOverlay.GameSettingIntFactory(stream, package);
+                return GameSettingIntBinaryOverlay.GameSettingIntFactory(stream, package, default);
             case GameSettingType.String:
-                return GameSettingStringBinaryOverlay.GameSettingStringFactory(stream, package);
+                return GameSettingStringBinaryOverlay.GameSettingStringFactory(stream, package, default);
             default:
                 throw new ArgumentException($"Unknown game type: {settingType.Value}");
         }

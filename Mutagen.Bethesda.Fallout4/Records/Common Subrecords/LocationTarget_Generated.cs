@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LocationTargetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static LocationTarget CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationTarget();
             ((LocationTargetSetterCommon)((ILocationTargetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationTarget item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationTargetSetterCommon)((ILocationTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationTarget)item,
@@ -720,7 +720,6 @@ namespace Mutagen.Bethesda.Fallout4
             LocationTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Link = item.Link.Equals(rhs.Link);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -971,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationTargetBinaryWriteTranslation Instance = new LocationTargetBinaryWriteTranslation();
+        public new static readonly LocationTargetBinaryWriteTranslation Instance = new LocationTargetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationTargetGetter item,
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -995,7 +994,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationTargetGetter)item,
@@ -1006,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IALocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationTargetGetter)item,
@@ -1018,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LocationTargetBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
-        public new readonly static LocationTargetBinaryCreateTranslation Instance = new LocationTargetBinaryCreateTranslation();
+        public new static readonly LocationTargetBinaryCreateTranslation Instance = new LocationTargetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationTarget item,
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LocationTargetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1092,7 +1091,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationTargetGetter LocationTargetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationTargetBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILocationTargetGetter LocationTargetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationTargetFactory(
                 stream: new OverlayStream(slice, package),

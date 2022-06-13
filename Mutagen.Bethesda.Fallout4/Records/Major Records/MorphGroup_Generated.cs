@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MorphGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MorphGroup CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MorphGroup();
             ((MorphGroupSetterCommon)((IMorphGroupGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MorphGroup item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMorphGroup item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MorphGroupSetterCommon)((IMorphGroupGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMorphGroup item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -992,7 +992,6 @@ namespace Mutagen.Bethesda.Fallout4
             MorphGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.MorphPresets = item.MorphPresets.CollectionEqualsHelper(
                 rhs.MorphPresets,
@@ -1305,12 +1304,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MorphGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MorphGroupBinaryWriteTranslation Instance = new MorphGroupBinaryWriteTranslation();
+        public static readonly MorphGroupBinaryWriteTranslation Instance = new MorphGroupBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMorphGroupGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1322,7 +1321,7 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.MorphPresets,
                 counterType: RecordTypes.MPPC,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IMorphPresetGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IMorphPresetGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((MorphPresetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1343,7 +1342,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMorphGroupGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1354,7 +1353,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMorphGroupGetter)item,
@@ -1366,7 +1365,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MorphGroupBinaryCreateTranslation
     {
-        public readonly static MorphGroupBinaryCreateTranslation Instance = new MorphGroupBinaryCreateTranslation();
+        public static readonly MorphGroupBinaryCreateTranslation Instance = new MorphGroupBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMorphGroup item,
@@ -1381,7 +1380,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1444,7 +1443,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMorphGroupGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MorphGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1489,7 +1488,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MorphGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1533,7 +1532,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMorphGroupGetter MorphGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MorphGroupBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1551,7 +1550,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMorphGroupGetter MorphGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MorphGroupFactory(
                 stream: new OverlayStream(slice, package),
@@ -1566,7 +1565,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

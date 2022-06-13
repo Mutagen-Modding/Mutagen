@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseFlagsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DialogResponseFlags CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogResponseFlags();
             ((DialogResponseFlagsSetterCommon)((IDialogResponseFlagsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogResponseFlags item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDialogResponseFlags item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogResponseFlagsSetterCommon)((IDialogResponseFlagsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IDialogResponseFlags item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ENAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
             DialogResponseFlags.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.ResetHours = item.ResetHours.EqualsWithin(rhs.ResetHours);
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogResponseFlagsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DialogResponseFlagsBinaryWriteTranslation Instance = new DialogResponseFlagsBinaryWriteTranslation();
+        public static readonly DialogResponseFlagsBinaryWriteTranslation Instance = new DialogResponseFlagsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDialogResponseFlagsGetter item,
@@ -1013,12 +1012,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IDialogResponseFlagsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ENAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1030,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogResponseFlagsGetter)item,
@@ -1042,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class DialogResponseFlagsBinaryCreateTranslation
     {
-        public readonly static DialogResponseFlagsBinaryCreateTranslation Instance = new DialogResponseFlagsBinaryCreateTranslation();
+        public static readonly DialogResponseFlagsBinaryCreateTranslation Instance = new DialogResponseFlagsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDialogResponseFlags item,
@@ -1068,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDialogResponseFlagsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseFlagsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1112,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseFlagsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDialogResponseFlagsGetter DialogResponseFlagsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogResponseFlagsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IDialogResponseFlagsGetter DialogResponseFlagsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogResponseFlagsFactory(
                 stream: new OverlayStream(slice, package),

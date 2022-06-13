@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellUniqueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LocationCellUnique CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationCellUnique();
             ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationCellUnique item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationCellUnique item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILocationCellUnique item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -841,7 +841,6 @@ namespace Mutagen.Bethesda.Skyrim
             LocationCellUnique.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Actor = item.Actor.Equals(rhs.Actor);
             ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Location = item.Location.Equals(rhs.Location);
@@ -1068,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationCellUniqueBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocationCellUniqueBinaryWriteTranslation Instance = new LocationCellUniqueBinaryWriteTranslation();
+        public static readonly LocationCellUniqueBinaryWriteTranslation Instance = new LocationCellUniqueBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationCellUniqueGetter item,
@@ -1088,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILocationCellUniqueGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1098,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationCellUniqueGetter)item,
@@ -1110,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LocationCellUniqueBinaryCreateTranslation
     {
-        public readonly static LocationCellUniqueBinaryCreateTranslation Instance = new LocationCellUniqueBinaryCreateTranslation();
+        public static readonly LocationCellUniqueBinaryCreateTranslation Instance = new LocationCellUniqueBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationCellUnique item,
@@ -1132,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILocationCellUniqueGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellUniqueBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1177,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellUniqueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationCellUniqueGetter LocationCellUniqueFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationCellUniqueBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1224,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILocationCellUniqueGetter LocationCellUniqueFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationCellUniqueFactory(
                 stream: new OverlayStream(slice, package),

@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static WeatherColors CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherColors();
             ((WeatherColorsSetterCommon)((IWeatherColorsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherColors item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IWeatherColors item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherColorsSetterCommon)((IWeatherColorsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IWeatherColors item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -847,7 +847,6 @@ namespace Mutagen.Bethesda.Oblivion
             WeatherColors.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sunrise = item.Sunrise.ColorOnlyEquals(rhs.Sunrise);
             ret.Day = item.Day.ColorOnlyEquals(rhs.Day);
             ret.Sunset = item.Sunset.ColorOnlyEquals(rhs.Sunset);
@@ -1085,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeatherColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherColorsBinaryWriteTranslation Instance = new WeatherColorsBinaryWriteTranslation();
+        public static readonly WeatherColorsBinaryWriteTranslation Instance = new WeatherColorsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherColorsGetter item,
@@ -1108,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IWeatherColorsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1118,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherColorsGetter)item,
@@ -1130,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class WeatherColorsBinaryCreateTranslation
     {
-        public readonly static WeatherColorsBinaryCreateTranslation Instance = new WeatherColorsBinaryCreateTranslation();
+        public static readonly WeatherColorsBinaryCreateTranslation Instance = new WeatherColorsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherColors item,
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IWeatherColorsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherColorsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1197,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1228,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IWeatherColorsGetter WeatherColorsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherColorsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1245,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IWeatherColorsGetter WeatherColorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherColorsFactory(
                 stream: new OverlayStream(slice, package),

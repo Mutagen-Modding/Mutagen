@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static FaceMorph CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FaceMorph();
             ((FaceMorphSetterCommon)((IFaceMorphGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FaceMorph item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFaceMorph item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FaceMorphSetterCommon)((IFaceMorphGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IFaceMorph item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -834,7 +834,6 @@ namespace Mutagen.Bethesda.Fallout4
             FaceMorph.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
             ret.Name = object.Equals(item.Name, rhs.Name);
         }
@@ -1052,12 +1051,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FaceMorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FaceMorphBinaryWriteTranslation Instance = new FaceMorphBinaryWriteTranslation();
+        public static readonly FaceMorphBinaryWriteTranslation Instance = new FaceMorphBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFaceMorphGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1074,7 +1073,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IFaceMorphGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1085,7 +1084,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFaceMorphGetter)item,
@@ -1097,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class FaceMorphBinaryCreateTranslation
     {
-        public readonly static FaceMorphBinaryCreateTranslation Instance = new FaceMorphBinaryCreateTranslation();
+        public static readonly FaceMorphBinaryCreateTranslation Instance = new FaceMorphBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFaceMorph item,
@@ -1112,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1150,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IFaceMorphGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceMorphBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFaceMorphGetter FaceMorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FaceMorphBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1255,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFaceMorphGetter FaceMorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FaceMorphFactory(
                 stream: new OverlayStream(slice, package),
@@ -1270,7 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

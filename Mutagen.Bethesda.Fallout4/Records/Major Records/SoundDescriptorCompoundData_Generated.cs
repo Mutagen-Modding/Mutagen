@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => SoundDescriptorCompoundDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundDescriptorCompoundDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static SoundDescriptorCompoundData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundDescriptorCompoundData();
             ((SoundDescriptorCompoundDataSetterCommon)((ISoundDescriptorCompoundDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundDescriptorCompoundData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISoundDescriptorCompoundData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundDescriptorCompoundDataSetterCommon)((ISoundDescriptorCompoundDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISoundDescriptorCompoundData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IASoundDescriptor item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundDescriptorCompoundData)item,
@@ -656,7 +656,6 @@ namespace Mutagen.Bethesda.Fallout4
             SoundDescriptorCompoundData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -892,19 +891,19 @@ namespace Mutagen.Bethesda.Fallout4
         ASoundDescriptorBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoundDescriptorCompoundDataBinaryWriteTranslation Instance = new SoundDescriptorCompoundDataBinaryWriteTranslation();
+        public new static readonly SoundDescriptorCompoundDataBinaryWriteTranslation Instance = new SoundDescriptorCompoundDataBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             ISoundDescriptorCompoundDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundDescriptorCompoundDataGetter)item,
@@ -915,7 +914,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IASoundDescriptorGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundDescriptorCompoundDataGetter)item,
@@ -927,7 +926,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SoundDescriptorCompoundDataBinaryCreateTranslation : ASoundDescriptorBinaryCreateTranslation
     {
-        public new readonly static SoundDescriptorCompoundDataBinaryCreateTranslation Instance = new SoundDescriptorCompoundDataBinaryCreateTranslation();
+        public new static readonly SoundDescriptorCompoundDataBinaryCreateTranslation Instance = new SoundDescriptorCompoundDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundDescriptorCompoundData item,
@@ -971,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => SoundDescriptorCompoundDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundDescriptorCompoundDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -998,7 +997,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundDescriptorCompoundDataGetter SoundDescriptorCompoundDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundDescriptorCompoundDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1014,7 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundDescriptorCompoundDataGetter SoundDescriptorCompoundDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundDescriptorCompoundDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -975,7 +975,6 @@ namespace Mutagen.Bethesda.Pex
             DebugInfo.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ModificationTime = item.ModificationTime == rhs.ModificationTime;
             ret.Functions = item.Functions.CollectionEqualsHelper(
                 rhs.Functions,

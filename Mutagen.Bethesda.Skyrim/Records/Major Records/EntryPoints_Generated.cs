@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EntryPointsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static EntryPoints CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EntryPoints();
             ((EntryPointsSetterCommon)((IEntryPointsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EntryPoints item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IEntryPoints item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EntryPointsSetterCommon)((IEntryPointsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IEntryPoints item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -772,7 +772,6 @@ namespace Mutagen.Bethesda.Skyrim
             EntryPoints.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Points = item.Points == rhs.Points;
         }
@@ -982,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EntryPointsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EntryPointsBinaryWriteTranslation Instance = new EntryPointsBinaryWriteTranslation();
+        public static readonly EntryPointsBinaryWriteTranslation Instance = new EntryPointsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEntryPointsGetter item,
@@ -1001,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IEntryPointsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1011,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEntryPointsGetter)item,
@@ -1023,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class EntryPointsBinaryCreateTranslation
     {
-        public readonly static EntryPointsBinaryCreateTranslation Instance = new EntryPointsBinaryCreateTranslation();
+        public static readonly EntryPointsBinaryCreateTranslation Instance = new EntryPointsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEntryPoints item,
@@ -1048,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IEntryPointsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EntryPointsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1092,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EntryPointsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1121,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEntryPointsGetter EntryPointsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EntryPointsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1138,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEntryPointsGetter EntryPointsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return EntryPointsFactory(
                 stream: new OverlayStream(slice, package),

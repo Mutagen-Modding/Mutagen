@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundLoopAndRumbleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static SoundLoopAndRumble CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundLoopAndRumble();
             ((SoundLoopAndRumbleSetterCommon)((ISoundLoopAndRumbleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundLoopAndRumble item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISoundLoopAndRumble item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundLoopAndRumbleSetterCommon)((ISoundLoopAndRumbleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,12 +817,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISoundLoopAndRumble item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.LNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -857,7 +857,6 @@ namespace Mutagen.Bethesda.Fallout4
             SoundLoopAndRumble.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Loop = item.Loop == rhs.Loop;
             ret.Sidechain = item.Sidechain == rhs.Sidechain;
@@ -1095,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundLoopAndRumbleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundLoopAndRumbleBinaryWriteTranslation Instance = new SoundLoopAndRumbleBinaryWriteTranslation();
+        public static readonly SoundLoopAndRumbleBinaryWriteTranslation Instance = new SoundLoopAndRumbleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISoundLoopAndRumbleGetter item,
@@ -1113,12 +1112,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ISoundLoopAndRumbleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.LNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1130,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundLoopAndRumbleGetter)item,
@@ -1142,7 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SoundLoopAndRumbleBinaryCreateTranslation
     {
-        public readonly static SoundLoopAndRumbleBinaryCreateTranslation Instance = new SoundLoopAndRumbleBinaryCreateTranslation();
+        public static readonly SoundLoopAndRumbleBinaryCreateTranslation Instance = new SoundLoopAndRumbleBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundLoopAndRumble item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ISoundLoopAndRumbleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundLoopAndRumbleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1211,7 +1210,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundLoopAndRumbleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1242,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundLoopAndRumbleGetter SoundLoopAndRumbleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundLoopAndRumbleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1260,7 +1259,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISoundLoopAndRumbleGetter SoundLoopAndRumbleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundLoopAndRumbleFactory(
                 stream: new OverlayStream(slice, package),

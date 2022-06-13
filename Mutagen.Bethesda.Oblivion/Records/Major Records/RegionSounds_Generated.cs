@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => RegionSoundsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionSoundsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static RegionSounds CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionSounds();
             ((RegionSoundsSetterCommon)((IRegionSoundsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RegionSounds item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRegionSounds item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionSoundsSetterCommon)((IRegionSoundsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IRegionSounds item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IRegionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (RegionSounds)item,
@@ -849,7 +849,6 @@ namespace Mutagen.Bethesda.Oblivion
             RegionSounds.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MusicType = item.MusicType == rhs.MusicType;
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
@@ -1168,12 +1167,12 @@ namespace Mutagen.Bethesda.Oblivion
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static RegionSoundsBinaryWriteTranslation Instance = new RegionSoundsBinaryWriteTranslation();
+        public new static readonly RegionSoundsBinaryWriteTranslation Instance = new RegionSoundsBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRegionSoundsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             RegionDataBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1188,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 items: item.Sounds,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RDSD),
-                transl: (MutagenWriter subWriter, IRegionSoundGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRegionSoundGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RegionSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IRegionSoundsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1212,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionSoundsGetter)item,
@@ -1223,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IRegionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRegionSoundsGetter)item,
@@ -1235,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class RegionSoundsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
-        public new readonly static RegionSoundsBinaryCreateTranslation Instance = new RegionSoundsBinaryCreateTranslation();
+        public new static readonly RegionSoundsBinaryCreateTranslation Instance = new RegionSoundsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRegionSounds item,
@@ -1250,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1321,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => RegionSoundsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionSoundsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1353,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRegionSoundsGetter RegionSoundsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionSoundsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1371,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IRegionSoundsGetter RegionSoundsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionSoundsFactory(
                 stream: new OverlayStream(slice, package),
@@ -1386,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

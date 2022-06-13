@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => OblivionMajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -835,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1031,14 +1031,14 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (OblivionMajorRecord)item,
@@ -1073,7 +1073,6 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMajorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.OblivionMajorRecordFlags = item.OblivionMajorRecordFlags == rhs.OblivionMajorRecordFlags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1440,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion
         MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static OblivionMajorRecordBinaryWriteTranslation Instance = new OblivionMajorRecordBinaryWriteTranslation();
+        public new static readonly OblivionMajorRecordBinaryWriteTranslation Instance = new OblivionMajorRecordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IOblivionMajorRecordGetter item,
@@ -1454,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
@@ -1475,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IOblivionMajorRecordGetter)item,
@@ -1486,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IOblivionMajorRecordGetter)item,
@@ -1498,7 +1497,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class OblivionMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
     {
-        public new readonly static OblivionMajorRecordBinaryCreateTranslation Instance = new OblivionMajorRecordBinaryCreateTranslation();
+        public new static readonly OblivionMajorRecordBinaryCreateTranslation Instance = new OblivionMajorRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
         public static void FillBinaryStructs(
@@ -1553,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => OblivionMajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

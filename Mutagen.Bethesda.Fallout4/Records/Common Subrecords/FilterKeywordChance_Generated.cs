@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FilterKeywordChanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static FilterKeywordChance CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FilterKeywordChance();
             ((FilterKeywordChanceSetterCommon)((IFilterKeywordChanceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FilterKeywordChance item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFilterKeywordChance item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FilterKeywordChanceSetterCommon)((IFilterKeywordChanceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IFilterKeywordChance item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -788,7 +788,6 @@ namespace Mutagen.Bethesda.Fallout4
             FilterKeywordChance.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FilterKeyword = item.FilterKeyword.Equals(rhs.FilterKeyword);
             ret.Chance = item.Chance == rhs.Chance;
         }
@@ -1002,7 +1001,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FilterKeywordChanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FilterKeywordChanceBinaryWriteTranslation Instance = new FilterKeywordChanceBinaryWriteTranslation();
+        public static readonly FilterKeywordChanceBinaryWriteTranslation Instance = new FilterKeywordChanceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFilterKeywordChanceGetter item,
@@ -1017,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IFilterKeywordChanceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1027,7 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFilterKeywordChanceGetter)item,
@@ -1039,7 +1038,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class FilterKeywordChanceBinaryCreateTranslation
     {
-        public readonly static FilterKeywordChanceBinaryCreateTranslation Instance = new FilterKeywordChanceBinaryCreateTranslation();
+        public static readonly FilterKeywordChanceBinaryCreateTranslation Instance = new FilterKeywordChanceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFilterKeywordChance item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IFilterKeywordChanceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FilterKeywordChanceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1106,7 +1105,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FilterKeywordChanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFilterKeywordChanceGetter FilterKeywordChanceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FilterKeywordChanceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFilterKeywordChanceGetter FilterKeywordChanceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FilterKeywordChanceFactory(
                 stream: new OverlayStream(slice, package),

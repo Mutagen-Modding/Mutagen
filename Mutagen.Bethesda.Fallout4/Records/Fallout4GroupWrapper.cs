@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
@@ -103,7 +103,7 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     
     void IBinaryItem.WriteToBinary(
         MutagenWriter writer,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         ((Fallout4GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
             item: this,

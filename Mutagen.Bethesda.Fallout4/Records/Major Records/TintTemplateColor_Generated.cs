@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintTemplateColorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static TintTemplateColor CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintTemplateColor();
             ((TintTemplateColorSetterCommon)((ITintTemplateColorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TintTemplateColor item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ITintTemplateColor item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TintTemplateColorSetterCommon)((ITintTemplateColorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ITintTemplateColor item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -862,7 +862,6 @@ namespace Mutagen.Bethesda.Fallout4
             TintTemplateColor.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Color = item.Color.Equals(rhs.Color);
             ret.Alpha = item.Alpha.EqualsWithin(rhs.Alpha);
             ret.TemplateIndex = item.TemplateIndex == rhs.TemplateIndex;
@@ -1101,7 +1100,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TintTemplateColorBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TintTemplateColorBinaryWriteTranslation Instance = new TintTemplateColorBinaryWriteTranslation();
+        public static readonly TintTemplateColorBinaryWriteTranslation Instance = new TintTemplateColorBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITintTemplateColorGetter item,
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ITintTemplateColorGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1133,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITintTemplateColorGetter)item,
@@ -1145,7 +1144,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class TintTemplateColorBinaryCreateTranslation
     {
-        public readonly static TintTemplateColorBinaryCreateTranslation Instance = new TintTemplateColorBinaryCreateTranslation();
+        public static readonly TintTemplateColorBinaryCreateTranslation Instance = new TintTemplateColorBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITintTemplateColor item,
@@ -1170,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ITintTemplateColorGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintTemplateColorBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1215,7 +1214,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintTemplateColorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1246,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITintTemplateColorGetter TintTemplateColorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintTemplateColorBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xE),
@@ -1263,7 +1262,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ITintTemplateColorGetter TintTemplateColorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return TintTemplateColorFactory(
                 stream: new OverlayStream(slice, package),

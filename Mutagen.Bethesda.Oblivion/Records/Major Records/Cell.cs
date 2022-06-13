@@ -300,10 +300,10 @@ partial class CellBinaryOverlay
     private ReadOnlyMemorySlice<byte>? _grupData;
 
     private int? _pathgridLocation;
-    public IPathGridGetter? PathGrid => _pathgridLocation.HasValue ? PathGridBinaryOverlay.PathGridFactory(new OverlayStream(_grupData!.Value.Slice(_pathgridLocation!.Value), _package), _package) : default;
+    public IPathGridGetter? PathGrid => _pathgridLocation.HasValue ? PathGridBinaryOverlay.PathGridFactory(new OverlayStream(_grupData!.Value.Slice(_pathgridLocation!.Value), _package), _package, default) : default;
 
     private int? _landscapeLocation;
-    public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new OverlayStream(_grupData!.Value.Slice(_landscapeLocation!.Value), _package), _package) : default;
+    public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new OverlayStream(_grupData!.Value.Slice(_landscapeLocation!.Value), _package), _package, default) : default;
 
     public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData.Value).LastModifiedData) : 0;
 
@@ -378,11 +378,11 @@ partial class CellBinaryOverlay
                     switch (majorMeta.RecordType.TypeInt)
                     {
                         case RecordTypeInts.ACRE:
-                            return PlacedCreatureBinaryOverlay.PlacedCreatureFactory(new OverlayStream(span, stream.MetaData), package);
+                            return PlacedCreatureBinaryOverlay.PlacedCreatureFactory(new OverlayStream(span, stream.MetaData), package, default);
                         case RecordTypeInts.ACHR:
-                            return PlacedNpcBinaryOverlay.PlacedNpcFactory(new OverlayStream(span, stream.MetaData), package);
+                            return PlacedNpcBinaryOverlay.PlacedNpcFactory(new OverlayStream(span, stream.MetaData), package, default);
                         case RecordTypeInts.REFR:
-                            return PlacedObjectBinaryOverlay.PlacedObjectFactory(new OverlayStream(span, stream.MetaData), package);
+                            return PlacedObjectBinaryOverlay.PlacedObjectFactory(new OverlayStream(span, stream.MetaData), package, default);
                         default:
                             throw new NotImplementedException();
                     }
@@ -403,7 +403,8 @@ partial class CellBinaryOverlay
                                 stream: new OverlayStream(contentSpan, stream.MetaData),
                                 triggers: TypicalPlacedTypes,
                                 constants: GameConstants.Oblivion.MajorConstants,
-                                skipHeader: false));
+                                skipHeader: false,
+                                translationParams: default));
                         break;
                     }
                     case GroupTypeEnum.CellTemporaryChildren:
@@ -456,7 +457,8 @@ partial class CellBinaryOverlay
                                 stream: new OverlayStream(contentSpan, stream.MetaData),
                                 triggers: TypicalPlacedTypes,
                                 constants: GameConstants.Oblivion.MajorConstants,
-                                skipHeader: false));
+                                skipHeader: false,
+                                translationParams: default));
                         break;
                     }
                     default:

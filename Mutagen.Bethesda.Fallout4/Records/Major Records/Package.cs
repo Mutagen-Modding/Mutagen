@@ -318,7 +318,7 @@ partial class PackageBinaryCreateTranslation
             ListBinaryTranslation<PackageBranch>.Instance.Parse(
                 reader: frame.SpawnAll(),
                 triggeringRecord: RecordTypes.ANAM,
-                transl: (MutagenFrame r, [MaybeNullWhen(false)] out PackageBranch listSubItem, TypedParseParams? translationParams) =>
+                transl: (MutagenFrame r, [MaybeNullWhen(false)] out PackageBranch listSubItem, TypedParseParams translationParams) =>
                 {
                     listSubItem = PackageBranch.CreateFromBinary(r);
                     return true;

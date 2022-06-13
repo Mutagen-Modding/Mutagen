@@ -225,7 +225,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 await args.Add(async (gen) =>
                 {
                     var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
-                    gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(TypedWriteParams)}? conv" : null)}) =>");
+                    gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(TypedWriteParams)} conv" : null)}) =>");
                     using (gen.CurlyBrace())
                     {
                         await subTransl.GenerateWrite(

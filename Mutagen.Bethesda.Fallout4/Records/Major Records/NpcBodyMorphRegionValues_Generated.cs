@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcBodyMorphRegionValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static NpcBodyMorphRegionValues CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcBodyMorphRegionValues();
             ((NpcBodyMorphRegionValuesSetterCommon)((INpcBodyMorphRegionValuesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcBodyMorphRegionValues item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this INpcBodyMorphRegionValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcBodyMorphRegionValuesSetterCommon)((INpcBodyMorphRegionValuesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             INpcBodyMorphRegionValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -883,7 +883,6 @@ namespace Mutagen.Bethesda.Fallout4
             NpcBodyMorphRegionValues.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Head = item.Head.EqualsWithin(rhs.Head);
             ret.UpperTorso = item.UpperTorso.EqualsWithin(rhs.UpperTorso);
             ret.Arms = item.Arms.EqualsWithin(rhs.Arms);
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcBodyMorphRegionValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcBodyMorphRegionValuesBinaryWriteTranslation Instance = new NpcBodyMorphRegionValuesBinaryWriteTranslation();
+        public static readonly NpcBodyMorphRegionValuesBinaryWriteTranslation Instance = new NpcBodyMorphRegionValuesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcBodyMorphRegionValuesGetter item,
@@ -1161,7 +1160,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             INpcBodyMorphRegionValuesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1171,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcBodyMorphRegionValuesGetter)item,
@@ -1183,7 +1182,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class NpcBodyMorphRegionValuesBinaryCreateTranslation
     {
-        public readonly static NpcBodyMorphRegionValuesBinaryCreateTranslation Instance = new NpcBodyMorphRegionValuesBinaryCreateTranslation();
+        public static readonly NpcBodyMorphRegionValuesBinaryCreateTranslation Instance = new NpcBodyMorphRegionValuesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcBodyMorphRegionValues item,
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this INpcBodyMorphRegionValuesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcBodyMorphRegionValuesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1251,7 +1250,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcBodyMorphRegionValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1283,7 +1282,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcBodyMorphRegionValuesGetter NpcBodyMorphRegionValuesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcBodyMorphRegionValuesBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x14),
@@ -1300,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static INpcBodyMorphRegionValuesGetter NpcBodyMorphRegionValuesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcBodyMorphRegionValuesFactory(
                 stream: new OverlayStream(slice, package),

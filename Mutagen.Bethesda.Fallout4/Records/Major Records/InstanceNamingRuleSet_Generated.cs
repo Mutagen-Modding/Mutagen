@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InstanceNamingRuleSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static InstanceNamingRuleSet CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new InstanceNamingRuleSet();
             ((InstanceNamingRuleSetSetterCommon)((IInstanceNamingRuleSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out InstanceNamingRuleSet item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IInstanceNamingRuleSet item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((InstanceNamingRuleSetSetterCommon)((IInstanceNamingRuleSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IInstanceNamingRuleSet item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -830,7 +830,6 @@ namespace Mutagen.Bethesda.Fallout4
             InstanceNamingRuleSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Names = item.Names.CollectionEqualsHelper(
                 rhs.Names,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1075,19 +1074,19 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class InstanceNamingRuleSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static InstanceNamingRuleSetBinaryWriteTranslation Instance = new InstanceNamingRuleSetBinaryWriteTranslation();
+        public static readonly InstanceNamingRuleSetBinaryWriteTranslation Instance = new InstanceNamingRuleSetBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IInstanceNamingRuleSetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IInstanceNamingRuleGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Names,
                 counterType: RecordTypes.VNAM,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IInstanceNamingRuleGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IInstanceNamingRuleGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((InstanceNamingRuleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1100,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IInstanceNamingRuleSetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1111,7 +1110,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IInstanceNamingRuleSetGetter)item,
@@ -1123,7 +1122,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class InstanceNamingRuleSetBinaryCreateTranslation
     {
-        public readonly static InstanceNamingRuleSetBinaryCreateTranslation Instance = new InstanceNamingRuleSetBinaryCreateTranslation();
+        public static readonly InstanceNamingRuleSetBinaryCreateTranslation Instance = new InstanceNamingRuleSetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IInstanceNamingRuleSet item,
@@ -1138,7 +1137,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1173,7 +1172,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IInstanceNamingRuleSetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InstanceNamingRuleSetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1218,7 +1217,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InstanceNamingRuleSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1246,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IInstanceNamingRuleSetGetter InstanceNamingRuleSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new InstanceNamingRuleSetBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1264,7 +1263,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IInstanceNamingRuleSetGetter InstanceNamingRuleSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return InstanceNamingRuleSetFactory(
                 stream: new OverlayStream(slice, package),
@@ -1279,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

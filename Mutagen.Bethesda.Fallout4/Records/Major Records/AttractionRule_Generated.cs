@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => AttractionRuleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttractionRuleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static AttractionRule CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AttractionRule();
             ((AttractionRuleSetterCommon)((IAttractionRuleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AttractionRule item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -836,7 +836,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAttractionRuleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AttractionRuleSetterCommon)((IAttractionRuleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IAttractionRuleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IAttractionRuleInternal>(
                 record: item,
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AttractionRule)item,
@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AttractionRule)item,
@@ -1057,7 +1057,6 @@ namespace Mutagen.Bethesda.Fallout4
             AttractionRule.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
             ret.MinDelay = item.MinDelay.EqualsWithin(rhs.MinDelay);
             ret.MaxDelay = item.MaxDelay.EqualsWithin(rhs.MaxDelay);
@@ -1530,7 +1529,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AttractionRuleBinaryWriteTranslation Instance = new AttractionRuleBinaryWriteTranslation();
+        public new static readonly AttractionRuleBinaryWriteTranslation Instance = new AttractionRuleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAttractionRuleGetter item,
@@ -1544,7 +1543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IAttractionRuleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1570,7 +1569,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IAttractionRuleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1598,7 +1597,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAttractionRuleGetter)item,
@@ -1609,7 +1608,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAttractionRuleGetter)item,
@@ -1620,7 +1619,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAttractionRuleGetter)item,
@@ -1632,7 +1631,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class AttractionRuleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static AttractionRuleBinaryCreateTranslation Instance = new AttractionRuleBinaryCreateTranslation();
+        public new static readonly AttractionRuleBinaryCreateTranslation Instance = new AttractionRuleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AORU;
         public static void FillBinaryStructs(
@@ -1651,7 +1650,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1715,7 +1714,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => AttractionRuleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttractionRuleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1776,7 +1775,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IAttractionRuleGetter AttractionRuleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new AttractionRuleBinaryOverlay(
@@ -1803,7 +1802,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IAttractionRuleGetter AttractionRuleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AttractionRuleFactory(
                 stream: new OverlayStream(slice, package),
@@ -1818,7 +1817,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

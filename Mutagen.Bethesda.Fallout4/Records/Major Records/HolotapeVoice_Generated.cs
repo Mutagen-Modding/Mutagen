@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => HolotapeVoiceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HolotapeVoiceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static HolotapeVoice CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HolotapeVoice();
             ((HolotapeVoiceSetterCommon)((IHolotapeVoiceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out HolotapeVoice item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IHolotapeVoice item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HolotapeVoiceSetterCommon)((IHolotapeVoiceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IHolotapeVoice item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAHolotapeData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (HolotapeVoice)item,
@@ -720,7 +720,6 @@ namespace Mutagen.Bethesda.Fallout4
             HolotapeVoice.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Scene = item.Scene.Equals(rhs.Scene);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -971,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         AHolotapeDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static HolotapeVoiceBinaryWriteTranslation Instance = new HolotapeVoiceBinaryWriteTranslation();
+        public new static readonly HolotapeVoiceBinaryWriteTranslation Instance = new HolotapeVoiceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IHolotapeVoiceGetter item,
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IHolotapeVoiceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -995,7 +994,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHolotapeVoiceGetter)item,
@@ -1006,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAHolotapeDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHolotapeVoiceGetter)item,
@@ -1018,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class HolotapeVoiceBinaryCreateTranslation : AHolotapeDataBinaryCreateTranslation
     {
-        public new readonly static HolotapeVoiceBinaryCreateTranslation Instance = new HolotapeVoiceBinaryCreateTranslation();
+        public new static readonly HolotapeVoiceBinaryCreateTranslation Instance = new HolotapeVoiceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IHolotapeVoice item,
@@ -1064,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => HolotapeVoiceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HolotapeVoiceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1092,7 +1091,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IHolotapeVoiceGetter HolotapeVoiceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HolotapeVoiceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IHolotapeVoiceGetter HolotapeVoiceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return HolotapeVoiceFactory(
                 stream: new OverlayStream(slice, package),

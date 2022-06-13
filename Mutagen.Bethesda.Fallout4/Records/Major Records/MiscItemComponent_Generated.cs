@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MiscItemComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MiscItemComponent CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MiscItemComponent();
             ((MiscItemComponentSetterCommon)((IMiscItemComponentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MiscItemComponent item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMiscItemComponent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MiscItemComponentSetterCommon)((IMiscItemComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMiscItemComponent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -788,7 +788,6 @@ namespace Mutagen.Bethesda.Fallout4
             MiscItemComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Component = item.Component.Equals(rhs.Component);
             ret.Count = item.Count == rhs.Count;
         }
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MiscItemComponentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MiscItemComponentBinaryWriteTranslation Instance = new MiscItemComponentBinaryWriteTranslation();
+        public static readonly MiscItemComponentBinaryWriteTranslation Instance = new MiscItemComponentBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMiscItemComponentGetter item,
@@ -1014,7 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMiscItemComponentGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1024,7 +1023,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMiscItemComponentGetter)item,
@@ -1036,7 +1035,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MiscItemComponentBinaryCreateTranslation
     {
-        public readonly static MiscItemComponentBinaryCreateTranslation Instance = new MiscItemComponentBinaryCreateTranslation();
+        public static readonly MiscItemComponentBinaryCreateTranslation Instance = new MiscItemComponentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMiscItemComponent item,
@@ -1057,7 +1056,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMiscItemComponentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MiscItemComponentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1102,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MiscItemComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1131,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMiscItemComponentGetter MiscItemComponentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MiscItemComponentBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMiscItemComponentGetter MiscItemComponentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MiscItemComponentFactory(
                 stream: new OverlayStream(slice, package),

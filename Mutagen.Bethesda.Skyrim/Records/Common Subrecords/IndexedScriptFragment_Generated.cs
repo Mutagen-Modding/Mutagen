@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IndexedScriptFragmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static IndexedScriptFragment CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IndexedScriptFragment();
             ((IndexedScriptFragmentSetterCommon)((IIndexedScriptFragmentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out IndexedScriptFragment item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IIndexedScriptFragment item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IndexedScriptFragmentSetterCommon)((IIndexedScriptFragmentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IIndexedScriptFragment item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -883,7 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
             IndexedScriptFragment.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FragmentIndex = item.FragmentIndex == rhs.FragmentIndex;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IndexedScriptFragmentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static IndexedScriptFragmentBinaryWriteTranslation Instance = new IndexedScriptFragmentBinaryWriteTranslation();
+        public static readonly IndexedScriptFragmentBinaryWriteTranslation Instance = new IndexedScriptFragmentBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IIndexedScriptFragmentGetter item,
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IIndexedScriptFragmentGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIndexedScriptFragmentGetter)item,
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class IndexedScriptFragmentBinaryCreateTranslation
     {
-        public readonly static IndexedScriptFragmentBinaryCreateTranslation Instance = new IndexedScriptFragmentBinaryCreateTranslation();
+        public static readonly IndexedScriptFragmentBinaryCreateTranslation Instance = new IndexedScriptFragmentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IIndexedScriptFragment item,
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IIndexedScriptFragmentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IndexedScriptFragmentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1251,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IndexedScriptFragmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1289,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIndexedScriptFragmentGetter IndexedScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IndexedScriptFragmentBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1308,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIndexedScriptFragmentGetter IndexedScriptFragmentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return IndexedScriptFragmentFactory(
                 stream: new OverlayStream(slice, package),

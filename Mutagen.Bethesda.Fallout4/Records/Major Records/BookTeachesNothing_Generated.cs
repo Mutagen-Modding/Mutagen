@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => BookTeachesNothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookTeachesNothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static BookTeachesNothing CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookTeachesNothing();
             ((BookTeachesNothingSetterCommon)((IBookTeachesNothingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BookTeachesNothing item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IBookTeachesNothing item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BookTeachesNothingSetterCommon)((IBookTeachesNothingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IBookTeachesNothing item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IBookTeachTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BookTeachesNothing)item,
@@ -704,7 +704,6 @@ namespace Mutagen.Bethesda.Fallout4
             BookTeachesNothing.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.RawContent = item.RawContent == rhs.RawContent;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -954,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4
         BookTeachTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static BookTeachesNothingBinaryWriteTranslation Instance = new BookTeachesNothingBinaryWriteTranslation();
+        public new static readonly BookTeachesNothingBinaryWriteTranslation Instance = new BookTeachesNothingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBookTeachesNothingGetter item,
@@ -966,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IBookTeachesNothingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -976,7 +975,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBookTeachesNothingGetter)item,
@@ -987,7 +986,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IBookTeachTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBookTeachesNothingGetter)item,
@@ -999,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class BookTeachesNothingBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
-        public new readonly static BookTeachesNothingBinaryCreateTranslation Instance = new BookTeachesNothingBinaryCreateTranslation();
+        public new static readonly BookTeachesNothingBinaryCreateTranslation Instance = new BookTeachesNothingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBookTeachesNothing item,
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => BookTeachesNothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookTeachesNothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1072,7 +1071,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IBookTeachesNothingGetter BookTeachesNothingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookTeachesNothingBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1089,7 +1088,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IBookTeachesNothingGetter BookTeachesNothingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return BookTeachesNothingFactory(
                 stream: new OverlayStream(slice, package),

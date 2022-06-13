@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LoadScreenLocation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LoadScreenLocation();
             ((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LoadScreenLocation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILoadScreenLocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -804,12 +804,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             ILoadScreenLocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.LNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -844,7 +844,6 @@ namespace Mutagen.Bethesda.Oblivion
             LoadScreenLocation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Direct = item.Direct.Equals(rhs.Direct);
             ret.Indirect = item.Indirect.Equals(rhs.Indirect);
             ret.GridPoint = item.GridPoint.Equals(rhs.GridPoint);
@@ -1070,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LoadScreenLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LoadScreenLocationBinaryWriteTranslation Instance = new LoadScreenLocationBinaryWriteTranslation();
+        public static readonly LoadScreenLocationBinaryWriteTranslation Instance = new LoadScreenLocationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILoadScreenLocationGetter item,
@@ -1090,12 +1089,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             ILoadScreenLocationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.LNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1107,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILoadScreenLocationGetter)item,
@@ -1119,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class LoadScreenLocationBinaryCreateTranslation
     {
-        public readonly static LoadScreenLocationBinaryCreateTranslation Instance = new LoadScreenLocationBinaryCreateTranslation();
+        public static readonly LoadScreenLocationBinaryCreateTranslation Instance = new LoadScreenLocationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILoadScreenLocation item,
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILoadScreenLocationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenLocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1186,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1216,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILoadScreenLocationGetter LoadScreenLocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LoadScreenLocationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1234,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ILoadScreenLocationGetter LoadScreenLocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LoadScreenLocationFactory(
                 stream: new OverlayStream(slice, package),

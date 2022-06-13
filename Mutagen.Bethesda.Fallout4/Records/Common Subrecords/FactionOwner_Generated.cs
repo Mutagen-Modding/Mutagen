@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => FactionOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FactionOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static FactionOwner CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FactionOwner();
             ((FactionOwnerSetterCommon)((IFactionOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FactionOwner item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFactionOwner item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FactionOwnerSetterCommon)((IFactionOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IFactionOwner item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IOwnerTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (FactionOwner)item,
@@ -764,7 +764,6 @@ namespace Mutagen.Bethesda.Fallout4
             FactionOwner.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Faction = item.Faction.Equals(rhs.Faction);
             ret.RequiredRank = item.RequiredRank == rhs.RequiredRank;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1029,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
         OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static FactionOwnerBinaryWriteTranslation Instance = new FactionOwnerBinaryWriteTranslation();
+        public new static readonly FactionOwnerBinaryWriteTranslation Instance = new FactionOwnerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFactionOwnerGetter item,
@@ -1044,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IFactionOwnerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1054,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFactionOwnerGetter)item,
@@ -1065,7 +1064,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IOwnerTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFactionOwnerGetter)item,
@@ -1077,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class FactionOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
-        public new readonly static FactionOwnerBinaryCreateTranslation Instance = new FactionOwnerBinaryCreateTranslation();
+        public new static readonly FactionOwnerBinaryCreateTranslation Instance = new FactionOwnerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFactionOwner item,
@@ -1124,7 +1123,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => FactionOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FactionOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFactionOwnerGetter FactionOwnerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FactionOwnerBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1170,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFactionOwnerGetter FactionOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return FactionOwnerFactory(
                 stream: new OverlayStream(slice, package),

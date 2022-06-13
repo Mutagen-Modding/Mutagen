@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptFieldsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static ScriptFields CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptFields();
             ((ScriptFieldsSetterCommon)((IScriptFieldsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptFields item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IScriptFields item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptFieldsSetterCommon)((IScriptFieldsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IScriptFields item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1070,7 +1070,6 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptFields.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MetadataSummary = MaskItemExt.Factory(item.MetadataSummary.GetEqualsMask(rhs.MetadataSummary, include), include);
             ret.CompiledScript = MemorySliceExt.Equal(item.CompiledScript, rhs.CompiledScript);
             ret.SourceCode = string.Equals(item.SourceCode, rhs.SourceCode);
@@ -1428,12 +1427,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptFieldsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ScriptFieldsBinaryWriteTranslation Instance = new ScriptFieldsBinaryWriteTranslation();
+        public static readonly ScriptFieldsBinaryWriteTranslation Instance = new ScriptFieldsBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IScriptFieldsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             ScriptFieldsBinaryWriteTranslation.WriteBinaryMetadataSummaryOld(
                 writer: writer,
@@ -1455,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocalVariableGetter>.Instance.Write(
                 writer: writer,
                 items: item.LocalVariables,
-                transl: (MutagenWriter subWriter, ILocalVariableGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocalVariableGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocalVariableBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1466,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAScriptReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.References,
-                transl: (MutagenWriter subWriter, IAScriptReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IAScriptReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((AScriptReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1492,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IScriptFieldsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1503,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptFieldsGetter)item,
@@ -1515,7 +1514,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class ScriptFieldsBinaryCreateTranslation
     {
-        public readonly static ScriptFieldsBinaryCreateTranslation Instance = new ScriptFieldsBinaryCreateTranslation();
+        public static readonly ScriptFieldsBinaryCreateTranslation Instance = new ScriptFieldsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptFields item,
@@ -1530,7 +1529,7 @@ namespace Mutagen.Bethesda.Oblivion
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1584,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion
                             reader: frame,
                             triggeringRecord: AScriptReference_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out AScriptReference listSubItem, TypedParseParams? translationParams) =>
+                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out AScriptReference listSubItem, TypedParseParams translationParams) =>
                             {
                                 switch (header.TypeInt)
                                 {
@@ -1627,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IScriptFieldsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptFieldsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1672,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptFieldsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1720,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IScriptFieldsGetter ScriptFieldsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptFieldsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1738,7 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IScriptFieldsGetter ScriptFieldsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptFieldsFactory(
                 stream: new OverlayStream(slice, package),
@@ -1753,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

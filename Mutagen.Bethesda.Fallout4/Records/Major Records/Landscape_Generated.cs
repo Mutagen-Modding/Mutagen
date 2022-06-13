@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandscapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1027,7 +1027,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Landscape CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Landscape();
             ((LandscapeSetterCommon)((ILandscapeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Landscape item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILandscapeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ILandscapeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILandscapeInternal>(
                 record: item,
@@ -1428,7 +1428,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Landscape)item,
@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Landscape)item,
@@ -1474,7 +1474,6 @@ namespace Mutagen.Bethesda.Fallout4
             Landscape.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
             ret.VertexNormals = item.VertexNormals.Array2dEqualsHelper(
                 rhs.VertexNormals,
@@ -2178,12 +2177,12 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LandscapeBinaryWriteTranslation Instance = new LandscapeBinaryWriteTranslation();
+        public new static readonly LandscapeBinaryWriteTranslation Instance = new LandscapeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILandscapeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2213,7 +2212,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBaseLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.Layers,
-                transl: (MutagenWriter subWriter, IBaseLayerGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IBaseLayerGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((BaseLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2225,7 +2224,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.Textures,
                 recordType: translationParams.ConvertToCustom(RecordTypes.VTEX),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandscapeTextureGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandscapeTextureGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2234,7 +2233,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILandscapeMPCDGetter>.Instance.Write(
                 writer: writer,
                 items: item.MPCDs,
-                transl: (MutagenWriter subWriter, ILandscapeMPCDGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILandscapeMPCDGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LandscapeMPCDBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2247,7 +2246,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ILandscapeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2275,7 +2274,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILandscapeGetter)item,
@@ -2286,7 +2285,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILandscapeGetter)item,
@@ -2297,7 +2296,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILandscapeGetter)item,
@@ -2309,7 +2308,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class LandscapeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
+        public new static readonly LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LAND;
         public static void FillBinaryStructs(
@@ -2328,7 +2327,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2374,7 +2373,7 @@ namespace Mutagen.Bethesda.Fallout4
                             reader: frame,
                             triggeringRecord: BaseLayer_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out BaseLayer listSubItem, TypedParseParams? translationParams) =>
+                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out BaseLayer listSubItem, TypedParseParams translationParams) =>
                             {
                                 switch (header.TypeInt)
                                 {
@@ -2464,7 +2463,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandscapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2506,7 +2505,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILandscapeGetter LandscapeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new LandscapeBinaryOverlay(
@@ -2533,7 +2532,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ILandscapeGetter LandscapeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LandscapeFactory(
                 stream: new OverlayStream(slice, package),
@@ -2548,7 +2547,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAmbientColorSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static WeatherAmbientColorSet CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherAmbientColorSet();
             ((WeatherAmbientColorSetSetterCommon)((IWeatherAmbientColorSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherAmbientColorSet item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IWeatherAmbientColorSet item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherAmbientColorSetSetterCommon)((IWeatherAmbientColorSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IWeatherAmbientColorSet item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1051,7 +1051,6 @@ namespace Mutagen.Bethesda.Fallout4
             WeatherAmbientColorSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sunrise = MaskItemExt.Factory(item.Sunrise.GetEqualsMask(rhs.Sunrise, include), include);
             ret.Day = MaskItemExt.Factory(item.Day.GetEqualsMask(rhs.Day, include), include);
             ret.Sunset = MaskItemExt.Factory(item.Sunset.GetEqualsMask(rhs.Sunset, include), include);
@@ -1521,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeatherAmbientColorSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherAmbientColorSetBinaryWriteTranslation Instance = new WeatherAmbientColorSetBinaryWriteTranslation();
+        public static readonly WeatherAmbientColorSetBinaryWriteTranslation Instance = new WeatherAmbientColorSetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherAmbientColorSetGetter item,
@@ -1532,7 +1531,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IWeatherAmbientColorSetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1542,7 +1541,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherAmbientColorSetGetter)item,
@@ -1554,7 +1553,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class WeatherAmbientColorSetBinaryCreateTranslation
     {
-        public readonly static WeatherAmbientColorSetBinaryCreateTranslation Instance = new WeatherAmbientColorSetBinaryCreateTranslation();
+        public static readonly WeatherAmbientColorSetBinaryCreateTranslation Instance = new WeatherAmbientColorSetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherAmbientColorSet item,
@@ -1573,7 +1572,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IWeatherAmbientColorSetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAmbientColorSetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1617,7 +1616,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAmbientColorSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1644,7 +1643,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeatherAmbientColorSetGetter WeatherAmbientColorSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherAmbientColorSetBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1660,7 +1659,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWeatherAmbientColorSetGetter WeatherAmbientColorSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherAmbientColorSetFactory(
                 stream: new OverlayStream(slice, package),

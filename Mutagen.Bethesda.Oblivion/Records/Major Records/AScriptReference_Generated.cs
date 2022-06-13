@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AScriptReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAScriptReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AScriptReferenceSetterCommon)((IAScriptReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IAScriptReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
@@ -686,7 +686,6 @@ namespace Mutagen.Bethesda.Oblivion
             AScriptReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
         public string Print(
@@ -868,19 +867,19 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AScriptReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AScriptReferenceBinaryWriteTranslation Instance = new AScriptReferenceBinaryWriteTranslation();
+        public static readonly AScriptReferenceBinaryWriteTranslation Instance = new AScriptReferenceBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IAScriptReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAScriptReferenceGetter)item,
@@ -892,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class AScriptReferenceBinaryCreateTranslation
     {
-        public readonly static AScriptReferenceBinaryCreateTranslation Instance = new AScriptReferenceBinaryCreateTranslation();
+        public static readonly AScriptReferenceBinaryCreateTranslation Instance = new AScriptReferenceBinaryCreateTranslation();
 
     }
 
@@ -905,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAScriptReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AScriptReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -950,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AScriptReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

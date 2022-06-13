@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlphaBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Alpha CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Alpha();
             ((AlphaSetterCommon)((IAlphaGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Alpha item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAlpha item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AlphaSetterCommon)((IAlphaGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAlpha item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XALP),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
             Alpha.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Cutoff = item.Cutoff == rhs.Cutoff;
             ret.Base = item.Base == rhs.Base;
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AlphaBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AlphaBinaryWriteTranslation Instance = new AlphaBinaryWriteTranslation();
+        public static readonly AlphaBinaryWriteTranslation Instance = new AlphaBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAlphaGetter item,
@@ -1006,12 +1005,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IAlphaGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XALP),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1023,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAlphaGetter)item,
@@ -1035,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class AlphaBinaryCreateTranslation
     {
-        public readonly static AlphaBinaryCreateTranslation Instance = new AlphaBinaryCreateTranslation();
+        public static readonly AlphaBinaryCreateTranslation Instance = new AlphaBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAlpha item,
@@ -1056,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAlphaGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlphaBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1100,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlphaBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1129,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlphaGetter AlphaFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AlphaBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlphaGetter AlphaFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AlphaFactory(
                 stream: new OverlayStream(slice, package),

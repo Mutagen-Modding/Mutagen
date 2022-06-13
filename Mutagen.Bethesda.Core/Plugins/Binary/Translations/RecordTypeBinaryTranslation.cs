@@ -17,7 +17,7 @@ internal class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordTy
     public bool Parse<T>(
         MutagenFrame reader,
         out EDIDLink<T> item,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
         where T : class, IMajorRecordGetter
     {
         if (!reader.TryCheckUpcomingRead(4, out var ex))
@@ -32,7 +32,7 @@ internal class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordTy
     public bool Parse<T>(
         MutagenFrame reader,
         out IEDIDLinkGetter<T> item,
-        TypedParseParams? translationParams = null)
+        TypedParseParams translationParams = default)
         where T : class, IMajorRecordGetter
     {
         if (!reader.TryCheckUpcomingRead(4, out var ex))

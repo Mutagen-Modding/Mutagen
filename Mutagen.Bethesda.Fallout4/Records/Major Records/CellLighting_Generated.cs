@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static CellLighting CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CellLighting();
             ((CellLightingSetterCommon)((ICellLightingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CellLighting item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ICellLighting item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1724,12 +1724,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ICellLighting item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XCLL),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1764,7 +1764,6 @@ namespace Mutagen.Bethesda.Fallout4
             CellLighting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.AmbientColor = item.AmbientColor.ColorOnlyEquals(rhs.AmbientColor);
             ret.DirectionalColor = item.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor);
@@ -2363,7 +2362,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CellLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CellLightingBinaryWriteTranslation Instance = new CellLightingBinaryWriteTranslation();
+        public static readonly CellLightingBinaryWriteTranslation Instance = new CellLightingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICellLightingGetter item,
@@ -2462,12 +2461,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ICellLightingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XCLL),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2479,7 +2478,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICellLightingGetter)item,
@@ -2491,7 +2490,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class CellLightingBinaryCreateTranslation
     {
-        public readonly static CellLightingBinaryCreateTranslation Instance = new CellLightingBinaryCreateTranslation();
+        public static readonly CellLightingBinaryCreateTranslation Instance = new CellLightingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICellLighting item,
@@ -2554,7 +2553,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ICellLightingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2598,7 +2597,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2653,7 +2652,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICellLightingGetter CellLightingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CellLightingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -2682,7 +2681,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ICellLightingGetter CellLightingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CellLightingFactory(
                 stream: new OverlayStream(slice, package),

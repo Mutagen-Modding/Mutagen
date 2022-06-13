@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedPrimitiveBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static PlacedPrimitive CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedPrimitive();
             ((PlacedPrimitiveSetterCommon)((IPlacedPrimitiveGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedPrimitive item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IPlacedPrimitive item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedPrimitiveSetterCommon)((IPlacedPrimitiveGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -818,12 +818,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IPlacedPrimitive item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XPRM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -858,7 +858,6 @@ namespace Mutagen.Bethesda.Fallout4
             PlacedPrimitive.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Bounds = item.Bounds.Equals(rhs.Bounds);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             ret.Unknown = item.Unknown.EqualsWithin(rhs.Unknown);
@@ -1096,7 +1095,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedPrimitiveBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PlacedPrimitiveBinaryWriteTranslation Instance = new PlacedPrimitiveBinaryWriteTranslation();
+        public static readonly PlacedPrimitiveBinaryWriteTranslation Instance = new PlacedPrimitiveBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedPrimitiveGetter item,
@@ -1134,12 +1133,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IPlacedPrimitiveGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XPRM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1151,7 +1150,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedPrimitiveGetter)item,
@@ -1163,7 +1162,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class PlacedPrimitiveBinaryCreateTranslation
     {
-        public readonly static PlacedPrimitiveBinaryCreateTranslation Instance = new PlacedPrimitiveBinaryCreateTranslation();
+        public static readonly PlacedPrimitiveBinaryCreateTranslation Instance = new PlacedPrimitiveBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPlacedPrimitive item,
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPlacedPrimitiveGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedPrimitiveBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1238,7 +1237,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedPrimitiveBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1272,7 +1271,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedPrimitiveGetter PlacedPrimitiveFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedPrimitiveBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IPlacedPrimitiveGetter PlacedPrimitiveFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedPrimitiveFactory(
                 stream: new OverlayStream(slice, package),

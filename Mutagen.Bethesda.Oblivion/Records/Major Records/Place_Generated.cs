@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PlaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPlaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1000,14 +1000,14 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IPlaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Place)item,
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Place)item,
@@ -1053,7 +1053,6 @@ namespace Mutagen.Bethesda.Oblivion
             Place.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1482,12 +1481,12 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PlaceBinaryWriteTranslation Instance = new PlaceBinaryWriteTranslation();
+        public new static readonly PlaceBinaryWriteTranslation Instance = new PlaceBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IPlaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
@@ -1508,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1519,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1530,7 +1529,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1542,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class PlaceBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static PlaceBinaryCreateTranslation Instance = new PlaceBinaryCreateTranslation();
+        public new static readonly PlaceBinaryCreateTranslation Instance = new PlaceBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
     }
@@ -1588,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PlaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

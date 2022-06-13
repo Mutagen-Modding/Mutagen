@@ -2250,7 +2250,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneActionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2260,7 +2260,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static SceneAction CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SceneAction();
             ((SceneActionSetterCommon)((ISceneActionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SceneAction item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -2566,7 +2566,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISceneAction item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SceneActionSetterCommon)((ISceneActionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2850,7 +2850,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             ISceneAction item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -2887,7 +2887,6 @@ namespace Mutagen.Bethesda.Fallout4
             SceneAction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = MaskItemExt.Factory(item.Type.GetEqualsMask(rhs.Type, include), include);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.ActorID = item.ActorID == rhs.ActorID;
@@ -4042,12 +4041,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SceneActionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SceneActionBinaryWriteTranslation Instance = new SceneActionBinaryWriteTranslation();
+        public static readonly SceneActionBinaryWriteTranslation Instance = new SceneActionBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISceneActionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             SceneActionBinaryWriteTranslation.WriteBinaryType(
                 writer: writer,
@@ -4097,7 +4096,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IStartSceneGetter>.Instance.Write(
                 writer: writer,
                 items: item.StartScenes,
-                transl: (MutagenWriter subWriter, IStartSceneGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IStartSceneGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((StartSceneBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -4181,7 +4180,7 @@ namespace Mutagen.Bethesda.Fallout4
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4275,7 +4274,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             ISceneActionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -4286,7 +4285,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISceneActionGetter)item,
@@ -4298,7 +4297,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class SceneActionBinaryCreateTranslation
     {
-        public readonly static SceneActionBinaryCreateTranslation Instance = new SceneActionBinaryCreateTranslation();
+        public static readonly SceneActionBinaryCreateTranslation Instance = new SceneActionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISceneAction item,
@@ -4313,7 +4312,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -4746,7 +4745,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ISceneActionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneActionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -4791,7 +4790,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneActionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -4985,7 +4984,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneActionGetter SceneActionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SceneActionBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -5003,7 +5002,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static ISceneActionGetter SceneActionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SceneActionFactory(
                 stream: new OverlayStream(slice, package),
@@ -5018,7 +5017,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

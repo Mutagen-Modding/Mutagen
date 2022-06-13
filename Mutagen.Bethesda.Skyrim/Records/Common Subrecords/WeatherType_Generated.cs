@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeatherType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherType();
             ((WeatherTypeSetterCommon)((IWeatherTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IWeatherType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -833,7 +833,6 @@ namespace Mutagen.Bethesda.Skyrim
             WeatherType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Weather = item.Weather.Equals(rhs.Weather);
             ret.Chance = item.Chance == rhs.Chance;
             ret.Global = item.Global.Equals(rhs.Global);
@@ -1059,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherTypeBinaryWriteTranslation Instance = new WeatherTypeBinaryWriteTranslation();
+        public static readonly WeatherTypeBinaryWriteTranslation Instance = new WeatherTypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherTypeGetter item,
@@ -1077,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IWeatherTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1087,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherTypeGetter)item,
@@ -1099,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class WeatherTypeBinaryCreateTranslation
     {
-        public readonly static WeatherTypeBinaryCreateTranslation Instance = new WeatherTypeBinaryCreateTranslation();
+        public static readonly WeatherTypeBinaryCreateTranslation Instance = new WeatherTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherType item,
@@ -1121,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeatherTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1166,7 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherTypeGetter WeatherTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherTypeBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWeatherTypeGetter WeatherTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherTypeFactory(
                 stream: new OverlayStream(slice, package),

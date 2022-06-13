@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExtraDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ExtraData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ExtraData();
             ((ExtraDataSetterCommon)((IExtraDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ExtraData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IExtraData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ExtraDataSetterCommon)((IExtraDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -755,12 +755,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IExtraData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.COED),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -795,7 +795,6 @@ namespace Mutagen.Bethesda.Skyrim
             ExtraData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Owner = MaskItemExt.Factory(item.Owner.GetEqualsMask(rhs.Owner, include), include);
             ret.ItemCondition = item.ItemCondition.EqualsWithin(rhs.ItemCondition);
         }
@@ -1034,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ExtraDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ExtraDataBinaryWriteTranslation Instance = new ExtraDataBinaryWriteTranslation();
+        public static readonly ExtraDataBinaryWriteTranslation Instance = new ExtraDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IExtraDataGetter item,
@@ -1064,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IExtraDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.COED),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1081,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IExtraDataGetter)item,
@@ -1093,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ExtraDataBinaryCreateTranslation
     {
-        public readonly static ExtraDataBinaryCreateTranslation Instance = new ExtraDataBinaryCreateTranslation();
+        public static readonly ExtraDataBinaryCreateTranslation Instance = new ExtraDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IExtraData item,
@@ -1120,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IExtraDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExtraDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1165,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExtraDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1197,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IExtraDataGetter ExtraDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ExtraDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1215,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IExtraDataGetter ExtraDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ExtraDataFactory(
                 stream: new OverlayStream(slice, package),

@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => HazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HazardBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Hazard CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Hazard();
             ((HazardSetterCommon)((IHazardGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Hazard item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IHazardInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HazardSetterCommon)((IHazardGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IHazardInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IHazardInternal>(
                 record: item,
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Hazard)item,
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Hazard)item,
@@ -1633,7 +1633,6 @@ namespace Mutagen.Bethesda.Fallout4
             Hazard.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
@@ -2335,7 +2334,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static HazardBinaryWriteTranslation Instance = new HazardBinaryWriteTranslation();
+        public new static readonly HazardBinaryWriteTranslation Instance = new HazardBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IHazardGetter item,
@@ -2349,7 +2348,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IHazardGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2423,7 +2422,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IHazardGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2451,7 +2450,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHazardGetter)item,
@@ -2462,7 +2461,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHazardGetter)item,
@@ -2473,7 +2472,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHazardGetter)item,
@@ -2485,7 +2484,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class HazardBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static HazardBinaryCreateTranslation Instance = new HazardBinaryCreateTranslation();
+        public new static readonly HazardBinaryCreateTranslation Instance = new HazardBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.HAZD;
         public static void FillBinaryStructs(
@@ -2504,7 +2503,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2605,7 +2604,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => HazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HazardBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2723,7 +2722,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IHazardGetter HazardFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new HazardBinaryOverlay(
@@ -2750,7 +2749,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IHazardGetter HazardFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return HazardFactory(
                 stream: new OverlayStream(slice, package),
@@ -2765,7 +2764,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

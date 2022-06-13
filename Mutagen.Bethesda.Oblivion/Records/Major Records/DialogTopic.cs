@@ -106,12 +106,13 @@ partial class DialogTopicBinaryOverlay
             this.Items = BinaryOverlayList.FactoryByArray<IDialogItemGetter>(
                 contentSpan,
                 _package,
-                getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new OverlayStream(s, p), p),
+                getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new OverlayStream(s, p), p, default),
                 locs: ParseRecordLocations(
                     stream: new OverlayStream(contentSpan, _package),
                     trigger: DialogItem_Registration.TriggeringRecordType,
                     constants: GameConstants.Oblivion.MajorConstants,
-                    skipHeader: false));
+                    skipHeader: false,
+                    translationParams: default));
         }
         catch (Exception ex)
         {

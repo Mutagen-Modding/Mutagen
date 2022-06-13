@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => HairBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HairBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Hair CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Hair();
             ((HairSetterCommon)((IHairGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Hair item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IHairInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HairSetterCommon)((IHairGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IHairInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IHairInternal>(
                 record: item,
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Hair)item,
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Hair)item,
@@ -784,7 +784,6 @@ namespace Mutagen.Bethesda.Skyrim
             Hair.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1159,12 +1158,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static HairBinaryWriteTranslation Instance = new HairBinaryWriteTranslation();
+        public new static readonly HairBinaryWriteTranslation Instance = new HairBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             IHairGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1190,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHairGetter)item,
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHairGetter)item,
@@ -1212,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHairGetter)item,
@@ -1224,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class HairBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static HairBinaryCreateTranslation Instance = new HairBinaryCreateTranslation();
+        public new static readonly HairBinaryCreateTranslation Instance = new HairBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.HAIR;
         public static void FillBinaryStructs(
@@ -1272,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => HairBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HairBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1301,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IHairGetter HairFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new HairBinaryOverlay(
@@ -1328,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IHairGetter HairFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return HairFactory(
                 stream: new OverlayStream(slice, package),

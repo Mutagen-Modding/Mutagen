@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpeedOverridesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SpeedOverrides CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SpeedOverrides();
             ((SpeedOverridesSetterCommon)((ISpeedOverridesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SpeedOverrides item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISpeedOverrides item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SpeedOverridesSetterCommon)((ISpeedOverridesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1076,12 +1076,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ISpeedOverrides item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SPED),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1116,7 +1116,6 @@ namespace Mutagen.Bethesda.Skyrim
             SpeedOverrides.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LeftWalk = item.LeftWalk.EqualsWithin(rhs.LeftWalk);
             ret.LeftRun = item.LeftRun.EqualsWithin(rhs.LeftRun);
             ret.RightWalk = item.RightWalk.EqualsWithin(rhs.RightWalk);
@@ -1452,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SpeedOverridesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SpeedOverridesBinaryWriteTranslation Instance = new SpeedOverridesBinaryWriteTranslation();
+        public static readonly SpeedOverridesBinaryWriteTranslation Instance = new SpeedOverridesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISpeedOverridesGetter item,
@@ -1496,12 +1495,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ISpeedOverridesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SPED),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1513,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISpeedOverridesGetter)item,
@@ -1525,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class SpeedOverridesBinaryCreateTranslation
     {
-        public readonly static SpeedOverridesBinaryCreateTranslation Instance = new SpeedOverridesBinaryCreateTranslation();
+        public static readonly SpeedOverridesBinaryCreateTranslation Instance = new SpeedOverridesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISpeedOverrides item,
@@ -1555,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISpeedOverridesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpeedOverridesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1599,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpeedOverridesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1637,7 +1636,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISpeedOverridesGetter SpeedOverridesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SpeedOverridesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1655,7 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISpeedOverridesGetter SpeedOverridesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return SpeedOverridesFactory(
                 stream: new OverlayStream(slice, package),

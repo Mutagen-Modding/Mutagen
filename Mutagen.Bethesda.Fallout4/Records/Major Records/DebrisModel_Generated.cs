@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static DebrisModel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DebrisModel();
             ((DebrisModelSetterCommon)((IDebrisModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DebrisModel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDebrisModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DebrisModelSetterCommon)((IDebrisModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IDebrisModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -920,7 +920,6 @@ namespace Mutagen.Bethesda.Fallout4
             DebrisModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Percentage = item.Percentage == rhs.Percentage;
             ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
@@ -1183,7 +1182,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DebrisModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DebrisModelBinaryWriteTranslation Instance = new DebrisModelBinaryWriteTranslation();
+        public static readonly DebrisModelBinaryWriteTranslation Instance = new DebrisModelBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDebrisModelGetter item,
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IDebrisModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
@@ -1220,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IDebrisModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1234,7 +1233,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDebrisModelGetter)item,
@@ -1246,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class DebrisModelBinaryCreateTranslation
     {
-        public readonly static DebrisModelBinaryCreateTranslation Instance = new DebrisModelBinaryCreateTranslation();
+        public static readonly DebrisModelBinaryCreateTranslation Instance = new DebrisModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDebrisModel item,
@@ -1261,7 +1260,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1308,7 +1307,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IDebrisModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1352,7 +1351,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1399,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDebrisModelGetter DebrisModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DebrisModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1419,7 +1418,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IDebrisModelGetter DebrisModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return DebrisModelFactory(
                 stream: new OverlayStream(slice, package),
@@ -1434,7 +1433,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

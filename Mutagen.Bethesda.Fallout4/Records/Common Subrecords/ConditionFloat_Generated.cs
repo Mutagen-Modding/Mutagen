@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ConditionFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ConditionFloat CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ConditionFloat();
             ((ConditionFloatSetterCommon)((IConditionFloatGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ConditionFloat item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IConditionFloat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ConditionFloatSetterCommon)((IConditionFloatGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -728,12 +728,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IConditionFloat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CTDA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             ICondition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ConditionFloat)item,
@@ -782,7 +782,6 @@ namespace Mutagen.Bethesda.Fallout4
             ConditionFloat.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ComparisonValue = item.ComparisonValue.EqualsWithin(rhs.ComparisonValue);
             ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1078,7 +1077,7 @@ namespace Mutagen.Bethesda.Fallout4
         ConditionBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ConditionFloatBinaryWriteTranslation Instance = new ConditionFloatBinaryWriteTranslation();
+        public new static readonly ConditionFloatBinaryWriteTranslation Instance = new ConditionFloatBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IConditionFloatGetter item,
@@ -1122,12 +1121,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IConditionFloatGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CTDA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1142,7 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IConditionFloatGetter)item,
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IConditionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IConditionFloatGetter)item,
@@ -1165,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class ConditionFloatBinaryCreateTranslation : ConditionBinaryCreateTranslation
     {
-        public new readonly static ConditionFloatBinaryCreateTranslation Instance = new ConditionFloatBinaryCreateTranslation();
+        public new static readonly ConditionFloatBinaryCreateTranslation Instance = new ConditionFloatBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IConditionFloat item,
@@ -1232,7 +1231,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ConditionFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1270,7 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IConditionFloatGetter ConditionFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ConditionFloatBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1292,7 +1291,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IConditionFloatGetter ConditionFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ConditionFloatFactory(
                 stream: new OverlayStream(slice, package),

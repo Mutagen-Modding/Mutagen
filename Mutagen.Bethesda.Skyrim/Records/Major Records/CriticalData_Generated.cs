@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CriticalDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CriticalData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CriticalData();
             ((CriticalDataSetterCommon)((ICriticalDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CriticalData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICriticalData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CriticalDataSetterCommon)((ICriticalDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1031,12 +1031,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ICriticalData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CRDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1071,7 +1071,6 @@ namespace Mutagen.Bethesda.Skyrim
             CriticalData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Damage = item.Damage == rhs.Damage;
             ret.Unused = item.Unused == rhs.Unused;
@@ -1381,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CriticalDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CriticalDataBinaryWriteTranslation Instance = new CriticalDataBinaryWriteTranslation();
+        public static readonly CriticalDataBinaryWriteTranslation Instance = new CriticalDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICriticalDataGetter item,
@@ -1418,12 +1417,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ICriticalDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CRDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1435,7 +1434,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICriticalDataGetter)item,
@@ -1447,7 +1446,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class CriticalDataBinaryCreateTranslation
     {
-        public readonly static CriticalDataBinaryCreateTranslation Instance = new CriticalDataBinaryCreateTranslation();
+        public static readonly CriticalDataBinaryCreateTranslation Instance = new CriticalDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICriticalData item,
@@ -1487,7 +1486,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICriticalDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CriticalDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1532,7 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CriticalDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1574,7 +1573,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICriticalDataGetter CriticalDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CriticalDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1595,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ICriticalDataGetter CriticalDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return CriticalDataFactory(
                 stream: new OverlayStream(slice, package),

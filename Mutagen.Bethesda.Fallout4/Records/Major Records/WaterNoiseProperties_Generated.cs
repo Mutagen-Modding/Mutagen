@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterNoisePropertiesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static WaterNoiseProperties CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WaterNoiseProperties();
             ((WaterNoisePropertiesSetterCommon)((IWaterNoisePropertiesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WaterNoiseProperties item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IWaterNoiseProperties item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WaterNoisePropertiesSetterCommon)((IWaterNoisePropertiesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IWaterNoiseProperties item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -922,7 +922,6 @@ namespace Mutagen.Bethesda.Fallout4
             WaterNoiseProperties.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.WindDirection = item.WindDirection.EqualsWithin(rhs.WindDirection);
             ret.WindSpeed = item.WindSpeed.EqualsWithin(rhs.WindSpeed);
             ret.AmplitudeScale = item.AmplitudeScale.EqualsWithin(rhs.AmplitudeScale);
@@ -1192,7 +1191,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WaterNoisePropertiesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WaterNoisePropertiesBinaryWriteTranslation Instance = new WaterNoisePropertiesBinaryWriteTranslation();
+        public static readonly WaterNoisePropertiesBinaryWriteTranslation Instance = new WaterNoisePropertiesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWaterNoisePropertiesGetter item,
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IWaterNoisePropertiesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWaterNoisePropertiesGetter)item,
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class WaterNoisePropertiesBinaryCreateTranslation
     {
-        public readonly static WaterNoisePropertiesBinaryCreateTranslation Instance = new WaterNoisePropertiesBinaryCreateTranslation();
+        public static readonly WaterNoisePropertiesBinaryCreateTranslation Instance = new WaterNoisePropertiesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWaterNoiseProperties item,
@@ -1244,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IWaterNoisePropertiesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterNoisePropertiesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1288,7 +1287,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterNoisePropertiesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1315,7 +1314,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWaterNoisePropertiesGetter WaterNoisePropertiesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WaterNoisePropertiesBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1331,7 +1330,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IWaterNoisePropertiesGetter WaterNoisePropertiesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WaterNoisePropertiesFactory(
                 stream: new OverlayStream(slice, package),

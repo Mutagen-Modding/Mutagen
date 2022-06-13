@@ -7,7 +7,7 @@ public interface IBinaryWriteTranslator
     void Write(
         MutagenWriter writer,
         object item,
-        TypedWriteParams? translationParams = null);
+        TypedWriteParams translationParams = default);
 }
 
 public interface IBinaryItem
@@ -16,5 +16,5 @@ public interface IBinaryItem
     object BinaryWriteTranslator { get; }
     void WriteToBinary(
         MutagenWriter writer,
-        TypedWriteParams? translationParams = null);
+        TypedWriteParams translationParams = default);
 }

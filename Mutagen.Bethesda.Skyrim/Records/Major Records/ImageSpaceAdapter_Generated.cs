@@ -6580,7 +6580,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ImageSpaceAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -6590,7 +6590,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ImageSpaceAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceAdapter();
             ((ImageSpaceAdapterSetterCommon)((IImageSpaceAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -6605,7 +6605,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpaceAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -6913,7 +6913,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceAdapterInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceAdapterSetterCommon)((IImageSpaceAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -7238,7 +7238,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IImageSpaceAdapterInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IImageSpaceAdapterInternal>(
                 record: item,
@@ -7251,7 +7251,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ImageSpaceAdapter)item,
@@ -7262,7 +7262,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ImageSpaceAdapter)item,
@@ -7297,7 +7297,6 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpaceAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Animatable = item.Animatable == rhs.Animatable;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
             ret.RadialBlurUseTarget = item.RadialBlurUseTarget == rhs.RadialBlurUseTarget;
@@ -10836,7 +10835,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ImageSpaceAdapterBinaryWriteTranslation Instance = new ImageSpaceAdapterBinaryWriteTranslation();
+        public new static readonly ImageSpaceAdapterBinaryWriteTranslation Instance = new ImageSpaceAdapterBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceAdapterGetter item,
@@ -10850,7 +10849,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IImageSpaceAdapterGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -10884,7 +10883,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.BlurRadius,
                 recordType: translationParams.ConvertToCustom(RecordTypes.BNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10896,7 +10895,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.DoubleVisionStrength,
                 recordType: translationParams.ConvertToCustom(RecordTypes.VNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10908,7 +10907,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.TintColor,
                 recordType: translationParams.ConvertToCustom(RecordTypes.TNAM),
-                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ColorFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10920,7 +10919,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.FadeColor,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NAM3),
-                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ColorFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10932,7 +10931,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.RadialBlurStrength,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10944,7 +10943,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.RadialBlurRampUp,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10956,7 +10955,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.RadialBlurStart,
                 recordType: translationParams.ConvertToCustom(RecordTypes.UNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10968,7 +10967,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.RadialBlurRampDown,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NAM1),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10980,7 +10979,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.RadialBlurDownStart,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NAM2),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -10992,7 +10991,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.DepthOfFieldStrength,
                 recordType: translationParams.ConvertToCustom(RecordTypes.WNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11004,7 +11003,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.DepthOfFieldDistance,
                 recordType: translationParams.ConvertToCustom(RecordTypes.XNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11016,7 +11015,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.DepthOfFieldRange,
                 recordType: translationParams.ConvertToCustom(RecordTypes.YNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11028,7 +11027,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.MotionBlurStrength,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NAM4),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11040,7 +11039,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrEyeAdaptSpeedMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._0_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11052,7 +11051,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrEyeAdaptSpeedAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.@IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11064,7 +11063,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrBloomBlurRadiusMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._1_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11076,7 +11075,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrBloomBlurRadiusAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.AIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11088,7 +11087,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrBloomThresholdMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._2_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11100,7 +11099,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrBloomThresholdAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.BIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11112,7 +11111,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrBloomScaleMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._3_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11124,7 +11123,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrBloomScaleAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.CIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11136,7 +11135,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrTargetLumMinMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._4_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11148,7 +11147,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrTargetLumMinAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.DIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11160,7 +11159,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrTargetLumMaxMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._5_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11172,7 +11171,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrTargetLumMaxAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.EIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11184,7 +11183,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrSunlightScaleMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._6_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11196,7 +11195,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrSunlightScaleAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.FIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11208,7 +11207,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrSkyScaleMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._7_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11220,7 +11219,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.HdrSkyScaleAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.GIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11232,7 +11231,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown08,
                 recordType: translationParams.ConvertToCustom(RecordTypes._8_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11244,7 +11243,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown48,
                 recordType: translationParams.ConvertToCustom(RecordTypes.HIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11256,7 +11255,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown09,
                 recordType: translationParams.ConvertToCustom(RecordTypes._9_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11268,7 +11267,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown49,
                 recordType: translationParams.ConvertToCustom(RecordTypes.IIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11280,7 +11279,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown0A,
                 recordType: translationParams.ConvertToCustom(RecordTypes._A_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11292,7 +11291,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown4A,
                 recordType: translationParams.ConvertToCustom(RecordTypes.JIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11304,7 +11303,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown0B,
                 recordType: translationParams.ConvertToCustom(RecordTypes._B_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11316,7 +11315,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown4B,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11328,7 +11327,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown0C,
                 recordType: translationParams.ConvertToCustom(RecordTypes._C_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11340,7 +11339,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown4C,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11352,7 +11351,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown0D,
                 recordType: translationParams.ConvertToCustom(RecordTypes._D_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11364,7 +11363,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown4D,
                 recordType: translationParams.ConvertToCustom(RecordTypes.MIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11376,7 +11375,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown0E,
                 recordType: translationParams.ConvertToCustom(RecordTypes._E_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11388,7 +11387,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown4E,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11400,7 +11399,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown0F,
                 recordType: translationParams.ConvertToCustom(RecordTypes._F_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11412,7 +11411,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown4F,
                 recordType: translationParams.ConvertToCustom(RecordTypes.OIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11424,7 +11423,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown10,
                 recordType: translationParams.ConvertToCustom(RecordTypes._10_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11436,7 +11435,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown50,
                 recordType: translationParams.ConvertToCustom(RecordTypes.PIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11448,7 +11447,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.CinematicSaturationMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._11_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11460,7 +11459,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.CinematicSaturationAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.QIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11472,7 +11471,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.CinematicBrightnessMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._12_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11484,7 +11483,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.CinematicBrightnessAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11496,7 +11495,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.CinematicContrastMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._13_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11508,7 +11507,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.CinematicContrastAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11520,7 +11519,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown14,
                 recordType: translationParams.ConvertToCustom(RecordTypes._14_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11532,7 +11531,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Unknown54,
                 recordType: translationParams.ConvertToCustom(RecordTypes.TIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11584,7 +11583,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IImageSpaceAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -11612,7 +11611,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
@@ -11623,7 +11622,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
@@ -11634,7 +11633,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
@@ -11646,7 +11645,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ImageSpaceAdapterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ImageSpaceAdapterBinaryCreateTranslation Instance = new ImageSpaceAdapterBinaryCreateTranslation();
+        public new static readonly ImageSpaceAdapterBinaryCreateTranslation Instance = new ImageSpaceAdapterBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IMAD;
         public static void FillBinaryStructs(
@@ -11665,7 +11664,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -12305,7 +12304,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ImageSpaceAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -12437,7 +12436,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceAdapterGetter ImageSpaceAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new ImageSpaceAdapterBinaryOverlay(
@@ -12464,7 +12463,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IImageSpaceAdapterGetter ImageSpaceAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceAdapterFactory(
                 stream: new OverlayStream(slice, package),
@@ -12479,7 +12478,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

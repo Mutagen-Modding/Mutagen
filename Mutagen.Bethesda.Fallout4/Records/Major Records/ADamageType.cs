@@ -9,7 +9,7 @@ public partial class ADamageType
 {
     public static ADamageType CreateFromBinary(
         MutagenFrame frame,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var majorMeta = frame.GetMajorRecord();
         if (majorMeta.FormVersion >= 78)
@@ -28,7 +28,7 @@ partial class ADamageTypeBinaryOverlay
     public static IADamageTypeGetter ADamageTypeFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         var majorFrame = package.MetaData.Constants.MajorRecord(stream.RemainingMemory);
         if (majorFrame.FormVersion >= 78)

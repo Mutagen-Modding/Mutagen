@@ -35,7 +35,7 @@ partial class PerkScriptFragmentsBinaryWriteTranslation
             writer: writer,
             items: item.Fragments,
             countLengthLength: 2,
-            transl: (MutagenWriter subWriter, IPerkScriptFragmentGetter subItem, TypedWriteParams? conv) =>
+            transl: (MutagenWriter subWriter, IPerkScriptFragmentGetter subItem, TypedWriteParams conv) =>
             {
                 var Item = subItem;
                 ((PerkScriptFragmentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(

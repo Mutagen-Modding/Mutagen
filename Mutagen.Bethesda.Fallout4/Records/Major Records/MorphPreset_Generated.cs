@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MorphPresetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static MorphPreset CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MorphPreset();
             ((MorphPresetSetterCommon)((IMorphPresetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MorphPreset item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMorphPreset item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MorphPresetSetterCommon)((IMorphPresetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IMorphPreset item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -974,7 +974,6 @@ namespace Mutagen.Bethesda.Fallout4
             MorphPreset.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.UnknownMPPM = string.Equals(item.UnknownMPPM, rhs.UnknownMPPM);
@@ -1253,12 +1252,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MorphPresetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MorphPresetBinaryWriteTranslation Instance = new MorphPresetBinaryWriteTranslation();
+        public static readonly MorphPresetBinaryWriteTranslation Instance = new MorphPresetBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMorphPresetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1288,7 +1287,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IMorphPresetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMorphPresetGetter)item,
@@ -1311,7 +1310,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class MorphPresetBinaryCreateTranslation
     {
-        public readonly static MorphPresetBinaryCreateTranslation Instance = new MorphPresetBinaryCreateTranslation();
+        public static readonly MorphPresetBinaryCreateTranslation Instance = new MorphPresetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMorphPreset item,
@@ -1326,7 +1325,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1387,7 +1386,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IMorphPresetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MorphPresetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1432,7 +1431,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MorphPresetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1487,7 +1486,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMorphPresetGetter MorphPresetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MorphPresetBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1505,7 +1504,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IMorphPresetGetter MorphPresetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MorphPresetFactory(
                 stream: new OverlayStream(slice, package),
@@ -1520,7 +1519,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

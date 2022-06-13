@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => AlchemicalApparatusBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlchemicalApparatusBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static AlchemicalApparatus CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AlchemicalApparatus();
             ((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AlchemicalApparatus item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAlchemicalApparatusInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAlchemicalApparatusInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IAlchemicalApparatusInternal>(
                 record: item,
@@ -1478,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AlchemicalApparatus)item,
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AlchemicalApparatus)item,
@@ -1524,7 +1524,6 @@ namespace Mutagen.Bethesda.Skyrim
             AlchemicalApparatus.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -2280,7 +2279,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AlchemicalApparatusBinaryWriteTranslation Instance = new AlchemicalApparatusBinaryWriteTranslation();
+        public new static readonly AlchemicalApparatusBinaryWriteTranslation Instance = new AlchemicalApparatusBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAlchemicalApparatusGetter item,
@@ -2294,7 +2293,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IAlchemicalApparatusGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2370,7 +2369,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IAlchemicalApparatusGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2398,7 +2397,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAlchemicalApparatusGetter)item,
@@ -2409,7 +2408,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAlchemicalApparatusGetter)item,
@@ -2420,7 +2419,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAlchemicalApparatusGetter)item,
@@ -2432,7 +2431,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class AlchemicalApparatusBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static AlchemicalApparatusBinaryCreateTranslation Instance = new AlchemicalApparatusBinaryCreateTranslation();
+        public new static readonly AlchemicalApparatusBinaryCreateTranslation Instance = new AlchemicalApparatusBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.APPA;
         public static void FillBinaryStructs(
@@ -2451,7 +2450,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2583,7 +2582,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => AlchemicalApparatusBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlchemicalApparatusBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2665,7 +2664,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlchemicalApparatusGetter AlchemicalApparatusFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new AlchemicalApparatusBinaryOverlay(
@@ -2692,7 +2691,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAlchemicalApparatusGetter AlchemicalApparatusFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AlchemicalApparatusFactory(
                 stream: new OverlayStream(slice, package),
@@ -2707,7 +2706,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

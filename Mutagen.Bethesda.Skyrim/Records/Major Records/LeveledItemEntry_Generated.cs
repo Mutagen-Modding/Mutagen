@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledItemEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LeveledItemEntry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LeveledItemEntry();
             ((LeveledItemEntrySetterCommon)((ILeveledItemEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LeveledItemEntry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILeveledItemEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LeveledItemEntrySetterCommon)((ILeveledItemEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             ILeveledItemEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -818,7 +818,6 @@ namespace Mutagen.Bethesda.Skyrim
             LeveledItemEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -1110,12 +1109,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LeveledItemEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LeveledItemEntryBinaryWriteTranslation Instance = new LeveledItemEntryBinaryWriteTranslation();
+        public static readonly LeveledItemEntryBinaryWriteTranslation Instance = new LeveledItemEntryBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILeveledItemEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             if (item.Data is {} DataItem)
             {
@@ -1136,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             ILeveledItemEntryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILeveledItemEntryGetter)item,
@@ -1159,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class LeveledItemEntryBinaryCreateTranslation
     {
-        public readonly static LeveledItemEntryBinaryCreateTranslation Instance = new LeveledItemEntryBinaryCreateTranslation();
+        public static readonly LeveledItemEntryBinaryCreateTranslation Instance = new LeveledItemEntryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILeveledItemEntry item,
@@ -1174,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILeveledItemEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledItemEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1252,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledItemEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1287,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILeveledItemEntryGetter LeveledItemEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LeveledItemEntryBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1305,7 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ILeveledItemEntryGetter LeveledItemEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return LeveledItemEntryFactory(
                 stream: new OverlayStream(slice, package),
@@ -1320,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

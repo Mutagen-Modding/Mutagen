@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -429,7 +429,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static MagicEffectArchetype CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectArchetype();
             ((MagicEffectArchetypeSetterCommon)((IMagicEffectArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MagicEffectArchetype item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMagicEffectArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MagicEffectArchetypeSetterCommon)((IMagicEffectArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IMagicEffectArchetypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -817,7 +817,6 @@ namespace Mutagen.Bethesda.Skyrim
             MagicEffectArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.AssociationKey = item.AssociationKey == rhs.AssociationKey;
             ret.ActorValue = item.ActorValue == rhs.ActorValue;
@@ -1057,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectArchetypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MagicEffectArchetypeBinaryWriteTranslation Instance = new MagicEffectArchetypeBinaryWriteTranslation();
+        public static readonly MagicEffectArchetypeBinaryWriteTranslation Instance = new MagicEffectArchetypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMagicEffectArchetypeGetter item,
@@ -1068,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             IMagicEffectArchetypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1078,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMagicEffectArchetypeGetter)item,
@@ -1090,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class MagicEffectArchetypeBinaryCreateTranslation
     {
-        public readonly static MagicEffectArchetypeBinaryCreateTranslation Instance = new MagicEffectArchetypeBinaryCreateTranslation();
+        public static readonly MagicEffectArchetypeBinaryCreateTranslation Instance = new MagicEffectArchetypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMagicEffectArchetypeInternal item,
@@ -1109,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IMagicEffectArchetypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectArchetypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1180,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMagicEffectArchetypeGetter MagicEffectArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IMagicEffectArchetypeGetter MagicEffectArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return MagicEffectArchetypeFactory(
                 stream: new OverlayStream(slice, package),

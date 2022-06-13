@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ScriptIntListPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptIntListPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ScriptIntListProperty CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptIntListProperty();
             ((ScriptIntListPropertySetterCommon)((IScriptIntListPropertyGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptIntListProperty item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IScriptIntListProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptIntListPropertySetterCommon)((IScriptIntListPropertyGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IScriptIntListProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IScriptProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ScriptIntListProperty)item,
@@ -798,7 +798,6 @@ namespace Mutagen.Bethesda.Skyrim
             ScriptIntListProperty.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data.CollectionEqualsHelper(
                 rhs.Data,
                 (l, r) => l == r,
@@ -1078,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptPropertyBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ScriptIntListPropertyBinaryWriteTranslation Instance = new ScriptIntListPropertyBinaryWriteTranslation();
+        public new static readonly ScriptIntListPropertyBinaryWriteTranslation Instance = new ScriptIntListPropertyBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScriptIntListPropertyGetter item,
@@ -1097,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IScriptIntListPropertyGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1107,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptIntListPropertyGetter)item,
@@ -1118,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IScriptPropertyGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IScriptIntListPropertyGetter)item,
@@ -1130,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class ScriptIntListPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
-        public new readonly static ScriptIntListPropertyBinaryCreateTranslation Instance = new ScriptIntListPropertyBinaryCreateTranslation();
+        public new static readonly ScriptIntListPropertyBinaryCreateTranslation Instance = new ScriptIntListPropertyBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptIntListProperty item,
@@ -1182,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ScriptIntListPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptIntListPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScriptIntListPropertyGetter ScriptIntListPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptIntListPropertyBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1231,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IScriptIntListPropertyGetter ScriptIntListPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptIntListPropertyFactory(
                 stream: new OverlayStream(slice, package),

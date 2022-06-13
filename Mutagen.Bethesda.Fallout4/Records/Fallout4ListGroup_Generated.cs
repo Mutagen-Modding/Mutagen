@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4ListGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Fallout4ListGroup<T> CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Fallout4ListGroup<T>();
             ((Fallout4ListGroupSetterCommon<T>)((IFallout4ListGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Fallout4ListGroup<T> item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary<T>(
             this IFallout4ListGroup<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
             where T : class, ICellBlock, IBinaryItem
         {
             ((Fallout4ListGroupSetterCommon<T>)((IFallout4ListGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IFallout4ListGroup<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.GroupParse(
                 record: item,
@@ -899,7 +899,6 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4ListGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.LastModified = item.LastModified == rhs.LastModified;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1248,7 +1247,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4ListGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static Fallout4ListGroupBinaryWriteTranslation Instance = new Fallout4ListGroupBinaryWriteTranslation();
+        public static readonly Fallout4ListGroupBinaryWriteTranslation Instance = new Fallout4ListGroupBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
             IFallout4ListGroupGetter<T> item,
@@ -1269,13 +1268,13 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes<T>(
             IFallout4ListGroupGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
             where T : class, ICellBlockGetter, IBinaryItem
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
                 items: item.Records,
-                transl: (MutagenWriter subWriter, T subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, T subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((CellBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1303,7 +1302,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write<T>(
             MutagenWriter writer,
             IFallout4ListGroupGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
             where T : class, ICellBlockGetter, IBinaryItem
         {
             using (HeaderExport.Group(
@@ -1323,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             throw new NotImplementedException();
         }
@@ -1333,7 +1332,7 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class Fallout4ListGroupBinaryCreateTranslation<T>
         where T : class, ICellBlock, IBinaryItem
     {
-        public readonly static Fallout4ListGroupBinaryCreateTranslation<T> Instance = new Fallout4ListGroupBinaryCreateTranslation<T>();
+        public static readonly Fallout4ListGroupBinaryCreateTranslation<T> Instance = new Fallout4ListGroupBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
             IFallout4ListGroup<T> item,
@@ -1355,7 +1354,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1392,7 +1391,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary<T, T_ErrMask>(
             this IFallout4ListGroupGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
             where T : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
         {
@@ -1444,7 +1443,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4ListGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1479,7 +1478,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFallout4ListGroupGetter<T> Fallout4ListGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Fallout4ListGroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1503,7 +1502,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IFallout4ListGroupGetter<T> Fallout4ListGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return Fallout4ListGroupFactory(
                 stream: new OverlayStream(slice, package),
@@ -1518,7 +1517,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

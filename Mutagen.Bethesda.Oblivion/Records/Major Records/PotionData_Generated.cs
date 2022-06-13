@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PotionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static PotionData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PotionData();
             ((PotionDataSetterCommon)((IPotionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PotionData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPotionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PotionDataSetterCommon)((IPotionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IPotionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ENIT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -783,7 +783,6 @@ namespace Mutagen.Bethesda.Oblivion
             PotionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Value = item.Value == rhs.Value;
             ret.Flags = item.Flags == rhs.Flags;
         }
@@ -993,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PotionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PotionDataBinaryWriteTranslation Instance = new PotionDataBinaryWriteTranslation();
+        public static readonly PotionDataBinaryWriteTranslation Instance = new PotionDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPotionDataGetter item,
@@ -1009,12 +1008,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IPotionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ENIT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1026,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPotionDataGetter)item,
@@ -1038,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class PotionDataBinaryCreateTranslation
     {
-        public readonly static PotionDataBinaryCreateTranslation Instance = new PotionDataBinaryCreateTranslation();
+        public static readonly PotionDataBinaryCreateTranslation Instance = new PotionDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPotionData item,
@@ -1061,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IPotionDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PotionDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PotionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1134,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPotionDataGetter PotionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PotionDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1152,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IPotionDataGetter PotionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return PotionDataFactory(
                 stream: new OverlayStream(slice, package),

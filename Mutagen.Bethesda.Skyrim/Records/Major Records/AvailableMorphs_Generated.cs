@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AvailableMorphsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AvailableMorphs CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AvailableMorphs();
             ((AvailableMorphsSetterCommon)((IAvailableMorphsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AvailableMorphs item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAvailableMorphs item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AvailableMorphsSetterCommon)((IAvailableMorphsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IAvailableMorphs item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -907,7 +907,6 @@ namespace Mutagen.Bethesda.Skyrim
             AvailableMorphs.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Nose = EqualsMaskHelper.EqualsHelper(
                 item.Nose,
                 rhs.Nose,
@@ -1281,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AvailableMorphsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AvailableMorphsBinaryWriteTranslation Instance = new AvailableMorphsBinaryWriteTranslation();
+        public static readonly AvailableMorphsBinaryWriteTranslation Instance = new AvailableMorphsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAvailableMorphsGetter item,
@@ -1292,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteRecordTypes(
             IAvailableMorphsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             AvailableMorphsBinaryWriteTranslation.WriteBinaryParse(
                 writer: writer,
@@ -1315,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IAvailableMorphsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1329,7 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAvailableMorphsGetter)item,
@@ -1341,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class AvailableMorphsBinaryCreateTranslation
     {
-        public readonly static AvailableMorphsBinaryCreateTranslation Instance = new AvailableMorphsBinaryCreateTranslation();
+        public static readonly AvailableMorphsBinaryCreateTranslation Instance = new AvailableMorphsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAvailableMorphs item,
@@ -1356,7 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1390,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAvailableMorphsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AvailableMorphsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1434,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AvailableMorphsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1467,7 +1466,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAvailableMorphsGetter AvailableMorphsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AvailableMorphsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1485,7 +1484,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IAvailableMorphsGetter AvailableMorphsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AvailableMorphsFactory(
                 stream: new OverlayStream(slice, package),
@@ -1500,7 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

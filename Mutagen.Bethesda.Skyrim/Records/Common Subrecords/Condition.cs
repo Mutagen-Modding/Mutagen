@@ -712,7 +712,7 @@ public partial class Condition
 
     public static Condition CreateFromBinary(
         MutagenFrame frame,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         if (!frame.Reader.TryGetSubrecordHeader(Mutagen.Bethesda.Skyrim.Internals.RecordTypes.CTDA, out var subRecMeta))
         {
@@ -733,7 +733,7 @@ public partial class Condition
     public static bool TryCreateFromBinary(
         MutagenFrame frame,
         out Condition condition,
-        TypedParseParams? translationParams)
+        TypedParseParams translationParams)
     {
         condition = CreateFromBinary(frame, translationParams);
         return true;
@@ -962,7 +962,7 @@ abstract partial class ConditionBinaryOverlay
         }
     }
 
-    public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams? _)
+    public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams _)
     {
         var subRecMeta = stream.GetSubrecord();
         if (subRecMeta.RecordType != RecordTypes.CTDA)

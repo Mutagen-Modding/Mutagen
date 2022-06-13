@@ -1,4 +1,4 @@
-﻿using Loqui.Generation;
+using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins;
@@ -204,7 +204,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                             }
                             else
                             {
-                                gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, [MaybeNullWhen(false)] out {arr2d.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
+                                gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, [MaybeNullWhen(false)] out {arr2d.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem{(needsRecordConv ? $", {nameof(TypedParseParams)} translationParams" : null)}) =>");
                                 using (gen.CurlyBrace())
                                 {
                                     subGen.GenerateCopyInRet(
@@ -225,7 +225,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                         }
                         else
                         {
-                            gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, [MaybeNullWhen(false)] out {arr2d.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
+                            gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, [MaybeNullWhen(false)] out {arr2d.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem{(needsRecordConv ? $", {nameof(TypedParseParams)} translationParams" : null)}) =>");
                             using (gen.CurlyBrace())
                             {
                                 gen.AppendLine("switch (header.TypeInt)");

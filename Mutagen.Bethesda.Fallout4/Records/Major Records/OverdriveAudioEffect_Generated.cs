@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => OverdriveAudioEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OverdriveAudioEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static OverdriveAudioEffect CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new OverdriveAudioEffect();
             ((OverdriveAudioEffectSetterCommon)((IOverdriveAudioEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out OverdriveAudioEffect item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IOverdriveAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((OverdriveAudioEffectSetterCommon)((IOverdriveAudioEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IOverdriveAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IAAudioEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (OverdriveAudioEffect)item,
@@ -823,7 +823,6 @@ namespace Mutagen.Bethesda.Fallout4
             OverdriveAudioEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.InputGain = item.InputGain.EqualsWithin(rhs.InputGain);
             ret.OutputGain = item.OutputGain.EqualsWithin(rhs.OutputGain);
             ret.UpperThreshold = item.UpperThreshold.EqualsWithin(rhs.UpperThreshold);
@@ -1113,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
         AAudioEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static OverdriveAudioEffectBinaryWriteTranslation Instance = new OverdriveAudioEffectBinaryWriteTranslation();
+        public new static readonly OverdriveAudioEffectBinaryWriteTranslation Instance = new OverdriveAudioEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IOverdriveAudioEffectGetter item,
@@ -1139,7 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IOverdriveAudioEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IOverdriveAudioEffectGetter)item,
@@ -1160,7 +1159,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IAAudioEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IOverdriveAudioEffectGetter)item,
@@ -1172,7 +1171,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class OverdriveAudioEffectBinaryCreateTranslation : AAudioEffectBinaryCreateTranslation
     {
-        public new readonly static OverdriveAudioEffectBinaryCreateTranslation Instance = new OverdriveAudioEffectBinaryCreateTranslation();
+        public new static readonly OverdriveAudioEffectBinaryCreateTranslation Instance = new OverdriveAudioEffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IOverdriveAudioEffect item,
@@ -1223,7 +1222,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => OverdriveAudioEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OverdriveAudioEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1254,7 +1253,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IOverdriveAudioEffectGetter OverdriveAudioEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new OverdriveAudioEffectBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x14),
@@ -1271,7 +1270,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IOverdriveAudioEffectGetter OverdriveAudioEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return OverdriveAudioEffectFactory(
                 stream: new OverlayStream(slice, package),

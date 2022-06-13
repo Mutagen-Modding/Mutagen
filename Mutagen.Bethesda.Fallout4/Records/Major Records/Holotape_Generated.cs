@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => HolotapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HolotapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Holotape CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Holotape();
             ((HolotapeSetterCommon)((IHolotapeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Holotape item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IHolotapeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HolotapeSetterCommon)((IHolotapeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IHolotapeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IHolotapeInternal>(
                 record: item,
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Holotape)item,
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Holotape)item,
@@ -1478,7 +1478,6 @@ namespace Mutagen.Bethesda.Fallout4
             Holotape.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -2216,7 +2215,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static HolotapeBinaryWriteTranslation Instance = new HolotapeBinaryWriteTranslation();
+        public new static readonly HolotapeBinaryWriteTranslation Instance = new HolotapeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IHolotapeGetter item,
@@ -2230,7 +2229,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteRecordTypes(
             IHolotapeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2326,7 +2325,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IHolotapeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2354,7 +2353,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHolotapeGetter)item,
@@ -2365,7 +2364,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHolotapeGetter)item,
@@ -2376,7 +2375,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHolotapeGetter)item,
@@ -2388,7 +2387,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class HolotapeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static HolotapeBinaryCreateTranslation Instance = new HolotapeBinaryCreateTranslation();
+        public new static readonly HolotapeBinaryCreateTranslation Instance = new HolotapeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NOTE;
         public static void FillBinaryStructs(
@@ -2407,7 +2406,7 @@ namespace Mutagen.Bethesda.Fallout4
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2541,7 +2540,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => HolotapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HolotapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2627,7 +2626,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IHolotapeGetter HolotapeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new HolotapeBinaryOverlay(
@@ -2654,7 +2653,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IHolotapeGetter HolotapeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return HolotapeFactory(
                 stream: new OverlayStream(slice, package),
@@ -2669,7 +2668,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

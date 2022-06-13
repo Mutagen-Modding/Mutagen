@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmmunitionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static AmmunitionData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AmmunitionData();
             ((AmmunitionDataSetterCommon)((IAmmunitionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AmmunitionData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAmmunitionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AmmunitionDataSetterCommon)((IAmmunitionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -857,12 +857,12 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IAmmunitionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -897,7 +897,6 @@ namespace Mutagen.Bethesda.Oblivion
             AmmunitionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Value = item.Value == rhs.Value;
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AmmunitionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AmmunitionDataBinaryWriteTranslation Instance = new AmmunitionDataBinaryWriteTranslation();
+        public static readonly AmmunitionDataBinaryWriteTranslation Instance = new AmmunitionDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAmmunitionDataGetter item,
@@ -1172,12 +1171,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             IAmmunitionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1189,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAmmunitionDataGetter)item,
@@ -1201,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     internal partial class AmmunitionDataBinaryCreateTranslation
     {
-        public readonly static AmmunitionDataBinaryCreateTranslation Instance = new AmmunitionDataBinaryCreateTranslation();
+        public static readonly AmmunitionDataBinaryCreateTranslation Instance = new AmmunitionDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAmmunitionData item,
@@ -1227,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAmmunitionDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmmunitionDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1271,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmmunitionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1303,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IAmmunitionDataGetter AmmunitionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AmmunitionDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1321,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IAmmunitionDataGetter AmmunitionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return AmmunitionDataFactory(
                 stream: new OverlayStream(slice, package),

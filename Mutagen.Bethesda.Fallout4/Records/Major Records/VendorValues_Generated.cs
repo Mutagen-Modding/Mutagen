@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VendorValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static VendorValues CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new VendorValues();
             ((VendorValuesSetterCommon)((IVendorValuesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out VendorValues item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IVendorValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -965,12 +965,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void CopyInFromBinary(
             IVendorValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VENV),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1005,7 +1005,6 @@ namespace Mutagen.Bethesda.Fallout4
             VendorValues.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.StartHour = item.StartHour == rhs.StartHour;
             ret.EndHour = item.EndHour == rhs.EndHour;
             ret.Radius = item.Radius == rhs.Radius;
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class VendorValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static VendorValuesBinaryWriteTranslation Instance = new VendorValuesBinaryWriteTranslation();
+        public static readonly VendorValuesBinaryWriteTranslation Instance = new VendorValuesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IVendorValuesGetter item,
@@ -1318,12 +1317,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             IVendorValuesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VENV),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1335,7 +1334,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IVendorValuesGetter)item,
@@ -1347,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class VendorValuesBinaryCreateTranslation
     {
-        public readonly static VendorValuesBinaryCreateTranslation Instance = new VendorValuesBinaryCreateTranslation();
+        public static readonly VendorValuesBinaryCreateTranslation Instance = new VendorValuesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IVendorValues item,
@@ -1374,7 +1373,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IVendorValuesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VendorValuesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1418,7 +1417,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VendorValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1453,7 +1452,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IVendorValuesGetter VendorValuesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new VendorValuesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1471,7 +1470,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IVendorValuesGetter VendorValuesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return VendorValuesFactory(
                 stream: new OverlayStream(slice, package),

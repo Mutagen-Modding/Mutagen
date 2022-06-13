@@ -6809,8 +6809,8 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new Fallout4Mod(modKey: frame.MetaData.ModKey);
                 ((Fallout4ModSetterCommon)((IFallout4ModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                     item: ret,
-                    importMask: importMask,
-                    frame: frame);
+                    frame: frame,
+                    importMask: importMask);
                 return ret;
             }
             catch (Exception ex)
@@ -7605,8 +7605,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ((Fallout4ModSetterCommon)((IFallout4ModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                importMask: importMask,
-                frame: frame);
+                frame: frame,
+                importMask: importMask);
         }
 
         public static void CopyInFromBinary(
@@ -9872,7 +9872,6 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4Mod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
             ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
             ret.Keywords = MaskItemExt.Factory(item.Keywords.GetEqualsMask(rhs.Keywords, include), include);
@@ -20929,13 +20928,13 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4ModBinaryWriteTranslation
     {
-        public readonly static Fallout4ModBinaryWriteTranslation Instance = new Fallout4ModBinaryWriteTranslation();
+        public static readonly Fallout4ModBinaryWriteTranslation Instance = new Fallout4ModBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFallout4ModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             if (importMask?.GameSettings ?? true)
             {
@@ -22353,8 +22352,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             Write(
                 item: (IFallout4ModGetter)item,
-                importMask: importMask,
                 writer: writer,
+                importMask: importMask,
                 param: param,
                 modKey: modKey);
         }
@@ -22363,7 +22362,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     internal partial class Fallout4ModBinaryCreateTranslation
     {
-        public readonly static Fallout4ModBinaryCreateTranslation Instance = new Fallout4ModBinaryCreateTranslation();
+        public static readonly Fallout4ModBinaryCreateTranslation Instance = new Fallout4ModBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFallout4Mod item,
@@ -22377,7 +22376,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType nextRecordType,
             int contentLength,
             GroupMask? importMask,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -24176,8 +24175,8 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = item.ModKey;
             Fallout4ModBinaryWriteTranslation.Instance.Write(
                 item: item,
-                importMask: importMask,
                 writer: writer,
+                importMask: importMask,
                 param: param,
                 modKey: modKey);
         }
@@ -25017,7 +25016,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset,
             RecordType type,
             PreviousParse lastParsed,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

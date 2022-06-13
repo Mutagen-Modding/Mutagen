@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => IdleMarkerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IdleMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static IdleMarker CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IdleMarker();
             ((IdleMarkerSetterCommon)((IIdleMarkerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out IdleMarker item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IIdleMarkerInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IdleMarkerSetterCommon)((IIdleMarkerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IIdleMarkerInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IIdleMarkerInternal>(
                 record: item,
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (IdleMarker)item,
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (IdleMarker)item,
@@ -1162,7 +1162,6 @@ namespace Mutagen.Bethesda.Skyrim
             IdleMarker.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.IdleTimer = item.IdleTimer.EqualsWithin(rhs.IdleTimer);
@@ -1722,12 +1721,12 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static IdleMarkerBinaryWriteTranslation Instance = new IdleMarkerBinaryWriteTranslation();
+        public new static readonly IdleMarkerBinaryWriteTranslation Instance = new IdleMarkerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IIdleMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1791,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IIdleMarkerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1819,7 +1818,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIdleMarkerGetter)item,
@@ -1830,7 +1829,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IIdleMarkerGetter)item,
@@ -1841,7 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IIdleMarkerGetter)item,
@@ -1853,7 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class IdleMarkerBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static IdleMarkerBinaryCreateTranslation Instance = new IdleMarkerBinaryCreateTranslation();
+        public new static readonly IdleMarkerBinaryCreateTranslation Instance = new IdleMarkerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IDLM;
         public static void FillBinaryStructs(
@@ -1872,7 +1871,7 @@ namespace Mutagen.Bethesda.Skyrim
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1972,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => IdleMarkerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IdleMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2029,7 +2028,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIdleMarkerGetter IdleMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
             var ret = new IdleMarkerBinaryOverlay(
@@ -2056,7 +2055,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IIdleMarkerGetter IdleMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return IdleMarkerFactory(
                 stream: new OverlayStream(slice, package),
@@ -2071,7 +2070,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WorldspaceMap CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceMap();
             ((WorldspaceMapSetterCommon)((IWorldspaceMapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceMap item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWorldspaceMap item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceMapSetterCommon)((IWorldspaceMapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -936,12 +936,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void CopyInFromBinary(
             IWorldspaceMap item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -976,7 +976,6 @@ namespace Mutagen.Bethesda.Skyrim
             WorldspaceMap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.UsableDimensions = item.UsableDimensions.Equals(rhs.UsableDimensions);
             ret.NorthwestCellCoords = item.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords);
@@ -1257,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceMapBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceMapBinaryWriteTranslation Instance = new WorldspaceMapBinaryWriteTranslation();
+        public static readonly WorldspaceMapBinaryWriteTranslation Instance = new WorldspaceMapBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceMapGetter item,
@@ -1289,12 +1288,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             IWorldspaceMapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1306,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceMapGetter)item,
@@ -1318,7 +1317,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     internal partial class WorldspaceMapBinaryCreateTranslation
     {
-        public readonly static WorldspaceMapBinaryCreateTranslation Instance = new WorldspaceMapBinaryCreateTranslation();
+        public static readonly WorldspaceMapBinaryCreateTranslation Instance = new WorldspaceMapBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceMap item,
@@ -1348,7 +1347,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceMapGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMapBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1392,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1426,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWorldspaceMapGetter WorldspaceMapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceMapBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
@@ -1447,7 +1446,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IWorldspaceMapGetter WorldspaceMapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceMapFactory(
                 stream: new OverlayStream(slice, package),
