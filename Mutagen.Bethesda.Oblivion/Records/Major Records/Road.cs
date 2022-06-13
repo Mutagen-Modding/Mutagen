@@ -21,7 +21,7 @@ partial class RoadBinaryCreateTranslation
         subMeta = frame.ReadSubrecordHeader();
         switch (subMeta.RecordType.TypeInt)
         {
-            case 0x52524750: // "PGRR":
+            case RecordTypeInts.PGRR:
                 var connBytes = frame.Reader.ReadSpan(subMeta.ContentLength);
                 var connFloats = connBytes.AsFloatSpan();
                 int numPts = pointBytes.Length / POINT_LEN;
@@ -125,7 +125,7 @@ partial class RoadBinaryOverlay
         subMeta = stream.GetSubrecordHeader();
         switch (subMeta.RecordTypeInt)
         {
-            case 0x52524750: // "PGRR":
+            case RecordTypeInts.PGRR:
                 stream.Position += subMeta.HeaderLength;
                 var connBytes = stream.ReadMemory(subMeta.ContentLength);
                 this.Points = BinaryOverlayList.FactoryByLazyParse<IRoadPointGetter>(

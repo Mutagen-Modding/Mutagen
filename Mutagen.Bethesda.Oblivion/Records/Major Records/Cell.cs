@@ -124,13 +124,13 @@ partial class CellBinaryCreateTranslation
                 {
                     switch (header.TypeInt)
                     {
-                        case 0x45524341: // "ACRE":
+                        case RecordTypeInts.ACRE:
                             placed = PlacedCreature.CreateFromBinary(r);
                             return true;
-                        case 0x52484341: //"ACHR":
+                        case RecordTypeInts.ACHR:
                             placed = PlacedNpc.CreateFromBinary(r);
                             return true;
-                        case 0x52464552: // "REFR":
+                        case RecordTypeInts.REFR:
                             placed = PlacedObject.CreateFromBinary(r);
                             return true;
                         default:
@@ -175,13 +175,13 @@ partial class CellBinaryCreateTranslation
             {
                 switch (header.TypeInt)
                 {
-                    case 0x45524341: // "ACRE":
+                    case RecordTypeInts.ACRE:
                         placed = PlacedCreature.CreateFromBinary(r);
                         return true;
-                    case 0x52484341: //"ACHR":
+                    case RecordTypeInts.ACHR:
                         placed = PlacedNpc.CreateFromBinary(r);
                         return true;
-                    case 0x52464552: // "REFR":
+                    case RecordTypeInts.REFR:
                         placed = PlacedObject.CreateFromBinary(r);
                         return true;
                     default:

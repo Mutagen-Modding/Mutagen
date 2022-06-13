@@ -875,10 +875,10 @@ partial class ConditionBinaryCreateTranslation
         if (!frame.Reader.TryGetSubrecord(out var subMeta)) return;
         switch (subMeta.RecordType.TypeInt)
         {
-            case 0x31534943: // CIS1
+            case RecordTypeInts.CIS1:
                 funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                 break;
-            case 0x32534943: // CIS2
+            case RecordTypeInts.CIS2:
                 funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                 break;
             default:
@@ -1255,12 +1255,12 @@ partial class FunctionConditionDataBinaryOverlay
         if (stream.Complete || !stream.TryGetSubrecordHeader(out var subFrame)) return;
         switch (subFrame.RecordTypeInt)
         {
-            case 0x31534943: // CIS1
+            case RecordTypeInts.CIS1:
                 _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
                 ParameterOneStringIsSet = true;
                 stream.Position += subFrame.TotalLength;
                 break;
-            case 0x32534943: // CIS2
+            case RecordTypeInts.CIS2:
                 _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
                 ParameterTwoStringIsSet = true;
                 stream.Position += subFrame.TotalLength;

@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
             nextRecord = translationParams.ConvertToCustom(nextRecord);
             switch (nextRecord.TypeInt)
             {
-                case 1413764163: // CTDT
+                case RecordTypeInts.CTDT:
                     return CustomRecordTypeTrigger(
                         frame: frame.SpawnWithLength(customLen + frame.MetaData.Constants.SubConstants.HeaderLength),
                         recordType: nextRecord,
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion
             var nextRecord = translationParams.ConvertToCustom(stream.GetSubrecordHeader().RecordType);
             switch (nextRecord.TypeInt)
             {
-                case 1413764163: // CTDT
+                case RecordTypeInts.CTDT:
                     return CustomRecordTypeTrigger(
                         stream: stream,
                         recordType: nextRecord,

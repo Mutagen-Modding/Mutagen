@@ -11,8 +11,6 @@ namespace Mutagen.Bethesda.Oblivion;
 
 partial class PathGridBinaryCreateTranslation
 {
-    public static readonly RecordType PGRP = new("PGRP");
-    public static readonly RecordType PGRR = new("PGRR");
     public const int POINT_LEN = 16;
 
     public static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
@@ -26,7 +24,7 @@ partial class PathGridBinaryCreateTranslation
 
         uint ptCount = frame.Reader.ReadUInt16();
 
-        if (!frame.Reader.TryReadSubrecordHeader(PGRP, out subMeta)) return;
+        if (!frame.Reader.TryReadSubrecordHeader(RecordTypes.PGRP, out subMeta)) return;
         var pointDataSpan = frame.Reader.ReadSpan(subMeta.ContentLength);
         var bytePointsNum = pointDataSpan.Length / POINT_LEN;
         if (bytePointsNum != ptCount)
@@ -41,7 +39,7 @@ partial class PathGridBinaryCreateTranslation
             subMeta = frame.GetSubrecordHeader();
             switch (subMeta.RecordType.TypeInt)
             {
-                case 0x47414750: //"PGAG":
+                case RecordTypeInts.PGAG:
                     frame.Reader.Position += subMeta.HeaderLength;
                     if (ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                             frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false),
@@ -54,7 +52,7 @@ partial class PathGridBinaryCreateTranslation
                         item.PGAG = default;
                     }
                     break;
-                case 0x52524750: // "PGRR":
+                case RecordTypeInts.PGRR:
                     frame.Reader.Position += subMeta.HeaderLength;
                     var connectionInts = frame.Reader.ReadSpan(subMeta.ContentLength).AsInt16Span();
                     int numPts = pointDataSpan.Length / POINT_LEN;
@@ -113,7 +111,7 @@ partial class PathGridBinaryWriteTranslation
         }
 
         bool anyConnections = false;
-        using (HeaderExport.Subrecord(writer, PathGridBinaryCreateTranslation.PGRP))
+        using (HeaderExport.Subrecord(writer, RecordTypes.PGRP))
         {
             foreach (var pt in ptToPt)
             {
@@ -138,7 +136,7 @@ partial class PathGridBinaryWriteTranslation
         }
 
         if (!anyConnections) return;
-        using (HeaderExport.Subrecord(writer, PathGridBinaryCreateTranslation.PGRR))
+        using (HeaderExport.Subrecord(writer, RecordTypes.PGRR))
         {
             foreach (var pt in ptToPt)
             {
@@ -165,7 +163,7 @@ internal partial class PathGridBinaryOverlay
         uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.Content);
 
         var pgrpMeta = stream.GetSubrecordHeader();
-        if (pgrpMeta.RecordType != PathGridBinaryCreateTranslation.PGRP) return;
+        if (pgrpMeta.RecordType != RecordTypes.PGRP) return;
         stream.Position += pgrpMeta.HeaderLength;
         var pointData = stream.ReadMemory(pgrpMeta.ContentLength);
         var bytePointsNum = pgrpMeta.ContentLength / PathGridBinaryCreateTranslation.POINT_LEN;
@@ -181,11 +179,11 @@ internal partial class PathGridBinaryOverlay
             var subMeta = stream.GetSubrecordHeader();
             switch (subMeta.RecordType.TypeInt)
             {
-                case 0x47414750: //"PGAG":
+                case RecordTypeInts.PGAG:
                     this._PGAGLocation = stream.Position - offset;
                     stream.Position += subMeta.TotalLength;
                     break;
-                case 0x52524750: // "PGRR":
+                case RecordTypeInts.PGRR:
                     stream.Position += subMeta.HeaderLength;
                     var connectionPtData = stream.ReadMemory(subMeta.ContentLength);
                     this.PointToPointConnections = BinaryOverlayList.FactoryByLazyParse<IPathGridPointGetter>(

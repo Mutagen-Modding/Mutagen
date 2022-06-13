@@ -125,6 +125,7 @@ public partial class RecordTypeInts
     public const int PGRI = 0x49524750;
     public const int PGRL = 0x4C524750;
     public const int PGRP = 0x50524750;
+    public const int PGRR = 0x52524750;
     public const int PKDT = 0x54444B50;
     public const int PKID = 0x44494B50;
     public const int PLDT = 0x54444C50;

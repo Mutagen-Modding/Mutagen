@@ -127,6 +127,7 @@ public partial class RecordTypes
     public static readonly RecordType PGRI = new(0x49524750);
     public static readonly RecordType PGRL = new(0x4C524750);
     public static readonly RecordType PGRP = new(0x50524750);
+    public static readonly RecordType PGRR = new(0x52524750);
     public static readonly RecordType PKDT = new(0x54444B50);
     public static readonly RecordType PKID = new(0x44494B50);
     public static readonly RecordType PLDT = new(0x54444C50);

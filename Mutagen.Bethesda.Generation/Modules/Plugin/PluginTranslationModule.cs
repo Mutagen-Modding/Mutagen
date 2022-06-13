@@ -2447,7 +2447,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     foreach (var item in customLogicTriggers)
                     {
-                        sb.AppendLine($"case {item.TypeInt}: // {item.Type}");
+                        sb.AppendLine($"case RecordTypeInts.{item.Type}:");
                     }
                     using (sb.IncreaseDepth())
                     {

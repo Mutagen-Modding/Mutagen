@@ -237,7 +237,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                                         if (specificLoqui.TargetObjectGeneration.Abstract) continue;
                                         foreach (var trigger in item.Key)
                                         {
-                                            gen.AppendLine($"case 0x{trigger.TypeInt:X}: // {trigger.Type}");
+                                            gen.AppendLine($"case RecordTypeInts.{trigger.Type}:");
                                         }
                                         LoquiType targetLoqui = arr2d.SubTypeGeneration as LoquiType;
                                         using (gen.CurlyBrace())
