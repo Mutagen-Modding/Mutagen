@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// It does not enforce reading within those bounds, but simply acts as a reference marker.
 /// It also implements input stream interfaces, which will read from the source stream.
 /// </summary>
-public struct MutagenFrame : IMutagenReadStream
+public readonly struct MutagenFrame : IMutagenReadStream
 {
     /// <summary>
     /// Associated reader
