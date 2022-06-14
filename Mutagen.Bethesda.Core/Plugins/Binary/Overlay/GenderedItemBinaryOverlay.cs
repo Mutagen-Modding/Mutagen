@@ -49,7 +49,7 @@ internal static class GenderedItemBinaryOverlay
     internal static IGenderedItemGetter<T?> Factory<T>(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+        Func<OverlayStream, BinaryOverlayFactoryPackage, TypedParseParams, T> creator,
         RecordTypeConverter femaleRecordConverter,
         RecordTypeConverter maleRecordConverter)
         where T : class
@@ -63,11 +63,17 @@ internal static class GenderedItemBinaryOverlay
             var recType = subHeader.RecordType;
             if (maleRecordConverter.ToConversions.TryGetValue(recType, out var _))
             {
-                maleObj = creator(stream, package, maleRecordConverter);
+                maleObj = creator(stream, package, new TypedParseParams(
+                    lengthOverride: null,
+                    recordTypeConverter: maleRecordConverter,
+                    doNotShortCircuit: true));
             }
             else if (femaleRecordConverter.ToConversions.TryGetValue(recType, out var _))
             {
-                femaleObj = creator(stream, package, femaleRecordConverter);
+                femaleObj = creator(stream, package, new TypedParseParams(
+                    lengthOverride: null,
+                    recordTypeConverter: femaleRecordConverter,
+                    doNotShortCircuit: true));
             }
         }
         var readLen = stream.Position - initialPos;

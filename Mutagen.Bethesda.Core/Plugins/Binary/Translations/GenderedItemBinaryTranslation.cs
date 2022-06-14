@@ -46,11 +46,17 @@ internal class GenderedItemBinaryTranslation
         RecordTypeConverter? maleRecordConverter = null)
         where TItem : class
     {
-        if (!transl(frame, out var male, maleRecordConverter))
+        if (!transl(frame, out var male, new TypedParseParams(
+                lengthOverride: null,
+                recordTypeConverter: maleRecordConverter,
+                doNotShortCircuit: true)))
         {
             male = null;
         }
-        if (!transl(frame, out var female, femaleRecordConverter))
+        if (!transl(frame, out var female, new TypedParseParams(
+                lengthOverride: null,
+                recordTypeConverter: femaleRecordConverter,
+                doNotShortCircuit: true)))
         {
             female = null;
         }
@@ -62,11 +68,15 @@ internal class GenderedItemBinaryTranslation
         BinaryMasterParseDelegate<TItem> transl,
         RecordTypeConverter? recordTypeConverter = null)
     {
-        if (!transl(frame, out var male, recordTypeConverter))
+        var p = new TypedParseParams(
+            lengthOverride: null,
+            recordTypeConverter: recordTypeConverter,
+            doNotShortCircuit: false);
+        if (!transl(frame, out var male, p))
         {
             throw new ArgumentException();
         }
-        if (!transl(frame, out var female, recordTypeConverter))
+        if (!transl(frame, out var female, p))
         {
             throw new ArgumentException();
         }
@@ -185,6 +195,7 @@ internal class GenderedItemBinaryTranslation
         TypedParseParams translationParams = default)
         where TItem : class
     {
+        translationParams = translationParams.ShortCircuit();
         TItem? male = default, female = default;
         for (int i = 0; i < 2; i++)
         {
@@ -297,7 +308,10 @@ internal class GenderedItemBinaryTranslation
                 break;
             }
             frame.Position += genderedHeader.TotalLength;
-            if (!transl(frame, out var item, type == maleMarker ? null : femaleRecordConverter))
+            TypedParseParams p = new TypedParseParams(null, 
+                recordTypeConverter: type == maleMarker ? null : femaleRecordConverter,
+                doNotShortCircuit: false);
+            if (!transl(frame, out var item, p))
             {
                 continue;
             }
