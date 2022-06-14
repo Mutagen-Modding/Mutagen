@@ -137,7 +137,8 @@ public class Fallout4Processor : Processor
             int i = 0;
             while (i * 24 < frame.ContentLength)
             {
-                ProcessZeroFloats(frame, fileOffset, ref offset, 4);
+                ProcessZeroFloats(frame, fileOffset, ref offset, 3);
+                ProcessRotationFloat(frame, fileOffset, ref offset, 57.2958f);
                 i++;
                 offset = i * 24;
             }

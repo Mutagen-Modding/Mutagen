@@ -401,6 +401,35 @@ public abstract class Processor
                 new byte[4]);
         }
     }
+    
+    public bool ProcessRotationFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc, float multiplier)
+    {
+        if (loc >= pin.ContentLength) return false;
+        long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+        ProcessRotationFloat(pin.Content.Slice(loc), ref longLoc, multiplier);
+        loc += 4;
+        return true;
+    }
+
+    public void ProcessRotationFloat(ReadOnlySpan<byte> span, ref long offsetLoc, float multiplier)
+    {
+        var origFloat = span.Float();
+        var multiplied = origFloat * multiplier;
+        var newFloat = multiplied / multiplier;
+        if (origFloat != newFloat)
+        {
+            offsetLoc += 4;
+            var b = new byte[4];
+            BinaryPrimitives.WriteSingleLittleEndian(b, newFloat);
+            _instructions.SetSubstitution(
+                offsetLoc - 4,
+                b);
+        }
+        else
+        {
+            ProcessZeroFloat(span, ref offsetLoc);
+        }
+    }
 
     public void ProcessZeroFloat(MajorRecordFrame frame, long offsetLoc, ref int loc)
     {
