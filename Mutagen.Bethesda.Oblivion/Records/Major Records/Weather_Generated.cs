@@ -2206,7 +2206,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weather_FieldIndex.Model;
                 }
                 case RecordTypeInts.NAM0:
@@ -2459,7 +2459,8 @@ namespace Mutagen.Bethesda.Oblivion
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

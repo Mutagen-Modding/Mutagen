@@ -4180,7 +4180,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Patrol = Mutagen.Bethesda.Fallout4.Patrol.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedNpc_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XLCM:
@@ -4225,7 +4225,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.ActivateParents = Mutagen.Bethesda.Fallout4.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedNpc_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XATP:
@@ -4817,7 +4817,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

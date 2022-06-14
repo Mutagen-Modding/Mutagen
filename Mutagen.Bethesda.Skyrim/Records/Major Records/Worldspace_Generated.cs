@@ -5406,7 +5406,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.MaxHeight = Mutagen.Bethesda.Skyrim.WorldspaceMaxHeight.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(lastParsed.LengthOverride));
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Worldspace_FieldIndex.MaxHeight;
                 }
                 case RecordTypeInts.FULL:
@@ -5446,7 +5446,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Parent = Mutagen.Bethesda.Skyrim.WorldspaceParent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Worldspace_FieldIndex.Parent;
                 }
                 case RecordTypeInts.CNAM:
@@ -5490,7 +5490,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.CloudModel = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Worldspace_FieldIndex.CloudModel;
                 }
                 case RecordTypeInts.MNAM:
@@ -6066,7 +6066,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

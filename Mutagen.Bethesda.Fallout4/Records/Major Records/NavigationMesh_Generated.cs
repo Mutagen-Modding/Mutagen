@@ -1739,7 +1739,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(lastParsed.LengthOverride));
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)NavigationMesh_FieldIndex.NavmeshGeometry;
                 }
                 case RecordTypeInts.ONAM:
@@ -1952,7 +1952,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

@@ -3622,7 +3622,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Location = Mutagen.Bethesda.Skyrim.LocationAliasReference.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.Location;
                 }
                 case RecordTypeInts.ALEQ:
@@ -3630,14 +3630,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.External = Mutagen.Bethesda.Skyrim.ExternalAliasReference.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.External;
                 }
                 case RecordTypeInts.ALCO:
                 {
                     item.CreateReferenceToObject = Mutagen.Bethesda.Skyrim.CreateReferenceToObject.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.CreateReferenceToObject;
                 }
                 case RecordTypeInts.ALNA:
@@ -3645,7 +3645,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.FindMatchingRefNearAlias = Mutagen.Bethesda.Skyrim.FindMatchingRefNearAlias.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.FindMatchingRefNearAlias;
                 }
                 case RecordTypeInts.ALFE:
@@ -3653,7 +3653,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.FindMatchingRefFromEvent = Mutagen.Bethesda.Skyrim.FindMatchingRefFromEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:

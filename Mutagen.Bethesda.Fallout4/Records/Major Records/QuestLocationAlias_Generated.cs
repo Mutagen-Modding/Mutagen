@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.ReferenceAliasLocation = Mutagen.Bethesda.Fallout4.ReferenceAliasLocation.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestLocationAlias_FieldIndex.ReferenceAliasLocation;
                 }
                 case RecordTypeInts.ALEQ:
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.ExternalAliasLocation = Mutagen.Bethesda.Fallout4.ExternalAliasLocation.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestLocationAlias_FieldIndex.ExternalAliasLocation;
                 }
                 case RecordTypeInts.ALFE:
@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.FindMatchingRefFromEvent = Mutagen.Bethesda.Fallout4.FindMatchingRefFromEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestLocationAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:

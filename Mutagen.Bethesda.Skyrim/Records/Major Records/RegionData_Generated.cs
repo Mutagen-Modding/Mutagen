@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)RegionData_FieldIndex.Icons;
                 }
                 default:

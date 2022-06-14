@@ -1638,7 +1638,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Data = Mutagen.Bethesda.Skyrim.NavigationMeshData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(lastParsed.LengthOverride));
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)NavigationMesh_FieldIndex.Data;
                 }
                 case RecordTypeInts.ONAM:
@@ -1844,7 +1844,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

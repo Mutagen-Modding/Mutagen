@@ -5831,7 +5831,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.WNAM:
@@ -6034,7 +6034,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcInheritSound.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDT:
@@ -6043,7 +6043,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcSoundTypes.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DOFT:
@@ -6732,7 +6732,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

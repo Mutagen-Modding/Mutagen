@@ -2885,7 +2885,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Light_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
@@ -2894,7 +2894,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Light_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.FULL:
@@ -2910,7 +2910,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Light_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DATA:
@@ -3229,7 +3229,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

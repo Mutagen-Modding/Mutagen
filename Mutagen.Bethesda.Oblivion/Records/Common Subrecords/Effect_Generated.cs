@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Effect_FieldIndex.ScriptEffect;
                 }
                 default:

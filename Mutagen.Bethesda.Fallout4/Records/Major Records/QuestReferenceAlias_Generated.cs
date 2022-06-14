@@ -3896,7 +3896,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Location = Mutagen.Bethesda.Fallout4.LocationAliasReference.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestReferenceAlias_FieldIndex.Location;
                 }
                 case RecordTypeInts.ALEQ:
@@ -3904,14 +3904,14 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.External = Mutagen.Bethesda.Fallout4.ExternalAliasReference.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestReferenceAlias_FieldIndex.External;
                 }
                 case RecordTypeInts.ALCO:
                 {
                     item.CreateReferenceToObject = Mutagen.Bethesda.Fallout4.CreateReferenceToObject.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestReferenceAlias_FieldIndex.CreateReferenceToObject;
                 }
                 case RecordTypeInts.ALNA:
@@ -3919,7 +3919,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.FindMatchingRefNearAlias = Mutagen.Bethesda.Fallout4.FindMatchingRefNearAlias.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestReferenceAlias_FieldIndex.FindMatchingRefNearAlias;
                 }
                 case RecordTypeInts.ALFE:
@@ -3927,7 +3927,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.FindMatchingRefFromEvent = Mutagen.Bethesda.Fallout4.FindMatchingRefFromEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestReferenceAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.ALCC:

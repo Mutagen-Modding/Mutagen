@@ -4472,7 +4472,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Furniture_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
@@ -4483,7 +4483,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Furniture_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.KSIZ:
@@ -4665,7 +4665,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(lastParsed.LengthOverride));
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Furniture_FieldIndex.NavmeshGeometry;
                 }
                 case RecordTypeInts.XXXX:
@@ -5167,7 +5167,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

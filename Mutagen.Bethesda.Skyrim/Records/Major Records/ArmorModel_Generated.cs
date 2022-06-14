@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ShortCircuit((int)ArmorModel_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)ArmorModel_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ShortCircuit((int)ArmorModel_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)ArmorModel_FieldIndex.Icons;
                 }
                 default:

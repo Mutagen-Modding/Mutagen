@@ -3274,7 +3274,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Race_FieldIndex.FaceGenData;
                 }
                 case RecordTypeInts.SNAM:
@@ -3634,7 +3634,8 @@ namespace Mutagen.Bethesda.Oblivion
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

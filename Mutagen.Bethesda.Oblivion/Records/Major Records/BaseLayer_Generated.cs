@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.ShortCircuit((int)BaseLayer_FieldIndex.Header, translationParams)) return ParseResult.Stop;
                     item.Header = Mutagen.Bethesda.Oblivion.LayerHeader.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)BaseLayer_FieldIndex.Header;
                 }
                 default:

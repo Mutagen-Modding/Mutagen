@@ -7985,7 +7985,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.ActivateParents = Mutagen.Bethesda.Fallout4.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XLIB:
@@ -8115,7 +8115,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Patrol = Mutagen.Bethesda.Fallout4.Patrol.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XACT:
@@ -8148,7 +8148,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.MapMarker = Mutagen.Bethesda.Fallout4.PlacedObjectMapMarker.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.XATR:
@@ -9065,7 +9065,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

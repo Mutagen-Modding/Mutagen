@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     item.Icons = Mutagen.Bethesda.Fallout4.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)RegionData_FieldIndex.Icons;
                 }
                 default:

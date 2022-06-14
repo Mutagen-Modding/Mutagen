@@ -3916,7 +3916,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.ActivateParents = Mutagen.Bethesda.Fallout4.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)APlacedTrap_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XASP:
@@ -4430,7 +4430,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

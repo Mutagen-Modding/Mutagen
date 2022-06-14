@@ -2370,7 +2370,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Unused = Mutagen.Bethesda.Skyrim.ScenePhaseUnusedData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)SceneAction_FieldIndex.Unused;
                 }
                 default:

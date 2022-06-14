@@ -3757,7 +3757,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.IdleAnimations = Mutagen.Bethesda.Skyrim.PackageIdles.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.CNAM:
@@ -3791,7 +3791,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.OnBegin = Mutagen.Bethesda.Skyrim.PackageEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnBegin;
                 }
                 case RecordTypeInts.POEA:
@@ -3799,7 +3799,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.OnEnd = Mutagen.Bethesda.Skyrim.PackageEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnEnd;
                 }
                 case RecordTypeInts.POCA:
@@ -3807,7 +3807,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.OnChange = Mutagen.Bethesda.Skyrim.PackageEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnChange;
                 }
                 default:
@@ -4158,7 +4158,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

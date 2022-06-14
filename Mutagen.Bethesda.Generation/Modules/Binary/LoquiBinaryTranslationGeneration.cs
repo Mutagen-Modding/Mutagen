@@ -214,14 +214,14 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                     {
                         trans.Add($"lastParsed.{nameof(PreviousParse.LengthOverride)}");
                     }
-
+ 
                     if (trans.Count > 0)
                     {
-                        args.Add($"translationParams: translationParams.With({string.Join(", ", trans)})");
+                        args.Add($"translationParams: translationParams.With({string.Join(", ", trans)}).DoNotShortCircuit()");
                     }
                     else if (await NeedsRecordTypeConverter(loqui))
                     {
-                        args.AddPassArg($"translationParams");
+                        args.Add($"translationParams: translationParams.DoNotShortCircuit()");
                     }
                 }
             }

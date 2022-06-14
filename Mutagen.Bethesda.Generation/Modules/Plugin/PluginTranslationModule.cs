@@ -1756,6 +1756,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 {
                                     args.Add($"translationParams: {obj.RegistrationName}.BaseConverter");
                                 }
+                                else
+                                {
+                                    args.Add($"translationParams: translationParams.WithNoConverter()");
+                                }
                             }
                         }
                         else

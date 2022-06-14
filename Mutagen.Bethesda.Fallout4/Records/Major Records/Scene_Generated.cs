@@ -3365,7 +3365,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Unused = Mutagen.Bethesda.Fallout4.ScenePhaseUnusedData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Scene_FieldIndex.Unused;
                 }
                 case RecordTypeInts.NEXT:
@@ -3373,7 +3373,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.Unused2 = Mutagen.Bethesda.Fallout4.ScenePhaseUnusedData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Scene_FieldIndex.Unused2;
                 }
                 case RecordTypeInts.PNAM:
@@ -3787,7 +3787,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

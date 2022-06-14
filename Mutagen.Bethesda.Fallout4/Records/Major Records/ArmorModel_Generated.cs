@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)ArmorModel_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)ArmorModel_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)ArmorModel_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     item.Icons = Mutagen.Bethesda.Fallout4.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)ArmorModel_FieldIndex.Icons;
                 }
                 default:

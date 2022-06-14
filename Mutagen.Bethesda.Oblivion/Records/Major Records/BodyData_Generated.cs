@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)BodyData_FieldIndex.Model;
                 }
                 case RecordTypeInts.INDX:

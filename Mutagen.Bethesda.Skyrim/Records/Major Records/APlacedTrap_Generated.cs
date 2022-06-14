@@ -3188,7 +3188,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)APlacedTrap_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XESP:
@@ -3545,7 +3545,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

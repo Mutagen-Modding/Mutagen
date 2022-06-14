@@ -6760,7 +6760,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XLIB:
@@ -6869,7 +6869,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Patrol = Mutagen.Bethesda.Skyrim.Patrol.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XACT:
@@ -6902,7 +6902,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.MapMarker = Mutagen.Bethesda.Skyrim.MapMarker.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.XATR:
@@ -7596,7 +7596,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

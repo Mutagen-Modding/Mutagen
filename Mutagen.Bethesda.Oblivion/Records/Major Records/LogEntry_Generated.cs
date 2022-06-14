@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.ResultScript, translationParams)) return ParseResult.Stop;
                     item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LogEntry_FieldIndex.ResultScript;
                 }
                 default:

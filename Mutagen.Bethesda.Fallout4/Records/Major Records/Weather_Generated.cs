@@ -7767,7 +7767,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Aurora = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weather_FieldIndex.Aurora;
                 }
                 case RecordTypeInts.GNAM:

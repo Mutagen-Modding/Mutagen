@@ -2658,7 +2658,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Unused = Mutagen.Bethesda.Skyrim.ScenePhaseUnusedData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Scene_FieldIndex.Unused;
                 }
                 case RecordTypeInts.NEXT:
@@ -2666,7 +2666,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.Unused2 = Mutagen.Bethesda.Skyrim.ScenePhaseUnusedData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Scene_FieldIndex.Unused2;
                 }
                 case RecordTypeInts.PNAM:
@@ -2944,7 +2944,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

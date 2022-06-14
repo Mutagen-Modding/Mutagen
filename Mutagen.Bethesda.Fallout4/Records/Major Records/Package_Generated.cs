@@ -3682,7 +3682,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.IdleAnimations = Mutagen.Bethesda.Fallout4.PackageIdles.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.CNAM:
@@ -3716,7 +3716,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.OnBegin = Mutagen.Bethesda.Fallout4.PackageEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnBegin;
                 }
                 case RecordTypeInts.POEA:
@@ -3724,7 +3724,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.OnEnd = Mutagen.Bethesda.Fallout4.PackageEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnEnd;
                 }
                 case RecordTypeInts.POCA:
@@ -3732,7 +3732,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.OnChange = Mutagen.Bethesda.Fallout4.PackageEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnChange;
                 }
                 default:
@@ -4074,7 +4074,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

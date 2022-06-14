@@ -3172,7 +3172,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Container_FieldIndex.Model;
                 }
                 case RecordTypeInts.CNTO:
@@ -3197,7 +3197,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Container_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
@@ -3586,7 +3586,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

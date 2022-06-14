@@ -4065,14 +4065,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weapon_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weapon_FieldIndex.Icons;
                 }
                 case RecordTypeInts.EITM:
@@ -4093,7 +4093,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weapon_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ETYP:
@@ -4152,7 +4152,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.ScopeModel = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(Weapon_Registration.ScopeModelConverter));
+                        translationParams: translationParams.With(Weapon_Registration.ScopeModelConverter).DoNotShortCircuit());
                     return (int)Weapon_FieldIndex.ScopeModel;
                 }
                 case RecordTypeInts.NNAM:
@@ -4676,7 +4676,8 @@ namespace Mutagen.Bethesda.Skyrim
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

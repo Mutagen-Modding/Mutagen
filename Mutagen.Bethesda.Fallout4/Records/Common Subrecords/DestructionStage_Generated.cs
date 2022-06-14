@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(DestructionStage_Registration.ModelConverter));
+                        translationParams: translationParams.With(DestructionStage_Registration.ModelConverter).DoNotShortCircuit());
                     return (int)DestructionStage_FieldIndex.Model;
                 }
                 case RecordTypeInts.DSTF: // End Marker

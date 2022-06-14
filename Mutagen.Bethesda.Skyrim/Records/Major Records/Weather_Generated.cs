@@ -6476,7 +6476,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Aurora = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weather_FieldIndex.Aurora;
                 }
                 case RecordTypeInts.GNAM:

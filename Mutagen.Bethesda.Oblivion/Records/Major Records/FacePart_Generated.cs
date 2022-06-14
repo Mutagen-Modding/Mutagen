@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.ShortCircuit((int)FacePart_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)FacePart_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:

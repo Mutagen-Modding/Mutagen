@@ -2381,14 +2381,14 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Clothing_FieldIndex.MaleBipedModel;
                 }
                 case RecordTypeInts.MOD2:
                 {
                     item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(Clothing_Registration.MaleWorldModelConverter));
+                        translationParams: translationParams.With(Clothing_Registration.MaleWorldModelConverter).DoNotShortCircuit());
                     return (int)Clothing_FieldIndex.MaleWorldModel;
                 }
                 case RecordTypeInts.ICON:
@@ -2403,14 +2403,14 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(Clothing_Registration.FemaleBipedModelConverter));
+                        translationParams: translationParams.With(Clothing_Registration.FemaleBipedModelConverter).DoNotShortCircuit());
                     return (int)Clothing_FieldIndex.FemaleBipedModel;
                 }
                 case RecordTypeInts.MOD4:
                 {
                     item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(Clothing_Registration.FemaleWorldModelConverter));
+                        translationParams: translationParams.With(Clothing_Registration.FemaleWorldModelConverter).DoNotShortCircuit());
                     return (int)Clothing_FieldIndex.FemaleWorldModel;
                 }
                 case RecordTypeInts.ICO2:
@@ -2670,7 +2670,8 @@ namespace Mutagen.Bethesda.Oblivion
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

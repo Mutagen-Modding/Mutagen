@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)HeadData_FieldIndex.Model;
                 }
                 default:

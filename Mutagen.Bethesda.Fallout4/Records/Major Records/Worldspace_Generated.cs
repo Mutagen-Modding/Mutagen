@@ -5530,7 +5530,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.MaxHeight = Mutagen.Bethesda.Fallout4.WorldspaceMaxHeight.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(lastParsed.LengthOverride));
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Worldspace_FieldIndex.MaxHeight;
                 }
                 case RecordTypeInts.FULL:
@@ -5570,7 +5570,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Parent = Mutagen.Bethesda.Fallout4.WorldspaceParent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Worldspace_FieldIndex.Parent;
                 }
                 case RecordTypeInts.CNAM:
@@ -5614,7 +5614,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.CloudModel = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Worldspace_FieldIndex.CloudModel;
                 }
                 case RecordTypeInts.MNAM:
@@ -5704,7 +5704,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.DefaultLevelData = Mutagen.Bethesda.Fallout4.WorldDefaultLevelData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Worldspace_FieldIndex.DefaultLevelData;
                 }
                 case RecordTypeInts.OFST:
@@ -6214,7 +6214,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

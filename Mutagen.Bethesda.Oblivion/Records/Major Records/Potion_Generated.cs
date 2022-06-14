@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Potion_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -2203,7 +2203,8 @@ namespace Mutagen.Bethesda.Oblivion
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

@@ -3231,7 +3231,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Book_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -3239,7 +3239,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Icons = Mutagen.Bethesda.Fallout4.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Book_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
@@ -3259,7 +3259,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Book_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
@@ -3659,7 +3659,8 @@ namespace Mutagen.Bethesda.Fallout4
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String

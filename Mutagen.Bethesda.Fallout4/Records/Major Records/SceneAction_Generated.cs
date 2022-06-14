@@ -4717,7 +4717,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Unused = Mutagen.Bethesda.Fallout4.ScenePhaseUnusedData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)SceneAction_FieldIndex.Unused;
                 }
                 default:
