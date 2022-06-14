@@ -80,6 +80,11 @@ public readonly struct MajorRecordHeader
     /// Whether the compression flag is on
     /// </summary>
     public bool IsCompressed => (MajorRecordFlags & Constants.CompressedFlag) > 0;
+        
+    /// <summary>
+    /// Whether the deletion flag is on
+    /// </summary>
+    public bool IsDeleted => (MajorRecordFlags & Constants.DeletedFlag) > 0;
 
     /// <summary>
     /// Returns the Form Version of the Major Record
@@ -516,6 +521,11 @@ public readonly struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
     /// Whether the compression flag is on
     /// </summary>
     public bool IsCompressed => Header.IsCompressed;
+
+    /// <summary>
+    /// Whether the deletion flag is on
+    /// </summary>
+    public bool IsDeleted => Header.IsDeleted;
 
     /// <summary>
     /// Returns the Form Version of the Major Record

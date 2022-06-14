@@ -2957,27 +2957,35 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 if (HasRecordTypeFields(obj))
                 {
-                    if (await obj.IsMajorRecord())
+                    if (isMajor)
                     {
-                        sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                        sb.AppendLine($"if (!item.IsDeleted)");
                     }
-                    using (var args = sb.Call(
-                               $"WriteRecordTypes"))
+
+                    using (sb.CurlyBrace(doIt: isMajor))
                     {
-                        args.AddPassArg($"item");
-                        args.Add($"writer: {writerNameToUse}");
-                        if (obj.GetObjectType() == ObjectType.Mod)
+                        if (isMajor)
                         {
-                            args.AddPassArg($"importMask");
+                            sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
                         }
-                        else
+                        using (var args = sb.Call(
+                                   $"WriteRecordTypes"))
                         {
-                            args.AddPassArg($"translationParams");
+                            args.AddPassArg($"item");
+                            args.Add($"writer: {writerNameToUse}");
+                            if (obj.GetObjectType() == ObjectType.Mod)
+                            {
+                                args.AddPassArg($"importMask");
+                            }
+                            else
+                            {
+                                args.AddPassArg($"translationParams");
+                            }
                         }
-                    }
-                    if (await obj.IsMajorRecord())
-                    {
-                        sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                        if (isMajor)
+                        {
+                            sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                        }
                     }
                 }
                 else

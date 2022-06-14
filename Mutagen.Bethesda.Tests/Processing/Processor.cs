@@ -144,6 +144,8 @@ public abstract class Processor
         {
             yield return TaskExt.Run(DoMultithreading, () => RealignStrings(streamGetter));
         }
+        
+        yield return TaskExt.Run(DoMultithreading, () => RemoveDeletedContent(streamGetter));
     }
 
     protected virtual void AddDynamicProcessorInstructions()
@@ -193,6 +195,9 @@ public abstract class Processor
                 stream.Position = loc.Key;
                 frame = stream.ReadMajorRecord(readSafe: true);
             }
+
+            if (frame.IsDeleted) return;
+            
             if (procs != null)
             {
                 foreach (var proc in procs)
@@ -588,6 +593,19 @@ public abstract class Processor
         }
     }
 
+    public void RemoveDeletedContent(Func<IMutagenReadStream> streamGetter)
+    {
+        using var stream = streamGetter();
+        foreach (var loc in _alignedFileLocs.ListedRecords)
+        {
+            stream.Position = loc.Value.Location.Min;
+            var majorFrame = stream.ReadMajorRecord();
+            if (!majorFrame.IsDeleted || majorFrame.ContentLength == 0) continue;
+            _instructions.SetRemove(RangeInt64.FromLength(loc.Value.Location.Min + majorFrame.HeaderLength, majorFrame.ContentLength));
+            ProcessLengths(majorFrame, -checked((int)majorFrame.ContentLength), loc.Value.Location.Min);
+        }
+    }
+
     public int FixMissingCounters(
         MajorRecordFrame frame,
         long fileOffset,
@@ -830,6 +848,7 @@ public abstract class Processor
         {
             stream.Position = rec.Key;
             var major = stream.ReadMajorRecordHeader();
+            if (major.IsDeleted) continue;
             if (!dict.TryGetValue(major.RecordType, out var instructions))
             {
                 continue;
