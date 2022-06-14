@@ -307,6 +307,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         // Not needed, just for generation simplification
         bool triggersAlwaysAreNewRecords = false)
     {
+        translationParams = translationParams.ShortCircuit();
         List<int> ret = new List<int>();
         var startingPos = stream.Position;
         while (!stream.Complete)
@@ -336,6 +337,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         bool skipHeader,
         TypedParseParams translationParams = default)
     {
+        translationParams = translationParams.ShortCircuit();
         List<int> ret = new List<int>();
         var startingPos = stream.Position;
         while (!stream.Complete)
@@ -447,6 +449,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         bool triggersAlwaysAreNewRecords = false,
         TypedParseParams translationParams = default)
     {
+        translationParams = translationParams.ShortCircuit();
         var ret = new List<int>();
         int? lastParsed = null;
         var startingPos = stream.Position;
@@ -660,6 +663,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         StreamTypedFactory<T> factory,
         TypedParseParams translationParams)
     {
+        translationParams = translationParams.ShortCircuit();
         var ret = new List<T>();
         while (!stream.Complete)
         {
@@ -695,6 +699,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         StreamTypedFactory<T> factory,
         TypedParseParams translationParams)
     {
+        translationParams = translationParams.ShortCircuit();
         var ret = new List<T>();
         while (!stream.Complete)
         {
@@ -718,6 +723,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         TypedParseParams translationParams,
         bool skipHeader)
     {
+        translationParams = translationParams.ShortCircuit();
         var ret = new List<T>();
         while (!stream.Complete)
         {
