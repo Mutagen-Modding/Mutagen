@@ -1379,6 +1379,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.HDPT,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
                 RecordTypes.DATA,
                 RecordTypes.PNAM,
                 RecordTypes.HNAM,
@@ -2391,6 +2394,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)HeadPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
@@ -2629,6 +2635,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)HeadPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

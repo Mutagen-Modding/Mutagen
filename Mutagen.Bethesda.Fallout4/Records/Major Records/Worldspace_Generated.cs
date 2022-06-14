@@ -2668,6 +2668,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DNAM,
                 RecordTypes.ICON,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
                 RecordTypes.MNAM,
                 RecordTypes.ONAM,
                 RecordTypes.NAMA,
@@ -5611,6 +5614,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Worldspace_FieldIndex.MapImage;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     item.CloudModel = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
@@ -6112,6 +6118,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Worldspace_FieldIndex.MapImage;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     this.CloudModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

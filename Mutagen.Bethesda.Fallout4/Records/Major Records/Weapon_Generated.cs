@@ -4016,6 +4016,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.STCP,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
                 RecordTypes.ICON,
                 RecordTypes.MICO,
                 RecordTypes.EITM,
@@ -4025,6 +4028,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DSTD,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
+                RecordTypes.DMDC,
+                RecordTypes.DMDT,
+                RecordTypes.DMDS,
                 RecordTypes.ETYP,
                 RecordTypes.BIDS,
                 RecordTypes.BAMT,
@@ -6676,6 +6682,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
@@ -6707,6 +6716,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DSTD:
                 case RecordTypeInts.DSTA:
                 case RecordTypeInts.DMDL:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.DMDT:
+                case RecordTypeInts.DMDS:
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
@@ -6801,6 +6813,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Weapon_FieldIndex.EmbeddedWeaponMod;
                 }
                 case RecordTypeInts.MOD4:
+                case RecordTypeInts.MO4C:
+                case RecordTypeInts.MO4T:
+                case RecordTypeInts.MO4S:
                 {
                     item.FirstPersonModel = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
@@ -7401,6 +7416,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -7432,6 +7450,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DSTD:
                 case RecordTypeInts.DSTA:
                 case RecordTypeInts.DMDL:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.DMDT:
+                case RecordTypeInts.DMDS:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -7518,6 +7539,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Weapon_FieldIndex.EmbeddedWeaponMod;
                 }
                 case RecordTypeInts.MOD4:
+                case RecordTypeInts.MO4C:
+                case RecordTypeInts.MO4T:
+                case RecordTypeInts.MO4S:
                 {
                     this.FirstPersonModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

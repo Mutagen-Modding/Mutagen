@@ -1043,6 +1043,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ADDN,
                 RecordTypes.OBND,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
                 RecordTypes.DATA,
                 RecordTypes.SNAM,
                 RecordTypes.LNAM,
@@ -1892,6 +1895,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)AddonNode_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
@@ -2087,6 +2093,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)AddonNode_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

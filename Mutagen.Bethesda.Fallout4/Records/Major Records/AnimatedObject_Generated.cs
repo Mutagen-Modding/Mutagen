@@ -776,6 +776,9 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.ANIO,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
                 RecordTypes.BNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
@@ -1470,6 +1473,9 @@ namespace Mutagen.Bethesda.Fallout4
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
@@ -1615,6 +1621,9 @@ namespace Mutagen.Bethesda.Fallout4
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

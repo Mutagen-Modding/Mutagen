@@ -897,17 +897,20 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
                 RecordTypes.DSTA,
-                RecordTypes.DMDL);
+                RecordTypes.DMDL,
+                RecordTypes.DMDC,
+                RecordTypes.DMDT,
+                RecordTypes.DMDS);
             var all = RecordCollection.Factory(
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
-                RecordTypes.DSTF,
-                RecordTypes.DMDT,
                 RecordTypes.DMDC,
-                RecordTypes.DMDS);
+                RecordTypes.DMDT,
+                RecordTypes.DMDS,
+                RecordTypes.DSTF);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DestructibleBinaryWriteTranslation);
@@ -1455,6 +1458,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DSTD:
                 case RecordTypeInts.DSTA:
                 case RecordTypeInts.DMDL:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.DMDT:
+                case RecordTypeInts.DMDS:
                 {
                     if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Stages, translationParams)) return ParseResult.Stop;
                     item.Stages.SetTo(
@@ -1619,6 +1625,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DSTD:
                 case RecordTypeInts.DSTA:
                 case RecordTypeInts.DMDL:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.DMDT:
+                case RecordTypeInts.DMDS:
                 {
                     if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Stages, translationParams)) return ParseResult.Stop;
                     this.Stages = this.ParseRepeatedTypelessSubrecord<IDestructionStageGetter>(

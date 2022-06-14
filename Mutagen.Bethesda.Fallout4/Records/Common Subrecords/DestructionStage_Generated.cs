@@ -776,15 +776,18 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory(
                 RecordTypes.DSTD,
                 RecordTypes.DSTA,
-                RecordTypes.DMDL);
+                RecordTypes.DMDL,
+                RecordTypes.DMDC,
+                RecordTypes.DMDT,
+                RecordTypes.DMDS);
             var all = RecordCollection.Factory(
                 RecordTypes.DSTD,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
-                RecordTypes.DSTF,
-                RecordTypes.DMDT,
                 RecordTypes.DMDC,
-                RecordTypes.DMDS);
+                RecordTypes.DMDT,
+                RecordTypes.DMDS,
+                RecordTypes.DSTF);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
@@ -1297,6 +1300,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
                 case RecordTypeInts.DMDL:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.DMDT:
+                case RecordTypeInts.DMDS:
                 {
                     if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
@@ -1457,6 +1463,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
                 case RecordTypeInts.DMDL:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.DMDT:
+                case RecordTypeInts.DMDS:
                 {
                     if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(

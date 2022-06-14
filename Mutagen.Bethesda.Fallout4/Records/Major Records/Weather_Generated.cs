@@ -4459,6 +4459,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.WGDR,
                 RecordTypes.DALC,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
                 RecordTypes.GNAM,
                 RecordTypes.UNAM,
                 RecordTypes.VNAM,
@@ -7764,6 +7767,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     item.Aurora = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
@@ -8518,6 +8524,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     this.Aurora = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

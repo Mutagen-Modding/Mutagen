@@ -54,7 +54,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region File
-        public String File { get; set; } = string.Empty;
+        public String? File { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ISimpleModelGetter.File => this.File;
         #endregion
         #region ColorRemappingIndex
         public Single? ColorRemappingIndex { get; set; }
@@ -541,7 +543,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ISimpleModel>,
         ISimpleModelGetter
     {
-        new String File { get; set; }
+        new String? File { get; set; }
         new Single? ColorRemappingIndex { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
         new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
@@ -563,7 +565,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
-        String File { get; }
+        String? File { get; }
         Single? ColorRemappingIndex { get; }
         ReadOnlyMemorySlice<Byte>? Data { get; }
         IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
@@ -785,17 +787,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.MODL);
             var all = RecordCollection.Factory(
                 RecordTypes.MODL,
                 RecordTypes.MODC,
                 RecordTypes.MODT,
                 RecordTypes.MODS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SimpleModelBinaryWriteTranslation);
         #region Interface
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(ISimpleModel item)
         {
             ClearPartial();
-            item.File = string.Empty;
+            item.File = default;
             item.ColorRemappingIndex = default;
             item.Data = default;
             item.MaterialSwap.Clear();
@@ -942,9 +942,10 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            if (printMask?.File ?? true)
+            if ((printMask?.File ?? true)
+                && item.File is {} FileItem)
             {
-                sb.AppendItem(item.File, "File");
+                sb.AppendItem(FileItem, "File");
             }
             if ((printMask?.ColorRemappingIndex ?? true)
                 && item.ColorRemappingIndex is {} ColorRemappingIndexItem)
@@ -991,7 +992,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ISimpleModelGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.File);
+            if (item.File is {} Fileitem)
+            {
+                hash.Add(Fileitem);
+            }
             if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
             {
                 hash.Add(ColorRemappingIndexitem);
@@ -1157,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.File,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL),
@@ -1233,18 +1237,21 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MODC:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SimpleModel_FieldIndex.ColorRemappingIndex;
                 }
                 case RecordTypeInts.MODT:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SimpleModel_FieldIndex.Data;
                 }
                 case RecordTypeInts.MODS:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SimpleModel_FieldIndex.MaterialSwap;
@@ -1320,7 +1327,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region File
         private int? _FileLocation;
-        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ColorRemappingIndex
         private int? _ColorRemappingIndexLocation;
@@ -1399,16 +1406,19 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MODC:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     _ColorRemappingIndexLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.ColorRemappingIndex;
                 }
                 case RecordTypeInts.MODT:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.Data;
                 }
                 case RecordTypeInts.MODS:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
                     _MaterialSwapLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }

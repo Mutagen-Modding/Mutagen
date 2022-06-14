@@ -2035,6 +2035,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.WNAM,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.PRPS,
@@ -3637,6 +3640,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Terminal_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
@@ -3996,6 +4002,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Terminal_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

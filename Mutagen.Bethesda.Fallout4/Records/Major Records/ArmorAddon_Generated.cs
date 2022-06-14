@@ -1462,22 +1462,22 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MOD2,
                 RecordTypes.MOD3,
                 RecordTypes.MO2C,
-                RecordTypes.MO2T,
-                RecordTypes.MO2S,
-                RecordTypes.MO2F,
                 RecordTypes.MO3C,
+                RecordTypes.MO2T,
                 RecordTypes.MO3T,
+                RecordTypes.MO2S,
                 RecordTypes.MO3S,
+                RecordTypes.MO2F,
                 RecordTypes.MO3F,
                 RecordTypes.MOD4,
                 RecordTypes.MOD5,
                 RecordTypes.MO4C,
-                RecordTypes.MO4T,
-                RecordTypes.MO4S,
-                RecordTypes.MO4F,
                 RecordTypes.MO5C,
+                RecordTypes.MO4T,
                 RecordTypes.MO5T,
+                RecordTypes.MO4S,
                 RecordTypes.MO5S,
+                RecordTypes.MO4F,
                 RecordTypes.MO5F,
                 RecordTypes.NAM0,
                 RecordTypes.NAM1,
@@ -2758,6 +2758,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MOD2:
                 case RecordTypeInts.MOD3:
+                case RecordTypeInts.MO2C:
+                case RecordTypeInts.MO3C:
+                case RecordTypeInts.MO2T:
+                case RecordTypeInts.MO3T:
+                case RecordTypeInts.MO2S:
+                case RecordTypeInts.MO3S:
                 {
                     item.WorldModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
                         frame: frame,
@@ -2768,6 +2774,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MOD4:
                 case RecordTypeInts.MOD5:
+                case RecordTypeInts.MO4C:
+                case RecordTypeInts.MO5C:
+                case RecordTypeInts.MO4T:
+                case RecordTypeInts.MO5T:
+                case RecordTypeInts.MO4S:
+                case RecordTypeInts.MO5S:
                 {
                     item.FirstPersonModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
                         frame: frame,
@@ -3058,6 +3070,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MOD2:
                 case RecordTypeInts.MOD3:
+                case RecordTypeInts.MO2C:
+                case RecordTypeInts.MO3C:
+                case RecordTypeInts.MO2T:
+                case RecordTypeInts.MO3T:
+                case RecordTypeInts.MO2S:
+                case RecordTypeInts.MO3S:
                 {
                     _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
                         package: _package,
@@ -3069,6 +3087,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MOD4:
                 case RecordTypeInts.MOD5:
+                case RecordTypeInts.MO4C:
+                case RecordTypeInts.MO5C:
+                case RecordTypeInts.MO4T:
+                case RecordTypeInts.MO5T:
+                case RecordTypeInts.MO4S:
+                case RecordTypeInts.MO5S:
                 {
                     _FirstPersonModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
                         package: _package,
