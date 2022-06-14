@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Root = PackageRootBinaryOverlay.PackageRootFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PackageBranch_FieldIndex.Root;
                 }
                 case RecordTypeInts.PNAM:

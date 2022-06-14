@@ -2544,7 +2544,8 @@ namespace Mutagen.Bethesda.Oblivion
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2772,7 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Script = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)DialogItem_FieldIndex.Script;
                 }
                 default:

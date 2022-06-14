@@ -2433,7 +2433,8 @@ namespace Mutagen.Bethesda.Oblivion
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2620,7 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Armor_FieldIndex.MaleBipedModel;
                 }
                 case RecordTypeInts.MOD2:
@@ -2628,7 +2629,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: Armor_Registration.MaleWorldModelConverter);
+                        translationParams: translationParams.With(Armor_Registration.MaleWorldModelConverter).DoNotShortCircuit());
                     return (int)Armor_FieldIndex.MaleWorldModel;
                 }
                 case RecordTypeInts.ICON:
@@ -2641,7 +2642,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.FemaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: Armor_Registration.FemaleBipedModelConverter);
+                        translationParams: translationParams.With(Armor_Registration.FemaleBipedModelConverter).DoNotShortCircuit());
                     return (int)Armor_FieldIndex.FemaleBipedModel;
                 }
                 case RecordTypeInts.MOD4:
@@ -2649,7 +2650,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.FemaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: Armor_Registration.FemaleWorldModelConverter);
+                        translationParams: translationParams.With(Armor_Registration.FemaleWorldModelConverter).DoNotShortCircuit());
                     return (int)Armor_FieldIndex.FemaleWorldModel;
                 }
                 case RecordTypeInts.ICO2:

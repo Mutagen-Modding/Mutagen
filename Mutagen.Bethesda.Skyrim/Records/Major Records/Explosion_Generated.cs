@@ -2861,7 +2861,8 @@ namespace Mutagen.Bethesda.Skyrim
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -3096,7 +3097,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Explosion_FieldIndex.Model;
                 }
                 case RecordTypeInts.EITM:

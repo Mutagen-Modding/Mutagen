@@ -2542,7 +2542,8 @@ namespace Mutagen.Bethesda.Skyrim
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2746,7 +2747,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Perk_FieldIndex.Icons;
                 }
                 case RecordTypeInts.CTDA:

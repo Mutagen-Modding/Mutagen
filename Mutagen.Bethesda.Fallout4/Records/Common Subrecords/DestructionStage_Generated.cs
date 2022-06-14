@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: DestructionStage_Registration.ModelConverter);
+                        translationParams: translationParams.With(DestructionStage_Registration.ModelConverter).DoNotShortCircuit());
                     return (int)DestructionStage_FieldIndex.Model;
                 }
                 case RecordTypeInts.DSTF: // End Marker

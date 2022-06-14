@@ -2686,7 +2686,8 @@ namespace Mutagen.Bethesda.Fallout4
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2878,7 +2879,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Key_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -2887,7 +2888,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Key_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DEST:
@@ -2899,7 +2900,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Key_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:

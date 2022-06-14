@@ -3275,7 +3275,8 @@ namespace Mutagen.Bethesda.Oblivion
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -3586,7 +3587,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MapMarker = MapMarkerBinaryOverlay.MapMarkerFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.ONAM:
@@ -3618,7 +3619,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Location = LocationBinaryOverlay.LocationFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.Location;
                 }
                 default:

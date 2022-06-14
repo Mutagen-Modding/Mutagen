@@ -2148,7 +2148,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.ReferenceAliasLocation = ReferenceAliasLocationBinaryOverlay.ReferenceAliasLocationFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestLocationAlias_FieldIndex.ReferenceAliasLocation;
                 }
                 case RecordTypeInts.ALEQ:
@@ -2157,7 +2157,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.ExternalAliasLocation = ExternalAliasLocationBinaryOverlay.ExternalAliasLocationFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestLocationAlias_FieldIndex.ExternalAliasLocation;
                 }
                 case RecordTypeInts.ALFE:
@@ -2166,7 +2166,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.FindMatchingRefFromEvent = FindMatchingRefFromEventBinaryOverlay.FindMatchingRefFromEventFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestLocationAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:

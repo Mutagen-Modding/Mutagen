@@ -2152,7 +2152,8 @@ namespace Mutagen.Bethesda.Skyrim
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2302,7 +2303,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LoadScreen_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
@@ -2346,7 +2347,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.RotationOffsetConstraints = Int16MinMaxBinaryOverlay.Int16MinMaxFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LoadScreen_FieldIndex.RotationOffsetConstraints;
                 }
                 case RecordTypeInts.XNAM:

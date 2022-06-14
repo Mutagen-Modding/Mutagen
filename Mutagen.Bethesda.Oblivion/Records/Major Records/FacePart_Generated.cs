@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)FacePart_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:

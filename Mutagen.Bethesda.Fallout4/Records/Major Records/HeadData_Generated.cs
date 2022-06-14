@@ -2714,7 +2714,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.NeckFatAdjustmentsScale = NeckFatAdjustmentsScaleBinaryOverlay.NeckFatAdjustmentsScaleFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)HeadData_FieldIndex.NeckFatAdjustmentsScale;
                 }
                 case RecordTypeInts.INDX:

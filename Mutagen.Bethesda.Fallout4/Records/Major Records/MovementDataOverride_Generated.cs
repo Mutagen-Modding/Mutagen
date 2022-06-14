@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.MovementData = MovementDataBinaryOverlay.MovementDataFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)MovementDataOverride_FieldIndex.MovementData;
                 }
                 default:

@@ -3742,7 +3742,8 @@ namespace Mutagen.Bethesda.Fallout4
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -4010,7 +4011,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.IdleAnimations = PackageIdlesBinaryOverlay.PackageIdlesFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.CNAM:
@@ -4045,7 +4046,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.OnBegin = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnBegin;
                 }
                 case RecordTypeInts.POEA:
@@ -4054,7 +4055,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.OnEnd = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnEnd;
                 }
                 case RecordTypeInts.POCA:
@@ -4063,7 +4064,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.OnChange = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnChange;
                 }
                 default:

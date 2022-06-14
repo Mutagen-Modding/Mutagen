@@ -2012,7 +2012,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                             stream: stream,
                             package: _package,
-                            translationParams: translationParams);
+                            translationParams: translationParams.DoNotShortCircuit());
                         return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
                     }
                     else
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                                     stream: stream,
                                     package: _package,
-                                    translationParams: translationParams);
+                                    translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
                             default:
                                 throw new NotImplementedException();
@@ -2048,7 +2048,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Unused = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)ScenePhase_FieldIndex.Unused;
                 }
                 case RecordTypeInts.WNAM:

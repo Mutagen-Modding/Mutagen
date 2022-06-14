@@ -2437,7 +2437,8 @@ namespace Mutagen.Bethesda.Skyrim
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2654,7 +2655,7 @@ namespace Mutagen.Bethesda.Skyrim
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LightingTemplate_FieldIndex.DirectionalAmbientColors;
                 }
                 default:

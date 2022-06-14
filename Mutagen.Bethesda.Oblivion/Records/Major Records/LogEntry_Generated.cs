@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.ResultScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LogEntry_FieldIndex.ResultScript;
                 }
                 default:

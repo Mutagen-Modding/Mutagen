@@ -1999,7 +1999,8 @@ namespace Mutagen.Bethesda.Fallout4
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2172,7 +2173,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Rotation = LoadScreenRotationBinaryOverlay.LoadScreenRotationFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LoadScreen_FieldIndex.Rotation;
                 }
                 case RecordTypeInts.ZNAM:
@@ -2181,7 +2182,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.Zoom = LoadScreenZoomBinaryOverlay.LoadScreenZoomFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LoadScreen_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.MOD2:

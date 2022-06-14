@@ -2705,7 +2705,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.Unused = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                         stream: stream,
                         package: _package,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)SceneAction_FieldIndex.Unused;
                 }
                 default:

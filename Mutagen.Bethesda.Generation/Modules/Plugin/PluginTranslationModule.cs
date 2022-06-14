@@ -1096,6 +1096,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 {
                                     args.Add($"translationParams: translationParams.With({obj.RegistrationName}.BaseConverter)");
                                 }
+                                else
+                                {
+                                    args.Add($"translationParams: translationParams.WithNoConverter()");
+                                }
                             }
                         }
                         else
@@ -1522,7 +1526,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             if (fieldData?.RecordTypeConverter != null
                                                 && fieldData.RecordTypeConverter.FromConversions.Count > 0)
                                             {
-                                                recConverter = $"{obj.RegistrationName}.{field.Field.Name}Converter";
+                                                recConverter = $"translationParams.With({obj.RegistrationName}.{field.Field.Name}Converter)";
                                             }
                                             await generator.GenerateWrapperRecordTypeParse(
                                                 sb: sb,
