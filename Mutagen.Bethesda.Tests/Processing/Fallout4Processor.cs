@@ -316,6 +316,9 @@ public class Fallout4Processor : Processor
             BinaryPrimitives.WriteUInt32LittleEndian(b.AsSpan(), firstAmount);
             _instructions.SetSubstitution(fileOffset + first.Location + first.HeaderLength, b);
         }
+
+        FixVMADs(majorFrame, fileOffset);
+
         ProcessLengths(
             majorFrame,
             -removed,
@@ -881,7 +884,37 @@ public class Fallout4Processor : Processor
             stream,
             formKey,
             fileOffset);
+        
+        FixVMADs(majorFrame, fileOffset);
+    }
 
+    private void FixObjectPropertyIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
+    {
+        switch (objectFormat)
+        {
+            case 2:
+                {
+                    stream.Position += 4;
+                    long offset = fileOffset + stream.Position;
+                    ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
+                }
+                break;
+            case 1:
+                {
+                    long offset = fileOffset + stream.Position;
+                    ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
+                    stream.Position += 4;
+                }
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
+    public void FixVMADs(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {        
         FixVMADFormIDs(
             majorFrame,
             fileOffset,
@@ -924,29 +957,6 @@ public class Fallout4Processor : Processor
                     FixVMADScriptIDs(stream2, fileOffset, objectFormat);
                 }
             }
-        }
-    }
-
-    private void FixObjectPropertyIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
-    {
-        switch (objectFormat)
-        {
-            case 2:
-                {
-                    stream.Position += 4;
-                    long offset = fileOffset + stream.Position;
-                    ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
-                }
-                break;
-            case 1:
-                {
-                    long offset = fileOffset + stream.Position;
-                    ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
-                    stream.Position += 4;
-                }
-                break;
-            default:
-                throw new NotImplementedException();
         }
     }
 
