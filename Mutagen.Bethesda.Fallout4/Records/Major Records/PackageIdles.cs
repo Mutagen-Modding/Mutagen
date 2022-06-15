@@ -44,6 +44,7 @@ partial class PackageIdlesBinaryCreateTranslation
             }
             else if (subRecord.RecordType == RecordTypes.IDLA)
             {
+                item.Animations = new();
                 if (count == null)
                 {
                     item.Animations.SetTo(
@@ -72,7 +73,7 @@ partial class PackageIdlesBinaryCreateTranslation
                 break;
             }
         }
-        if (count.HasValue && count.Value != item.Animations.Count)
+        if (count != item.Animations?.Count)
         {
             throw new ArgumentException("Idle animation counts did not match.");
         }
@@ -84,23 +85,32 @@ partial class PackageIdlesBinaryWriteTranslation
     public static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IPackageIdlesGetter item)
     {
         var anims = item.Animations;
-        using (HeaderExport.Subrecord(writer, RecordTypes.IDLC))
+        if (anims != null)
         {
-            writer.Write(anims.Count, 1);
-        }
-
-        using (HeaderExport.Subrecord(writer, RecordTypes.IDLT))
-        {
-            writer.Write(item.TimerSetting);
-        }
-
-        using (HeaderExport.Subrecord(writer, RecordTypes.IDLA))
-        {
-            foreach (var anim in anims)
+            using (HeaderExport.Subrecord(writer, RecordTypes.IDLC))
             {
-                FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: anim);
+                writer.Write(anims.Count, 1);
+            }
+        }
+
+        if (item.TimerSetting is { } timer)
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.IDLT))
+            {
+                writer.Write(timer);
+            }
+        }
+
+        if (anims != null)
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.IDLA))
+            {
+                foreach (var anim in anims)
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: anim);
+                }
             }
         }
     }
@@ -112,10 +122,10 @@ partial class PackageIdlesBinaryWriteTranslation
 
 partial class PackageIdlesBinaryOverlay
 {
-    public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; private set; } = Array.Empty<IFormLinkGetter<IIdleAnimationGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; private set; }
 
-    private float _timerSetting;
-    public partial Single GetTimerSettingCustom() => _timerSetting;
+    private float? _timerSetting;
+    public partial Single? GetTimerSettingCustom() => _timerSetting;
 
     partial void TimerSettingCustomParse(OverlayStream stream, long finalPos, int offset)
     {
@@ -178,7 +188,7 @@ partial class PackageIdlesBinaryOverlay
                 break;
             }
         }
-        if (count.HasValue && count.Value != Animations.Count)
+        if (count != Animations?.Count)
         {
             throw new ArgumentException("Idle animation counts did not match.");
         }

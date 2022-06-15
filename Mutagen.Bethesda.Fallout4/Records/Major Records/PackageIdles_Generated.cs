@@ -54,19 +54,21 @@ namespace Mutagen.Bethesda.Fallout4
         public PackageIdles.Types Type { get; set; } = default;
         #endregion
         #region TimerSetting
-        public Single TimerSetting { get; set; } = default;
+        public Single? TimerSetting { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPackageIdlesGetter.TimerSetting => this.TimerSetting;
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> _Animations = new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
-        public ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations
+        private ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? _Animations;
+        public ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? Animations
         {
             get => this._Animations;
-            init => this._Animations = value;
+            set => this._Animations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> IPackageIdlesGetter.Animations => _Animations;
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? IPackageIdlesGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -599,8 +601,8 @@ namespace Mutagen.Bethesda.Fallout4
         IPackageIdlesGetter
     {
         new PackageIdles.Types Type { get; set; }
-        new Single TimerSetting { get; set; }
-        new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
+        new Single? TimerSetting { get; set; }
+        new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; set; }
         new Int32? IDLB { get; set; }
     }
 
@@ -618,8 +620,8 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PackageIdles_Registration.Instance;
         PackageIdles.Types Type { get; }
-        Single TimerSetting { get; }
-        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
+        Single? TimerSetting { get; }
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; }
         Int32? IDLB { get; }
 
     }
@@ -896,14 +898,14 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Type = default;
             item.TimerSetting = default;
-            item.Animations.Clear();
+            item.Animations = null;
             item.IDLB = default;
         }
         
         #region Mutagen
         public void RemapLinks(IPackageIdles obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Animations.RemapLinks(mapping);
+            obj.Animations?.RemapLinks(mapping);
         }
         
         #endregion
@@ -1004,16 +1006,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Type, "Type");
             }
-            if (printMask?.TimerSetting ?? true)
+            if ((printMask?.TimerSetting ?? true)
+                && item.TimerSetting is {} TimerSettingItem)
             {
-                sb.AppendItem(item.TimerSetting, "TimerSetting");
+                sb.AppendItem(TimerSettingItem, "TimerSetting");
             }
-            if (printMask?.Animations?.Overall ?? true)
+            if ((printMask?.Animations?.Overall ?? true)
+                && item.Animations is {} AnimationsItem)
             {
                 sb.AppendLine("Animations =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Animations)
+                    foreach (var subItem in AnimationsItem)
                     {
                         using (sb.Brace())
                         {
@@ -1059,7 +1063,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var hash = new HashCode();
             hash.Add(item.Type);
-            hash.Add(item.TimerSetting);
+            if (item.TimerSetting is {} TimerSettingitem)
+            {
+                hash.Add(TimerSettingitem);
+            }
             hash.Add(item.Animations);
             if (item.IDLB is {} IDLBitem)
             {
@@ -1079,9 +1086,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageIdlesGetter obj)
         {
-            foreach (var item in obj.Animations)
+            if (obj.Animations is {} AnimationsItem)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in AnimationsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1114,9 +1124,17 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask?.PushIndex((int)PackageIdles_FieldIndex.Animations);
                 try
                 {
-                    item.Animations.SetTo(
-                        rhs.Animations
-                        .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey)));
+                    if ((rhs.Animations != null))
+                    {
+                        item.Animations = 
+                            rhs.Animations
+                            .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
+                    }
+                    else
+                    {
+                        item.Animations = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1434,8 +1452,8 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             long finalPos,
             int offset);
-        public partial Single GetTimerSettingCustom();
-        public Single TimerSetting => GetTimerSettingCustom();
+        public partial Single? GetTimerSettingCustom();
+        public Single? TimerSetting => GetTimerSettingCustom();
         #endregion
         #region Animations
         partial void AnimationsCustomParse(

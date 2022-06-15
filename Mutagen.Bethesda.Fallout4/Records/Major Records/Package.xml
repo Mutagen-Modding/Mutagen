@@ -64,8 +64,8 @@
   <Object name="PackageIdles" objType="Subrecord" GUID="6efabf35-60d8-4d80-9e50-c28d643198a5" ID="564">
     <Fields>
       <Enum name="Type" enumName="PackageIdles.Types" byteLength="1" nullable="False" recordType="IDLF" />
-      <Float name="TimerSetting" recordType="IDLT" nullable="False" binary="Custom" />
-      <List name="Animations" recordType="IDLA" counterRecType="IDLC" counterLength="1" binary="Custom" nullable="False">
+      <Float name="TimerSetting" recordType="IDLT" binary="Custom" />
+      <List name="Animations" recordType="IDLA" counterRecType="IDLC" counterLength="1" binary="Custom" >
         <FormLink refName="IdleAnimation" />
       </List>
       <Int32 name="IDLB" recordType="IDLB" />
