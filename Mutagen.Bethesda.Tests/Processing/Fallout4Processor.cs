@@ -63,6 +63,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.EQUP, ProcessEquipTypes);
         AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
         AddDynamicProcessing(RecordTypes.GDRY, ProcessGodRays);
+        AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
     }
 
     private void ProcessGameSettings(
@@ -639,6 +640,16 @@ public class Fallout4Processor : Processor
             ProcessZeroFloats(subRec, fileOffset, ref loc, 5);
             ProcessColorFloats(subRec, fileOffset, ref loc, alpha: false, amount: 1);
             ProcessZeroFloats(subRec, fileOffset, ref loc, 1);
+        }
+    }
+
+    private void ProcessLocations(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.RCSR))
+        {
+            ProcessFormIDOverflows(subRec, fileOffset);
         }
     }
 
