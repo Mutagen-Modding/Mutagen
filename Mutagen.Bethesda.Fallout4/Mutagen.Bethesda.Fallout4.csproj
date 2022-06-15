@@ -2443,6 +2443,9 @@
     <Compile Include="Records\Major Records\ObjectVisibilityManagerItem_Generated.cs">
       <DependentUpon>ObjectVisibilityManager.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\QuestData_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

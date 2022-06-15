@@ -85,6 +85,8 @@ partial class QuestBinaryCreateTranslation
         {
             throw new ArgumentException("Unexpected NEXT header");
         }
+
+        item.UnusedConditions = new();
         ConditionBinaryCreateTranslation.FillConditionsList(item.UnusedConditions, frame);
         return null;
     }
@@ -101,7 +103,7 @@ partial class QuestBinaryCreateTranslation
     {
         frame = frame.SpawnAll();
         frame.TryReadSubrecord(RecordTypes.ANAM, out _);
-        item.Aliases.Clear();
+        item.Aliases = new();
         while (frame.TryReadSubrecord(_expectedAliasRecords, out var subRec))
         {
             switch (subRec.RecordTypeInt)
@@ -202,13 +204,16 @@ partial class QuestBinaryWriteTranslation
 
     public static partial void WriteBinaryUnusedConditionsLogicCustom(MutagenWriter writer, IQuestGetter item)
     {
+        var unusedConditions = item.UnusedConditions;
+        if (unusedConditions == null) return;
         using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
-        ConditionBinaryWriteTranslation.WriteConditionsList(item.UnusedConditions, writer);
+        ConditionBinaryWriteTranslation.WriteConditionsList(unusedConditions, writer);
     }
 
     public static partial void WriteBinaryAliasParseCustom(MutagenWriter writer, IQuestGetter item)
     {
         var aliases = item.Aliases;
+        if (aliases == null) return;
         using (HeaderExport.Subrecord(writer, RecordTypes.ANAM))
         {
             if (aliases.Count == 0)
@@ -315,8 +320,8 @@ partial class QuestBinaryWriteTranslation
 partial class QuestBinaryOverlay
 {
     public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = Array.Empty<IConditionGetter>();
-    public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = Array.Empty<IConditionGetter>();
-    public IReadOnlyList<IAQuestAliasGetter> Aliases { get; private set; } = Array.Empty<IAQuestAliasGetter>();
+    public IReadOnlyList<IConditionGetter>? UnusedConditions { get; private set; }
+    public IReadOnlyList<IAQuestAliasGetter>? Aliases { get; private set; }
 
     private ReadOnlyMemorySlice<byte>? _grupData;
 
@@ -467,7 +472,6 @@ partial class QuestBinaryOverlay
         try
         {
             if (stream.Complete) return;
-            var startPos = stream.Position;
             if (!stream.TryGetGroupHeader(out var groupMeta)) return;
             if (groupMeta.GroupType != (int)GroupTypeEnum.QuestChildren) return;
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));

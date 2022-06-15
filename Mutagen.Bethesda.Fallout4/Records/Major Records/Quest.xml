@@ -4,15 +4,7 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="QuestAdapter" recordType="VMAD" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <Data recordType="DNAM">
-        <Fields>
-          <Enum name="Flags" enumName="Quest.Flag" byteLength="2" />
-          <UInt8 name="Priority" />
-          <UInt8 name="Unused" />
-          <Float name="DelayTime" />
-          <Enum name="Type" enumName="Quest.TypeEnum" byteLength="4" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="QuestData" />
       <RecordType name="Event" recordType="ENAM" />
       <FormLink name="Location" recordType="LNAM" refName="Location" />
       <FormLink name="QuestCompletionXp" recordType="XNAM" refName="Global" />
@@ -22,7 +14,7 @@
       <String name="Filter" recordType="FLTR" />
       <RefList name="DialogConditions" refName="Condition" binary="Custom" />
       <CustomLogic name="UnusedConditionsLogic" recordType="NEXT" />
-      <RefList name="UnusedConditions" refName="Condition" binary="NoGeneration" />
+      <RefList name="UnusedConditions" refName="Condition" binary="NoGeneration" nullable="True" />
       <RefList name="Stages" refName="QuestStage" />
       <RefList name="Objectives" refName="QuestObjective" />
       <CustomLogic name="AliasParse">
@@ -32,7 +24,7 @@
         <RecordType>ALCS</RecordType>
         <RecordType>ALMI</RecordType>
       </CustomLogic>
-      <RefList name="Aliases" refName="AQuestAlias" binary="NoGeneration" />
+      <RefList name="Aliases" refName="AQuestAlias" binary="NoGeneration" nullable="True" />
       <String name="Description" translated="Normal" recordType="NNAM" />
       <FormLink name="QuestGroup" recordType="GNAM" refName="Keyword" />
       <String name="SwfFile" recordType="SNAM" />
@@ -41,6 +33,15 @@
       <RefList name="DialogBranches" binary="NoGeneration" refName="DialogBranch" />
       <RefList name="DialogTopics" binary="NoGeneration" refName="DialogTopic" />
       <RefList name="Scenes" binary="NoGeneration" refName="Scene" />
+    </Fields>
+  </Object>
+  <Object name="QuestData" objType="Subrecord" recordType="DNAM" GUID="c70aba81-4a1f-4922-ac95-ca821ed8b31a" ID="681">
+    <Fields>
+      <Enum name="Flags" enumName="Quest.Flag" byteLength="2" />
+      <UInt8 name="Priority" />
+      <UInt8 name="Unused" />
+      <Float name="DelayTime" />
+      <Enum name="Type" enumName="Quest.TypeEnum" byteLength="4" />
     </Fields>
   </Object>
   <Object name="QuestAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="ac22ba38-9b50-49b1-99fd-c1b057879549" ID="522">

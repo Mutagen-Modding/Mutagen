@@ -104,20 +104,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #endregion
-        #region Flags
-        public Quest.Flag Flags { get; set; } = default;
-        #endregion
-        #region Priority
-        public Byte Priority { get; set; } = default;
-        #endregion
-        #region Unused
-        public Byte Unused { get; set; } = default;
-        #endregion
-        #region DelayTime
-        public Single DelayTime { get; set; } = default;
-        #endregion
-        #region Type
-        public Quest.TypeEnum Type { get; set; } = default;
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private QuestData? _Data;
+        public QuestData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IQuestDataGetter? IQuestGetter.Data => this.Data;
         #endregion
         #region Event
         public RecordType? Event { get; set; }
@@ -179,15 +175,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region UnusedConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _UnusedConditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> UnusedConditions
+        private ExtendedList<Condition>? _UnusedConditions;
+        public ExtendedList<Condition>? UnusedConditions
         {
             get => this._UnusedConditions;
-            init => this._UnusedConditions = value;
+            set => this._UnusedConditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter> IQuestGetter.UnusedConditions => _UnusedConditions;
+        IReadOnlyList<IConditionGetter>? IQuestGetter.UnusedConditions => _UnusedConditions;
         #endregion
 
         #endregion
@@ -221,15 +217,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AQuestAlias> _Aliases = new ExtendedList<AQuestAlias>();
-        public ExtendedList<AQuestAlias> Aliases
+        private ExtendedList<AQuestAlias>? _Aliases;
+        public ExtendedList<AQuestAlias>? Aliases
         {
             get => this._Aliases;
-            init => this._Aliases = value;
+            set => this._Aliases = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAQuestAliasGetter> IQuestGetter.Aliases => _Aliases;
+        IReadOnlyList<IAQuestAliasGetter>? IQuestGetter.Aliases => _Aliases;
         #endregion
 
         #endregion
@@ -301,9 +297,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region DNAMDataTypeState
-        public Quest.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -331,11 +324,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(initialValue, new QuestAdapter.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.Flags = initialValue;
-                this.Priority = initialValue;
-                this.Unused = initialValue;
-                this.DelayTime = initialValue;
-                this.Type = initialValue;
+                this.Data = new MaskItem<TItem, QuestData.Mask<TItem>?>(initialValue, new QuestData.Mask<TItem>(initialValue));
                 this.Event = initialValue;
                 this.Location = initialValue;
                 this.QuestCompletionXp = initialValue;
@@ -354,7 +343,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>());
                 this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
                 this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -366,11 +354,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Version2,
                 TItem VirtualMachineAdapter,
                 TItem Name,
-                TItem Flags,
-                TItem Priority,
-                TItem Unused,
-                TItem DelayTime,
-                TItem Type,
+                TItem Data,
                 TItem Event,
                 TItem Location,
                 TItem QuestCompletionXp,
@@ -388,8 +372,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Unknown,
                 TItem DialogBranches,
                 TItem DialogTopics,
-                TItem Scenes,
-                TItem DNAMDataTypeState)
+                TItem Scenes)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -400,11 +383,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(VirtualMachineAdapter, new QuestAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
-                this.Flags = Flags;
-                this.Priority = Priority;
-                this.Unused = Unused;
-                this.DelayTime = DelayTime;
-                this.Type = Type;
+                this.Data = new MaskItem<TItem, QuestData.Mask<TItem>?>(Data, new QuestData.Mask<TItem>(Data));
                 this.Event = Event;
                 this.Location = Location;
                 this.QuestCompletionXp = QuestCompletionXp;
@@ -423,7 +402,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(DialogBranches, Enumerable.Empty<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>());
                 this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(DialogTopics, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
                 this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(Scenes, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -437,11 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public MaskItem<TItem, QuestAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem Name;
-            public TItem Flags;
-            public TItem Priority;
-            public TItem Unused;
-            public TItem DelayTime;
-            public TItem Type;
+            public MaskItem<TItem, QuestData.Mask<TItem>?>? Data { get; set; }
             public TItem Event;
             public TItem Location;
             public TItem QuestCompletionXp;
@@ -460,7 +434,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>? DialogBranches;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>? DialogTopics;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>? Scenes;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -476,11 +449,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Priority, rhs.Priority)) return false;
-                if (!object.Equals(this.Unused, rhs.Unused)) return false;
-                if (!object.Equals(this.DelayTime, rhs.DelayTime)) return false;
-                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Event, rhs.Event)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
                 if (!object.Equals(this.QuestCompletionXp, rhs.QuestCompletionXp)) return false;
@@ -499,7 +468,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DialogBranches, rhs.DialogBranches)) return false;
                 if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
                 if (!object.Equals(this.Scenes, rhs.Scenes)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -507,11 +475,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Name);
-                hash.Add(this.Flags);
-                hash.Add(this.Priority);
-                hash.Add(this.Unused);
-                hash.Add(this.DelayTime);
-                hash.Add(this.Type);
+                hash.Add(this.Data);
                 hash.Add(this.Event);
                 hash.Add(this.Location);
                 hash.Add(this.QuestCompletionXp);
@@ -530,7 +494,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DialogBranches);
                 hash.Add(this.DialogTopics);
                 hash.Add(this.Scenes);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -547,11 +510,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Name)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.Priority)) return false;
-                if (!eval(this.Unused)) return false;
-                if (!eval(this.DelayTime)) return false;
-                if (!eval(this.Type)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Event)) return false;
                 if (!eval(this.Location)) return false;
                 if (!eval(this.QuestCompletionXp)) return false;
@@ -668,7 +631,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -683,11 +645,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Name)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.Priority)) return true;
-                if (eval(this.Unused)) return true;
-                if (eval(this.DelayTime)) return true;
-                if (eval(this.Type)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Event)) return true;
                 if (eval(this.Location)) return true;
                 if (eval(this.QuestCompletionXp)) return true;
@@ -804,7 +766,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -822,11 +783,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, QuestAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
-                obj.Flags = eval(this.Flags);
-                obj.Priority = eval(this.Priority);
-                obj.Unused = eval(this.Unused);
-                obj.DelayTime = eval(this.DelayTime);
-                obj.Type = eval(this.Type);
+                obj.Data = this.Data == null ? null : new MaskItem<R, QuestData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.Event = eval(this.Event);
                 obj.Location = eval(this.Location);
                 obj.QuestCompletionXp = eval(this.QuestCompletionXp);
@@ -970,7 +927,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -997,25 +953,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.Priority ?? true)
-                    {
-                        sb.AppendItem(Priority, "Priority");
-                    }
-                    if (printMask?.Unused ?? true)
-                    {
-                        sb.AppendItem(Unused, "Unused");
-                    }
-                    if (printMask?.DelayTime ?? true)
-                    {
-                        sb.AppendItem(DelayTime, "DelayTime");
-                    }
-                    if (printMask?.Type ?? true)
-                    {
-                        sb.AppendItem(Type, "Type");
+                        Data?.Print(sb);
                     }
                     if (printMask?.Event ?? true)
                     {
@@ -1226,10 +1166,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1243,11 +1179,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public MaskItem<Exception?, QuestAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? Name;
-            public Exception? Flags;
-            public Exception? Priority;
-            public Exception? Unused;
-            public Exception? DelayTime;
-            public Exception? Type;
+            public MaskItem<Exception?, QuestData.ErrorMask?>? Data;
             public Exception? Event;
             public Exception? Location;
             public Exception? QuestCompletionXp;
@@ -1266,7 +1198,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>? DialogBranches;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>? DialogTopics;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>? Scenes;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1279,16 +1210,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return VirtualMachineAdapter;
                     case Quest_FieldIndex.Name:
                         return Name;
-                    case Quest_FieldIndex.Flags:
-                        return Flags;
-                    case Quest_FieldIndex.Priority:
-                        return Priority;
-                    case Quest_FieldIndex.Unused:
-                        return Unused;
-                    case Quest_FieldIndex.DelayTime:
-                        return DelayTime;
-                    case Quest_FieldIndex.Type:
-                        return Type;
+                    case Quest_FieldIndex.Data:
+                        return Data;
                     case Quest_FieldIndex.Event:
                         return Event;
                     case Quest_FieldIndex.Location:
@@ -1325,8 +1248,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return DialogTopics;
                     case Quest_FieldIndex.Scenes:
                         return Scenes;
-                    case Quest_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1343,20 +1264,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Quest_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Quest_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case Quest_FieldIndex.Priority:
-                        this.Priority = ex;
-                        break;
-                    case Quest_FieldIndex.Unused:
-                        this.Unused = ex;
-                        break;
-                    case Quest_FieldIndex.DelayTime:
-                        this.DelayTime = ex;
-                        break;
-                    case Quest_FieldIndex.Type:
-                        this.Type = ex;
+                    case Quest_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, QuestData.ErrorMask?>(ex, null);
                         break;
                     case Quest_FieldIndex.Event:
                         this.Event = ex;
@@ -1412,9 +1321,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Quest_FieldIndex.Scenes:
                         this.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(ex, null);
                         break;
-                    case Quest_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -1432,20 +1338,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Quest_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Quest_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case Quest_FieldIndex.Priority:
-                        this.Priority = (Exception?)obj;
-                        break;
-                    case Quest_FieldIndex.Unused:
-                        this.Unused = (Exception?)obj;
-                        break;
-                    case Quest_FieldIndex.DelayTime:
-                        this.DelayTime = (Exception?)obj;
-                        break;
-                    case Quest_FieldIndex.Type:
-                        this.Type = (Exception?)obj;
+                    case Quest_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, QuestData.ErrorMask?>?)obj;
                         break;
                     case Quest_FieldIndex.Event:
                         this.Event = (Exception?)obj;
@@ -1501,9 +1395,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Quest_FieldIndex.Scenes:
                         this.Scenes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>)obj;
                         break;
-                    case Quest_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1515,11 +1406,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
                 if (Name != null) return true;
-                if (Flags != null) return true;
-                if (Priority != null) return true;
-                if (Unused != null) return true;
-                if (DelayTime != null) return true;
-                if (Type != null) return true;
+                if (Data != null) return true;
                 if (Event != null) return true;
                 if (Location != null) return true;
                 if (QuestCompletionXp != null) return true;
@@ -1538,7 +1425,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DialogBranches != null) return true;
                 if (DialogTopics != null) return true;
                 if (Scenes != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1569,21 +1455,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Name, "Name");
                 }
-                {
-                    sb.AppendItem(Flags, "Flags");
-                }
-                {
-                    sb.AppendItem(Priority, "Priority");
-                }
-                {
-                    sb.AppendItem(Unused, "Unused");
-                }
-                {
-                    sb.AppendItem(DelayTime, "DelayTime");
-                }
-                {
-                    sb.AppendItem(Type, "Type");
-                }
+                Data?.Print(sb);
                 {
                     sb.AppendItem(Event, "Event");
                 }
@@ -1775,9 +1647,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1788,11 +1657,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Priority = this.Priority.Combine(rhs.Priority);
-                ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.DelayTime = this.DelayTime.Combine(rhs.DelayTime);
-                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Event = this.Event.Combine(rhs.Event);
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.QuestCompletionXp = this.QuestCompletionXp.Combine(rhs.QuestCompletionXp);
@@ -1811,7 +1676,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DialogBranches = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogBranches?.Overall, rhs.DialogBranches?.Overall), ExceptionExt.Combine(this.DialogBranches?.Specific, rhs.DialogBranches?.Specific));
                 ret.DialogTopics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), ExceptionExt.Combine(this.DialogTopics?.Specific, rhs.DialogTopics?.Specific));
                 ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1836,11 +1700,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public QuestAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Name;
-            public bool Flags;
-            public bool Priority;
-            public bool Unused;
-            public bool DelayTime;
-            public bool Type;
+            public QuestData.TranslationMask? Data;
             public bool Event;
             public bool Location;
             public bool QuestCompletionXp;
@@ -1859,7 +1719,6 @@ namespace Mutagen.Bethesda.Fallout4
             public DialogBranch.TranslationMask? DialogBranches;
             public DialogTopic.TranslationMask? DialogTopics;
             public Scene.TranslationMask? Scenes;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1869,11 +1728,6 @@ namespace Mutagen.Bethesda.Fallout4
                 : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
-                this.Flags = defaultOn;
-                this.Priority = defaultOn;
-                this.Unused = defaultOn;
-                this.DelayTime = defaultOn;
-                this.Type = defaultOn;
                 this.Event = defaultOn;
                 this.Location = defaultOn;
                 this.QuestCompletionXp = defaultOn;
@@ -1884,7 +1738,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SwfFile = defaultOn;
                 this.Timestamp = defaultOn;
                 this.Unknown = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1894,11 +1747,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((Flags, null));
-                ret.Add((Priority, null));
-                ret.Add((Unused, null));
-                ret.Add((DelayTime, null));
-                ret.Add((Type, null));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((Event, null));
                 ret.Add((Location, null));
                 ret.Add((QuestCompletionXp, null));
@@ -1917,7 +1766,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DialogBranches == null ? DefaultOn : !DialogBranches.GetCrystal().CopyNothing, DialogBranches?.GetCrystal()));
                 ret.Add((DialogTopics == null ? DefaultOn : !DialogTopics.GetCrystal().CopyNothing, DialogTopics?.GetCrystal()));
                 ret.Add((Scenes == null ? DefaultOn : !Scenes.GetCrystal().CopyNothing, Scenes?.GetCrystal()));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1990,10 +1838,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DNAMDataType
-        {
         }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
@@ -2111,21 +1955,17 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new Quest.Flag Flags { get; set; }
-        new Byte Priority { get; set; }
-        new Byte Unused { get; set; }
-        new Single DelayTime { get; set; }
-        new Quest.TypeEnum Type { get; set; }
+        new QuestData? Data { get; set; }
         new RecordType? Event { get; set; }
         new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new IFormLinkNullable<IGlobalGetter> QuestCompletionXp { get; set; }
         new ExtendedList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
         new String? Filter { get; set; }
         new ExtendedList<Condition> DialogConditions { get; }
-        new ExtendedList<Condition> UnusedConditions { get; }
+        new ExtendedList<Condition>? UnusedConditions { get; set; }
         new ExtendedList<QuestStage> Stages { get; }
         new ExtendedList<QuestObjective> Objectives { get; }
-        new ExtendedList<AQuestAlias> Aliases { get; }
+        new ExtendedList<AQuestAlias>? Aliases { get; set; }
         new TranslatedString? Description { get; set; }
         new IFormLinkNullable<IKeywordGetter> QuestGroup { get; set; }
         new String? SwfFile { get; set; }
@@ -2134,7 +1974,6 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<DialogBranch> DialogBranches { get; }
         new ExtendedList<DialogTopic> DialogTopics { get; }
         new ExtendedList<Scene> Scenes { get; }
-        new Quest.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new Quest.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2175,21 +2014,17 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        Quest.Flag Flags { get; }
-        Byte Priority { get; }
-        Byte Unused { get; }
-        Single DelayTime { get; }
-        Quest.TypeEnum Type { get; }
+        IQuestDataGetter? Data { get; }
         RecordType? Event { get; }
         IFormLinkNullableGetter<ILocationGetter> Location { get; }
         IFormLinkNullableGetter<IGlobalGetter> QuestCompletionXp { get; }
         IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
         String? Filter { get; }
         IReadOnlyList<IConditionGetter> DialogConditions { get; }
-        IReadOnlyList<IConditionGetter> UnusedConditions { get; }
+        IReadOnlyList<IConditionGetter>? UnusedConditions { get; }
         IReadOnlyList<IQuestStageGetter> Stages { get; }
         IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
-        IReadOnlyList<IAQuestAliasGetter> Aliases { get; }
+        IReadOnlyList<IAQuestAliasGetter>? Aliases { get; }
         ITranslatedStringGetter? Description { get; }
         IFormLinkNullableGetter<IKeywordGetter> QuestGroup { get; }
         String? SwfFile { get; }
@@ -2198,7 +2033,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IDialogBranchGetter> DialogBranches { get; }
         IReadOnlyList<IDialogTopicGetter> DialogTopics { get; }
         IReadOnlyList<ISceneGetter> Scenes { get; }
-        Quest.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
         Quest.MajorFlag MajorFlags { get; }
@@ -2581,30 +2415,25 @@ namespace Mutagen.Bethesda.Fallout4
         Version2 = 5,
         VirtualMachineAdapter = 6,
         Name = 7,
-        Flags = 8,
-        Priority = 9,
-        Unused = 10,
-        DelayTime = 11,
-        Type = 12,
-        Event = 13,
-        Location = 14,
-        QuestCompletionXp = 15,
-        TextDisplayGlobals = 16,
-        Filter = 17,
-        DialogConditions = 18,
-        UnusedConditions = 19,
-        Stages = 20,
-        Objectives = 21,
-        Aliases = 22,
-        Description = 23,
-        QuestGroup = 24,
-        SwfFile = 25,
-        Timestamp = 26,
-        Unknown = 27,
-        DialogBranches = 28,
-        DialogTopics = 29,
-        Scenes = 30,
-        DNAMDataTypeState = 31,
+        Data = 8,
+        Event = 9,
+        Location = 10,
+        QuestCompletionXp = 11,
+        TextDisplayGlobals = 12,
+        Filter = 13,
+        DialogConditions = 14,
+        UnusedConditions = 15,
+        Stages = 16,
+        Objectives = 17,
+        Aliases = 18,
+        Description = 19,
+        QuestGroup = 20,
+        SwfFile = 21,
+        Timestamp = 22,
+        Unknown = 23,
+        DialogBranches = 24,
+        DialogTopics = 25,
+        Scenes = 26,
     }
     #endregion
 
@@ -2622,9 +2451,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "3299b1c9-621b-4a10-961a-698116d54617";
 
-        public const ushort AdditionalFieldCount = 26;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -2802,21 +2631,17 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.Name = default;
-            item.Flags = default;
-            item.Priority = default;
-            item.Unused = default;
-            item.DelayTime = default;
-            item.Type = default;
+            item.Data = null;
             item.Event = default;
             item.Location.Clear();
             item.QuestCompletionXp.Clear();
             item.TextDisplayGlobals.Clear();
             item.Filter = default;
             item.DialogConditions.Clear();
-            item.UnusedConditions.Clear();
+            item.UnusedConditions = null;
             item.Stages.Clear();
             item.Objectives.Clear();
-            item.Aliases.Clear();
+            item.Aliases = null;
             item.Description = default;
             item.QuestGroup.Clear();
             item.SwfFile = default;
@@ -2825,7 +2650,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.DialogBranches.Clear();
             item.DialogTopics.Clear();
             item.Scenes.Clear();
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2848,10 +2672,10 @@ namespace Mutagen.Bethesda.Fallout4
             obj.QuestCompletionXp.Relink(mapping);
             obj.TextDisplayGlobals.RemapLinks(mapping);
             obj.DialogConditions.RemapLinks(mapping);
-            obj.UnusedConditions.RemapLinks(mapping);
+            obj.UnusedConditions?.RemapLinks(mapping);
             obj.Stages.RemapLinks(mapping);
             obj.Objectives.RemapLinks(mapping);
-            obj.Aliases.RemapLinks(mapping);
+            obj.Aliases?.RemapLinks(mapping);
             obj.QuestGroup.Relink(mapping);
             obj.DialogBranches.RemapLinks(mapping);
             obj.DialogTopics.RemapLinks(mapping);
@@ -3064,11 +2888,11 @@ namespace Mutagen.Bethesda.Fallout4
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Priority = item.Priority == rhs.Priority;
-            ret.Unused = item.Unused == rhs.Unused;
-            ret.DelayTime = item.DelayTime.EqualsWithin(rhs.DelayTime);
-            ret.Type = item.Type == rhs.Type;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Event = item.Event == rhs.Event;
             ret.Location = item.Location.Equals(rhs.Location);
             ret.QuestCompletionXp = item.QuestCompletionXp.Equals(rhs.QuestCompletionXp);
@@ -3114,7 +2938,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Scenes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3174,25 +2997,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data is {} DataItem)
             {
-                sb.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.Priority ?? true)
-            {
-                sb.AppendItem(item.Priority, "Priority");
-            }
-            if (printMask?.Unused ?? true)
-            {
-                sb.AppendItem(item.Unused, "Unused");
-            }
-            if (printMask?.DelayTime ?? true)
-            {
-                sb.AppendItem(item.DelayTime, "DelayTime");
-            }
-            if (printMask?.Type ?? true)
-            {
-                sb.AppendItem(item.Type, "Type");
+                DataItem?.Print(sb, "Data");
             }
             if ((printMask?.Event ?? true)
                 && item.Event is {} EventItem)
@@ -3240,12 +3048,13 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.UnusedConditions?.Overall ?? true)
+            if ((printMask?.UnusedConditions?.Overall ?? true)
+                && item.UnusedConditions is {} UnusedConditionsItem)
             {
                 sb.AppendLine("UnusedConditions =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.UnusedConditions)
+                    foreach (var subItem in UnusedConditionsItem)
                     {
                         using (sb.Brace())
                         {
@@ -3282,12 +3091,13 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.Aliases?.Overall ?? true)
+            if ((printMask?.Aliases?.Overall ?? true)
+                && item.Aliases is {} AliasesItem)
             {
                 sb.AppendLine("Aliases =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Aliases)
+                    foreach (var subItem in AliasesItem)
                     {
                         using (sb.Brace())
                         {
@@ -3360,10 +3170,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Quest_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -3424,25 +3230,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Data) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Priority) ?? true))
-            {
-                if (lhs.Priority != rhs.Priority) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Unused) ?? true))
-            {
-                if (lhs.Unused != rhs.Unused) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DelayTime) ?? true))
-            {
-                if (!lhs.DelayTime.EqualsWithin(rhs.DelayTime)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Type) ?? true))
-            {
-                if (lhs.Type != rhs.Type) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((QuestDataCommon)((IQuestDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Quest_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Event) ?? true))
             {
@@ -3470,7 +3264,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
             {
-                if (!lhs.UnusedConditions.SequenceEqual(rhs.UnusedConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.UnusedConditions)))) return false;
+                if (!lhs.UnusedConditions.SequenceEqualNullable(rhs.UnusedConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.UnusedConditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
@@ -3482,7 +3276,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
             {
-                if (!lhs.Aliases.SequenceEqual(rhs.Aliases, (l, r) => ((AQuestAliasCommon)((IAQuestAliasGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Aliases)))) return false;
+                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases, (l, r) => ((AQuestAliasCommon)((IAQuestAliasGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Aliases)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Description) ?? true))
             {
@@ -3515,10 +3309,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Scenes) ?? true))
             {
                 if (!lhs.Scenes.SequenceEqual(rhs.Scenes, (l, r) => ((SceneCommon)((ISceneGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Scenes)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -3556,11 +3346,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.Flags);
-            hash.Add(item.Priority);
-            hash.Add(item.Unused);
-            hash.Add(item.DelayTime);
-            hash.Add(item.Type);
+            if (item.Data is {} Dataitem)
+            {
+                hash.Add(Dataitem);
+            }
             if (item.Event is {} Eventitem)
             {
                 hash.Add(Eventitem);
@@ -3591,7 +3380,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.DialogBranches);
             hash.Add(item.DialogTopics);
             hash.Add(item.Scenes);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3645,10 +3433,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            if (obj.UnusedConditions is {} UnusedConditionsItem)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in UnusedConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             foreach (var item in obj.Stages.SelectMany(f => f.EnumerateFormLinks()))
             {
@@ -3658,10 +3449,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Aliases.WhereCastable<IAQuestAliasGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            if (obj.Aliases is {} AliasesItem)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in AliasesItem.WhereCastable<IAQuestAliasGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             if (FormLinkInformation.TryFactory(obj.QuestGroup, out var QuestGroupInfo))
             {
@@ -4308,25 +4102,31 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Name = rhs.Name?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Data) ?? true))
             {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Priority) ?? true))
-            {
-                item.Priority = rhs.Priority;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Unused) ?? true))
-            {
-                item.Unused = rhs.Unused;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DelayTime) ?? true))
-            {
-                item.DelayTime = rhs.DelayTime;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Type) ?? true))
-            {
-                item.Type = rhs.Type;
+                errorMask?.PushIndex((int)Quest_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data is {} rhsData)
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Quest_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Event) ?? true))
             {
@@ -4392,14 +4192,22 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask?.PushIndex((int)Quest_FieldIndex.UnusedConditions);
                 try
                 {
-                    item.UnusedConditions.SetTo(
-                        rhs.UnusedConditions
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((rhs.UnusedConditions != null))
+                    {
+                        item.UnusedConditions = 
+                            rhs.UnusedConditions
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<Condition>();
+                    }
+                    else
+                    {
+                        item.UnusedConditions = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4464,14 +4272,22 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask?.PushIndex((int)Quest_FieldIndex.Aliases);
                 try
                 {
-                    item.Aliases.SetTo(
-                        rhs.Aliases
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((rhs.Aliases != null))
+                    {
+                        item.Aliases = 
+                            rhs.Aliases
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<AQuestAlias>();
+                    }
+                    else
+                    {
+                        item.Aliases = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4574,10 +4390,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
             }
         }
         
@@ -4758,21 +4570,12 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            if (item.Data is {} DataItem)
             {
-                EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 2);
-                writer.Write(item.Priority);
-                writer.Write(item.Unused);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                ((QuestDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
                     writer: writer,
-                    item: item.DelayTime);
-                EnumBinaryTranslation<Quest.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Type,
-                    length: 4);
+                    translationParams: translationParams);
             }
             RecordTypeBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -5010,18 +4813,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 2);
-                    item.Priority = dataFrame.ReadUInt8();
-                    item.Unused = dataFrame.ReadUInt8();
-                    item.DelayTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Type = EnumBinaryTranslation<Quest.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 4);
-                    return (int)Quest_FieldIndex.Type;
+                    item.Data = Mutagen.Bethesda.Fallout4.QuestData.CreateFromBinary(frame: frame);
+                    return (int)Quest_FieldIndex.Data;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -5230,32 +5023,9 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        private RangeInt32? _DNAMLocation;
-        public Quest.DNAMDataType DNAMDataTypeState { get; private set; }
-        #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value.Min;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public Quest.Flag Flags => _Flags_IsSet ? (Quest.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
-        #endregion
-        #region Priority
-        private int _PriorityLocation => _DNAMLocation!.Value.Min + 0x2;
-        private bool _Priority_IsSet => _DNAMLocation.HasValue;
-        public Byte Priority => _Priority_IsSet ? _data.Span[_PriorityLocation] : default;
-        #endregion
-        #region Unused
-        private int _UnusedLocation => _DNAMLocation!.Value.Min + 0x3;
-        private bool _Unused_IsSet => _DNAMLocation.HasValue;
-        public Byte Unused => _Unused_IsSet ? _data.Span[_UnusedLocation] : default;
-        #endregion
-        #region DelayTime
-        private int _DelayTimeLocation => _DNAMLocation!.Value.Min + 0x4;
-        private bool _DelayTime_IsSet => _DNAMLocation.HasValue;
-        public Single DelayTime => _DelayTime_IsSet ? _data.Slice(_DelayTimeLocation, 4).Float() : default;
-        #endregion
-        #region Type
-        private int _TypeLocation => _DNAMLocation!.Value.Min + 0x8;
-        private bool _Type_IsSet => _DNAMLocation.HasValue;
-        public Quest.TypeEnum Type => _Type_IsSet ? (Quest.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 0x4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        public IQuestDataGetter? Data => _DataLocation.HasValue ? QuestDataBinaryOverlay.QuestDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
         #region Event
         private int? _EventLocation;
@@ -5393,8 +5163,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Quest_FieldIndex.Type;
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Quest_FieldIndex.Data;
                 }
                 case RecordTypeInts.ENAM:
                 {
