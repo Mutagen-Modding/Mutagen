@@ -404,8 +404,9 @@ partial class PerkBinaryWriteTranslation
                     PerkEntryPointSetText _ => APerkEntryPointEffect.ParameterType.LString,
                     _ => throw new NotImplementedException()
                 };
-                if (effect is not PerkEntryPointModifyValue modValEpft
+                if ((effect is not PerkEntryPointModifyValue modValEpft
                     || modValEpft.Value.HasValue)
+                    && paramType != APerkEntryPointEffect.ParameterType.None)
                 {
                     using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
                     {
@@ -413,9 +414,12 @@ partial class PerkBinaryWriteTranslation
                     }
                 }
 
-                using (HeaderExport.Subrecord(writer, RecordTypes.EPFB))
+                if (ptEffect.PerkEntryID is { } id)
                 {
-                    writer.Write(ptEffect.PerkEntryID);
+                    using (HeaderExport.Subrecord(writer, RecordTypes.EPFB))
+                    {
+                        writer.Write(id);
+                    }
                 }
 
                 if (effect is PerkEntryPointAddActivateChoice choice)
