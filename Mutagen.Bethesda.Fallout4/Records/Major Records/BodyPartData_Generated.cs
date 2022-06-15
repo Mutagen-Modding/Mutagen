@@ -1614,6 +1614,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)BodyPartData_FieldIndex.Model;
                 }
                 case RecordTypeInts.BPTN:
+                case RecordTypeInts.BPNN:
                 {
                     item.Parts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BodyPart>.Instance.Parse(
@@ -1762,6 +1763,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)BodyPartData_FieldIndex.Model;
                 }
                 case RecordTypeInts.BPTN:
+                case RecordTypeInts.BPNN:
                 {
                     this.Parts = this.ParseRepeatedTypelessSubrecord<IBodyPartGetter>(
                         stream: stream,

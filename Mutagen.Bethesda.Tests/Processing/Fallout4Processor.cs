@@ -280,6 +280,14 @@ public class Fallout4Processor : Processor
             int loc = 20;
             ProcessBool(xbsd, fileOffset, loc, 1, 1);
         }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRFG, out var xrfg))
+        {
+            ProcessFormIDOverflow(xrfg, fileOffset);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XLYR, out var xlyr))
+        {
+            ProcessFormIDOverflow(xlyr, fileOffset);
+        }
         if (majorFrame.TryFindSubrecord(RecordTypes.XRMR, out var xrmr)
             && xrmr.AsInt32() == 0
             && !majorFrame.TryFindSubrecord(RecordTypes.LNAM, out _)

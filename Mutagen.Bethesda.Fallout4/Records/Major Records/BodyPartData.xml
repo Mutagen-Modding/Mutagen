@@ -8,7 +8,7 @@
   </Object>
   <Object name="BodyPart" objType="Subrecord" GUID="776b6f1c-d6fa-47db-a84a-450e3a2d36a4" ID="612">
     <Fields>
-      <String name="Name" recordType="BPTN" translated="Normal" nullable="False" />
+      <String name="Name" recordType="BPTN" translated="Normal" />
       <String name="PartNode" recordType="BPNN" nullable="False" />
       <String name="VatsTarget" recordType="BPNT" nullable="False" />
       <Data recordType="BPND">

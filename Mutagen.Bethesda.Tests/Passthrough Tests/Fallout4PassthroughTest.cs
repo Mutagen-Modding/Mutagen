@@ -400,6 +400,33 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.MODT,
             RecordTypes.MODS
         );
+        ret.AddAlignments(
+            RecordTypes.ACTI,
+            RecordTypes.MODL,
+            RecordTypes.MODC,
+            RecordTypes.MODT,
+            RecordTypes.MODS,
+            RecordTypes.KSIZ,
+            AlignmentRepeatedRule.Basic(RecordTypes.KWDA),
+            RecordTypes.PNAM,
+            RecordTypes.FNAM
+        );
+        ret.AddAlignments(
+            RecordTypes.SCOL,
+            RecordTypes.MODL,
+            RecordTypes.MODC,
+            RecordTypes.MODT,
+            RecordTypes.MODS,
+            RecordTypes.FLTR
+        );
+        ret.AddAlignments(
+            RecordTypes.BPTD,
+            RecordTypes.EDID,
+            RecordTypes.MODL,
+            RecordTypes.MODC,
+            RecordTypes.MODT,
+            RecordTypes.MODS
+        );
         return ret;
     }
 

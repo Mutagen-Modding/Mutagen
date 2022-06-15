@@ -54,15 +54,26 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Name
         /// <summary>
-        /// Aspects: INamedRequired, ITranslatedNamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public TranslatedString Name { get; set; } = string.Empty;
-        ITranslatedStringGetter IBodyPartGetter.Name => this.Name;
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IBodyPartGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
         {
@@ -2189,13 +2200,15 @@ namespace Mutagen.Bethesda.Fallout4
         IBodyPartGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IBodyPart>,
+        INamed,
         INamedRequired,
+        ITranslatedNamed,
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamedRequired, ITranslatedNamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new TranslatedString Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new String PartNode { get; set; }
         new String VatsTarget { get; set; }
         new Single DamageMult { get; set; }
@@ -2252,7 +2265,9 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IBodyPartGetter>,
+        INamedGetter,
         INamedRequiredGetter,
+        ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -2264,9 +2279,9 @@ namespace Mutagen.Bethesda.Fallout4
         static ILoquiRegistration StaticRegistration => BodyPart_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedRequiredGetter, ITranslatedNamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        ITranslatedStringGetter Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         String PartNode { get; }
         String VatsTarget { get; }
@@ -2581,11 +2596,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BPTN;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.BPTN);
+            var triggers = RecordCollection.Factory(
+                RecordTypes.BPTN,
+                RecordTypes.BPNN);
             var all = RecordCollection.Factory(
                 RecordTypes.BPTN,
                 RecordTypes.BPNN,
@@ -2646,7 +2662,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IBodyPart item)
         {
             ClearPartial();
-            item.Name.Clear();
+            item.Name = default;
             item.PartNode = string.Empty;
             item.VatsTarget = string.Empty;
             item.DamageMult = default;
@@ -2856,9 +2872,10 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             BodyPart.Mask<bool>? printMask = null)
         {
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
             {
-                sb.AppendItem(item.Name, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.PartNode ?? true)
             {
@@ -3275,7 +3292,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IBodyPartGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Name);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
             hash.Add(item.PartNode);
             hash.Add(item.VatsTarget);
             hash.Add(item.DamageMult);
@@ -3402,7 +3422,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name.DeepCopy();
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.PartNode) ?? true))
             {
@@ -3710,7 +3730,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.BPTN),
@@ -3940,6 +3960,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.BPNN:
                 {
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.PartNode, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PartNode = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -4158,10 +4179,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         #region PartNode
@@ -4458,6 +4483,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.BPNN:
                 {
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.PartNode, translationParams)) return ParseResult.Stop;
                     _PartNodeLocation = (stream.Position - offset);
                     return (int)BodyPart_FieldIndex.PartNode;
                 }
