@@ -49,6 +49,9 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public WaterVelocity.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Offset
         public P3Float Offset { get; set; } = default;
         #endregion
@@ -68,6 +71,17 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IWaterVelocityGetter.Unknown2 => this.Unknown2;
+        #endregion
+        #region Unknown3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unknown3 = new byte[16];
+        public MemorySlice<Byte> Unknown3
+        {
+            get => _Unknown3;
+            set => this._Unknown3 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IWaterVelocityGetter.Unknown3 => this.Unknown3;
         #endregion
 
         #region To String
@@ -108,22 +122,28 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Offset = initialValue;
                 this.Unknown = initialValue;
                 this.Angle = initialValue;
                 this.Unknown2 = initialValue;
+                this.Unknown3 = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Offset,
                 TItem Unknown,
                 TItem Angle,
-                TItem Unknown2)
+                TItem Unknown2,
+                TItem Unknown3)
             {
+                this.Versioning = Versioning;
                 this.Offset = Offset;
                 this.Unknown = Unknown;
                 this.Angle = Angle;
                 this.Unknown2 = Unknown2;
+                this.Unknown3 = Unknown3;
             }
 
             #pragma warning disable CS8618
@@ -135,10 +155,12 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Offset;
             public TItem Unknown;
             public TItem Angle;
             public TItem Unknown2;
+            public TItem Unknown3;
             #endregion
 
             #region Equals
@@ -151,19 +173,23 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Offset, rhs.Offset)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Angle, rhs.Angle)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Offset);
                 hash.Add(this.Unknown);
                 hash.Add(this.Angle);
                 hash.Add(this.Unknown2);
+                hash.Add(this.Unknown3);
                 return hash.ToHashCode();
             }
 
@@ -172,10 +198,12 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Offset)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.Angle)) return false;
                 if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Unknown3)) return false;
                 return true;
             }
             #endregion
@@ -183,10 +211,12 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Offset)) return true;
                 if (eval(this.Unknown)) return true;
                 if (eval(this.Angle)) return true;
                 if (eval(this.Unknown2)) return true;
+                if (eval(this.Unknown3)) return true;
                 return false;
             }
             #endregion
@@ -201,10 +231,12 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Offset = eval(this.Offset);
                 obj.Unknown = eval(this.Unknown);
                 obj.Angle = eval(this.Angle);
                 obj.Unknown2 = eval(this.Unknown2);
+                obj.Unknown3 = eval(this.Unknown3);
             }
             #endregion
 
@@ -223,6 +255,10 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(WaterVelocity.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Offset ?? true)
                     {
                         sb.AppendItem(Offset, "Offset");
@@ -238,6 +274,10 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.Unknown2 ?? true)
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                 }
             }
@@ -263,10 +303,12 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Offset;
             public Exception? Unknown;
             public Exception? Angle;
             public Exception? Unknown2;
+            public Exception? Unknown3;
             #endregion
 
             #region IErrorMask
@@ -275,6 +317,8 @@ namespace Mutagen.Bethesda.Fallout4
                 WaterVelocity_FieldIndex enu = (WaterVelocity_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterVelocity_FieldIndex.Versioning:
+                        return Versioning;
                     case WaterVelocity_FieldIndex.Offset:
                         return Offset;
                     case WaterVelocity_FieldIndex.Unknown:
@@ -283,6 +327,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Angle;
                     case WaterVelocity_FieldIndex.Unknown2:
                         return Unknown2;
+                    case WaterVelocity_FieldIndex.Unknown3:
+                        return Unknown3;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -293,6 +339,9 @@ namespace Mutagen.Bethesda.Fallout4
                 WaterVelocity_FieldIndex enu = (WaterVelocity_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterVelocity_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case WaterVelocity_FieldIndex.Offset:
                         this.Offset = ex;
                         break;
@@ -305,6 +354,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case WaterVelocity_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
                         break;
+                    case WaterVelocity_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -315,6 +367,9 @@ namespace Mutagen.Bethesda.Fallout4
                 WaterVelocity_FieldIndex enu = (WaterVelocity_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterVelocity_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case WaterVelocity_FieldIndex.Offset:
                         this.Offset = (Exception?)obj;
                         break;
@@ -327,6 +382,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case WaterVelocity_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
+                    case WaterVelocity_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -335,10 +393,12 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Offset != null) return true;
                 if (Unknown != null) return true;
                 if (Angle != null) return true;
                 if (Unknown2 != null) return true;
+                if (Unknown3 != null) return true;
                 return false;
             }
             #endregion
@@ -365,6 +425,9 @@ namespace Mutagen.Bethesda.Fallout4
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(Offset, "Offset");
                 }
                 {
@@ -376,6 +439,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
                 }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
             }
             #endregion
 
@@ -384,10 +450,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Offset = this.Offset.Combine(rhs.Offset);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Angle = this.Angle.Combine(rhs.Angle);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -411,10 +479,12 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool Offset;
             public bool Unknown;
             public bool Angle;
             public bool Unknown2;
+            public bool Unknown3;
             #endregion
 
             #region Ctors
@@ -424,10 +494,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Offset = defaultOn;
                 this.Unknown = defaultOn;
                 this.Angle = defaultOn;
                 this.Unknown2 = defaultOn;
+                this.Unknown3 = defaultOn;
             }
 
             #endregion
@@ -443,10 +515,12 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Offset, null));
                 ret.Add((Unknown, null));
                 ret.Add((Angle, null));
                 ret.Add((Unknown2, null));
+                ret.Add((Unknown3, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -454,6 +528,14 @@ namespace Mutagen.Bethesda.Fallout4
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
+        }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
         }
         #endregion
 
@@ -519,10 +601,12 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IWaterVelocity>,
         IWaterVelocityGetter
     {
+        new WaterVelocity.VersioningBreaks Versioning { get; set; }
         new P3Float Offset { get; set; }
         new Int32 Unknown { get; set; }
         new P3Float Angle { get; set; }
         new MemorySlice<Byte> Unknown2 { get; set; }
+        new MemorySlice<Byte> Unknown3 { get; set; }
     }
 
     public partial interface IWaterVelocityGetter :
@@ -537,10 +621,12 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WaterVelocity_Registration.Instance;
+        WaterVelocity.VersioningBreaks Versioning { get; }
         P3Float Offset { get; }
         Int32 Unknown { get; }
         P3Float Angle { get; }
         ReadOnlyMemorySlice<Byte> Unknown2 { get; }
+        ReadOnlyMemorySlice<Byte> Unknown3 { get; }
 
     }
 
@@ -710,10 +796,12 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum WaterVelocity_FieldIndex
     {
-        Offset = 0,
-        Unknown = 1,
-        Angle = 2,
-        Unknown2 = 3,
+        Versioning = 0,
+        Offset = 1,
+        Unknown = 2,
+        Angle = 3,
+        Unknown2 = 4,
+        Unknown3 = 5,
     }
     #endregion
 
@@ -731,9 +819,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "32088d8e-5e65-4053-8ea1-7aa62027a23d";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(WaterVelocity.Mask<>);
 
@@ -808,10 +896,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWaterVelocity item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Offset = default;
             item.Unknown = default;
             item.Angle = default;
             item.Unknown2 = new byte[20];
+            item.Unknown3 = new byte[16];
         }
         
         #region Mutagen
@@ -865,10 +955,12 @@ namespace Mutagen.Bethesda.Fallout4
             WaterVelocity.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Offset = item.Offset.Equals(rhs.Offset);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Angle = item.Angle.Equals(rhs.Angle);
             ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
+            ret.Unknown3 = MemoryExtensions.SequenceEqual(item.Unknown3.Span, rhs.Unknown3.Span);
         }
         
         public string Print(
@@ -913,6 +1005,10 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             WaterVelocity.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Offset ?? true)
             {
                 sb.AppendItem(item.Offset, "Offset");
@@ -929,6 +1025,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
             }
+            if (printMask?.Unknown3 ?? true)
+            {
+                sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+            }
         }
         
         #region Equals and Hash
@@ -938,6 +1038,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((crystal?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Offset) ?? true))
             {
                 if (!lhs.Offset.Equals(rhs.Offset)) return false;
@@ -954,16 +1058,22 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Unknown3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
+            }
             return true;
         }
         
         public virtual int GetHashCode(IWaterVelocityGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Offset);
             hash.Add(item.Unknown);
             hash.Add(item.Angle);
             hash.Add(item.Unknown2);
+            hash.Add(item.Unknown3);
             return hash.ToHashCode();
         }
         
@@ -996,6 +1106,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Offset) ?? true))
             {
                 item.Offset = rhs.Offset;
@@ -1011,6 +1125,11 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2.ToArray();
+            }
+            if (rhs.Versioning.HasFlag(WaterVelocity.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Unknown3) ?? true))
+            {
+                item.Unknown3 = rhs.Unknown3.ToArray();
             }
         }
         
@@ -1118,6 +1237,12 @@ namespace Mutagen.Bethesda.Fallout4
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown2);
+            if (!item.Versioning.HasFlag(WaterVelocity.VersioningBreaks.Break0))
+            {
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown3);
+            }
         }
 
         public void Write(
@@ -1162,6 +1287,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.Unknown = frame.ReadInt32();
             item.Angle = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(20));
+            if (frame.Complete)
+            {
+                item.Versioning |= WaterVelocity.VersioningBreaks.Break0;
+                return;
+            }
+            item.Unknown3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(16));
         }
 
     }
@@ -1227,10 +1358,12 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
+        public WaterVelocity.VersioningBreaks Versioning { get; private set; }
         public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
         public P3Float Angle => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x10, 0xC));
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x1C, 0x14).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _data.Span.Slice(0x30, 0x10).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1257,7 +1390,10 @@ namespace Mutagen.Bethesda.Fallout4
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x30 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._data.Length <= 0x30)
+            {
+                ret.Versioning |= WaterVelocity.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

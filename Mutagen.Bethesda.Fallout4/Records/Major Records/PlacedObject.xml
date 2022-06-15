@@ -162,6 +162,8 @@
       <Int32 name="Unknown" />
       <P3Float name="Angle" />
       <ByteArray name="Unknown2" byteLength="20" nullable="False" />
+      <Break />
+      <ByteArray name="Unknown3" byteLength="16" nullable="False" />
     </Fields>
   </Object>
   <Object name="PlacedObjectRadio" objType="Subrecord" recordType="XRDO" GUID="2b9ff158-2747-4d81-b71e-053c508e5244" ID="498">
