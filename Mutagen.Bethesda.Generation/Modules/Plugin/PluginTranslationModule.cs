@@ -2955,19 +2955,21 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                     }
                 }
-                if (HasRecordTypeFields(obj))
+                if (isMajor)
                 {
-                    if (isMajor)
-                    {
-                        sb.AppendLine($"if (!item.IsDeleted)");
-                    }
+                    sb.AppendLine($"if (!item.IsDeleted)");
+                }
 
-                    using (sb.CurlyBrace(doIt: isMajor))
+                using (sb.CurlyBrace(doIt: isMajor))
+                {
+                    if (HasRecordTypeFields(obj))
                     {
                         if (isMajor)
                         {
-                            sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                            sb.AppendLine(
+                                $"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
                         }
+
                         using (var args = sb.Call(
                                    $"WriteRecordTypes"))
                         {
@@ -2982,23 +2984,25 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.AddPassArg($"translationParams");
                             }
                         }
+
                         if (isMajor)
                         {
-                            sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                            sb.AppendLine(
+                                $"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
                         }
                     }
-                }
-                else
-                {
-                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
-                    if (firstBase != null)
+                    else
                     {
-                        using (var args = sb.Call(
-                                   $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
+                        if (firstBase != null)
                         {
-                            args.AddPassArg($"item");
-                            args.Add($"writer: {writerNameToUse}");
-                            args.AddPassArg($"translationParams");
+                            using (var args = sb.Call(
+                                       $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
+                            {
+                                args.AddPassArg($"item");
+                                args.Add($"writer: {writerNameToUse}");
+                                args.AddPassArg($"translationParams");
+                            }
                         }
                     }
                 }
