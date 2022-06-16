@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
@@ -198,7 +199,7 @@ public static class StreamHeaderMixIn
         var ret = new GroupPinHeader(constants, stream.GetMemory(constants.GroupConstants.HeaderLength, offset, readSafe: readSafe), pinLocation: stream.Position);
         if (checkIsGroup && !ret.IsGroup)
         {
-            throw new ArgumentException("Read in data that was not a GRUP");
+            throw new MalformedDataException("Read in data that was not a GRUP");
         }
         return ret;
     }
@@ -224,7 +225,7 @@ public static class StreamHeaderMixIn
         var ret = new GroupPinHeader(constants, stream.ReadMemory(constants.GroupConstants.HeaderLength, offset, readSafe: readSafe), pinLocation: loc);
         if (checkIsGroup && !ret.IsGroup)
         {
-            throw new ArgumentException("Read in data that was not a GRUP");
+            throw new MalformedDataException("Read in data that was not a GRUP");
         }
         return ret;
     }
