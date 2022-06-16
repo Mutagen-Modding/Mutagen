@@ -417,6 +417,7 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.MODC,
             RecordTypes.MODT,
             RecordTypes.MODS,
+            RecordTypes.FULL,
             RecordTypes.FLTR
         );
         ret.AddAlignments(
@@ -426,6 +427,33 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.MODC,
             RecordTypes.MODT,
             RecordTypes.MODS
+        );
+        ret.AddAlignments(
+            RecordTypes.FURN,
+            RecordTypes.MODL,
+            RecordTypes.MODC,
+            RecordTypes.MODT,
+            RecordTypes.MODS,
+            RecordTypes.DEST,
+            RecordTypes.DAMC,
+            AlignmentRepeatedRule.Sorted(
+                new AlignmentRepeatedSubrule(RecordTypes.DSTD, Single: true),
+                new AlignmentRepeatedSubrule(RecordTypes.DSTA, Single: false),
+                new AlignmentRepeatedSubrule(RecordTypes.DMDL, Single: false),
+                new AlignmentRepeatedSubrule(RecordTypes.DMDT, Single: false),
+                new AlignmentRepeatedSubrule(RecordTypes.DMDS, Single: false),
+                new AlignmentRepeatedSubrule(RecordTypes.DSTF, Single: false)),
+            RecordTypes.KSIZ,
+            RecordTypes.KWDA
+        );
+        ret.AddAlignments(
+            RecordTypes.CONT,
+            RecordTypes.PRPS,
+            RecordTypes.NTRM,
+            RecordTypes.SNAM,
+            RecordTypes.QNAM,
+            RecordTypes.TNAM,
+            RecordTypes.ONAM
         );
         return ret;
     }
