@@ -293,7 +293,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
             {
                 if (lastParsed != ObjectType.Record)
                 {
-                    throw new DataMisalignedException("Unexpected Group encountered which was not after a major record: " + GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE);
+                    throw new MalformedDataException("Unexpected Group encountered which was not after a major record: " + GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE);
                 }
                 stream.Position += checked((int)varMeta.TotalLength);
                 lastParsed = ObjectType.Group;
@@ -303,7 +303,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
                 MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecordHeader(stream.RemainingMemory);
                 if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
                 {
-                    throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
+                    throw new MalformedDataException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                 }
                 var formKey = FormKey.Factory(package.MetaData.MasterReferences!, majorMeta.FormID.Raw);
                 try

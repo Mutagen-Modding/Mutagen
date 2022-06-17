@@ -146,10 +146,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         Dictionary<RecordType, int>? recordParseCount = null;
         while (!stream.Complete && stream.Position < finalPos)
         {
-            if (!stream.TryGetGroupHeader(out var groupMeta))
-            {
-                throw new DataMisalignedException();
-            }
+            var groupMeta = stream.GetGroupHeader();
             var subStream = new OverlayStream(stream.RemainingMemory.Slice(0, finalPos - stream.Position), stream.MetaData);
             var parsed = fill(
                 stream: subStream,
