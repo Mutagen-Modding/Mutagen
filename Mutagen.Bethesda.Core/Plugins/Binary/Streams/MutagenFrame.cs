@@ -186,9 +186,10 @@ public readonly struct MutagenFrame : IMutagenReadStream
     /// <param name="finalPosition">Absolute position to be marked as frame end</param>
     /// <returns>Frame with current position as start, and given final position</returns>
     [DebuggerStepThrough]
-    public static MutagenFrame ByFinalPosition(
-        IMutagenReadStream reader,
+    public static MutagenFrame ByFinalPosition<T>(
+        T reader,
         long finalPosition)
+        where T : IMutagenReadStream
     {
         return new MutagenFrame(
             reader: reader,
@@ -202,9 +203,10 @@ public readonly struct MutagenFrame : IMutagenReadStream
     /// <param name="length">Size of frame</param>
     /// <returns>Frame with current position as start, and given length</returns>
     [DebuggerStepThrough]
-    public static MutagenFrame ByLength(
-        IMutagenReadStream reader,
+    public static MutagenFrame ByLength<T>(
+        T reader,
         long length)
+        where T : IMutagenReadStream
     {
         return new MutagenFrame(
             reader: reader,
@@ -228,7 +230,7 @@ public readonly struct MutagenFrame : IMutagenReadStream
     /// Creates a new frame around reader of a given length
     /// </summary>
     /// <param name="length">Size of frame</param>
-    /// <param name="checkFraming">Whethr to do a check that frame doesn't exceed reader's final position</param>
+    /// <param name="checkFraming">Whether to do a check that frame doesn't exceed reader's final position</param>
     /// <returns>Frame with current position as start, and given length</returns>
     /// <exception cref="ArgumentException">If checkFraming is true, and frame exceeds reader's final position</exception>
     public MutagenFrame SpawnWithLength(long length, bool checkFraming = true)

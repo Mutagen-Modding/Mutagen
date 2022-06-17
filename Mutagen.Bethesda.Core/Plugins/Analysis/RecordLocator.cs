@@ -33,7 +33,7 @@ public class RecordLocator
         public FormKey LastParsed;
         public long LastLoc;
         public GameConstants MetaData { get; }
-        public Func<IMutagenReadStream, RecordType, uint, bool>? AdditionalCriteria;
+        public Func<IMutagenReadStream, MajorRecordHeader, bool>? AdditionalCriteria;
 
         public FileLocationConstructor(GameConstants metaData)
         {
@@ -71,7 +71,7 @@ public class RecordLocator
     public static RecordLocatorResults GetLocations(
         IMutagenReadStream reader,
         RecordInterest? interest = null,
-        Func<IMutagenReadStream, RecordType, uint, bool>? additionalCriteria = null)
+        Func<IMutagenReadStream, MajorRecordHeader, bool>? additionalCriteria = null)
     {
         FileLocationConstructor ret = new FileLocationConstructor(reader.MetaData.Constants)
         {
@@ -139,6 +139,24 @@ public class RecordLocator
         return _interest?.IsInterested(grupRec) ?? true;
     }
 
+    private bool CheckAdditionalCriteria(
+        MutagenFrame reader,
+        MajorRecordHeader majorRecord)
+    {
+        if (_locs.AdditionalCriteria != null)
+        {
+            var pos = reader.Position;
+            if (!_locs.AdditionalCriteria(reader, majorRecord))
+            {
+                reader.Position = pos;
+                return false;
+            }
+            reader.Position = pos;
+        }
+
+        return true;
+    }
+
     private void ParseTopLevelGroup(
         MutagenFrame reader,
         GroupPinHeader groupPin,
@@ -177,17 +195,13 @@ public class RecordLocator
                     continue;
                 }
             }
-            var recLength = majorRecordMeta.ContentLength;
-            if (_locs.AdditionalCriteria != null)
+
+            if (!CheckAdditionalCriteria(reader, majorRecordMeta))
             {
-                var pos = reader.Position;
-                if (!_locs.AdditionalCriteria(reader, targetRec, recLength))
-                {
-                    reader.Position = pos + majorRecordMeta.TotalLength;
-                    continue;
-                }
-                reader.Position = pos;
+                reader.Position += majorRecordMeta.TotalLength;
+                continue;
             }
+            
             if (IsInterested(targetRec))
             {
                 var pos = reader.Position;

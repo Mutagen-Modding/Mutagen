@@ -21,9 +21,9 @@ public class ModGroupMerger
         var fileLocs = RecordLocator.GetLocations(
             inputStream,
             interest: interest,
-            additionalCriteria: (stream, recType, len) =>
+            additionalCriteria: (_, majorHeader) =>
             {
-                return stream.GetMajorRecordHeader().IsCompressed;
+                return majorHeader.IsCompressed;
             });
         
         inputStream.Position = 0;

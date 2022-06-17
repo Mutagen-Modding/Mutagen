@@ -30,9 +30,9 @@ public static class ModDecompressor
         var fileLocs = RecordLocator.GetLocations(
             inputStream,
             interest: interest,
-            additionalCriteria: (stream, recType, len) =>
+            additionalCriteria: (_, majorRecord) =>
             {
-                return stream.GetMajorRecordHeader().IsCompressed;
+                return majorRecord.IsCompressed;
             });
 
         // Construct group length container for later use
