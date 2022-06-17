@@ -50,6 +50,9 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public SplineConnection.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Ref
         private readonly IFormLink<IPlacedSimpleGetter> _Ref = new FormLink<IPlacedSimpleGetter>();
         public IFormLink<IPlacedSimpleGetter> Ref
@@ -102,14 +105,17 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Ref = initialValue;
                 this.Unknown = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Ref,
                 TItem Unknown)
             {
+                this.Versioning = Versioning;
                 this.Ref = Ref;
                 this.Unknown = Unknown;
             }
@@ -123,6 +129,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Ref;
             public TItem Unknown;
             #endregion
@@ -137,6 +144,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Ref, rhs.Ref)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
@@ -144,6 +152,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Ref);
                 hash.Add(this.Unknown);
                 return hash.ToHashCode();
@@ -154,6 +163,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Ref)) return false;
                 if (!eval(this.Unknown)) return false;
                 return true;
@@ -163,6 +173,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Ref)) return true;
                 if (eval(this.Unknown)) return true;
                 return false;
@@ -179,6 +190,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Ref = eval(this.Ref);
                 obj.Unknown = eval(this.Unknown);
             }
@@ -199,6 +211,10 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(SplineConnection.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Ref ?? true)
                     {
                         sb.AppendItem(Ref, "Ref");
@@ -231,6 +247,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Ref;
             public Exception? Unknown;
             #endregion
@@ -241,6 +258,8 @@ namespace Mutagen.Bethesda.Fallout4
                 SplineConnection_FieldIndex enu = (SplineConnection_FieldIndex)index;
                 switch (enu)
                 {
+                    case SplineConnection_FieldIndex.Versioning:
+                        return Versioning;
                     case SplineConnection_FieldIndex.Ref:
                         return Ref;
                     case SplineConnection_FieldIndex.Unknown:
@@ -255,6 +274,9 @@ namespace Mutagen.Bethesda.Fallout4
                 SplineConnection_FieldIndex enu = (SplineConnection_FieldIndex)index;
                 switch (enu)
                 {
+                    case SplineConnection_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case SplineConnection_FieldIndex.Ref:
                         this.Ref = ex;
                         break;
@@ -271,6 +293,9 @@ namespace Mutagen.Bethesda.Fallout4
                 SplineConnection_FieldIndex enu = (SplineConnection_FieldIndex)index;
                 switch (enu)
                 {
+                    case SplineConnection_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case SplineConnection_FieldIndex.Ref:
                         this.Ref = (Exception?)obj;
                         break;
@@ -285,6 +310,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Ref != null) return true;
                 if (Unknown != null) return true;
                 return false;
@@ -313,6 +339,9 @@ namespace Mutagen.Bethesda.Fallout4
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(Ref, "Ref");
                 }
                 {
@@ -326,6 +355,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Ref = this.Ref.Combine(rhs.Ref);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
@@ -351,6 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool Ref;
             public bool Unknown;
             #endregion
@@ -362,6 +393,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Ref = defaultOn;
                 this.Unknown = defaultOn;
             }
@@ -379,6 +411,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Ref, null));
                 ret.Add((Unknown, null));
             }
@@ -392,6 +425,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SplineConnectionCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SplineConnectionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -459,6 +497,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ISplineConnection>,
         ISplineConnectionGetter
     {
+        new SplineConnection.VersioningBreaks Versioning { get; set; }
         new IFormLink<IPlacedSimpleGetter> Ref { get; set; }
         new Int32 Unknown { get; set; }
     }
@@ -476,6 +515,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SplineConnection_Registration.Instance;
+        SplineConnection.VersioningBreaks Versioning { get; }
         IFormLinkGetter<IPlacedSimpleGetter> Ref { get; }
         Int32 Unknown { get; }
 
@@ -647,8 +687,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum SplineConnection_FieldIndex
     {
-        Ref = 0,
-        Unknown = 1,
+        Versioning = 0,
+        Ref = 1,
+        Unknown = 2,
     }
     #endregion
 
@@ -666,9 +707,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "381b9149-f078-443e-a1fb-e39651cd6b24";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(SplineConnection.Mask<>);
 
@@ -743,6 +784,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISplineConnection item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Ref.Clear();
             item.Unknown = default;
         }
@@ -799,6 +841,7 @@ namespace Mutagen.Bethesda.Fallout4
             SplineConnection.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Unknown = item.Unknown == rhs.Unknown;
         }
@@ -845,6 +888,10 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             SplineConnection.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Ref ?? true)
             {
                 sb.AppendItem(item.Ref.FormKey, "Ref");
@@ -862,6 +909,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((crystal?.GetShouldTranslate((int)SplineConnection_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)SplineConnection_FieldIndex.Ref) ?? true))
             {
                 if (!lhs.Ref.Equals(rhs.Ref)) return false;
@@ -876,6 +927,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ISplineConnectionGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Ref);
             hash.Add(item.Unknown);
             return hash.ToHashCode();
@@ -911,10 +963,15 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)SplineConnection_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)SplineConnection_FieldIndex.Ref) ?? true))
             {
                 item.Ref.SetTo(rhs.Ref.FormKey);
             }
+            if (rhs.Versioning.HasFlag(SplineConnection.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)SplineConnection_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
@@ -1018,7 +1075,10 @@ namespace Mutagen.Bethesda.Fallout4
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Ref);
-            writer.Write(item.Unknown);
+            if (!item.Versioning.HasFlag(SplineConnection.VersioningBreaks.Break0))
+            {
+                writer.Write(item.Unknown);
+            }
         }
 
         public void Write(
@@ -1060,6 +1120,11 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame)
         {
             item.Ref.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            if (frame.Complete)
+            {
+                item.Versioning |= SplineConnection.VersioningBreaks.Break0;
+                return;
+            }
             item.Unknown = frame.ReadInt32();
         }
 
@@ -1127,8 +1192,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
+        public SplineConnection.VersioningBreaks Versioning { get; private set; }
         public IFormLinkGetter<IPlacedSimpleGetter> Ref => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public Int32 Unknown => _data.Length <= 0x4 ? default : BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1155,7 +1221,10 @@ namespace Mutagen.Bethesda.Fallout4
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._data.Length <= 0x4)
+            {
+                ret.Versioning |= SplineConnection.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

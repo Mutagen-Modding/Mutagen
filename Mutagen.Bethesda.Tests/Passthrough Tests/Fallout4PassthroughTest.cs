@@ -54,25 +54,18 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.HLTX,
             RecordTypes.QSTI
         );
-        ret.StartMarkers.Add(RecordTypes.STAT, new[]
-        {
-            RecordTypes.MODL,
-            RecordTypes.MODC,
-            RecordTypes.MODT,
-            RecordTypes.MODS
-        });
-        ret.StopMarkers.Add(RecordTypes.STAT, new[]
-        {
-            RecordTypes.PRPS,
-            RecordTypes.FULL,
-            RecordTypes.DNAM
-        });
         ret.AddAlignments(
             RecordTypes.STAT,
             RecordTypes.MODL,
             RecordTypes.MODC,
             RecordTypes.MODT,
-            RecordTypes.MODS
+            RecordTypes.MODS,
+            RecordTypes.PRPS,
+            RecordTypes.FULL,
+            RecordTypes.DNAM,
+            RecordTypes.XXXX,
+            RecordTypes.NVNM,
+            RecordTypes.MNAM
         );
         ret.AddAlignments(
             RecordTypes.MSTT,

@@ -5,6 +5,7 @@
       <FormLink name="Ref">
         <Interface>IPlacedSimple</Interface>
       </FormLink>
+      <Break />
       <Int32 name="Unknown" />
     </Fields>
   </Object>
