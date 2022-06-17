@@ -127,6 +127,11 @@
         <None Update="Pex\SmoothCamMCM.pex">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Plugins\Analysis\OrphanedDeepGroups.esp">
+          <DefaultPackFolder>none</DefaultPackFolder>
+          <BuildAction>None</BuildAction>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -173,4 +173,11 @@ public class RecordTypeLocatorTests
                 new RangeInt64(1794, 1924),
                 new RecordType("INFO")));
     }
+    
+    [Fact]
+    public void OrphanedSubGroups()
+    {
+        var stream = TestDataPathing.GetReadFrame("Plugins/Analysis/OrphanedDeepGroups.esp", GameRelease.Fallout4);
+        var locs = RecordLocator.GetLocations(stream);
+    }
 }

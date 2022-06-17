@@ -104,35 +104,6 @@ public class RecordLocator
         return new RecordLocatorResults(_locs);
     }
 
-    private bool CheckForInitialGroup(
-        MutagenFrame reader,
-        GroupPinHeader groupPin,
-        GroupNesting? nesting)
-    {
-        var parsedAny = false;
-        while (reader.TryGetGroupHeader(out var initialNestedGroup))
-        {
-            var nestedGroupType = initialNestedGroup.GroupType;
-            var nextNesting = nesting?.Underneath.FirstOrDefault(x => x.GroupType == nestedGroupType) 
-                              ?? reader.MetaData.Constants.GroupConstants.TryGetNesting(nestedGroupType);
-            if (nextNesting != null)
-            {
-                HandleGroup(
-                    reader.SpawnWithLength(initialNestedGroup.TotalLength),
-                    initialNestedGroup,
-                    nextNesting);
-            }
-            else
-            {
-                throw new MalformedDataException($"Encountered nested group, but it was not registered: {initialNestedGroup.GroupType} was underneath {groupPin.GroupType}");
-            }
-
-            parsedAny = true;
-        }
-
-        return parsedAny;
-    }
-
     private bool IsInterested(RecordType grupRec)
     {
         return _interest?.IsInterested(grupRec) ?? true;
@@ -162,8 +133,6 @@ public class RecordLocator
         GroupNesting? nesting)
     {
         reader.Position += groupPin.HeaderLength;
-
-        if (CheckForInitialGroup(reader, groupPin, nesting)) return;
 
         using var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + groupPin.ContentLength);
         
