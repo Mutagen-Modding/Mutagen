@@ -97,7 +97,6 @@ public class RecordLocator
             ParseTopLevelGroup(
                 reader: reader.SpawnWithLength(groupHeader.TotalLength),
                 groupPin: groupHeader,
-                grupRecOverride: null,
                 nesting: null);
             _parentGroupLocations = _parentGroupLocations.Pop();
         }
@@ -114,14 +113,14 @@ public class RecordLocator
         while (reader.TryGetGroupHeader(out var initialNestedGroup))
         {
             var nestedGroupType = initialNestedGroup.GroupType;
-            var nextNexting = nesting?.Underneath.FirstOrDefault(x => x.GroupType == nestedGroupType) 
+            var nextNesting = nesting?.Underneath.FirstOrDefault(x => x.GroupType == nestedGroupType) 
                               ?? reader.MetaData.Constants.GroupConstants.TryGetNesting(nestedGroupType);
-            if (nextNexting != null)
+            if (nextNesting != null)
             {
                 HandleGroup(
                     reader.SpawnWithLength(initialNestedGroup.TotalLength),
                     initialNestedGroup,
-                    nextNexting);
+                    nextNesting);
             }
             else
             {
@@ -160,11 +159,8 @@ public class RecordLocator
     private void ParseTopLevelGroup(
         MutagenFrame reader,
         GroupPinHeader groupPin,
-        RecordType? grupRecOverride,
         GroupNesting? nesting)
     {
-        var grupRec = grupRecOverride ?? groupPin.ContainedRecordType;
-
         reader.Position += groupPin.HeaderLength;
 
         if (CheckForInitialGroup(reader, groupPin, nesting)) return;
@@ -176,24 +172,22 @@ public class RecordLocator
         {
             MajorRecordHeader majorRecordMeta = frame.GetMajorRecordHeader();
             var targetRec = majorRecordMeta.RecordType;
-            if (targetRec != grupRec)
+            
+            if (frame.TryGetGroupHeader(out var followupNestedGroup)
+                && followupNestedGroup.CanHaveSubGroups)
             {
-                if (frame.TryGetGroupHeader(out var followupNestedGroup)
-                    && followupNestedGroup.CanHaveSubGroups)
+                var nestedGroupType = followupNestedGroup.GroupType;
+                var nextNesting = nesting?.Underneath.FirstOrDefault(x => x.GroupType == nestedGroupType) 
+                                  ?? reader.MetaData.Constants.GroupConstants.TryGetNesting(nestedGroupType);
+                if (nextNesting == null)
                 {
-                    var nestedGroupType = followupNestedGroup.GroupType;
-                    var nextNexting = nesting?.Underneath.FirstOrDefault(x => x.GroupType == nestedGroupType) 
-                                      ?? reader.MetaData.Constants.GroupConstants.TryGetNesting(nestedGroupType);
-                    if (nextNexting == null)
-                    {
-                        throw new MalformedDataException($"Encountered nested group, but it was not registered: {followupNestedGroup.GroupType} was underneath {groupPin.GroupType}");
-                    }
-                    HandleGroup(
-                        frame: frame.SpawnWithLength(followupNestedGroup.TotalLength),
-                        groupPin: followupNestedGroup,
-                        nesting: nextNexting);
-                    continue;
+                    throw new MalformedDataException($"Encountered nested group, but it was not registered: {followupNestedGroup.GroupType} was underneath {groupPin.GroupType}");
                 }
+                HandleGroup(
+                    frame: frame.SpawnWithLength(followupNestedGroup.TotalLength),
+                    groupPin: followupNestedGroup,
+                    nesting: nextNesting);
+                continue;
             }
 
             if (!CheckAdditionalCriteria(reader, majorRecordMeta))
@@ -205,7 +199,7 @@ public class RecordLocator
             if (IsInterested(targetRec))
             {
                 var pos = reader.Position;
-                var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences!, majorRecordMeta.FormID.Raw);
+                var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences, majorRecordMeta.FormID.Raw);
 
                 _locs.Add(
                     formKey: currentFormKey,
@@ -256,7 +250,6 @@ public class RecordLocator
         {
             ParseTopLevelGroup(
                 reader: frame,
-                grupRecOverride: null,
                 nesting: nesting,
                 groupPin: groupPin);
         }
