@@ -11,13 +11,13 @@ internal class LoquiBinaryTranslation<T>
     where T : class, ILoquiObjectGetter
 {
     public static readonly LoquiBinaryTranslation<T> Instance = new();
-    public delegate T CREATE_FUNC(
+    public delegate T CreateFunc(
         MutagenFrame reader,
         TypedParseParams translationParams);
-    public static readonly CREATE_FUNC CREATE = GetCreateFunc();
+    public static readonly CreateFunc CREATE = GetCreateFunc();
 
     #region Parse
-    private static CREATE_FUNC GetCreateFunc()
+    private static CreateFunc GetCreateFunc()
     {
         var tType = typeof(T);
         var method = tType.GetMethods()
@@ -31,7 +31,7 @@ internal class LoquiBinaryTranslation<T>
             .FirstOrDefault();
         if (method != null)
         {
-            return DelegateBuilder.BuildDelegate<CREATE_FUNC>(method);
+            return DelegateBuilder.BuildDelegate<CreateFunc>(method);
         }
         else
         {

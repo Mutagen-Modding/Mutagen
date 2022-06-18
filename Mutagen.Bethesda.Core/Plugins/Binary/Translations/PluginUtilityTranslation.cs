@@ -321,6 +321,40 @@ internal static class PluginUtilityTranslation
         return record;
     }
 
+    internal static TGroup GroupParse<TGroup, TRecord>(
+        TGroup record,
+        MutagenFrame frame,
+        TypedParseParams translationParams,
+        RecordType expectedRecordType,
+        RecordStructFill<TGroup> fillStructs)
+        where TGroup : IGroup<TRecord>
+        where TRecord : class, IMajorRecord
+    {
+        return GroupParse(
+            record,
+            frame,
+            translationParams,
+            fillStructs,
+            (rec, frame, rpCount, next, contLen, translParam) =>
+            {
+                next = translationParams.ConvertToStandard(next);
+                if (next.Equals(expectedRecordType))
+                {
+                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TRecord>.Instance.Parse(
+                        reader: frame,
+                        triggeringRecord: expectedRecordType,
+                        item: record.RecordCache,
+                        transl: LoquiBinaryTranslation<TRecord>.Instance.Parse);
+                    return ParseResult.Stop;
+                }
+                else
+                {
+                    frame.Position += contLen + frame.MetaData.Constants.MajorConstants.HeaderLength;
+                    return default(int?);
+                }
+            });
+    }
+
     internal static TMod ModParse<TMod, TImportMask>(
         TMod record,
         MutagenFrame frame,

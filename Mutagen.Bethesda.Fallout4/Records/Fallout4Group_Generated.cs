@@ -863,12 +863,12 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.GroupParse(
+            PluginUtilityTranslation.GroupParse<IFallout4Group<T>, T>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: Fallout4GroupBinaryCreateTranslation<T>.FillBinaryStructs,
-                fillTyped: Fallout4GroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
+                expectedRecordType: Fallout4Group<T>.T_RecordType,
+                fillStructs: Fallout4GroupBinaryCreateTranslation<T>.FillBinaryStructs);
         }
         
         #endregion
@@ -1357,32 +1357,6 @@ namespace Mutagen.Bethesda.Fallout4
                 length: 4);
             item.LastModified = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
-        }
-
-        public static ParseResult FillBinaryRecordTypes(
-            IFallout4Group<T> item,
-            MutagenFrame frame,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                default:
-                    if (nextRecordType.Equals(Fallout4Group<T>.T_RecordType))
-                    {
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: Fallout4Group<T>.T_RecordType,
-                            item: item.RecordCache,
-                            transl: LoquiBinaryTranslation<T>.Instance.Parse);
-                        return ParseResult.Stop;
-                    }
-                    frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return default(int?);
-            }
         }
 
         public static partial void FillBinaryContainedRecordTypeParseCustom(

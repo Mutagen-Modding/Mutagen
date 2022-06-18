@@ -39,8 +39,6 @@ public class TriggeringRecordModule : GenerationModule
         }
         if (obj.IsTopLevelGroup() && (field.Name?.Equals("Items") ?? false))
         {
-            DictType dict = field as DictType;
-            LoquiType loqui = dict.ValueTypeGen as LoquiType;
             data.TriggeringRecordAccessors.Add($"Group<T>.T_RecordType");
         }
         return base.PostFieldLoad(obj, field, node);

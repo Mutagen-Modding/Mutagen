@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks;
 
 public class LoquiTranslationReflection
 {
-    LoquiBinaryTranslation<Ammunition>.CREATE_FUNC _create = LoquiBinaryTranslation<Ammunition>.CREATE;
+    LoquiBinaryTranslation<Ammunition>.CreateFunc _create = LoquiBinaryTranslation<Ammunition>.CREATE;
     byte[] _data = new byte[0x14];
     MutagenFrame _frame;
     MasterReferenceCollection _masterRefs = new(Constants.Oblivion);

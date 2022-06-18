@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
 public class FormKeyBinaryTranslation
 {
-    public readonly static FormKeyBinaryTranslation Instance = new();
+    public static readonly FormKeyBinaryTranslation Instance = new();
 
     public FormKey Parse(
         ReadOnlySpan<byte> span,

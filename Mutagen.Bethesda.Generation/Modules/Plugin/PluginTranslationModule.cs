@@ -789,7 +789,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             sb.AppendLine();
         }
 
-        if (HasRecordTypeFields(obj))
+        if (HasRecordTypeFields(obj) && !obj.IsTopLevelGroup())
         {
             using (var args = sb.Function(
                        $"public static {Loqui.Generation.Utility.TaskWrap(nameof(ParseResult), HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
@@ -1921,18 +1921,34 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     break;
                 case ObjectType.Group:
-                    using (var args = sb.Call(
-                               $"{utilityTranslation}.GroupParse",
-                               suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                    if (obj.IsTopLevelGroup())
                     {
-                        args.Add($"record: {accessor}");
-                        args.AddPassArg(ReaderMemberName);
-                        args.AddPassArg($"translationParams");
-                        args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
-                        if (HasRecordTypeFields(obj)
-                            || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
+                        using (var args = sb.Call(
+                                   $"{utilityTranslation}.GroupParse<{obj.GetTypeName(LoquiInterfaceType.ISetter)}, T>",
+                                   suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
-                            args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
+                            args.Add($"record: {accessor}");
+                            args.AddPassArg(ReaderMemberName);
+                            args.AddPassArg($"translationParams");
+                            args.Add($"expectedRecordType: {obj.ObjectName}.T_RecordType");
+                            args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
+                        }
+                    }
+                    else
+                    {
+                        using (var args = sb.Call(
+                                   $"{utilityTranslation}.GroupParse",
+                                   suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                        {
+                            args.Add($"record: {accessor}");
+                            args.AddPassArg(ReaderMemberName);
+                            args.AddPassArg($"translationParams");
+                            args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
+                            if (HasRecordTypeFields(obj)
+                                || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
+                            {
+                                args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
+                            }
                         }
                     }
                     break;
