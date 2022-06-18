@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Location" recordType="LCTN" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="09ffb45f-a070-402d-a2eb-a6bcdeb35cdc" ID="467">
+  <Object name="Location" recordType="LCTN" baseClass="Fallout4MajorRecord" majorFlag="true" partialForm="true" objType="Record" GUID="09ffb45f-a070-402d-a2eb-a6bcdeb35cdc" ID="467">
     <Fields>
       <RefList name="ActorCellPersistentReferences" refName="LocationReference" recordType="ACPR" />
       <RefList name="LocationCellPersistentReferences" refName="LocationReference" recordType="LCPR" />

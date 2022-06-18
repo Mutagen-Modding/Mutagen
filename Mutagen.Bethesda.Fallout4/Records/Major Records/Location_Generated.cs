@@ -3020,6 +3020,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
+        public static bool IsPartialFormable => true;
         public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -39,6 +39,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="partialForm" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether record can be a PartialForm
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="failOnUnknownType" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>
@@ -749,14 +756,14 @@
     </xs:choice>
     <xs:attribute name="Min" use="required" />
   </xs:complexType>
-  
+
   <xs:complexType name="DataTypeFields" >
     <xs:choice minOccurs="0" maxOccurs="unbounded" >
       <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="Range" type="DataTypeFieldRangeType" />
     </xs:choice>
   </xs:complexType>
-  
+
   <xs:complexType name="DataType" >
     <xs:sequence>
       <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
@@ -808,5 +815,5 @@
     <xs:attribute name="refName" use="required" />
     <xs:attribute name="edidLinked" />
   </xs:complexType>
-  
+
 </xs:schema>

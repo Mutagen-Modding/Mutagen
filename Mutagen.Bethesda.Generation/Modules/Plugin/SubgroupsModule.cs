@@ -64,4 +64,12 @@ public class SubgroupsModule : GenerationModule
             obj.GetObjectData().Subgroups.Add(int.Parse(elem.Value));
         }
     }
+
+    public override async Task GenerateInRegistration(ObjectGeneration obj, StructuredStringBuilder sb)
+    {
+        if (obj.GetObjectData().Subgroups.Count > 0)
+        {
+            sb.AppendLine($"public static IReadOnlyCollection<int> {Mutagen.Bethesda.Plugins.Internals.Constants.SubgroupsMember} {{ get; }} = new HashSet<int>(){{ {string.Join(", ", obj.GetObjectData().Subgroups)} }};");
+        }
+    }
 }

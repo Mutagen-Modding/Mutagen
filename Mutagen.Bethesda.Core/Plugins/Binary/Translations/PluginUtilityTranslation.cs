@@ -9,6 +9,7 @@ using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -337,21 +338,23 @@ internal static class PluginUtilityTranslation
             fillStructs,
             (rec, frame, rpCount, next, contLen, translParam) =>
             {
-                next = translationParams.ConvertToStandard(next);
                 if (next.Equals(expectedRecordType))
                 {
                     Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TRecord>.Instance.Parse(
                         reader: frame,
                         triggeringRecord: expectedRecordType,
-                        item: record.RecordCache,
+                        item: rec.RecordCache,
                         transl: LoquiBinaryTranslation<TRecord>.Instance.Parse);
-                    return ParseResult.Stop;
+                }
+                else if (SubgroupsBinaryTranslation<TRecord>.TryReadOrphanedSubgroups(frame, out var record))
+                {
+                    rec.RecordCache.Add(record);
                 }
                 else
                 {
                     frame.Position += contLen + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return default(int?);
                 }
+                return default(int?);
             });
     }
 

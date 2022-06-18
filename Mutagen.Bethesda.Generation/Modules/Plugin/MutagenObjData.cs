@@ -33,6 +33,7 @@ public class MutagenObjData
     public HashSet<GameRelease> GameReleaseOptions;
     public RecordType? EndMarkerType;
     public bool MajorRecordFlags;
+    public bool PartialForm;
     public int? LastRequiredFieldIndex;
     public bool ShortCircuitToLastRequiredField;
     public int? GetLastRequiredFieldIndexToUse() => ShortCircuitToLastRequiredField ? LastRequiredFieldIndex : null;

@@ -2587,6 +2587,8 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.KSIZ);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
+        public static IReadOnlyCollection<int> SubgroupTypes { get; } = new HashSet<int>(){ 10 };
+        public static bool IsPartialFormable => true;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
