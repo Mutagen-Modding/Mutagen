@@ -72,7 +72,7 @@ internal class GroupListOverlay<T> : IReadOnlyList<T>
         // Parse locations
         while (stream.Position < finalPos)
         {
-            VariableHeader meta = package.MetaData.Constants.Constants(objectType).VariableMeta(stream.RemainingMemory);
+            VariableHeader meta = package.MetaData.Constants.VariableHeader(stream.RemainingMemory, objectType);
             locations.Add(checked((int)stream.Position - offset));
             stream.Position += checked((int)meta.TotalLength);
         }

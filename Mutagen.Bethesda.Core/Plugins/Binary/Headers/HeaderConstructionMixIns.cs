@@ -80,11 +80,78 @@ public static class HeaderConstructionMixIns
         RecordType rec = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(span));
         if (rec == Internals.Constants.Group)
         {
-            return meta.GroupConstants.VariableMeta(span);
+            return meta.VariableHeader(span, ObjectType.Group);
         }
         else
         {
-            return meta.MajorConstants.VariableMeta(span);
+            return meta.VariableHeader(span, ObjectType.Record);
         }
+    }
+
+    public static VariablePinHeader VariableHeader(this GameConstants meta, ReadOnlyMemorySlice<byte> span, int loc)
+    {
+        span = span.Slice(loc);
+        RecordType rec = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(span));
+        if (rec == Internals.Constants.Group)
+        {
+            return meta.VariableHeader(span, ObjectType.Group, loc);
+        }
+        else
+        {
+            return meta.VariableHeader(span, ObjectType.Record, loc);
+        }
+    }
+
+    public static VariableHeader VariableHeader(this GameConstants meta, ReadOnlyMemorySlice<byte> span, ObjectType objectType) => new(meta, objectType, span);
+
+    public static VariableHeader VariableHeader(this GameConstants meta, ReadOnlyMemorySlice<byte> span, RecordHeaderConstants headerConstants) => new(meta, headerConstants, span);
+
+    public static VariablePinHeader VariableHeader(this GameConstants meta, ReadOnlyMemorySlice<byte> span, ObjectType objectType, int loc) => new(meta, objectType, span, loc);
+
+    public static VariablePinHeader VariableHeader(this GameConstants meta, ReadOnlyMemorySlice<byte> span, RecordHeaderConstants headerConstants, int loc) => new(meta, headerConstants, span, loc);
+
+    public static VariableHeader GetVariableHeader(this GameConstants meta, IBinaryReadStream stream,
+        ObjectType objectType, int offset = 0)
+    {
+        return GetVariableHeader(meta, stream, meta.Constants(objectType), offset);
+    }
+
+    public static VariableHeader GetVariableHeader(this GameConstants meta, IBinaryReadStream stream, RecordHeaderConstants headerConstants, int offset = 0)
+    {
+        return new(meta, headerConstants, stream.GetMemory(headerConstants.HeaderLength, offset));
+    }
+    
+    public static VariableHeader ReadVariableHeader(this GameConstants meta, IBinaryReadStream stream, ObjectType objectType)
+    {
+        return ReadVariableHeader(meta, stream, meta.Constants(objectType));
+    }
+    
+    public static VariableHeader ReadVariableHeader(this GameConstants meta, IBinaryReadStream stream, RecordHeaderConstants headerConstants)
+    {
+        return new(meta, headerConstants, stream.ReadMemory(headerConstants.HeaderLength));
+    }
+    
+    public static bool TryGetAsMajorRecord(this VariablePinHeader header, out MajorRecordPinFrame majorFrame)
+    {
+        if (header.HeaderConstants.ObjectType != ObjectType.Record)
+        {
+            majorFrame = default;
+            return false;
+        }
+
+        majorFrame = new MajorRecordPinFrame(header.Constants, header.HeaderAndContentData, header.Location);
+        return true;
+    }
+
+    public static bool TryGetAsGroup(this VariablePinHeader header, out GroupPinFrame group)
+    {
+        if (header.HeaderConstants.ObjectType != ObjectType.Group)
+        {
+            group = default;
+            return false;
+        }
+
+        group = new GroupPinFrame(header.Constants, header.HeaderAndContentData, header.Location);
+        return true;
     }
 }

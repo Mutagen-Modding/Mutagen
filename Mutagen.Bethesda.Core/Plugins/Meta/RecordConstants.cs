@@ -63,8 +63,4 @@ public record RecordHeaderConstants
         TypeAndLengthLength = (byte)(Constants.HeaderLength + LengthLength);
         HeaderIncludedInLength = type == ObjectType.Group;
     }
-
-    public VariableHeader VariableMeta(ReadOnlyMemorySlice<byte> span) => new VariableHeader(this, span);
-    public VariableHeader GetVariableMeta(IBinaryReadStream stream, int offset = 0) => new VariableHeader(this, stream.GetMemory(HeaderLength, offset));
-    public VariableHeader ReadVariableMeta(IBinaryReadStream stream) => new VariableHeader(this, stream.ReadMemory(HeaderLength));
 }

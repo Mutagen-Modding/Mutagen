@@ -309,7 +309,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var startingPos = stream.Position;
         while (!stream.Complete)
         {
-            var varMeta = constants.GetVariableMeta(stream);
+            var varMeta = stream.MetaData.Constants.GetVariableHeader(stream, constants);
             var recType = translationParams.ConvertToStandard(varMeta.RecordType);
             if (recType != trigger) break;
             if (skipHeader)
@@ -339,7 +339,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var startingPos = stream.Position;
         while (!stream.Complete)
         {
-            var varMeta = constants.GetVariableMeta(stream);
+            var varMeta = stream.MetaData.Constants.GetVariableHeader(stream, constants);
             var recType = translationParams.ConvertToStandard(varMeta.RecordType);
             if (!triggers.TriggeringRecordTypes.Contains(recType)) break;
             if (skipHeader)
@@ -369,7 +369,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var startingPos = stream.Position;
         while (!stream.Complete && stream.Position < finalPos)
         {
-            var varMeta = constants.GetVariableMeta(stream);
+            var varMeta = stream.MetaData.Constants.GetVariableHeader(stream, constants);
             var recType = varMeta.RecordType;
             var isTrigger = trigger == recType;
             var includeTrigger = includeTriggers.TriggeringRecordTypes.Contains(recType);
@@ -407,7 +407,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var startingPos = stream.Position;
         for (uint i = 0; i < count;)
         {
-            var varMeta = constants.GetVariableMeta(stream);
+            var varMeta = stream.MetaData.Constants.GetVariableHeader(stream, constants);
             var recType = varMeta.RecordType;
             if (trigger == recType)
             {
@@ -599,7 +599,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var startingPos = stream.Position;
         while (!stream.Complete && stream.Position < finalPos)
         {
-            var varMeta = constants.GetVariableMeta(stream);
+            var varMeta = stream.MetaData.Constants.GetVariableHeader(stream, constants);
             var recType = varMeta.RecordType;
             var isTrigger = trigger == recType;
             var isIncludeTrigger = includeTrigger == recType;

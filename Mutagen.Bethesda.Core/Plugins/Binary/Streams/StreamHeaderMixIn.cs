@@ -1076,16 +1076,16 @@ public static class StreamHeaderMixIn
     {
         if (subRecords)
         {
-            return constants.SubConstants.VariableMeta(stream.GetMemory(constants.SubConstants.HeaderLength, readSafe: readSafe));
+            return constants.VariableHeader(stream.GetMemory(constants.SubConstants.HeaderLength, readSafe: readSafe), ObjectType.Subrecord);
         }
         RecordType rec = new RecordType(stream.GetInt32());
         if (rec == Constants.Group)
         {
-            return constants.GroupConstants.VariableMeta(stream.GetMemory(constants.GroupConstants.HeaderLength, readSafe: readSafe));
+            return constants.VariableHeader(stream.GetMemory(constants.GroupConstants.HeaderLength, readSafe: readSafe), ObjectType.Group);
         }
         else
         {
-            return constants.MajorConstants.VariableMeta(stream.GetMemory(constants.MajorConstants.HeaderLength, readSafe: readSafe));
+            return constants.VariableHeader(stream.GetMemory(constants.MajorConstants.HeaderLength, readSafe: readSafe), ObjectType.Record);
         }
     }
 
@@ -1106,16 +1106,16 @@ public static class StreamHeaderMixIn
     {
         if (subRecords)
         {
-            return constants.GroupConstants.VariableMeta(stream.GetMemory(constants.SubConstants.HeaderLength, readSafe: readSafe));
+            return constants.VariableHeader(stream.GetMemory(constants.SubConstants.HeaderLength, readSafe: readSafe), ObjectType.Subrecord);
         }
         RecordType rec = new RecordType(stream.GetInt32());
         if (rec == Constants.Group)
         {
-            return constants.GroupConstants.VariableMeta(stream.ReadMemory(constants.GroupConstants.HeaderLength, readSafe: readSafe));
+            return constants.VariableHeader(stream.ReadMemory(constants.GroupConstants.HeaderLength, readSafe: readSafe), ObjectType.Group);
         }
         else
         {
-            return constants.MajorConstants.VariableMeta(stream.ReadMemory(constants.MajorConstants.HeaderLength, readSafe: readSafe));
+            return constants.VariableHeader(stream.ReadMemory(constants.MajorConstants.HeaderLength, readSafe: readSafe), ObjectType.Record);
         }
     }
     #endregion
