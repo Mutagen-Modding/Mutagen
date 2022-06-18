@@ -1450,10 +1450,13 @@ namespace Mutagen.Bethesda.Skyrim
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    APlacedTrapBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        APlacedTrapBinaryWriteTranslation.WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                    }
                 }
                 catch (Exception ex)
                 {
