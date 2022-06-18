@@ -638,8 +638,11 @@ public class ModModule : GenerationModule
                 {
                     groupInstance = loqui;
                 }
-                if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
-                    && !loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
+
+                var groupTarget = loqui.GetGroupTarget().GetObjectData();
+                if (!loqui.TargetObjectGeneration.IsListGroup()
+                    && groupTarget.CustomBinaryEnd == CustomEnd.Off 
+                    && groupTarget.Subgroups.Count == 0)
                 {
                     sb.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, {i}, outputStreams, bundle, parallelParam));");
                 }

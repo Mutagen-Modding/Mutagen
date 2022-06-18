@@ -24,7 +24,6 @@ using FloatType = Mutagen.Bethesda.Generation.Fields.FloatType;
 using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
-using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -716,7 +715,6 @@ public class PluginTranslationModule : BinaryTranslationModule
     private async Task GenerateCreateExtras(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
-        bool typelessStruct = obj.IsTypelessStruct();
 
         if (await obj.IsMajorRecord())
         {
@@ -1165,6 +1163,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine();
             }
         }
+
+        await SubgroupsModule.GenerateSubgroupsParseSnippet(obj, sb);
     }
 
     private static void AttachOverflowCases(StructuredStringBuilder sb, List<(int, int, TypeGeneration Field)> fields, Accessor streamAccessor)
@@ -1981,6 +1981,15 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
             }
         }
+
+        if (SubgroupsModule.HasSubgroups(obj))
+        {
+            using (var arg = sb.Call($"{TranslationCreateClass(obj)}.ParseSubgroupsLogic"))
+            {
+                arg.AddPassArg("frame");
+                arg.Add($"obj: {accessor}");
+            }
+        }
     }
 
     private void GenerateStructStateSubscriptions(ObjectGeneration obj, StructuredStringBuilder sb)
@@ -2446,6 +2455,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
             }
 
+            await SubgroupsModule.GenerateSubgroupsOverlaySnippet(obj, sb);
         }
         sb.AppendLine();
     }
@@ -2483,7 +2493,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             if (await obj.IsMajorRecord())
             {
-                if (objData.CustomBinaryEnd != CustomEnd.Off)
+                if (objData.CustomBinaryEnd != CustomEnd.Off || SubgroupsModule.HasSubgroups(obj))
                 {
                     sb.AppendLine("var origStream = stream;");
                 }
@@ -2883,6 +2893,24 @@ public class PluginTranslationModule : BinaryTranslationModule
                     args.AddPassArg("offset");
                 }
             }
+
+            if (SubgroupsModule.HasSubgroups(obj))
+            {
+                using (var args = sb.Call($"ret.ParseSubgroupsLogic"))
+                {
+                    if (obj.GetObjectType() == ObjectType.Record)
+                    {
+                        args.Add("stream: origStream");
+                    }
+                    else
+                    {
+                        args.AddPassArg("stream");
+                    }
+                    args.Add("finalPos: stream.Length");
+                    args.AddPassArg($"offset");
+                }
+            }
+            
             sb.AppendLine("return ret;");
         }
         sb.AppendLine();
@@ -2892,6 +2920,7 @@ public class PluginTranslationModule : BinaryTranslationModule
     {
         await GenerateWriteExtras(obj, sb);
         await base.GenerateInTranslationWriteClass(obj, sb);
+        await SubgroupsModule.GenerateSubgroupsWriteSnippet(obj, sb);
     }
 
     protected override async Task GenerateWriteSnippet(ObjectGeneration obj, StructuredStringBuilder sb)
@@ -3041,6 +3070,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                 args.Add("obj: item");
             }
         }
+
+        await SubgroupsModule.GenerateSubgroupsWrite(obj, sb, "item");
     }
 
     private async Task GenerateWriteExtras(ObjectGeneration obj, StructuredStringBuilder sb)

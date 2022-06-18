@@ -2828,7 +2828,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams,
                 fillStructs: QuestBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: QuestBinaryCreateTranslation.FillBinaryRecordTypes);
-            QuestBinaryCreateTranslation.CustomBinaryEndImportPublic(
+            QuestBinaryCreateTranslation.ParseSubgroupsLogic(
                 frame: frame,
                 obj: item);
         }
@@ -4691,17 +4691,6 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item);
         }
 
-        public static partial void CustomBinaryEndExport(
-            MutagenWriter writer,
-            IQuestGetter obj);
-        public static void CustomBinaryEndExportInternal(
-            MutagenWriter writer,
-            IQuestGetter obj)
-        {
-            CustomBinaryEndExport(
-                writer: writer,
-                obj: obj);
-        }
         public void Write(
             MutagenWriter writer,
             IQuestGetter item,
@@ -4731,7 +4720,7 @@ namespace Mutagen.Bethesda.Fallout4
                     throw RecordException.Enrich(ex, item);
                 }
             }
-            CustomBinaryEndExportInternal(
+            WriteSubgroupsLogic(
                 writer: writer,
                 obj: item);
         }
@@ -4768,6 +4757,10 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
+
+        public static partial void WriteSubgroupsLogic(
+            MutagenWriter writer,
+            IQuestGetter obj);
 
     }
 
@@ -4929,6 +4922,10 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
 
+        public static partial void ParseSubgroupsLogic(
+            MutagenFrame frame,
+            IQuestInternal obj);
+
         public static partial void FillBinaryDialogConditionsCustom(
             MutagenFrame frame,
             IQuestInternal item);
@@ -4941,17 +4938,6 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             IQuestInternal item);
 
-        public static partial void CustomBinaryEndImport(
-            MutagenFrame frame,
-            IQuestInternal obj);
-        public static void CustomBinaryEndImportPublic(
-            MutagenFrame frame,
-            IQuestInternal obj)
-        {
-            CustomBinaryEndImport(
-                frame: frame,
-                obj: obj);
-        }
     }
 
 }
@@ -5080,10 +5066,6 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             int finalPos,
             int offset);
-        partial void CustomEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
 
         partial void CustomCtor();
         protected QuestBinaryOverlay(
@@ -5121,7 +5103,7 @@ namespace Mutagen.Bethesda.Fallout4
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.CustomEnd(
+            ret.ParseSubgroupsLogic(
                 stream: origStream,
                 finalPos: stream.Length,
                 offset: offset);
@@ -5308,6 +5290,11 @@ namespace Mutagen.Bethesda.Fallout4
         public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
+
+        public partial void ParseSubgroupsLogic(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
 
     }
 

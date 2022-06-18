@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Quest" recordType="QUST" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" customBinaryEnd="Normal" GUID="3299b1c9-621b-4a10-961a-698116d54617" ID="154">
+  <Object name="Quest" recordType="QUST" objType="Record" majorFlag="true" partialForm="true" baseClass="Fallout4MajorRecord" GUID="3299b1c9-621b-4a10-961a-698116d54617" ID="154">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="QuestAdapter" recordType="VMAD" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -34,6 +34,7 @@
       <RefList name="DialogTopics" binary="NoGeneration" refName="DialogTopic" />
       <RefList name="Scenes" binary="NoGeneration" refName="Scene" />
     </Fields>
+    <SubgroupType>10</SubgroupType>
   </Object>
   <Object name="QuestData" objType="Subrecord" recordType="DNAM" GUID="c70aba81-4a1f-4922-ac95-ca821ed8b31a" ID="681">
     <Fields>

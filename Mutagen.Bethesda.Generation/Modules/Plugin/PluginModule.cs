@@ -46,6 +46,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new MajorRecordLinkEqualityModule());
         SubModules.Add(new ImplicitsModule());
         SubModules.Add(new BreakMarkingModule());
+        SubModules.Add(new SubgroupsModule());
     }
 
     public bool FieldFilter(TypeGeneration field)

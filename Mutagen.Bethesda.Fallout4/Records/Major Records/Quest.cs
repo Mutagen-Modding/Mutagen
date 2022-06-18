@@ -144,7 +144,7 @@ partial class QuestBinaryCreateTranslation
         return (int)Quest_FieldIndex.Aliases;
     }
 
-    public static partial void CustomBinaryEndImport(MutagenFrame frame, IQuestInternal obj)
+    public static partial void ParseSubgroupsLogic(MutagenFrame frame, IQuestInternal obj)
     {
         try
         {
@@ -266,7 +266,7 @@ partial class QuestBinaryWriteTranslation
         }
     }
 
-    public static partial void CustomBinaryEndExport(MutagenWriter writer, IQuestGetter obj)
+    public static partial void WriteSubgroupsLogic(MutagenWriter writer, IQuestGetter obj)
     {
         try
         {
@@ -467,7 +467,7 @@ partial class QuestBinaryOverlay
         return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
     });
 
-    partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
+    public partial void ParseSubgroupsLogic(OverlayStream stream, int finalPos, int offset)
     {
         try
         {

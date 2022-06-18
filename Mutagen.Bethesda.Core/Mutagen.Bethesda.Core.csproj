@@ -196,6 +196,7 @@
     </Compile>
     <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
     <Compile Include="Plugins\Binary\Translations\RecordSpanExtensions.cs" />
+    <Compile Include="Plugins\Binary\Translations\SubgroupsBinaryTranslation.cs" />
     <Compile Include="Plugins\Binary\Translations\TypedParseParams.cs" />
     <Compile Include="Plugins\Binary\Translations\TypedWriteParams.cs" />
     <Compile Include="Plugins\Cache\IIdentifierLinkCache.cs" />

@@ -59,6 +59,8 @@ public class MutagenObjData
         }
     }
 
+    public List<int> Subgroups = new();
+
     public MutagenObjData(ObjectGeneration objGen)
     {
         this.ObjGen = objGen;
