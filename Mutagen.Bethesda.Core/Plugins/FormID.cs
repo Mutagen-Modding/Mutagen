@@ -1,6 +1,7 @@
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins;
 
@@ -133,6 +134,18 @@ public struct FormID : IEquatable<FormID>
     }
 
     /// <summary>
+    /// Convert an array to a FormID, with protection against ModKey overflow
+    /// </summary>
+    /// <param name="bytes">Input byte array</param>
+    /// <param name="masters">Master list to reference to handle overflow</param>
+    /// <returns>Converted FormID</returns>
+    /// <exception cref="ArgumentException">Thrown if array size less than 4</exception>
+    public static FormID Factory(ReadOnlySpan<byte> bytes, IReadOnlyMasterReferenceCollection masters)
+    {
+        return Factory(BinaryPrimitives.ReadUInt32LittleEndian(bytes), masters);
+    }
+
+    /// <summary>
     /// Wrap a uint with a FormID
     /// </summary>
     /// <param name="idWithModIndex">Mod index and Record ID to use</param>
@@ -140,6 +153,19 @@ public struct FormID : IEquatable<FormID>
     public static FormID Factory(uint idWithModIndex)
     {
         return new FormID(idWithModIndex);
+    }
+
+    /// <summary>
+    /// Wrap a uint with a FormID, with protection against ModKey overflow
+    /// </summary>
+    /// <param name="idWithModIndex">Mod index and Record ID to use</param>
+    /// <param name="masters">Master list to reference to handle overflow</param>
+    /// <returns>Converted FormID</returns>
+    public static FormID Factory(uint idWithModIndex, IReadOnlyMasterReferenceCollection masters)
+    {
+        var ret = new FormID(idWithModIndex);
+        if (ret.ModIndex.ID <= masters.Masters.Count) return ret;
+        return new FormID(new ModIndex(checked((byte)masters.Masters.Count)), ret.ID);
     }
 
     /// <summary>

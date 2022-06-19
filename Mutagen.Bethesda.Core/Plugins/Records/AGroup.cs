@@ -10,6 +10,7 @@ using System.Buffers.Binary;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Records;
@@ -272,11 +273,12 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
             recordTypeConverter: null);
     }
 
-    public static GroupMajorRecordCacheWrapper<T> Factory(
-        IBinaryReadStream stream,
+    public static GroupMajorRecordCacheWrapper<T> Factory<TStream>(
+        TStream stream,
         ReadOnlyMemorySlice<byte> data,
         BinaryOverlayFactoryPackage package,
         int offset)
+        where TStream : IMutagenReadStream
     {
         Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
 
@@ -285,18 +287,19 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
         var finalPos = stream.Position + groupMeta.TotalLength;
         stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
         // Parse MajorRecord locations
-        ObjectType? lastParsed = default;
+        FormID? lastParsed = default;
         while (stream.Position < finalPos)
         {
             VariableHeader varMeta = package.MetaData.Constants.VariableHeader(stream.RemainingMemory);
-            if (varMeta.IsGroup)
+            if (varMeta.TryGetAsGroup(out var groupHeader))
             {
-                if (lastParsed != ObjectType.Record)
+                var formId = FormID.Factory(groupHeader.ContainedRecordTypeData, stream.MetaData.MasterReferences);
+                if (formId != lastParsed)
                 {
                     throw new MalformedDataException("Unexpected Group encountered which was not after a major record: " + GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE);
                 }
                 stream.Position += checked((int)varMeta.TotalLength);
-                lastParsed = ObjectType.Group;
+                lastParsed = null;
             }
             else
             {
@@ -315,7 +318,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
                     throw new RecordCollisionException(formKey, typeof(T));
                 }
                 stream.Position += checked((int)majorMeta.TotalLength);
-                lastParsed = ObjectType.Record;
+                lastParsed = majorMeta.FormID;
             }
         }
 
