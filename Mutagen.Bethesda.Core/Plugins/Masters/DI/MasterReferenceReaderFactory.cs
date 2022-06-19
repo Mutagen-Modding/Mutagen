@@ -6,9 +6,9 @@ namespace Mutagen.Bethesda.Plugins.Masters.DI;
 
 public interface IMasterReferenceReaderFactory
 {
-    IMasterReferenceReader FromPath(ModPath path);
-    IMasterReferenceReader FromStream(Stream stream, ModKey modKey, bool disposeStream = true);
-    IMasterReferenceReader FromStream(IMutagenReadStream stream);
+    IReadOnlyMasterReferenceCollection FromPath(ModPath path);
+    IReadOnlyMasterReferenceCollection FromStream(Stream stream, ModKey modKey, bool disposeStream = true);
+    IReadOnlyMasterReferenceCollection FromStream(IMutagenReadStream stream);
 }
 
 public class MasterReferenceReaderFactory : IMasterReferenceReaderFactory
@@ -24,17 +24,17 @@ public class MasterReferenceReaderFactory : IMasterReferenceReaderFactory
         _gameReleaseContext = gameReleaseContext;
     }
         
-    public IMasterReferenceReader FromPath(ModPath path)
+    public IReadOnlyMasterReferenceCollection FromPath(ModPath path)
     {
         return MasterReferenceCollection.FromPath(path, _gameReleaseContext.Release, fileSystem: _fileSystem);
     }
 
-    public IMasterReferenceReader FromStream(Stream stream, ModKey modKey, bool disposeStream = true)
+    public IReadOnlyMasterReferenceCollection FromStream(Stream stream, ModKey modKey, bool disposeStream = true)
     {
         return MasterReferenceCollection.FromStream(stream, modKey, _gameReleaseContext.Release, disposeStream);
     }
 
-    public IMasterReferenceReader FromStream(IMutagenReadStream stream)
+    public IReadOnlyMasterReferenceCollection FromStream(IMutagenReadStream stream)
     {
         return MasterReferenceCollection.FromStream(stream);
     }

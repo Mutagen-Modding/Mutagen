@@ -15,7 +15,7 @@ public abstract class AMastersListOrderingOption
         };
     }
 
-    public static AMastersListOrderingOption ByMasters(IMasterReferenceReader reader)
+    public static AMastersListOrderingOption ByMasters(IReadOnlyMasterReferenceCollection reader)
     {
         return new MastersListOrderingByLoadOrder(reader.Masters.Select(m => m.Master));
     }

@@ -472,7 +472,7 @@ public abstract class PassthroughTest
         });
     }
 
-    public BinaryWriteParameters GetWriteParam(IMasterReferenceReader masterRefs, StringsWriter stringsWriter)
+    public BinaryWriteParameters GetWriteParam(IReadOnlyMasterReferenceCollection masterRefs, StringsWriter stringsWriter)
     {
         return new BinaryWriteParameters()
         {

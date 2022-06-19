@@ -13,7 +13,7 @@ public class FormKeyBinaryTranslation
 
     public FormKey Parse(
         ReadOnlySpan<byte> span,
-        IMasterReferenceReader masterReferences,
+        IReadOnlyMasterReferenceCollection masterReferences,
         bool negativeOneIsNull = false)
     {
         var id = BinaryPrimitives.ReadUInt32LittleEndian(span);

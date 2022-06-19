@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Masters;
 /// A registry of master listings.
 /// Generally used for reference when converting FormIDs to FormKeys
 /// </summary>
-public interface IMasterReferenceReader
+public interface IReadOnlyMasterReferenceCollection
 {
     /// <summary>
     /// List of masters in the registry
@@ -31,7 +31,7 @@ public interface IMasterReferenceReader
     FormID GetFormID(FormKey key);
 }
 
-public interface IMasterReferenceCollection : IMasterReferenceReader
+public interface IMasterReferenceCollection : IReadOnlyMasterReferenceCollection
 {
     /// <summary>
     /// Clears and sets contained masters to given enumerable's contents
@@ -51,7 +51,7 @@ public class MasterReferenceCollection : IMasterReferenceCollection
     /// <summary>
     /// A static singleton that is an empty registry containing no masters
     /// </summary>
-    public static IMasterReferenceReader Empty { get; } = new MasterReferenceCollection(ModKey.Null);
+    public static IReadOnlyMasterReferenceCollection Empty { get; } = new MasterReferenceCollection(ModKey.Null);
 
     /// <inheritdoc />
     public IReadOnlyList<IMasterReferenceGetter> Masters { get; private set; } = Array.Empty<IMasterReferenceGetter>();

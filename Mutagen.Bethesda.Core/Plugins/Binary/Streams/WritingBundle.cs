@@ -19,7 +19,7 @@ public record WritingBundle(GameConstants Constants)
     /// <summary>
     /// Optional master references for easy access during write operations
     /// </summary>
-    public IMasterReferenceReader? MasterReferences { get; set; }
+    public IReadOnlyMasterReferenceCollection? MasterReferences { get; set; }
 
     /// <summary>
     /// Optional strings writer for easy access during write operations

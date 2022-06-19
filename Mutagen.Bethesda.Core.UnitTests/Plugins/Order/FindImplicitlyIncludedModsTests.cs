@@ -36,7 +36,7 @@ public class FindImplicitlyIncludedModsTests
                 .FromPath(Path.Combine(directoryPath.Path, listing.Mod.FileName.String))
                 .Returns(_ =>
                 {
-                    var reader = Substitute.For<IMasterReferenceReader>();
+                    var reader = Substitute.For<IReadOnlyMasterReferenceCollection>();
                     reader.Masters.Returns(_ =>
                     {
                         return new List<IMasterReferenceGetter>(listing.Masters.Select(m =>

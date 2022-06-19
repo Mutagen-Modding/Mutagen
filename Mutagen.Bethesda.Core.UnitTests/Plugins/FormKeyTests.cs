@@ -103,7 +103,7 @@ public class FormKeyTests
     #region BinaryTranslation
     public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
-    public IMasterReferenceReader TypicalMasters() =>
+    public IReadOnlyMasterReferenceCollection TypicalMasters() =>
         new MasterReferenceCollection(
             TestConstants.PluginModKey,
             new List<IMasterReferenceGetter>()

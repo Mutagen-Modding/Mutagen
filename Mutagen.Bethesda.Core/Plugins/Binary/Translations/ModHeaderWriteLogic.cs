@@ -84,7 +84,7 @@ public class ModHeaderWriteLogic
         }
     }
 
-    private IMasterReferenceReader ConstructWriteMasters(IModGetter mod)
+    private IReadOnlyMasterReferenceCollection ConstructWriteMasters(IModGetter mod)
     {
         MasterReferenceCollection ret = new MasterReferenceCollection(mod.ModKey);
         _modKeys.Remove(mod.ModKey);
