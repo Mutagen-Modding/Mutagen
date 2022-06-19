@@ -248,25 +248,6 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
 
     private T ConstructWrapper(int pos)
     {
-        ReadOnlyMemorySlice<byte> slice = _data.Slice(pos);
-        var majorMeta = _package.MetaData.Constants.MajorRecordHeader(slice);
-        if (majorMeta.IsCompressed)
-        {
-            uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));
-            byte[] buf = new byte[majorMeta.HeaderLength + checked((int)uncompressedLength)];
-            // Copy major meta bytes over
-            slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
-            // Set length bytes
-            BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
-            // Remove compression flag
-            BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
-            // Copy uncompressed data over
-            using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
-            {
-                stream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
-            }
-            slice = new MemorySlice<byte>(buf);
-        }
         return LoquiBinaryOverlayTranslation<T>.Create(
             stream: new OverlayStream(_data.Slice(pos), _package),
             package: _package,
@@ -297,6 +278,10 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
                 if (formId != lastParsed)
                 {
                     throw new MalformedDataException("Unexpected Group encountered which was not after a major record: " + GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE);
+
+                    // Orphaned subgroup
+                    var formKey = FormKey.Factory(package.MetaData.MasterReferences!, formId.Raw);
+                    locationDict.Add(formKey, checked((int)(stream.Position - offset)));
                 }
                 stream.Position += checked((int)varMeta.TotalLength);
                 lastParsed = null;
