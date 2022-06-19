@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -64,6 +65,59 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
         AddDynamicProcessing(RecordTypes.GDRY, ProcessGodRays);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
+    }
+
+    protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    {
+        foreach (var job in base.ExtraJobs(streamGetter))
+        {
+            yield return job;
+        }
+        yield return TaskExt.Run(DoMultithreading, () => AddOrphanedRecords(streamGetter));
+    }
+    
+
+    public void AddOrphanedRecords(Func<IMutagenReadStream> streamGetter)
+    {
+        int added = 0;
+        using var stream = streamGetter();
+        foreach (var group in _alignedFileLocs.GrupLocations.Values)
+        {
+            stream.Position = group.Location.Min;
+            var groupMeta = stream.ReadGroup();
+            if (groupMeta.GroupType != 0 || groupMeta.ContainedRecordType != RecordTypes.QUST) continue;
+            FormID? lastForm = null;
+            foreach (var rec in groupMeta)
+            {
+                if (rec.TryGetAsMajorRecord(out var majorRec))
+                {
+                    lastForm = majorRec.FormID;
+                }
+                else if (rec.TryGetAsGroup(out var groupRec))
+                {
+                    var formId = FormID.Factory(groupRec.ContainedRecordTypeData);
+                    formId = ProcessFormIDOverflow(formId);
+                    if (formId == lastForm) continue;
+
+                    var bytes = new byte[stream.MetaData.Constants.MajorConstants.HeaderLength];
+                    var writable = new MajorRecordHeaderWritable(stream.MetaData, bytes);
+                    writable.RecordType = RecordTypes.QUST;
+                    writable.FormID = formId;
+                    writable.FormVersion = 0x83;
+                    
+                    // Insert partial formed record
+                    _instructions.SetAddition(
+                        rec.Location + group.Location.Min,
+                        bytes);
+                    added += bytes.Length;
+                    ModifyParentGroupLengths(bytes.Length, _alignedFileLocs.GrupLocations[rec.Location + group.Location.Min]);
+                }
+                else
+                {
+                    throw new MalformedDataException();
+                }
+            }
+        }
     }
 
     private void ProcessGameSettings(
@@ -418,7 +472,8 @@ public class Fallout4Processor : Processor
 
             uint actualCount = 0;
             stream.Position = fileOffset + majorFrame.TotalLength;
-            if (stream.TryReadGroup(out var groupFrame))
+            if (stream.TryReadGroup(out var groupFrame)
+                && groupFrame.GroupType == 7)
             {
                 int groupPos = 0;
                 while (groupPos < groupFrame.Content.Length)

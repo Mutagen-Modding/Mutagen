@@ -250,6 +250,12 @@ public abstract class Processor
             _numMasters);
     }
 
+    public FormID ProcessFormIDOverflow(FormID formId)
+    {
+        if (formId.ModIndex.ID <= _numMasters) return formId;
+        return new FormID(new ModIndex(_numMasters), formId.ID);
+    }
+
     public bool ProcessFormIDOverflow(SubrecordPinFrame pin, long offsetLoc, ref int loc)
     {
         if (loc >= pin.ContentLength) return false;
@@ -313,6 +319,18 @@ public abstract class Processor
             foreach (var k in _alignedFileLocs.GetContainingGroupLocations(formKey))
             {
                 _lengthTracker[k] = (uint)(_lengthTracker[k] + amount);
+            }
+        }
+    }
+
+    public void ModifyParentGroupLengths(int amount, GroupLocationMarker group)
+    {
+        if (amount == 0) return;
+        lock (_lengthTracker)
+        {
+            foreach (var k in group.Parents)
+            {
+                _lengthTracker[k.Location.Min] = (uint)(_lengthTracker[k.Location.Min] + amount);
             }
         }
     }

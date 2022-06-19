@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 
@@ -560,15 +561,37 @@ public static class HeaderExt
     /// Enumerates locations of the contained subrecords.<br/>
     /// Locations are relative to the RecordType of the MajorRecordFrame.
     /// </summary>
-    public static IEnumerable<MajorRecordPinFrame> EnumerateRecords(GroupFrame group)
+    public static IEnumerable<VariablePinHeader> EnumerateRecords(GroupFrame group)
     {
         int loc = group.HeaderLength;
         while (loc < group.HeaderAndContentData.Length)
         {
-            var subHeader = new MajorRecordPinFrame(group.Meta, group.HeaderAndContentData.Slice(loc), loc);
+            var subHeader = group.Meta.VariableHeader(group.HeaderAndContentData, loc);
             yield return subHeader;
             loc = checked((int)(loc + subHeader.TotalLength));
         }
     }
+
+    public static IEnumerable<MajorRecordPinFrame> EnumerateMajorRecords(this GroupFrame group)
+    {
+        foreach (var varRec in group)
+        {
+            if (varRec.IsGroup) continue;
+            yield return new MajorRecordPinFrame(group.Meta, group.Content.Slice(varRec.Location), varRec.Location);
+        }
+    }
+
+    public static IEnumerable<GroupPinFrame> EnumerateSubGroups(this GroupFrame group)
+    {
+        foreach (var varRec in group)
+        {
+            if (!varRec.IsGroup) continue;
+            yield return new GroupPinFrame(group.Meta, group.Content.Slice(varRec.Location), varRec.Location);
+        }
+    }
+
+    public static IEnumerable<MajorRecordPinFrame> EnumerateMajorRecords(this GroupPinFrame group) => group.Frame.EnumerateMajorRecords();
+
+    public static IEnumerable<GroupPinFrame> EnumerateSubGroups(this GroupPinFrame group) => group.Frame.EnumerateSubGroups();
     #endregion
 }

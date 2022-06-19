@@ -5,16 +5,14 @@ namespace Mutagen.Bethesda.Plugins.Analysis;
 
 public class RecordLocatorResults
 {
-    private readonly Dictionary<FormKey, (RangeInt64 Range, IEnumerable<GroupLocationMarker> GroupPositions, RecordType Record)>
-        _fromFormKeys;
+    private readonly Dictionary<FormKey, (RangeInt64 Range, IEnumerable<GroupLocationMarker> GroupPositions, RecordType Record)> _fromFormKeys;
 
     private readonly SortingListDictionary<long, RecordLocationMarker> _fromStart;
     private readonly SortingListDictionary<long, RecordLocationMarker> _fromEnd;
     private readonly SortingListDictionary<long, GroupLocationMarker> _grupLocations;
     public ISortingListDictionaryGetter<long, GroupLocationMarker> GrupLocations => _grupLocations;
 
-    public SortingListDictionary<long, RecordLocationMarker> ListedRecords =>
-        _fromStart;
+    public SortingListDictionary<long, RecordLocationMarker> ListedRecords => _fromStart;
 
     public RangeInt64 this[FormKey formKey] => _fromFormKeys[formKey].Range;
     public ICollectionGetter<FormKey> FormKeys => new CollectionGetterWrapper<FormKey>(_fromFormKeys.Keys);

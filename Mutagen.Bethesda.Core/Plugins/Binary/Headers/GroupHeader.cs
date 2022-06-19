@@ -241,7 +241,7 @@ public readonly struct GroupPinHeader
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrieve Group data on demand.
 /// </summary>
-public readonly struct GroupFrame : IEnumerable<MajorRecordPinFrame>
+public readonly struct GroupFrame : IEnumerable<VariablePinHeader>
 {
     /// <summary>
     /// Header struct contained in the frame
@@ -289,7 +289,7 @@ public readonly struct GroupFrame : IEnumerable<MajorRecordPinFrame>
     public override string ToString() => Header.ToString();
 
     /// <inheritdoc/>
-    public IEnumerator<MajorRecordPinFrame> GetEnumerator() => HeaderExt.EnumerateRecords(this).GetEnumerator();
+    public IEnumerator<VariablePinHeader> GetEnumerator() => HeaderExt.EnumerateRecords(this).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -371,7 +371,7 @@ public readonly struct GroupFrame : IEnumerable<MajorRecordPinFrame>
 /// A struct that overlays on top of bytes that is able to retrieve Group data on demand.
 /// In addition, it keeps track of its location relative to its parent stream
 /// </summary>
-public readonly struct GroupPinFrame : IEnumerable<MajorRecordPinFrame>
+public readonly struct GroupPinFrame : IEnumerable<VariablePinHeader>
 {
     /// <summary>
     /// Frame struct contained in the pin
@@ -420,7 +420,7 @@ public readonly struct GroupPinFrame : IEnumerable<MajorRecordPinFrame>
     public override string ToString() => $"{Frame.ToString()} => 0x{ContentLength:X} @ 0x{Location:X}";
 
     /// <inheritdoc/>
-    public IEnumerator<MajorRecordPinFrame> GetEnumerator() => HeaderExt.EnumerateRecords(Frame).GetEnumerator();
+    public IEnumerator<VariablePinHeader> GetEnumerator() => HeaderExt.EnumerateRecords(Frame).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

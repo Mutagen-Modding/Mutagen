@@ -200,7 +200,7 @@ public class RecordLocator
 
     private void PushGroup(GroupPinHeader groupPin)
     {
-        var register = new GroupLocationMarker(groupPin);
+        var register = new GroupLocationMarker(groupPin, _parentGroupLocations);
         _parentGroupLocations = _parentGroupLocations.Push(register);
         if (_interest == null)
         {

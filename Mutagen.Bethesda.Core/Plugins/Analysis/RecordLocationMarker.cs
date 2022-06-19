@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Plugins.Binary.Headers;
+﻿using System.Collections.Immutable;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Analysis;
@@ -7,20 +8,31 @@ public record RecordLocationMarker(FormKey FormKey, RangeInt64 Location, RecordT
 
 public class GroupLocationMarker
 {
+    public ImmutableStack<GroupLocationMarker> Parents { get; }
     internal bool Registered { get; set; }
     public RangeInt64 Location { get; init; }
     public RecordType ContainedRecordType { get; init; }
     public int GroupType { get; init; }
+
+    public GroupLocationMarker(RangeInt64 location, RecordType containedRecordType, int groupType, ImmutableStack<GroupLocationMarker> parents)
+    {
+        Location = location;
+        ContainedRecordType = containedRecordType;
+        GroupType = groupType;
+        Parents = parents;
+    }
 
     public GroupLocationMarker(RangeInt64 location, RecordType containedRecordType, int groupType)
     {
         Location = location;
         ContainedRecordType = containedRecordType;
         GroupType = groupType;
+        Parents = ImmutableStack<GroupLocationMarker>.Empty;
     }
 
-    public GroupLocationMarker(GroupPinHeader pinHeader)
+    public GroupLocationMarker(GroupPinHeader pinHeader, ImmutableStack<GroupLocationMarker> parents)
     {
+        Parents = parents;
         Location = RangeInt64.FromLength(pinHeader.Location, pinHeader.TotalLength);
         ContainedRecordType = pinHeader.ContainedRecordType;
         GroupType = pinHeader.GroupType;
