@@ -120,33 +120,61 @@ partial class PerkBinaryCreateTranslation
                             case APerkEntryPointEffect.FunctionType.MultiplyValue:
                                 if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                 if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                float? f;
                                 if (epft == null && epfd == null)
                                 {
-                                    f = null;
+                                    entryPointEffect = new PerkEntryPointModifyValue()
+                                    {
+                                        Value = null,
+                                        Modification = func switch
+                                        {
+                                            APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
+                                            APerkEntryPointEffect.FunctionType.MultiplyValue => PerkEntryPointModifyValue.ModificationType.Multiply,
+                                            APerkEntryPointEffect.FunctionType.AddValue => PerkEntryPointModifyValue.ModificationType.Add,
+                                            _ => throw new MalformedDataException(),
+                                        }
+                                    };
                                 }
                                 else
                                 {
                                     if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
                                     if (!epfd.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
-                                    if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
+                                    var epftType = (APerkEntryPointEffect.ParameterType)epft.Value[0];
+                                    if (epftType != APerkEntryPointEffect.ParameterType.Float
+                                        && epftType != APerkEntryPointEffect.ParameterType.FloatFloat)
                                     {
                                         throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
 
-                                    f = epfd.Value.Float();
-                                }
-                                entryPointEffect = new PerkEntryPointModifyValue()
-                                {
-                                    Value = f,
-                                    Modification = func switch
+                                    if (epftType == APerkEntryPointEffect.ParameterType.Float)
                                     {
-                                        APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
-                                        APerkEntryPointEffect.FunctionType.MultiplyValue => PerkEntryPointModifyValue.ModificationType.Multiply,
-                                        APerkEntryPointEffect.FunctionType.AddValue => PerkEntryPointModifyValue.ModificationType.Add,
-                                        _ => throw new MalformedDataException(),
+                                        entryPointEffect = new PerkEntryPointModifyValue()
+                                        {
+                                            Value = epfd.Value.Float(),
+                                            Modification = func switch
+                                            {
+                                                APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
+                                                APerkEntryPointEffect.FunctionType.MultiplyValue => PerkEntryPointModifyValue.ModificationType.Multiply,
+                                                APerkEntryPointEffect.FunctionType.AddValue => PerkEntryPointModifyValue.ModificationType.Add,
+                                                _ => throw new MalformedDataException(),
+                                            }
+                                        };
                                     }
-                                };
+                                    else
+                                    {
+                                        entryPointEffect = new PerkEntryPointModifyValues()
+                                        {
+                                            Value = epfd.Value.Float(),
+                                            Value2 = epfd.Value.Slice(4).Float(),
+                                            Modification = func switch
+                                            {
+                                                APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
+                                                APerkEntryPointEffect.FunctionType.MultiplyValue => PerkEntryPointModifyValue.ModificationType.Multiply,
+                                                APerkEntryPointEffect.FunctionType.AddValue => PerkEntryPointModifyValue.ModificationType.Add,
+                                                _ => throw new MalformedDataException(),
+                                            }
+                                        };
+                                    }
+                                }
                                 break;
                             case APerkEntryPointEffect.FunctionType.AddRangeToValue:
                                 if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
@@ -353,6 +381,13 @@ partial class PerkBinaryWriteTranslation
                                 PerkEntryPointModifyValue.ModificationType.Multiply => APerkEntryPointEffect.FunctionType.MultiplyValue,
                                 _ => throw new NotImplementedException()
                             },
+                            PerkEntryPointModifyValues modVals => modVals.Modification switch
+                            {
+                                PerkEntryPointModifyValue.ModificationType.Add => APerkEntryPointEffect.FunctionType.AddValue,
+                                PerkEntryPointModifyValue.ModificationType.Set => APerkEntryPointEffect.FunctionType.SetValue,
+                                PerkEntryPointModifyValue.ModificationType.Multiply => APerkEntryPointEffect.FunctionType.MultiplyValue,
+                                _ => throw new NotImplementedException()
+                            },
                             PerkEntryPointAddRangeToValue addRange => APerkEntryPointEffect.FunctionType.AddRangeToValue,
                             PerkEntryPointModifyActorValue modActorVal => modActorVal.Modification switch
                             {
@@ -385,6 +420,7 @@ partial class PerkBinaryWriteTranslation
                 var paramType = effect switch
                 {
                     PerkEntryPointModifyValue _ => APerkEntryPointEffect.ParameterType.Float,
+                    PerkEntryPointModifyValues _ => APerkEntryPointEffect.ParameterType.FloatFloat,
                     PerkEntryPointAddRangeToValue _ => APerkEntryPointEffect.ParameterType.FloatFloat,
                     PerkEntryPointModifyActorValue _ => APerkEntryPointEffect.ParameterType.FloatFloat,
                     PerkEntryPointAbsoluteValue _ => APerkEntryPointEffect.ParameterType.None,
@@ -418,11 +454,25 @@ partial class PerkBinaryWriteTranslation
                 switch (effect)
                 {
                     case PerkEntryPointModifyValue modVal:
-                        if (modVal.Value is {} f)
                         {
-                            using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                            if (modVal.Value is {} f)
                             {
-                                writer.Write(f);
+                                using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                                {
+                                    writer.Write(f);
+                                }
+                            }
+                        }
+                        break;
+                    case PerkEntryPointModifyValues modVal:
+                        {
+                            if (modVal.Value is not null || modVal.Value2 is not null)
+                            {
+                                using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                                {
+                                    writer.Write(modVal.Value ?? 0f);
+                                    writer.Write(modVal.Value2 ?? 0f);
+                                }
                             }
                         }
                         break;

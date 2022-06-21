@@ -2446,6 +2446,9 @@
     <Compile Include="Records\Major Records\QuestData_Generated.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointModifyValues_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

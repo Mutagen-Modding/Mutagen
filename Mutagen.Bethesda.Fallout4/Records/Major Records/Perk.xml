@@ -80,6 +80,13 @@
       <Float name="Value" recordType="EPFD" nullable="True" />
     </Fields>
   </Object>
+  <Object name="PerkEntryPointModifyValues" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="e3c154a2-c61b-4f02-944d-3eb33b4da577" ID="682">
+    <Fields>
+      <Enum name="Modification" enumName="PerkEntryPointModifyValue.ModificationType" />
+      <Float name="Value" nullable="True" />
+      <Float name="Value2" nullable="True" />
+    </Fields>
+  </Object>
   <Object name="PerkEntryPointAddRangeToValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="c9831f67-aa2e-4d1f-b87a-1326749bac47" ID="603">
     <Fields>
       <Float name="From" />

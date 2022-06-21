@@ -438,7 +438,8 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             CellMaxHeightData_Registration.Instance,
             ANavmeshParent_Registration.Instance,
             WorldspaceNavmeshParent_Registration.Instance,
-            CellNavmeshParent_Registration.Instance
+            CellNavmeshParent_Registration.Instance,
+            PerkEntryPointModifyValues_Registration.Instance
         );
     }
 }

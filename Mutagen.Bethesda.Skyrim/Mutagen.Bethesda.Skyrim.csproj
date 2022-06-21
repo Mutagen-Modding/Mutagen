@@ -2079,6 +2079,9 @@
     </Compile>
     <Compile Include="Interfaces\Link\IPlaceableObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IExplodeSpawn_Generated.cs" />
+    <Compile Include="Records\Major Records\PerkEntryPointModifyValues_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
