@@ -335,12 +335,12 @@ public ref struct MajorRecordHeaderWritable
     /// Form Version of the Major Record
     /// </summary>
     [DisallowNull]
-    public short? FormVersion
+    public ushort? FormVersion
     {
         get
         {
             if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
-            return BinaryPrimitives.ReadInt16LittleEndian(
+            return BinaryPrimitives.ReadUInt16LittleEndian(
                 HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value));
         }
         set
@@ -349,7 +349,7 @@ public ref struct MajorRecordHeaderWritable
             {
                 throw new ArgumentException("Attempted to set Form Version on a non-applicable game.");
             }
-            BinaryPrimitives.WriteInt16LittleEndian(
+            BinaryPrimitives.WriteUInt16LittleEndian(
                 HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value, 2),
                 value.Value);
         }

@@ -1,23 +1,27 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Buffers.Binary;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
+using Noggog;
 using Noggog.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
 internal class SubgroupsBinaryTranslation<T>
-    where T : class, IMajorRecord, IBinaryItem
+    where T : IMajorRecordGetter
 {
     public static readonly SubgroupsBinaryTranslation<T> Instance = new();
     public delegate void FillFunc(
         MutagenFrame reader,
         T item);
 
-    public static readonly FillFunc? Fill;
+    private static readonly Lazy<FillFunc>? Fill;
     public static readonly bool IsPartialFormable;
     public static readonly IReadOnlyCollection<int> Subgroups = Array.Empty<int>();
 
@@ -27,7 +31,7 @@ internal class SubgroupsBinaryTranslation<T>
         var prop = t.GetProperty(Constants.PartialFormMember, BindingFlags.Static | BindingFlags.Public);
         IsPartialFormable = (bool?)prop?.GetValue(null) ?? false;
         if (!IsPartialFormable) return;
-        Fill = GetCreateFunc();
+        Fill = new Lazy<FillFunc>(GetCreateFunc);
         Subgroups = (IReadOnlyCollection<int>?)LoquiRegistration.GetRegister(typeof(T))!.GetType()
             .GetProperty(Constants.SubgroupsMember, BindingFlags.Static | BindingFlags.Public)?.GetValue(null) ?? Array.Empty<int>();
     }
@@ -68,7 +72,29 @@ internal class SubgroupsBinaryTranslation<T>
         }
         var fk = FormKeyBinaryTranslation.Instance.Parse(group.ContainedRecordTypeData, frame.MetaData.MasterReferences);
         record = MajorRecordInstantiator<T>.Activator(fk, frame.MetaData.Constants.Release);
-        Fill(frame, record);
+        Fill.Value(frame, record);
+        return true;
+    }
+
+    public static bool TryReadOrphanedSubgroupWrappers(ReadOnlyMemorySlice<byte> sourceBytes, BinaryOverlayFactoryPackage package, [MaybeNullWhen(false)] out T record)
+    {
+        if (Fill == null
+            || !package.MetaData.Constants.TryGroup(sourceBytes, out var group)
+            || !Subgroups.Contains(group.GroupType))
+        {
+            record = default;
+            return false;
+        }
+
+        // ToDo
+        // Avoid array copy by using MemoryPair
+        var formId = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(group.ContainedRecordTypeData));
+        byte[] bytes = new byte[package.MetaData.Constants.MajorConstants.HeaderLength + group.TotalLength];
+        MajorRecordHeaderWritable majorWritable = new MajorRecordHeaderWritable(package.MetaData, bytes);
+        majorWritable.FormID = formId;
+        majorWritable.FormVersion = package.MetaData.Constants.Release.GetDefaultFormVersion()!.Value;
+        group.HeaderAndContentData.Span.CopyTo(bytes.AsSpan().Slice(majorWritable.HeaderLength));
+        record = LoquiBinaryOverlayTranslation<T>.Create(new OverlayStream(bytes, package.MetaData), package, recordTypeConverter: null);
         return true;
     }
 }

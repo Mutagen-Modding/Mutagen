@@ -10,7 +10,30 @@ public static class HeaderConstructionMixIns
 
     public static GroupHeader GroupHeader(this GameConstants meta, ReadOnlyMemorySlice<byte> span) => new(meta, span);
 
+    public static bool TryGroupHeader(this GameConstants meta, ReadOnlyMemorySlice<byte> span, out GroupHeader header)
+    {
+        if (span.Length < meta.GroupConstants.HeaderLength)
+        {
+            header = default;
+            return false;
+        }
+        header = new GroupHeader(meta, span);
+        return header.IsGroup;
+    }
+
     public static GroupFrame Group(this GameConstants meta, ReadOnlyMemorySlice<byte> span) => new(meta, span);
+
+    public static bool TryGroup(this GameConstants meta, ReadOnlyMemorySlice<byte> span, out GroupFrame frame)
+    {
+        if (!meta.TryGroupHeader(span, out var header))
+        {
+            frame = default;
+            return false;
+        }
+
+        frame = new GroupFrame(header, span);
+        return true;
+    }
 
     public static MajorRecordHeader MajorRecordHeader(this GameConstants meta, ReadOnlyMemorySlice<byte> span) => new(meta, span);
 

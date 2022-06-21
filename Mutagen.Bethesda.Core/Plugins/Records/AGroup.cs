@@ -248,8 +248,14 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
 
     private T ConstructWrapper(int pos)
     {
+        var data = _data.Slice(pos);
+        if (SubgroupsBinaryTranslation<T>.TryReadOrphanedSubgroupWrappers(data, _package, out var rec))
+        {
+            return rec;
+        }
+        var stream = new OverlayStream(data, _package);
         return LoquiBinaryOverlayTranslation<T>.Create(
-            stream: new OverlayStream(_data.Slice(pos), _package),
+            stream: stream,
             package: _package,
             recordTypeConverter: null);
     }
@@ -277,8 +283,6 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
                 var formId = FormID.Factory(groupHeader.ContainedRecordTypeData, stream.MetaData.MasterReferences);
                 if (formId != lastParsed)
                 {
-                    throw new MalformedDataException("Unexpected Group encountered which was not after a major record: " + GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE);
-
                     // Orphaned subgroup
                     var formKey = FormKey.Factory(package.MetaData.MasterReferences!, formId.Raw);
                     locationDict.Add(formKey, checked((int)(stream.Position - offset)));
