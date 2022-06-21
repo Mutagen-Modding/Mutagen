@@ -351,9 +351,9 @@ internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGrou
     }
 
     protected AGroupBinaryOverlay(
-        ReadOnlyMemorySlice<byte> bytes,
+        PluginBinaryOverlay.MemoryPair memoryPair,
         BinaryOverlayFactoryPackage package)
-        : base(bytes, package)
+        : base(memoryPair, package)
     {
     }
 }

@@ -1682,11 +1682,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }
         #region Flag
         private int? _FlagLocation;
-        public EquipType.Flags? Flag => _FlagLocation.HasValue ? (EquipType.Flags)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagLocation!.Value, _package.MetaData.Constants)) : default(EquipType.Flags?);
+        public EquipType.Flags? Flag => _FlagLocation.HasValue ? (EquipType.Flags)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagLocation!.Value, _package.MetaData.Constants)) : default(EquipType.Flags?);
         #endregion
         #region ConditionActorValue
         private int? _ConditionActorValueLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue => _ConditionActorValueLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ConditionActorValueLocation.Value, _package.MetaData.Constants)), maxIsNull: true)) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue => _ConditionActorValueLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConditionActorValueLocation.Value, _package.MetaData.Constants)), maxIsNull: true)) : FormLinkNullable<IActorValueInformationGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1695,10 +1695,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected EquipTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1710,13 +1710,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new EquipTypeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

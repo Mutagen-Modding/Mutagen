@@ -1164,11 +1164,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region SoundChance
         private int? _SoundChanceLocation;
-        public Byte? SoundChance => _SoundChanceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SoundChanceLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? SoundChance => _SoundChanceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundChanceLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1177,10 +1177,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected NpcSoundBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1191,10 +1191,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NpcSoundBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

@@ -39,7 +39,7 @@ partial class SkyrimListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
     {
         _Records = GroupListOverlay<T>.Factory(
             stream,
-            _data,
+            _recordData,
             _package,
             offset: offset,
             objectType: ObjectType.Group);

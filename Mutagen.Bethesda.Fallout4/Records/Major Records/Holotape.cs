@@ -177,8 +177,8 @@ partial class HolotapeBinaryOverlay
             {
                 throw new MalformedDataException($"Did not parse {RecordTypes.SNAM} and so cannot provide Holotape data.");
             }
-            var typeMem = HeaderTranslation.ExtractSubrecordMemory(_data, _DataTypeLocation.Value, _package.MetaData.Constants);
-            var dataMem = HeaderTranslation.ExtractSubrecordMemory(_data, _DataContentLocation.Value, _package.MetaData.Constants);
+            var typeMem = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataTypeLocation.Value, _package.MetaData.Constants);
+            var dataMem = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataContentLocation.Value, _package.MetaData.Constants);
             var type = (Holotape.Types)typeMem[0];
             switch (type)
             {

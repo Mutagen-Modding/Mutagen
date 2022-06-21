@@ -142,7 +142,7 @@ partial class SceneActionBinaryOverlay
         int offset)
     {
         var loc = (stream.Position - offset);
-        var rec = _package.MetaData.Constants.Subrecord(_data.Slice(loc));
+        var rec = _package.MetaData.Constants.Subrecord(_recordData.Slice(loc));
         var type = rec.AsUInt16();
         if (type == 4)
         {

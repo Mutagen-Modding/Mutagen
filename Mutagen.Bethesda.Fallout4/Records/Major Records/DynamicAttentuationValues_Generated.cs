@@ -1645,18 +1645,18 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single FadeInDistanceStart => _data.Slice(0x0, 0x4).Float();
-        public Single FadeInDistanceEnd => _data.Slice(0x4, 0x4).Float();
-        public Single FadeOutDistanceStart => _data.Slice(0x8, 0x4).Float();
-        public Single FadeOutDistanceEnd => _data.Slice(0xC, 0x4).Float();
-        public Byte FadeInCurveValue1 => _data.Span[0x10];
-        public Byte FadeInCurveValue2 => _data.Span[0x11];
-        public Byte FadeInCurveValue3 => _data.Span[0x12];
-        public Byte FadeInCurveValue4 => _data.Span[0x13];
-        public Byte FadeOutCurveValue1 => _data.Span[0x14];
-        public Byte FadeOutCurveValue2 => _data.Span[0x15];
-        public Byte FadeOutCurveValue3 => _data.Span[0x16];
-        public Byte FadeOutCurveValue4 => _data.Span[0x17];
+        public Single FadeInDistanceStart => _structData.Slice(0x0, 0x4).Float();
+        public Single FadeInDistanceEnd => _structData.Slice(0x4, 0x4).Float();
+        public Single FadeOutDistanceStart => _structData.Slice(0x8, 0x4).Float();
+        public Single FadeOutDistanceEnd => _structData.Slice(0xC, 0x4).Float();
+        public Byte FadeInCurveValue1 => _structData.Span[0x10];
+        public Byte FadeInCurveValue2 => _structData.Span[0x11];
+        public Byte FadeInCurveValue3 => _structData.Span[0x12];
+        public Byte FadeInCurveValue4 => _structData.Span[0x13];
+        public Byte FadeOutCurveValue1 => _structData.Span[0x14];
+        public Byte FadeOutCurveValue2 => _structData.Span[0x15];
+        public Byte FadeOutCurveValue3 => _structData.Span[0x16];
+        public Byte FadeOutCurveValue4 => _structData.Span[0x17];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1664,10 +1664,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected DynamicAttentuationValuesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1678,11 +1678,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x18,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new DynamicAttentuationValuesBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

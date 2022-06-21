@@ -99,7 +99,7 @@ partial class QuestAdapterBinaryOverlay
     {
         var frame = new MutagenFrame(
             new MutagenInterfaceReadStream(
-                new BinaryMemoryReadStream(_data.Slice(ScriptsEndingPos + 1)),
+                new BinaryMemoryReadStream(_structData.Slice(ScriptsEndingPos + 1)),
                 _package.MetaData));
         if (frame.Complete) return;
         var count = frame.ReadUInt16();

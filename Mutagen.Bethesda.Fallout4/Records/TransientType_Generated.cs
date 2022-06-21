@@ -1238,9 +1238,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public UInt32 FormType => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public UInt32 FormType => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
         #region Links
-        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(_data.Slice(0x4), _package, 4, (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(_structData.Slice(0x4), _package, 4, (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int LinksEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1250,10 +1250,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected TransientTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1264,12 +1264,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TransientTypeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.LinksEndingPos = ret._data.Length;
+            ret.LinksEndingPos = ret._structData.Length;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

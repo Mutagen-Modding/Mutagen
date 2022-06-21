@@ -1687,16 +1687,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MetadataSummary
         private RangeInt32? _MetadataSummaryLocation;
-        private IScriptMetaSummaryGetter? _MetadataSummary => _MetadataSummaryLocation.HasValue ? ScriptMetaSummaryBinaryOverlay.ScriptMetaSummaryFactory(new OverlayStream(_data.Slice(_MetadataSummaryLocation!.Value.Min), _package), _package) : default;
+        private IScriptMetaSummaryGetter? _MetadataSummary => _MetadataSummaryLocation.HasValue ? ScriptMetaSummaryBinaryOverlay.ScriptMetaSummaryFactory(_recordData.Slice(_MetadataSummaryLocation!.Value.Min), _package) : default;
         public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
         #endregion
         #region CompiledScript
         private int? _CompiledScriptLocation;
-        public ReadOnlyMemorySlice<Byte>? CompiledScript => _CompiledScriptLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CompiledScriptLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? CompiledScript => _CompiledScriptLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CompiledScriptLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SourceCode
         private int? _SourceCodeLocation;
-        public String? SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SourceCodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourceCodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<ILocalVariableGetter> LocalVariables { get; private set; } = Array.Empty<ILocalVariableGetter>();
         public IReadOnlyList<IAScriptReferenceGetter> References { get; private set; } = Array.Empty<IAScriptReferenceGetter>();
@@ -1707,10 +1707,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected ScriptFieldsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1721,10 +1721,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ScriptFieldsBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

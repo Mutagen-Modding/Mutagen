@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Data
-        public IReadOnlyList<Single> Data => BinaryOverlayList.FactoryByCountLength<Single>(_data, _package, 4, countLength: 4, (s, p) => s.Float());
+        public IReadOnlyList<Single> Data => BinaryOverlayList.FactoryByCountLength<Single>(_structData, _package, 4, countLength: 4, (s, p) => s.Float());
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1200,10 +1200,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ScriptFloatListPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1214,11 +1214,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ScriptFloatListPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.DataEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 4 + 4;
+            ret.DataEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 4 + 4;
             stream.Position += ret.DataEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

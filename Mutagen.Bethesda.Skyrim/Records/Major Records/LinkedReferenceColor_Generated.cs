@@ -1112,8 +1112,8 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Color Start => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color End => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Start => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color End => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1121,10 +1121,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected LinkedReferenceColorBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1135,11 +1135,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LinkedReferenceColorBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

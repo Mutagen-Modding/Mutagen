@@ -1468,29 +1468,29 @@ namespace Mutagen.Bethesda.Fallout4
         #region DataType
         private int _DataTypeLocation => _TETILocation!.Value.Min;
         private bool _DataType_IsSet => _TETILocation.HasValue;
-        public NpcFaceTintingLayer.Type DataType => _DataType_IsSet ? (NpcFaceTintingLayer.Type)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DataTypeLocation, 0x2)) : default;
+        public NpcFaceTintingLayer.Type DataType => _DataType_IsSet ? (NpcFaceTintingLayer.Type)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_DataTypeLocation, 0x2)) : default;
         #endregion
         #region Index
         private int _IndexLocation => _TETILocation!.Value.Min + 0x2;
         private bool _Index_IsSet => _TETILocation.HasValue;
-        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_IndexLocation, 2)) : default;
+        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default;
         #endregion
         private RangeInt32? _TENDLocation;
         public NpcFaceTintingLayer.TENDDataType TENDDataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _TENDLocation!.Value.Min;
         private bool _Value_IsSet => _TENDLocation.HasValue;
-        public Single Value => _Value_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_ValueLocation, 1), FloatIntegerType.Byte, 0.01) : default;
+        public Single Value => _Value_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_ValueLocation, 1), FloatIntegerType.Byte, 0.01) : default;
         #endregion
         #region Color
         private int _ColorLocation => _TENDLocation!.Value.Min + 0x1;
         private bool _Color_IsSet => _TENDLocation.HasValue && !TENDDataTypeState.HasFlag(NpcFaceTintingLayer.TENDDataType.Break0);
-        public Color Color => _Color_IsSet ? _data.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color Color => _Color_IsSet ? _recordData.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region TemplateColorIndex
         private int _TemplateColorIndexLocation => _TENDLocation!.Value.Min + 0x5;
         private bool _TemplateColorIndex_IsSet => _TENDLocation.HasValue && !TENDDataTypeState.HasFlag(NpcFaceTintingLayer.TENDDataType.Break0);
-        public Int16 TemplateColorIndex => _TemplateColorIndex_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_TemplateColorIndexLocation, 2)) : default;
+        public Int16 TemplateColorIndex => _TemplateColorIndex_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_TemplateColorIndexLocation, 2)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1499,10 +1499,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected NpcFaceTintingLayerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1513,10 +1513,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NpcFaceTintingLayerBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1558,7 +1564,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TEND:
                 {
                     _TENDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x1)
                     {
                         this.TENDDataTypeState |= NpcFaceTintingLayer.TENDDataType.Break0;

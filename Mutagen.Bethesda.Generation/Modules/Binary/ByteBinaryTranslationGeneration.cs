@@ -23,7 +23,8 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
         StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
-        Accessor dataAccessor, 
+        Accessor structDataAccessor,  
+        Accessor recordDataAccessor, 
         int? currentPosition,
         string passedLengthAccessor,
         DataType dataType)
@@ -40,7 +41,6 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
                     sb,
                     objGen,
                     typeGen,
-                    dataAccessor,
                     currentPosition,
                     passedLengthAccessor,
                     dataType);
@@ -53,27 +53,27 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
             sb.AppendLine($"private int? _{typeGen.Name}Location;");
             if (typeGen.CanBeNullable(getter: true))
             {
-                dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
+                recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {recordDataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
             }
             else
             {
                 sb.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
                 if (dataType != null) throw new ArgumentException();
-                dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
+                recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {recordDataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
             }
         }
         else
         {
             if (dataType == null)
             {
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");
             }
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span[_{typeGen.Name}Location] : default;");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {recordDataAccessor}.Span[_{typeGen.Name}Location] : default;");
             }
         }
     }

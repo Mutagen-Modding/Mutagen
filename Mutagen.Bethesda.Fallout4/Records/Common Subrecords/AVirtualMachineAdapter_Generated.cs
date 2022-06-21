@@ -1282,8 +1282,8 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
+        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x0, 0x2));
+        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
         #region Scripts
         protected int ScriptsEndingPos;
         partial void CustomScriptsEndPos();
@@ -1295,10 +1295,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected AVirtualMachineAdapterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

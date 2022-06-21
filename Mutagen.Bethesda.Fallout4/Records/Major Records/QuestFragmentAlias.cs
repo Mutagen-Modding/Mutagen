@@ -45,7 +45,7 @@ partial class QuestFragmentAliasBinaryOverlay
 
     partial void CustomCtor()
     {
-        var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))
+        var frame = new MutagenFrame(new MutagenMemoryReadStream(_structData, _package.MetaData))
         {
             Position = PropertyEndingPos + 0x4
         };

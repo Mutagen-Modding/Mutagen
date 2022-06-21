@@ -3807,7 +3807,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IPackageAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PackageAdapterBinaryOverlay.PackageAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IPackageAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PackageAdapterBinaryOverlay.PackageAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         private RangeInt32? _PKDTLocation;
@@ -3815,84 +3815,84 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _PKDTLocation!.Value.Min;
         private bool _Flags_IsSet => _PKDTLocation.HasValue;
-        public Package.Flag Flags => _Flags_IsSet ? (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Package.Flag Flags => _Flags_IsSet ? (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Type
         private int _TypeLocation => _PKDTLocation!.Value.Min + 0x4;
         private bool _Type_IsSet => _PKDTLocation.HasValue;
-        public Package.Types Type => _Type_IsSet ? (Package.Types)_data.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public Package.Types Type => _Type_IsSet ? (Package.Types)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
         #endregion
         #region InterruptOverride
         private int _InterruptOverrideLocation => _PKDTLocation!.Value.Min + 0x5;
         private bool _InterruptOverride_IsSet => _PKDTLocation.HasValue;
-        public Package.Interrupt InterruptOverride => _InterruptOverride_IsSet ? (Package.Interrupt)_data.Span.Slice(_InterruptOverrideLocation, 0x1)[0] : default;
+        public Package.Interrupt InterruptOverride => _InterruptOverride_IsSet ? (Package.Interrupt)_recordData.Span.Slice(_InterruptOverrideLocation, 0x1)[0] : default;
         #endregion
         #region PreferredSpeed
         private int _PreferredSpeedLocation => _PKDTLocation!.Value.Min + 0x6;
         private bool _PreferredSpeed_IsSet => _PKDTLocation.HasValue;
-        public Package.Speed PreferredSpeed => _PreferredSpeed_IsSet ? (Package.Speed)_data.Span.Slice(_PreferredSpeedLocation, 0x1)[0] : default;
+        public Package.Speed PreferredSpeed => _PreferredSpeed_IsSet ? (Package.Speed)_recordData.Span.Slice(_PreferredSpeedLocation, 0x1)[0] : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _PKDTLocation!.Value.Min + 0x7;
         private bool _Unknown_IsSet => _PKDTLocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
         #region InteruptFlags
         private int _InteruptFlagsLocation => _PKDTLocation!.Value.Min + 0x8;
         private bool _InteruptFlags_IsSet => _PKDTLocation.HasValue;
-        public Package.InterruptFlag InteruptFlags => _InteruptFlags_IsSet ? (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_InteruptFlagsLocation, 0x2)) : default;
+        public Package.InterruptFlag InteruptFlags => _InteruptFlags_IsSet ? (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_InteruptFlagsLocation, 0x2)) : default;
         #endregion
         #region Unknown2
         private int _Unknown2Location => _PKDTLocation!.Value.Min + 0xA;
         private bool _Unknown2_IsSet => _PKDTLocation.HasValue;
-        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_Unknown2Location, 2)) : default;
+        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default;
         #endregion
         private RangeInt32? _PSDTLocation;
         public Package.PSDTDataType PSDTDataTypeState { get; private set; }
         #region ScheduleMonth
         private int _ScheduleMonthLocation => _PSDTLocation!.Value.Min;
         private bool _ScheduleMonth_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_data.Slice(_ScheduleMonthLocation, 1)[0] : default;
+        public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_recordData.Slice(_ScheduleMonthLocation, 1)[0] : default;
         #endregion
         #region ScheduleDayOfWeek
         private int _ScheduleDayOfWeekLocation => _PSDTLocation!.Value.Min + 0x1;
         private bool _ScheduleDayOfWeek_IsSet => _PSDTLocation.HasValue;
-        public Package.DayOfWeek ScheduleDayOfWeek => _ScheduleDayOfWeek_IsSet ? (Package.DayOfWeek)_data.Span.Slice(_ScheduleDayOfWeekLocation, 0x1)[0] : default;
+        public Package.DayOfWeek ScheduleDayOfWeek => _ScheduleDayOfWeek_IsSet ? (Package.DayOfWeek)_recordData.Span.Slice(_ScheduleDayOfWeekLocation, 0x1)[0] : default;
         #endregion
         #region ScheduleDate
         private int _ScheduleDateLocation => _PSDTLocation!.Value.Min + 0x2;
         private bool _ScheduleDate_IsSet => _PSDTLocation.HasValue;
-        public Byte ScheduleDate => _ScheduleDate_IsSet ? _data.Span[_ScheduleDateLocation] : default;
+        public Byte ScheduleDate => _ScheduleDate_IsSet ? _recordData.Span[_ScheduleDateLocation] : default;
         #endregion
         #region ScheduleHour
         private int _ScheduleHourLocation => _PSDTLocation!.Value.Min + 0x3;
         private bool _ScheduleHour_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_data.Slice(_ScheduleHourLocation, 1)[0] : default;
+        public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_recordData.Slice(_ScheduleHourLocation, 1)[0] : default;
         #endregion
         #region ScheduleMinute
         private int _ScheduleMinuteLocation => _PSDTLocation!.Value.Min + 0x4;
         private bool _ScheduleMinute_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_data.Slice(_ScheduleMinuteLocation, 1)[0] : default;
+        public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_recordData.Slice(_ScheduleMinuteLocation, 1)[0] : default;
         #endregion
         #region Unknown3
         private int _Unknown3Location => _PSDTLocation!.Value.Min + 0x5;
         private bool _Unknown3_IsSet => _PSDTLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _data.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region ScheduleDurationInMinutes
         private int _ScheduleDurationInMinutesLocation => _PSDTLocation!.Value.Min + 0x8;
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
-        public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_ScheduleDurationInMinutesLocation, 4)) : default;
+        public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ScheduleDurationInMinutesLocation, 4)) : default;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region PackageTemplate
         partial void PackageTemplateCustomParse(
@@ -3920,10 +3920,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected PackageBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -3935,13 +3935,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PackageBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

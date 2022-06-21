@@ -1908,47 +1908,47 @@ namespace Mutagen.Bethesda.Fallout4
         #region BackColor
         private int _BackColorLocation => _DATALocation!.Value.Min;
         private bool _BackColor_IsSet => _DATALocation.HasValue;
-        public Color BackColor => _BackColor_IsSet ? _data.Slice(_BackColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color BackColor => _BackColor_IsSet ? _recordData.Slice(_BackColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
         #endregion
         #region ForwardColor
         private int _ForwardColorLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ForwardColor_IsSet => _DATALocation.HasValue;
-        public Color ForwardColor => _ForwardColor_IsSet ? _data.Slice(_ForwardColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color ForwardColor => _ForwardColor_IsSet ? _recordData.Slice(_ForwardColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
         #endregion
         #region Intensity
         private int _IntensityLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Intensity_IsSet => _DATALocation.HasValue;
-        public Single Intensity => _Intensity_IsSet ? _data.Slice(_IntensityLocation, 4).Float() : default;
+        public Single Intensity => _Intensity_IsSet ? _recordData.Slice(_IntensityLocation, 4).Float() : default;
         #endregion
         #region AirColorScale
         private int _AirColorScaleLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _AirColorScale_IsSet => _DATALocation.HasValue;
-        public Single AirColorScale => _AirColorScale_IsSet ? _data.Slice(_AirColorScaleLocation, 4).Float() : default;
+        public Single AirColorScale => _AirColorScale_IsSet ? _recordData.Slice(_AirColorScaleLocation, 4).Float() : default;
         #endregion
         #region BackColorScale
         private int _BackColorScaleLocation => _DATALocation!.Value.Min + 0x20;
         private bool _BackColorScale_IsSet => _DATALocation.HasValue;
-        public Single BackColorScale => _BackColorScale_IsSet ? _data.Slice(_BackColorScaleLocation, 4).Float() : default;
+        public Single BackColorScale => _BackColorScale_IsSet ? _recordData.Slice(_BackColorScaleLocation, 4).Float() : default;
         #endregion
         #region ForwardColorScale
         private int _ForwardColorScaleLocation => _DATALocation!.Value.Min + 0x24;
         private bool _ForwardColorScale_IsSet => _DATALocation.HasValue;
-        public Single ForwardColorScale => _ForwardColorScale_IsSet ? _data.Slice(_ForwardColorScaleLocation, 4).Float() : default;
+        public Single ForwardColorScale => _ForwardColorScale_IsSet ? _recordData.Slice(_ForwardColorScaleLocation, 4).Float() : default;
         #endregion
         #region BackPhase
         private int _BackPhaseLocation => _DATALocation!.Value.Min + 0x28;
         private bool _BackPhase_IsSet => _DATALocation.HasValue;
-        public Single BackPhase => _BackPhase_IsSet ? _data.Slice(_BackPhaseLocation, 4).Float() : default;
+        public Single BackPhase => _BackPhase_IsSet ? _recordData.Slice(_BackPhaseLocation, 4).Float() : default;
         #endregion
         #region AirColor
         private int _AirColorLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _AirColor_IsSet => _DATALocation.HasValue;
-        public Color AirColor => _AirColor_IsSet ? _data.Slice(_AirColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color AirColor => _AirColor_IsSet ? _recordData.Slice(_AirColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
         #endregion
         #region ForwardPhase
         private int _ForwardPhaseLocation => _DATALocation!.Value.Min + 0x38;
         private bool _ForwardPhase_IsSet => _DATALocation.HasValue;
-        public Single ForwardPhase => _ForwardPhase_IsSet ? _data.Slice(_ForwardPhaseLocation, 4).Float() : default;
+        public Single ForwardPhase => _ForwardPhase_IsSet ? _recordData.Slice(_ForwardPhaseLocation, 4).Float() : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1957,10 +1957,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected GodRaysBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1972,13 +1972,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new GodRaysBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

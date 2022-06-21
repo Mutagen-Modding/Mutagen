@@ -1224,10 +1224,10 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single Frequency => _data.Slice(0x0, 0x4).Float();
-        public Single MinWeakDistance => _data.Slice(0x4, 0x4).Float();
-        public Single MaxWeakDistance => _data.Slice(0x8, 0x4).Float();
-        public PlacedObjectRadio.Flag Flags => (PlacedObjectRadio.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public Single Frequency => _structData.Slice(0x0, 0x4).Float();
+        public Single MinWeakDistance => _structData.Slice(0x4, 0x4).Float();
+        public Single MaxWeakDistance => _structData.Slice(0x8, 0x4).Float();
+        public PlacedObjectRadio.Flag Flags => (PlacedObjectRadio.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1235,10 +1235,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected PlacedObjectRadioBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1249,11 +1249,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PlacedObjectRadioBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

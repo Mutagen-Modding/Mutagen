@@ -1326,10 +1326,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Boolean Enabled => _data.Slice(0x0, 0x1)[0] >= 1;
-        public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x1), _package), _package, default(TypedParseParams));
-        public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
-        public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x9), _package), _package, default(TypedParseParams));
+        public Boolean Enabled => _structData.Slice(0x0, 0x1)[0] >= 1;
+        public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(_structData.Slice(0x1), _package, default(TypedParseParams));
+        public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x5, 0x4))));
+        public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(_structData.Slice(0x9), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1337,10 +1337,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected FurnitureMarkerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1351,10 +1351,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xD,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new FurnitureMarkerBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xD),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xD;
             ret.CustomFactoryEnd(
                 stream: stream,

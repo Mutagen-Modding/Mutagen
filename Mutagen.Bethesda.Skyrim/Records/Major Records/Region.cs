@@ -191,16 +191,16 @@ partial class RegionBinaryOverlay : IRegionGetter
         switch (dataType)
         {
             case RegionData.RegionDataType.Object:
-                _ObjectsSpan = this._data.Slice(loc, len);
+                _ObjectsSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Map:
-                _MapSpan = this._data.Slice(loc, len);
+                _MapSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Grass:
-                _GrassesSpan = this._data.Slice(loc, len);
+                _GrassesSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Land:
-                _LandSpan = this._data.Slice(loc, len);
+                _LandSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Sound:
                 if (stream.TryGetSubrecordHeader(out var nextRec)
@@ -209,10 +209,10 @@ partial class RegionBinaryOverlay : IRegionGetter
                 {
                     len += nextRec.TotalLength;
                 }
-                _SoundsSpan = this._data.Slice(loc, len);
+                _SoundsSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Weather:
-                _WeatherSpan = this._data.Slice(loc, len);
+                _WeatherSpan = _recordData.Slice(loc, len);
                 break;
             default:
                 throw new NotImplementedException();

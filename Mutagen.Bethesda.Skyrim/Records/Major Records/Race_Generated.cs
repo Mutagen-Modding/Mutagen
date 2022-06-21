@@ -8145,7 +8145,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -8157,12 +8157,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region BodyTemplate
         partial void BodyTemplateCustomParse(
@@ -8181,49 +8181,49 @@ namespace Mutagen.Bethesda.Skyrim
         #region SkillBoost0
         private int _SkillBoost0Location => _DATALocation!.Value.Min;
         private bool _SkillBoost0_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost0Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost0Location), _package) : default;
         public ISkillBoostGetter SkillBoost0 => _SkillBoost0 ?? new SkillBoost();
         #endregion
         #region SkillBoost1
         private int _SkillBoost1Location => _DATALocation!.Value.Min + 0x2;
         private bool _SkillBoost1_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost1Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost1Location), _package) : default;
         public ISkillBoostGetter SkillBoost1 => _SkillBoost1 ?? new SkillBoost();
         #endregion
         #region SkillBoost2
         private int _SkillBoost2Location => _DATALocation!.Value.Min + 0x4;
         private bool _SkillBoost2_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost2Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost2Location), _package) : default;
         public ISkillBoostGetter SkillBoost2 => _SkillBoost2 ?? new SkillBoost();
         #endregion
         #region SkillBoost3
         private int _SkillBoost3Location => _DATALocation!.Value.Min + 0x6;
         private bool _SkillBoost3_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost3Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost3Location), _package) : default;
         public ISkillBoostGetter SkillBoost3 => _SkillBoost3 ?? new SkillBoost();
         #endregion
         #region SkillBoost4
         private int _SkillBoost4Location => _DATALocation!.Value.Min + 0x8;
         private bool _SkillBoost4_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost4Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost4Location), _package) : default;
         public ISkillBoostGetter SkillBoost4 => _SkillBoost4 ?? new SkillBoost();
         #endregion
         #region SkillBoost5
         private int _SkillBoost5Location => _DATALocation!.Value.Min + 0xA;
         private bool _SkillBoost5_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost5Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost5Location), _package) : default;
         public ISkillBoostGetter SkillBoost5 => _SkillBoost5 ?? new SkillBoost();
         #endregion
         #region SkillBoost6
         private int _SkillBoost6Location => _DATALocation!.Value.Min + 0xC;
         private bool _SkillBoost6_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost6Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost6Location), _package) : default;
         public ISkillBoostGetter SkillBoost6 => _SkillBoost6 ?? new SkillBoost();
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0xE;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region Height
         private int _HeightLocation => _DATALocation!.Value.Min + 0x10;
@@ -8233,7 +8233,7 @@ namespace Mutagen.Bethesda.Skyrim
             get
             {
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Slice(_HeightLocation);
+                var data = _recordData.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -8248,7 +8248,7 @@ namespace Mutagen.Bethesda.Skyrim
             get
             {
                 if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Slice(_WeightLocation);
+                var data = _recordData.Slice(_WeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -8264,97 +8264,97 @@ namespace Mutagen.Bethesda.Skyrim
         private int _StartingLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Starting_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Single> Starting => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StartingLocation), _package.MetaData)),
+            new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_StartingLocation), _package.MetaData)),
             new Dictionary<BasicStat, Single>(),
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region BaseCarryWeight
         private int _BaseCarryWeightLocation => _DATALocation!.Value.Min + 0x30;
         private bool _BaseCarryWeight_IsSet => _DATALocation.HasValue;
-        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _data.Slice(_BaseCarryWeightLocation, 4).Float() : default;
+        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _recordData.Slice(_BaseCarryWeightLocation, 4).Float() : default;
         #endregion
         #region BaseMass
         private int _BaseMassLocation => _DATALocation!.Value.Min + 0x34;
         private bool _BaseMass_IsSet => _DATALocation.HasValue;
-        public Single BaseMass => _BaseMass_IsSet ? _data.Slice(_BaseMassLocation, 4).Float() : default;
+        public Single BaseMass => _BaseMass_IsSet ? _recordData.Slice(_BaseMassLocation, 4).Float() : default;
         #endregion
         #region AccelerationRate
         private int _AccelerationRateLocation => _DATALocation!.Value.Min + 0x38;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AccelerationRate => _AccelerationRate_IsSet ? _data.Slice(_AccelerationRateLocation, 4).Float() : default;
+        public Single AccelerationRate => _AccelerationRate_IsSet ? _recordData.Slice(_AccelerationRateLocation, 4).Float() : default;
         #endregion
         #region DecelerationRate
         private int _DecelerationRateLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
-        public Single DecelerationRate => _DecelerationRate_IsSet ? _data.Slice(_DecelerationRateLocation, 4).Float() : default;
+        public Single DecelerationRate => _DecelerationRate_IsSet ? _recordData.Slice(_DecelerationRateLocation, 4).Float() : default;
         #endregion
         #region Size
         private int _SizeLocation => _DATALocation!.Value.Min + 0x40;
         private bool _Size_IsSet => _DATALocation.HasValue;
-        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SizeLocation, 0x4)) : default;
+        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default;
         #endregion
         #region HeadBipedObject
         private int _HeadBipedObjectLocation => _DATALocation!.Value.Min + 0x44;
         private bool _HeadBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject HeadBipedObject => _HeadBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_HeadBipedObjectLocation, 0x4)) : default;
+        public BipedObject HeadBipedObject => _HeadBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_HeadBipedObjectLocation, 0x4)) : default;
         #endregion
         #region HairBipedObject
         private int _HairBipedObjectLocation => _DATALocation!.Value.Min + 0x48;
         private bool _HairBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject HairBipedObject => _HairBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_HairBipedObjectLocation, 0x4)) : default;
+        public BipedObject HairBipedObject => _HairBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_HairBipedObjectLocation, 0x4)) : default;
         #endregion
         #region InjuredHealthPercent
         private int _InjuredHealthPercentLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
-        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _data.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
+        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _recordData.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
         #endregion
         #region ShieldBipedObject
         private int _ShieldBipedObjectLocation => _DATALocation!.Value.Min + 0x50;
         private bool _ShieldBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
+        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
         #endregion
         #region Regen
         private int _RegenLocation => _DATALocation!.Value.Min + 0x54;
         private bool _Regen_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Single> Regen => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_RegenLocation), _package.MetaData)),
+            new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_RegenLocation), _package.MetaData)),
             new Dictionary<BasicStat, Single>(),
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region UnarmedDamage
         private int _UnarmedDamageLocation => _DATALocation!.Value.Min + 0x60;
         private bool _UnarmedDamage_IsSet => _DATALocation.HasValue;
-        public Single UnarmedDamage => _UnarmedDamage_IsSet ? _data.Slice(_UnarmedDamageLocation, 4).Float() : default;
+        public Single UnarmedDamage => _UnarmedDamage_IsSet ? _recordData.Slice(_UnarmedDamageLocation, 4).Float() : default;
         #endregion
         #region UnarmedReach
         private int _UnarmedReachLocation => _DATALocation!.Value.Min + 0x64;
         private bool _UnarmedReach_IsSet => _DATALocation.HasValue;
-        public Single UnarmedReach => _UnarmedReach_IsSet ? _data.Slice(_UnarmedReachLocation, 4).Float() : default;
+        public Single UnarmedReach => _UnarmedReach_IsSet ? _recordData.Slice(_UnarmedReachLocation, 4).Float() : default;
         #endregion
         #region BodyBipedObject
         private int _BodyBipedObjectLocation => _DATALocation!.Value.Min + 0x68;
         private bool _BodyBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
+        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
         #endregion
         #region AimAngleTolerance
         private int _AimAngleToleranceLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
-        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _data.Slice(_AimAngleToleranceLocation, 4).Float() : default;
+        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _recordData.Slice(_AimAngleToleranceLocation, 4).Float() : default;
         #endregion
         #region FlightRadius
         private int _FlightRadiusLocation => _DATALocation!.Value.Min + 0x70;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
-        public Single FlightRadius => _FlightRadius_IsSet ? _data.Slice(_FlightRadiusLocation, 4).Float() : default;
+        public Single FlightRadius => _FlightRadius_IsSet ? _recordData.Slice(_FlightRadiusLocation, 4).Float() : default;
         #endregion
         #region AngularAccelerationRate
         private int _AngularAccelerationRateLocation => _DATALocation!.Value.Min + 0x74;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _data.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
+        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _recordData.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
         #endregion
         #region AngularTolerance
         private int _AngularToleranceLocation => _DATALocation!.Value.Min + 0x78;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
-        public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
+        public Single AngularTolerance => _AngularTolerance_IsSet ? _recordData.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
         private int _Flags2Location => _DATALocation!.Value.Min + 0x7C;
@@ -8366,7 +8366,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MountData
         private int _MountDataLocation => _DATALocation!.Value.Min + 0x80;
         private bool _MountData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Race.DATADataType.Break0);
-        private IMountDataGetter? _MountData => _MountData_IsSet ? MountDataBinaryOverlay.MountDataFactory(new OverlayStream(_data.Slice(_MountDataLocation), _package), _package) : default;
+        private IMountDataGetter? _MountData => _MountData_IsSet ? MountDataBinaryOverlay.MountDataFactory(_recordData.Slice(_MountDataLocation), _package) : default;
         public IMountDataGetter MountData => _MountData ?? new MountData();
         #endregion
         #region SkeletalModel
@@ -8381,7 +8381,7 @@ namespace Mutagen.Bethesda.Skyrim
             get
             {
                 if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _VoicesLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
                     new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -8395,7 +8395,7 @@ namespace Mutagen.Bethesda.Skyrim
             get
             {
                 if (!_DecapitateArmorsLocation.HasValue) return default;
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DecapitateArmorsLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DecapitateArmorsLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IArmorGetter>>(
                     new FormLink<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -8409,7 +8409,7 @@ namespace Mutagen.Bethesda.Skyrim
             get
             {
                 if (!_DefaultHairColorsLocation.HasValue) return default;
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IColorRecordGetter>>(
                     new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -8418,19 +8418,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NumberOfTintsInList
         private int? _NumberOfTintsInListLocation;
-        public UInt16? NumberOfTintsInList => _NumberOfTintsInListLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NumberOfTintsInListLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16? NumberOfTintsInList => _NumberOfTintsInListLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NumberOfTintsInListLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region FacegenMainClamp
         private int? _FacegenMainClampLocation;
-        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region FacegenFaceClamp
         private int? _FacegenFaceClampLocation;
-        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region BodyData
@@ -8441,7 +8441,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IEyesGetter>>? Eyes { get; private set; }
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
         #endregion
         #region ExtraNAM2
         partial void ExtraNAM2CustomParse(
@@ -8455,33 +8455,33 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region DecapitationFX
         private int? _DecapitationFXLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> DecapitationFX => _DecapitationFXLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DecapitationFXLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> DecapitationFX => _DecapitationFXLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DecapitationFXLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
         #region OpenLootSound
         private int? _OpenLootSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenLootSound => _OpenLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenLootSound => _OpenLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpenLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region CloseLootSound
         private int? _CloseLootSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseLootSound => _CloseLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseLootSound => _CloseLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CloseLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = Array.Empty<IRaceMovementTypeGetter>();
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
-        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
+        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; private set; } = Array.Empty<IFormLinkGetter<IEquipTypeGetter>>();
         #region UnarmedEquipSlot
         private int? _UnarmedEquipSlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => _UnarmedEquipSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnarmedEquipSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => _UnarmedEquipSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnarmedEquipSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region FaceFxPhonemesListingParsing
         public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
@@ -8495,27 +8495,27 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region BaseMovementDefaultWalk
         private int? _BaseMovementDefaultWalkLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultWalk => _BaseMovementDefaultWalkLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultWalkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultWalk => _BaseMovementDefaultWalkLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultWalkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultRun
         private int? _BaseMovementDefaultRunLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultRun => _BaseMovementDefaultRunLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultRunLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultRun => _BaseMovementDefaultRunLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultRunLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSwim
         private int? _BaseMovementDefaultSwimLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultFly
         private int? _BaseMovementDefaultFlyLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSneak
         private int? _BaseMovementDefaultSneakLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSprint
         private int? _BaseMovementDefaultSprintLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint => _BaseMovementDefaultSprintLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSprintLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint => _BaseMovementDefaultSprintLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSprintLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region HeadData
         private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
@@ -8523,11 +8523,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MorphRace
         private int? _MorphRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -8536,10 +8536,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected RaceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -8551,13 +8551,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RaceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -8648,7 +8651,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x80)
                     {
                         this.DATADataTypeState |= Race.DATADataType.Break0;

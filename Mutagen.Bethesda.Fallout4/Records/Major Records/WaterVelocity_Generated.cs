@@ -1359,11 +1359,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public WaterVelocity.VersioningBreaks Versioning { get; private set; }
-        public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
-        public P3Float Angle => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x10, 0xC));
-        public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x1C, 0x14).ToArray();
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _data.Span.Slice(0x30, 0x10).ToArray();
+        public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public P3Float Angle => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x10, 0xC));
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _structData.Span.Slice(0x1C, 0x14).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _structData.Span.Slice(0x30, 0x10).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1371,10 +1371,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected WaterVelocityBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1385,12 +1385,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x40,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WaterVelocityBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x30)
+            if (ret._structData.Length <= 0x30)
             {
                 ret.Versioning |= WaterVelocity.VersioningBreaks.Break0;
             }

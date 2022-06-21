@@ -1203,10 +1203,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Single Sunrise => _data.Slice(0x0, 0x4).Float();
-        public Single Day => _data.Slice(0x4, 0x4).Float();
-        public Single Sunset => _data.Slice(0x8, 0x4).Float();
-        public Single Night => _data.Slice(0xC, 0x4).Float();
+        public Single Sunrise => _structData.Slice(0x0, 0x4).Float();
+        public Single Day => _structData.Slice(0x4, 0x4).Float();
+        public Single Sunset => _structData.Slice(0x8, 0x4).Float();
+        public Single Night => _structData.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1214,10 +1214,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected WeatherAlphaBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1228,10 +1228,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherAlphaBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x10),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,

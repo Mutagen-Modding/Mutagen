@@ -1498,7 +1498,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -1507,11 +1507,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IMorphPresetGetter>? MorphPresets { get; private set; }
         #region UnknownMPPK
         private int? _UnknownMPPKLocation;
-        public ReadOnlyMemorySlice<Byte>? UnknownMPPK => _UnknownMPPKLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownMPPKLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? UnknownMPPK => _UnknownMPPKLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnknownMPPKLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region UnknownMPGS
         private int? _UnknownMPGSLocation;
-        public ReadOnlyMemorySlice<Byte>? UnknownMPGS => _UnknownMPGSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownMPGSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? UnknownMPGS => _UnknownMPGSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnknownMPGSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1520,10 +1520,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected MorphGroupBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1534,10 +1534,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MorphGroupBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

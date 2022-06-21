@@ -1404,8 +1404,8 @@ namespace Mutagen.Bethesda.Fallout4
         protected int PropertyEndingPos;
         partial void CustomPropertyEndPos();
         #endregion
-        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(PropertyEndingPos, 0x2));
-        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(PropertyEndingPos + 0x2, 0x2));
+        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(PropertyEndingPos, 0x2));
+        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(PropertyEndingPos + 0x2, 0x2));
         #region Scripts
         protected int ScriptsEndingPos;
         partial void CustomScriptsEndPos();
@@ -1417,10 +1417,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected QuestFragmentAliasBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1431,10 +1431,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestFragmentAliasBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.CustomScriptsEndPos();
             stream.Position += ret.ScriptsEndingPos;
             ret.CustomFactoryEnd(

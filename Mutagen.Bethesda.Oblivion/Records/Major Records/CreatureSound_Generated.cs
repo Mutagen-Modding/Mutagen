@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region SoundType
         private int? _SoundTypeLocation;
-        public CreatureSound.CreatureSoundType? SoundType => _SoundTypeLocation.HasValue ? (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundTypeLocation!.Value, _package.MetaData.Constants)) : default(CreatureSound.CreatureSoundType?);
+        public CreatureSound.CreatureSoundType? SoundType => _SoundTypeLocation.HasValue ? (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundTypeLocation!.Value, _package.MetaData.Constants)) : default(CreatureSound.CreatureSoundType?);
         #endregion
         public IReadOnlyList<ISoundItemGetter> Sounds { get; private set; } = Array.Empty<ISoundItemGetter>();
         partial void CustomFactoryEnd(
@@ -1293,10 +1293,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected CreatureSoundBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1307,10 +1307,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CreatureSoundBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

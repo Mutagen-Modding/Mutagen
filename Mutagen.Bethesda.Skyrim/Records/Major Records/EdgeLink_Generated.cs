@@ -1162,9 +1162,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLinkGetter<INavigationMeshGetter> Mesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public IFormLinkGetter<INavigationMeshGetter> Mesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1172,10 +1172,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected EdgeLinkBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1186,10 +1186,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xA,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new EdgeLinkBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xA),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xA;
             ret.CustomFactoryEnd(
                 stream: stream,

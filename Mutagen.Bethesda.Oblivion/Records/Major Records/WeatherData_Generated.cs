@@ -1699,19 +1699,19 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Byte WindSpeed => _data.Span[0x0];
-        public Byte CloudSpeedLower => _data.Span[0x1];
-        public Byte CloudSpeedUpper => _data.Span[0x2];
-        public Byte TransDelta => _data.Span[0x3];
-        public Byte SunGlare => _data.Span[0x4];
-        public Byte SunDamage => _data.Span[0x5];
-        public Byte PrecipitationBeginFadeIn => _data.Span[0x6];
-        public Byte PrecipitationEndFadeOut => _data.Span[0x7];
-        public Byte ThunderLightningBeginFadeIn => _data.Span[0x8];
-        public Byte ThunderLightningEndFadeOut => _data.Span[0x9];
-        public Byte ThunderLightningFrequency => _data.Span[0xA];
-        public Weather.WeatherClassification Classification => (Weather.WeatherClassification)_data.Span.Slice(0xB, 0x1)[0];
-        public Color LightningColor => _data.Slice(0xC, 0x3).ReadColor(ColorBinaryType.NoAlpha);
+        public Byte WindSpeed => _structData.Span[0x0];
+        public Byte CloudSpeedLower => _structData.Span[0x1];
+        public Byte CloudSpeedUpper => _structData.Span[0x2];
+        public Byte TransDelta => _structData.Span[0x3];
+        public Byte SunGlare => _structData.Span[0x4];
+        public Byte SunDamage => _structData.Span[0x5];
+        public Byte PrecipitationBeginFadeIn => _structData.Span[0x6];
+        public Byte PrecipitationEndFadeOut => _structData.Span[0x7];
+        public Byte ThunderLightningBeginFadeIn => _structData.Span[0x8];
+        public Byte ThunderLightningEndFadeOut => _structData.Span[0x9];
+        public Byte ThunderLightningFrequency => _structData.Span[0xA];
+        public Weather.WeatherClassification Classification => (Weather.WeatherClassification)_structData.Span.Slice(0xB, 0x1)[0];
+        public Color LightningColor => _structData.Slice(0xC, 0x3).ReadColor(ColorBinaryType.NoAlpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1719,10 +1719,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected WeatherDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1733,11 +1733,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xF,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xF + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

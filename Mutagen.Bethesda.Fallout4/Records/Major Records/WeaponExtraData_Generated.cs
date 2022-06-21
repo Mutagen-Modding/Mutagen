@@ -1623,17 +1623,17 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single AnimationFireSeconds => _data.Slice(0x0, 0x4).Float();
-        public Single RumbleLeftMotorStrength => _data.Slice(0x4, 0x4).Float();
-        public Single RumbleRightMotorStrength => _data.Slice(0x8, 0x4).Float();
-        public Single RumbleDuration => _data.Slice(0xC, 0x4).Float();
-        public Single AnimationReloadSeconds => _data.Slice(0x10, 0x4).Float();
-        public Single BoltAnimSeconds => _data.Slice(0x14, 0x4).Float();
-        public Single SightedTransitionSeconds => _data.Slice(0x18, 0x4).Float();
-        public Byte NumProjectiles => _data.Span[0x1C];
-        public IFormLinkGetter<IProjectileGetter> ProjectileOverride => new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1D, 0x4))));
-        public Weapon.PatternType Pattern => (Weapon.PatternType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x21, 0x4));
-        public UInt32 RumblePeriodMs => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x25, 0x4));
+        public Single AnimationFireSeconds => _structData.Slice(0x0, 0x4).Float();
+        public Single RumbleLeftMotorStrength => _structData.Slice(0x4, 0x4).Float();
+        public Single RumbleRightMotorStrength => _structData.Slice(0x8, 0x4).Float();
+        public Single RumbleDuration => _structData.Slice(0xC, 0x4).Float();
+        public Single AnimationReloadSeconds => _structData.Slice(0x10, 0x4).Float();
+        public Single BoltAnimSeconds => _structData.Slice(0x14, 0x4).Float();
+        public Single SightedTransitionSeconds => _structData.Slice(0x18, 0x4).Float();
+        public Byte NumProjectiles => _structData.Span[0x1C];
+        public IFormLinkGetter<IProjectileGetter> ProjectileOverride => new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1D, 0x4))));
+        public Weapon.PatternType Pattern => (Weapon.PatternType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x21, 0x4));
+        public UInt32 RumblePeriodMs => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x25, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1641,10 +1641,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected WeaponExtraDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1655,11 +1655,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x29,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeaponExtraDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x29 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

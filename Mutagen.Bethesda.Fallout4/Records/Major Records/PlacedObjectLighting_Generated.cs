@@ -1410,12 +1410,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public PlacedObjectLighting.VersioningBreaks Versioning { get; private set; }
-        public Single Fov90PlusMinus => _data.Slice(0x0, 0x4).Float();
-        public Single Fade1PlusMinus => _data.Slice(0x4, 0x4).Float();
-        public Single EndDistanceCap => _data.Slice(0x8, 0x4).Float();
-        public Single ShadowDepthBias => _data.Slice(0xC, 0x4).Float();
-        public Single NearClip => _data.Length <= 0x10 ? default : _data.Slice(0x10, 0x4).Float();
-        public Single VolumetricIntensity => _data.Length <= 0x14 ? default : _data.Slice(0x14, 0x4).Float();
+        public Single Fov90PlusMinus => _structData.Slice(0x0, 0x4).Float();
+        public Single Fade1PlusMinus => _structData.Slice(0x4, 0x4).Float();
+        public Single EndDistanceCap => _structData.Slice(0x8, 0x4).Float();
+        public Single ShadowDepthBias => _structData.Slice(0xC, 0x4).Float();
+        public Single NearClip => _structData.Length <= 0x10 ? default : _structData.Slice(0x10, 0x4).Float();
+        public Single VolumetricIntensity => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1423,10 +1423,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected PlacedObjectLightingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1437,16 +1437,21 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x18,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PlacedObjectLightingBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x10)
+            if (ret._structData.Length <= 0x10)
             {
                 ret.Versioning |= PlacedObjectLighting.VersioningBreaks.Break0;
             }
-            if (ret._data.Length <= 0x14)
+            if (ret._structData.Length <= 0x14)
             {
                 ret.Versioning |= PlacedObjectLighting.VersioningBreaks.Break1;
             }

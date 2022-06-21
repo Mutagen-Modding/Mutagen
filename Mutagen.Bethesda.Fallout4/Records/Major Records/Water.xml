@@ -14,7 +14,7 @@
       <Data recordType="DNAM">
         <Fields>
           <Float name="FogDepthAmount" />
-          <Color name="FogShallowColor" binaryType="Alpha" />
+          <Color name="FogShallowCo_rlor" binaryType="Alpha" />
           <Color name="FogDeepColor" binaryType="Alpha" />
           <Float name="FogColorShallowRange" />
           <Float name="FogColorDeepRange" />

@@ -1153,13 +1153,13 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Byte ExtraBindDataVersion => _data.Span[0x0];
+        public Byte ExtraBindDataVersion => _structData.Span[0x0];
         #region ScriptName
-        public String ScriptName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x1), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
+        public String ScriptName => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x1), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int ScriptNameEndingPos;
         #endregion
         #region FragmentName
-        public String FragmentName => BinaryStringUtility.ParsePrependedString(_data.Slice(ScriptNameEndingPos), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
+        public String FragmentName => BinaryStringUtility.ParsePrependedString(_structData.Slice(ScriptNameEndingPos), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int FragmentNameEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1169,10 +1169,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ScriptFragmentBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1183,12 +1183,18 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ScriptFragmentBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.ScriptNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(0x1)) + 2;
-            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(ret.ScriptNameEndingPos)) + 2;
+            ret.ScriptNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x1)) + 2;
+            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
             stream.Position += ret.FragmentNameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

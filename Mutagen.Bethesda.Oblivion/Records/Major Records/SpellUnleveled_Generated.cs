@@ -1738,7 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Data
         private RangeInt32? _DataLocation;
-        public ISpellDataGetter? Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public ISpellDataGetter? Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
@@ -1748,10 +1748,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected SpellUnleveledBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1763,13 +1763,16 @@ namespace Mutagen.Bethesda.Oblivion
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SpellUnleveledBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

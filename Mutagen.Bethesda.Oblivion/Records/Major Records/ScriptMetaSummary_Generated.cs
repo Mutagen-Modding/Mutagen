@@ -1286,14 +1286,14 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         #region CompiledSize
         public partial Int32 GetCompiledSizeCustom(int location);
         public Int32 CompiledSize => GetCompiledSizeCustom(location: 0x8);
         #endregion
-        public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
-        public ScriptFields.ScriptType Type => (ScriptFields.ScriptType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
+        public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public ScriptFields.ScriptType Type => (ScriptFields.ScriptType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1301,10 +1301,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected ScriptMetaSummaryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1315,11 +1315,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ScriptMetaSummaryBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

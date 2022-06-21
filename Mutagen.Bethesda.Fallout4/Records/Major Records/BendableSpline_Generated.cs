@@ -1968,43 +1968,43 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         #endregion
         private RangeInt32? _DNAMLocation;
         public BendableSpline.DNAMDataType DNAMDataTypeState { get; private set; }
         #region DefaultNumberOfTiles
         private int _DefaultNumberOfTilesLocation => _DNAMLocation!.Value.Min;
         private bool _DefaultNumberOfTiles_IsSet => _DNAMLocation.HasValue;
-        public Single DefaultNumberOfTiles => _DefaultNumberOfTiles_IsSet ? _data.Slice(_DefaultNumberOfTilesLocation, 4).Float() : default;
+        public Single DefaultNumberOfTiles => _DefaultNumberOfTiles_IsSet ? _recordData.Slice(_DefaultNumberOfTilesLocation, 4).Float() : default;
         #endregion
         #region DefaultNumberOfSlices
         private int _DefaultNumberOfSlicesLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _DefaultNumberOfSlices_IsSet => _DNAMLocation.HasValue;
-        public UInt16 DefaultNumberOfSlices => _DefaultNumberOfSlices_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DefaultNumberOfSlicesLocation, 2)) : default;
+        public UInt16 DefaultNumberOfSlices => _DefaultNumberOfSlices_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfSlicesLocation, 2)) : default;
         #endregion
         #region DefaultNumberOfTilesIsRelativeToLength
         private int _DefaultNumberOfTilesIsRelativeToLengthLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _DefaultNumberOfTilesIsRelativeToLength_IsSet => _DNAMLocation.HasValue;
-        public Boolean DefaultNumberOfTilesIsRelativeToLength => _DefaultNumberOfTilesIsRelativeToLength_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DefaultNumberOfTilesIsRelativeToLengthLocation, 2)) >= 1 : default;
+        public Boolean DefaultNumberOfTilesIsRelativeToLength => _DefaultNumberOfTilesIsRelativeToLength_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfTilesIsRelativeToLengthLocation, 2)) >= 1 : default;
         #endregion
         #region DefaultColor
         private int _DefaultColorLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _DefaultColor_IsSet => _DNAMLocation.HasValue;
-        public Color DefaultColor => _DefaultColor_IsSet ? _data.Slice(_DefaultColorLocation, 16).ReadColor(ColorBinaryType.AlphaFloat) : default;
+        public Color DefaultColor => _DefaultColor_IsSet ? _recordData.Slice(_DefaultColorLocation, 16).ReadColor(ColorBinaryType.AlphaFloat) : default;
         #endregion
         #region WindSensibility
         private int _WindSensibilityLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _WindSensibility_IsSet => _DNAMLocation.HasValue;
-        public Single WindSensibility => _WindSensibility_IsSet ? _data.Slice(_WindSensibilityLocation, 4).Float() : default;
+        public Single WindSensibility => _WindSensibility_IsSet ? _recordData.Slice(_WindSensibilityLocation, 4).Float() : default;
         #endregion
         #region WindFlexibility
         private int _WindFlexibilityLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _WindFlexibility_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(BendableSpline.DNAMDataType.Break0);
-        public Single WindFlexibility => _WindFlexibility_IsSet ? _data.Slice(_WindFlexibilityLocation, 4).Float() : default;
+        public Single WindFlexibility => _WindFlexibility_IsSet ? _recordData.Slice(_WindFlexibilityLocation, 4).Float() : default;
         #endregion
         #region Texture
         private int? _TextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> Texture => _TextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> Texture => _TextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2013,10 +2013,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected BendableSplineBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2028,13 +2028,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new BendableSplineBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2080,7 +2083,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x1C)
                     {
                         this.DNAMDataTypeState |= BendableSpline.DNAMDataType.Break0;

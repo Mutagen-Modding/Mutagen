@@ -99,7 +99,7 @@ partial class ColorRecordBinaryOverlay
             {
                 throw new MalformedDataException("Did not find expected FNAM subrecord");
             }
-            return BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _fnamLocation.Value, _package.MetaData));
+            return BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _fnamLocation.Value, _package.MetaData));
         }
     }
 
@@ -110,7 +110,7 @@ partial class ColorRecordBinaryOverlay
             throw new MalformedDataException("Did not find expected CNAM subrecord");
         }
 
-        var cnamMem = HeaderTranslation.ExtractSubrecordMemory(_data, _cnamLocation.Value, _package.MetaData);
+        var cnamMem = HeaderTranslation.ExtractSubrecordMemory(_recordData, _cnamLocation.Value, _package.MetaData);
 
         var flag = RawFlag;
         if (EnumExt.HasFlag(flag, ColorRecordBinaryCreateTranslation.RemappingIndexFlag))

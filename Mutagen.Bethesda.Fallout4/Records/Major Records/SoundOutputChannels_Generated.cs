@@ -1257,9 +1257,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public ISoundOutputChannelGetter Channel0 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(TypedParseParams));
-        public ISoundOutputChannelGetter Channel1 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(TypedParseParams));
-        public ISoundOutputChannelGetter Channel2 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x10), _package), _package, default(TypedParseParams));
+        public ISoundOutputChannelGetter Channel0 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(_structData, _package, default(TypedParseParams));
+        public ISoundOutputChannelGetter Channel1 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(_structData.Slice(0x8), _package, default(TypedParseParams));
+        public ISoundOutputChannelGetter Channel2 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(_structData.Slice(0x10), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1267,10 +1267,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SoundOutputChannelsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1281,11 +1281,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x18,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundOutputChannelsBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

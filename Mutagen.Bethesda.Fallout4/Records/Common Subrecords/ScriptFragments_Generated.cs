@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Byte ExtraBindDataVersion => _data.Span[0x0];
+        public Byte ExtraBindDataVersion => _structData.Span[0x0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1348,10 +1348,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ScriptFragmentsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1362,10 +1362,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x1,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ScriptFragmentsBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x1),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x1;
             ret.CustomFactoryEnd(
                 stream: stream,

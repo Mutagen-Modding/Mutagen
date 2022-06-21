@@ -239,8 +239,8 @@ partial class ObjectTemplateBinaryWriteTranslation
 partial class ObjectTemplateBinaryOverlay<T>
 {
     private int? _obtsLoc;
-    private uint _includeCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_obtsLoc!.Value));
-    private uint _propertyCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_obtsLoc!.Value + 4));
+    private uint _includeCount => BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_obtsLoc!.Value));
+    private uint _propertyCount => BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_obtsLoc!.Value + 4));
     private byte? _keywordCount;
     private int? _postKeywordLoc;
     private int IncludeLoc => _postKeywordLoc!.Value + 2;
@@ -248,37 +248,37 @@ partial class ObjectTemplateBinaryOverlay<T>
     public partial ParseResult OBTSLogicCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         _obtsLoc = (stream.Position - offset) + stream.MetaData.Constants.SubConstants.HeaderLength;
-        _keywordCount = _data[_obtsLoc.Value + 15];
+        _keywordCount = _recordData[_obtsLoc.Value + 15];
         stream.ReadSubrecord(RecordTypes.OBTS);
         Keywords = BinaryOverlayList.FactoryByStartIndex(
-            _data.Slice(_obtsLoc.Value + 16, _keywordCount!.Value * 4),
+            _recordData.Slice(_obtsLoc.Value + 16, _keywordCount!.Value * 4),
             _package,
             itemLength: 4,
             getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         _postKeywordLoc = _obtsLoc!.Value + 16 + (4 * _keywordCount!.Value);
         var includeLen = checked((int)(7 * _includeCount));
         Includes = BinaryOverlayList.FactoryByStartIndex(
-            _data.Slice(IncludeLoc, includeLen),
+            _recordData.Slice(IncludeLoc, includeLen),
             _package,
             itemLength: 7,
             getter: (s, p) => ObjectTemplateIncludeBinaryOverlay.ObjectTemplateIncludeFactory(s, p));
         var propLen = checked((int)(24 * _propertyCount));
         Properties = BinaryOverlayList.FactoryByStartIndex(
-            _data.Slice(IncludeLoc + includeLen, propLen),
+            _recordData.Slice(IncludeLoc + includeLen, propLen),
             _package,
             itemLength: 24,
             getter: (s, p) => ObjectTemplateBinaryCreateTranslation<T>.ReadProperty(stream.MetaData.MasterReferences, s));
         return (int)ObjectTemplate_FieldIndex.Properties;
     }
 
-    public byte LevelMin => _data[_obtsLoc!.Value + 8];
-    public byte LevelMax => _data[_obtsLoc!.Value + 10];
-    public short AddonIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_obtsLoc!.Value + 12));
-    public bool Default => _data[_obtsLoc!.Value + 14] > 0;
+    public byte LevelMin => _recordData[_obtsLoc!.Value + 8];
+    public byte LevelMax => _recordData[_obtsLoc!.Value + 10];
+    public short AddonIndex => BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_obtsLoc!.Value + 12));
+    public bool Default => _recordData[_obtsLoc!.Value + 14] > 0;
     public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = null!;
     IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => Keywords;
-    public byte MinLevelForRanks => _data[_postKeywordLoc!.Value];
-    public byte AltLevelsPerTier => _data[_postKeywordLoc!.Value + 1];
+    public byte MinLevelForRanks => _recordData[_postKeywordLoc!.Value];
+    public byte AltLevelsPerTier => _recordData[_postKeywordLoc!.Value + 1];
     public IReadOnlyList<IObjectTemplateIncludeGetter> Includes { get; private set; } = null!;
     public IReadOnlyList<IAObjectModPropertyGetter<T>> Properties { get; private set; } = null!;
 }

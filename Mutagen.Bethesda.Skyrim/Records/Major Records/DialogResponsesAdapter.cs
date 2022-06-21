@@ -23,9 +23,9 @@ partial class DialogResponsesAdapterBinaryOverlay
 {
     public partial IScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
     {
-        if (this.ScriptsEndingPos == _data.Length) return null;
+        if (ScriptsEndingPos == _structData.Length) return null;
         return ScriptFragmentsBinaryOverlay.ScriptFragmentsFactory(
-            _data.Slice(this.ScriptsEndingPos),
+            _structData.Slice(ScriptsEndingPos),
             _package);
     }
 }

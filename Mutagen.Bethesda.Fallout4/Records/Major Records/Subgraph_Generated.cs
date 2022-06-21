@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region BehaviorGraph
         private int? _BehaviorGraphLocation;
-        public String? BehaviorGraph => _BehaviorGraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? BehaviorGraph => _BehaviorGraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> ActorKeywords { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> TargetKeywords { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
@@ -1789,10 +1789,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SubgraphBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1803,10 +1803,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SubgraphBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

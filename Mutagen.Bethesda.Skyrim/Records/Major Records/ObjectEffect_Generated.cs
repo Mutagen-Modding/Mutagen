@@ -2384,12 +2384,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2404,47 +2404,47 @@ namespace Mutagen.Bethesda.Skyrim
         #region EnchantmentCost
         private int _EnchantmentCostLocation => _ENITLocation!.Value.Min;
         private bool _EnchantmentCost_IsSet => _ENITLocation.HasValue;
-        public UInt32 EnchantmentCost => _EnchantmentCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_EnchantmentCostLocation, 4)) : default;
+        public UInt32 EnchantmentCost => _EnchantmentCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_EnchantmentCostLocation, 4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _ENITLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _ENITLocation.HasValue;
-        public ObjectEffect.Flag Flags => _Flags_IsSet ? (ObjectEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public ObjectEffect.Flag Flags => _Flags_IsSet ? (ObjectEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region CastType
         private int _CastTypeLocation => _ENITLocation!.Value.Min + 0x8;
         private bool _CastType_IsSet => _ENITLocation.HasValue;
-        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default;
         #endregion
         #region EnchantmentAmount
         private int _EnchantmentAmountLocation => _ENITLocation!.Value.Min + 0xC;
         private bool _EnchantmentAmount_IsSet => _ENITLocation.HasValue;
-        public Int32 EnchantmentAmount => _EnchantmentAmount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_EnchantmentAmountLocation, 4)) : default;
+        public Int32 EnchantmentAmount => _EnchantmentAmount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnchantmentAmountLocation, 4)) : default;
         #endregion
         #region TargetType
         private int _TargetTypeLocation => _ENITLocation!.Value.Min + 0x10;
         private bool _TargetType_IsSet => _ENITLocation.HasValue;
-        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default;
         #endregion
         #region EnchantType
         private int _EnchantTypeLocation => _ENITLocation!.Value.Min + 0x14;
         private bool _EnchantType_IsSet => _ENITLocation.HasValue;
-        public ObjectEffect.EnchantTypeEnum EnchantType => _EnchantType_IsSet ? (ObjectEffect.EnchantTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EnchantTypeLocation, 0x4)) : default;
+        public ObjectEffect.EnchantTypeEnum EnchantType => _EnchantType_IsSet ? (ObjectEffect.EnchantTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EnchantTypeLocation, 0x4)) : default;
         #endregion
         #region ChargeTime
         private int _ChargeTimeLocation => _ENITLocation!.Value.Min + 0x18;
         private bool _ChargeTime_IsSet => _ENITLocation.HasValue;
-        public Single ChargeTime => _ChargeTime_IsSet ? _data.Slice(_ChargeTimeLocation, 4).Float() : default;
+        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default;
         #endregion
         #region BaseEnchantment
         private int _BaseEnchantmentLocation => _ENITLocation!.Value.Min + 0x1C;
         private bool _BaseEnchantment_IsSet => _ENITLocation.HasValue;
-        public IFormLinkGetter<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
+        public IFormLinkGetter<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
         #endregion
         #region WornRestrictions
         private int _WornRestrictionsLocation => _ENITLocation!.Value.Min + 0x20;
         private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
-        public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
+        public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
@@ -2454,10 +2454,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ObjectEffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2469,13 +2469,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ObjectEffectBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2526,7 +2529,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ENIT:
                 {
                     _ENITLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x20)
                     {
                         this.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;

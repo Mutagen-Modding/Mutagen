@@ -1206,15 +1206,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region ID
         private int? _IDLocation;
-        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IDLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public SceneActor.Flag Flags => _FlagsLocation.HasValue ? (SceneActor.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.Flag);
+        public SceneActor.Flag Flags => _FlagsLocation.HasValue ? (SceneActor.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.Flag);
         #endregion
         #region BehaviorFlags
         private int? _BehaviorFlagsLocation;
-        public SceneActor.BehaviorFlag BehaviorFlags => _BehaviorFlagsLocation.HasValue ? (SceneActor.BehaviorFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BehaviorFlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.BehaviorFlag);
+        public SceneActor.BehaviorFlag BehaviorFlags => _BehaviorFlagsLocation.HasValue ? (SceneActor.BehaviorFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorFlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.BehaviorFlag);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1223,10 +1223,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SceneActorBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1237,10 +1237,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SceneActorBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

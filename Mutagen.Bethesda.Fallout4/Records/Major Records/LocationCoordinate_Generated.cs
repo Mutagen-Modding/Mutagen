@@ -1231,9 +1231,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         #region Coordinates
-        public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s, swapCoords: true));
+        public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_structData.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s, swapCoords: true));
         protected int CoordinatesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1243,10 +1243,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected LocationCoordinateBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1257,11 +1257,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LocationCoordinateBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.CoordinatesEndingPos = ret._data.Length;
+            ret.CoordinatesEndingPos = ret._structData.Length;
             stream.Position += ret.CoordinatesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

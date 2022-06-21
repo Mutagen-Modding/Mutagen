@@ -1711,16 +1711,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public MagicEffectData.VersioningBreaks Versioning { get; private set; }
-        public MagicEffect.MagicFlag Flags => (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public Single BaseCost => _data.Slice(0x4, 0x4).Float();
-        public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
-        public Resistance Resistance => (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
-        public UInt32 CounterEffectCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public IFormLinkGetter<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x18, 0x4))));
-        public Single ProjectileSpeed => _data.Slice(0x1C, 0x4).Float();
-        public IFormLinkGetter<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x20, 0x4))));
-        public IMagicEffectSubDataGetter SubData => MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(new OverlayStream(_data.Slice(0x24), _package), _package, default(TypedParseParams));
+        public MagicEffect.MagicFlag Flags => (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public Single BaseCost => _structData.Slice(0x4, 0x4).Float();
+        public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
+        public Resistance Resistance => (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x10, 0x4));
+        public UInt32 CounterEffectCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public IFormLinkGetter<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
+        public Single ProjectileSpeed => _structData.Slice(0x1C, 0x4).Float();
+        public IFormLinkGetter<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x20, 0x4))));
+        public IMagicEffectSubDataGetter SubData => MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(_structData.Slice(0x24), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1728,10 +1728,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected MagicEffectDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1742,12 +1742,17 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x40,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new MagicEffectDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x24)
+            if (ret._structData.Length <= 0x24)
             {
                 ret.Versioning |= MagicEffectData.VersioningBreaks.Break0;
             }

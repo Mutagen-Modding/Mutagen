@@ -16,7 +16,8 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
         StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
-        Accessor dataAccessor, 
+        Accessor structDataAccessor,  
+        Accessor recordDataAccessor, 
         int? currentPosition,
         string passedLengthAccessor,
         DataType dataType = null)
@@ -25,7 +26,7 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
         var data = arr.GetFieldData();
         if (data.BinaryOverlayFallback != BinaryGenerationType.Normal)
         {
-            await base.GenerateWrapperFields(sb, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType);
+            await base.GenerateWrapperFields(sb, objGen, typeGen, structDataAccessor, recordDataAccessor, currentPosition, passedLengthAccessor, dataType);
             return;
         }
         var subGen = this.Module.GetTypeGeneration(arr.SubTypeGeneration.GetType());
@@ -37,12 +38,12 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
         {
             if (arr.SubTypeGeneration is EnumType e)
             {
-                sb.AppendLine($"public {arr.ListTypeName(getter: true, internalInterface: true)} {typeGen.Name} => {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.EnumSliceFromFixedSize)}<{arr.SubTypeGeneration.TypeName(getter: true)}>({dataAccessor}.Slice({passedLengthAccessor ?? "0x0"}), amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
+                sb.AppendLine($"public {arr.ListTypeName(getter: true, internalInterface: true)} {typeGen.Name} => {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.EnumSliceFromFixedSize)}<{arr.SubTypeGeneration.TypeName(getter: true)}>({structDataAccessor}.Slice({passedLengthAccessor ?? "0x0"}), amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
             }
             else if (arr.SubTypeGeneration is Loqui.Generation.FloatType f
                      && data.HasTrigger)
             {
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.FloatSliceFromFixedSize)}(HeaderTranslation.ExtractSubrecordMemory({dataAccessor}, _{typeGen.Name}Location.Value, _package.MetaData.Constants), amount: {arr.FixedSize.Value}) : {typeGen.GetDefault(getter: true)};");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.FloatSliceFromFixedSize)}(HeaderTranslation.ExtractSubrecordMemory({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.MetaData.Constants), amount: {arr.FixedSize.Value}) : {typeGen.GetDefault(getter: true)};");
             }
             else
             {

@@ -283,7 +283,8 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
-        Accessor dataAccessor,
+        Accessor structDataAccessor,  
+        Accessor recordDataAccessor, 
         int? currentPosition,
         string passedLengthAccessor,
         DataType dataType)
@@ -301,7 +302,6 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                     sb,
                     objGen,
                     typeGen,
-                    dataAccessor,
                     currentPosition,
                     passedLengthAccessor,
                     dataType);
@@ -359,7 +359,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                         sb.Append($"{typeGen.Name}");
                         sb.Append($" => _{typeGen.Name}Locations != null ? ");
                         sb.Append(
-                            $"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(_data, _{typeGen.Name}Locations, _package");
+                            $"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({recordDataAccessor}, _{typeGen.Name}Locations, _package");
                         if (!recConverter.StartsWith("default("))
                         {
                             sb.Append($", {recConverter}");
@@ -418,7 +418,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                         if (!severalSubTypes)
                         {
                             sb.Append($" => _{typeGen.Name}Location.HasValue ? ");
-                            sb.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}, _package), _package{(data.OverflowRecordType.HasValue ? $", {nameof(TypedParseParams)}.{nameof(TypedParseParams.FromLengthOverride)}(_{typeGen.Name}LengthOverride)" : null)}");
+                            sb.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({DataAccessor(recordDataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}, _package{(data.OverflowRecordType.HasValue ? $", {nameof(TypedParseParams)}.{nameof(TypedParseParams.FromLengthOverride)}(_{typeGen.Name}LengthOverride)" : null)}");
                             if (!recConverter.StartsWith("default("))
                             {
                                 sb.Append($", {recConverter}");
@@ -449,7 +449,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                                         using (sb.IncreaseDepth())
                                         using (sb.Line())
                                         {
-                                            sb.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location!.Value.Min", $"_{subLoq.Name}Location!.Value.Max")}, _package), _package");
+                                            sb.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory({DataAccessor(recordDataAccessor, $"_{subLoq.Name}Location!.Value.Min", $"_{subLoq.Name}Location!.Value.Max")}, _package");
                                             if (!loqui.Singleton)
                                             {
                                                 sb.Append($", {recConverter}");
@@ -476,8 +476,8 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
                 else
                 {
-                    var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $", {dataAccessor}.Length - {passedLengthAccessor}" : null;
-                    sb.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({dataAccessor}.Slice({passedLengthAccessor ?? "0x0"}), _package), _package{finalPosParam}, {recConverter});");
+                    var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $".Slice(0, {structDataAccessor}.Length - {passedLengthAccessor})" : null; 
+                    sb.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}{finalPosParam}, _package, {recConverter});"); 
                 }
             }
         }
@@ -485,8 +485,8 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             isRequiredRecord = true;
             DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-            var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $", _{dataType.GetFieldData().RecordType}Location!.Value.Width - {currentPosition}" : null;
-            sb.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location", null)}, _package), _package{finalPosParam}) : default;");
+            var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $".Slice(0, _{dataType.GetFieldData().RecordType}Location!.Value.Width - {currentPosition})" : null; 
+            sb.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({DataAccessor(recordDataAccessor, $"_{typeGen.Name}Location", null)}{finalPosParam}, _package) : default;"); 
         }
 
         if (loqui.Singleton

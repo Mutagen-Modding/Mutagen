@@ -1784,15 +1784,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Flags
         private int? _FlagsLocation;
-        public MusicType.Flag Flags => _FlagsLocation.HasValue ? (MusicType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MusicType.Flag);
+        public MusicType.Flag Flags => _FlagsLocation.HasValue ? (MusicType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MusicType.Flag);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IMusicTypeDataGetter? Data => _DataLocation.HasValue ? MusicTypeDataBinaryOverlay.MusicTypeDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IMusicTypeDataGetter? Data => _DataLocation.HasValue ? MusicTypeDataBinaryOverlay.MusicTypeDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region FadeDuration
         private int? _FadeDurationLocation;
-        public Single? FadeDuration => _FadeDurationLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FadeDurationLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? FadeDuration => _FadeDurationLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeDurationLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; private set; }
         partial void CustomFactoryEnd(
@@ -1802,10 +1802,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected MusicTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1817,13 +1817,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MusicTypeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

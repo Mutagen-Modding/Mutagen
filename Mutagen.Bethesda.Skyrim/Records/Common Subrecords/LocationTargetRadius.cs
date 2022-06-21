@@ -117,6 +117,6 @@ partial class LocationTargetRadiusBinaryOverlay
     {
         return LocationTargetRadiusBinaryCreateTranslation.GetLocationTarget(
             new MutagenFrame(
-                new MutagenMemoryReadStream(_data.Slice(location), _package.MetaData)));
+                new MutagenMemoryReadStream(_structData.Slice(location), _package.MetaData)));
     }
 }

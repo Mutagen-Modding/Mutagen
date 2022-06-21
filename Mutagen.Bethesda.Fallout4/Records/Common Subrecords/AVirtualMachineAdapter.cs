@@ -269,7 +269,7 @@ partial class AVirtualMachineAdapterBinaryOverlay
 
     partial void CustomCtor()
     {
-        var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))
+        var frame = new MutagenFrame(new MutagenMemoryReadStream(_structData, _package.MetaData))
         {
             Position = 0x04
         };

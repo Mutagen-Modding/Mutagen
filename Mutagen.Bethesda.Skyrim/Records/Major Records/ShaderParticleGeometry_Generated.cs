@@ -2173,66 +2173,66 @@ namespace Mutagen.Bethesda.Skyrim
         #region GravityVelocity
         private int _GravityVelocityLocation => _DATALocation!.Value.Min;
         private bool _GravityVelocity_IsSet => _DATALocation.HasValue;
-        public Single GravityVelocity => _GravityVelocity_IsSet ? _data.Slice(_GravityVelocityLocation, 4).Float() : default;
+        public Single GravityVelocity => _GravityVelocity_IsSet ? _recordData.Slice(_GravityVelocityLocation, 4).Float() : default;
         #endregion
         #region RotationVelocity
         private int _RotationVelocityLocation => _DATALocation!.Value.Min + 0x4;
         private bool _RotationVelocity_IsSet => _DATALocation.HasValue;
-        public Single RotationVelocity => _RotationVelocity_IsSet ? _data.Slice(_RotationVelocityLocation, 4).Float() : default;
+        public Single RotationVelocity => _RotationVelocity_IsSet ? _recordData.Slice(_RotationVelocityLocation, 4).Float() : default;
         #endregion
         #region ParticleSizeX
         private int _ParticleSizeXLocation => _DATALocation!.Value.Min + 0x8;
         private bool _ParticleSizeX_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _data.Slice(_ParticleSizeXLocation, 4).Float() : default;
+        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _recordData.Slice(_ParticleSizeXLocation, 4).Float() : default;
         #endregion
         #region ParticleSizeY
         private int _ParticleSizeYLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ParticleSizeY_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _data.Slice(_ParticleSizeYLocation, 4).Float() : default;
+        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _recordData.Slice(_ParticleSizeYLocation, 4).Float() : default;
         #endregion
         #region CenterOffsetMin
         private int _CenterOffsetMinLocation => _DATALocation!.Value.Min + 0x10;
         private bool _CenterOffsetMin_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _data.Slice(_CenterOffsetMinLocation, 4).Float() : default;
+        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _recordData.Slice(_CenterOffsetMinLocation, 4).Float() : default;
         #endregion
         #region CenterOffsetMax
         private int _CenterOffsetMaxLocation => _DATALocation!.Value.Min + 0x14;
         private bool _CenterOffsetMax_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _data.Slice(_CenterOffsetMaxLocation, 4).Float() : default;
+        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _recordData.Slice(_CenterOffsetMaxLocation, 4).Float() : default;
         #endregion
         #region InitialRotationRange
         private int _InitialRotationRangeLocation => _DATALocation!.Value.Min + 0x18;
         private bool _InitialRotationRange_IsSet => _DATALocation.HasValue;
-        public Single InitialRotationRange => _InitialRotationRange_IsSet ? _data.Slice(_InitialRotationRangeLocation, 4).Float() : default;
+        public Single InitialRotationRange => _InitialRotationRange_IsSet ? _recordData.Slice(_InitialRotationRangeLocation, 4).Float() : default;
         #endregion
         #region NumSubtexturesX
         private int _NumSubtexturesXLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _NumSubtexturesX_IsSet => _DATALocation.HasValue;
-        public UInt32 NumSubtexturesX => _NumSubtexturesX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_NumSubtexturesXLocation, 4)) : default;
+        public UInt32 NumSubtexturesX => _NumSubtexturesX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_NumSubtexturesXLocation, 4)) : default;
         #endregion
         #region NumSubtexturesY
         private int _NumSubtexturesYLocation => _DATALocation!.Value.Min + 0x20;
         private bool _NumSubtexturesY_IsSet => _DATALocation.HasValue;
-        public UInt32 NumSubtexturesY => _NumSubtexturesY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_NumSubtexturesYLocation, 4)) : default;
+        public UInt32 NumSubtexturesY => _NumSubtexturesY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_NumSubtexturesYLocation, 4)) : default;
         #endregion
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public ShaderParticleGeometry.TypeEnum Type => _Type_IsSet ? (ShaderParticleGeometry.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 0x4)) : default;
+        public ShaderParticleGeometry.TypeEnum Type => _Type_IsSet ? (ShaderParticleGeometry.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
         #endregion
         #region BoxSize
         private int _BoxSizeLocation => _DATALocation!.Value.Min + 0x28;
         private bool _BoxSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0);
-        public UInt32 BoxSize => _BoxSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_BoxSizeLocation, 4)) : default;
+        public UInt32 BoxSize => _BoxSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BoxSizeLocation, 4)) : default;
         #endregion
         #region ParticleDensity
         private int _ParticleDensityLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _ParticleDensity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0);
-        public Single ParticleDensity => _ParticleDensity_IsSet ? _data.Slice(_ParticleDensityLocation, 4).Float() : default;
+        public Single ParticleDensity => _ParticleDensity_IsSet ? _recordData.Slice(_ParticleDensityLocation, 4).Float() : default;
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;
-        public String? ParticleTexture => _ParticleTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? ParticleTexture => _ParticleTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2241,10 +2241,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ShaderParticleGeometryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2256,13 +2256,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ShaderParticleGeometryBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2303,7 +2306,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x28)
                     {
                         this.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;

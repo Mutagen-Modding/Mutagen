@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomNavmeshSetsEndPos();
         #endregion
         #region NavmeshTree
-        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList.FactoryByCountLength<INavmeshNodeGetter>(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
+        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList.FactoryByCountLength<INavmeshNodeGetter>(_structData.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
         protected int NavmeshTreeEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1390,10 +1390,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected PreferredPathingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1404,13 +1404,18 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PreferredPathingBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomNavmeshSetsEndPos();
-            ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
+            ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

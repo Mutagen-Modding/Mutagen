@@ -2747,14 +2747,14 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public UInt32 NavmeshVersion => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public UInt32 Magic => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public UInt32 NavmeshVersion => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public UInt32 Magic => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         #region Parent
         public partial IANavmeshParentGetter GetParentCustom(int location);
         public IANavmeshParentGetter Parent => GetParentCustom(location: 0x8);
         #endregion
         #region Vertices
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_structData.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int VerticesEndingPos;
         #endregion
         #region Triangles
@@ -2762,31 +2762,31 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomTrianglesEndPos();
         #endregion
         #region EdgeLinks
-        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<IEdgeLinkGetter>(_data.Slice(TrianglesEndingPos), _package, 11, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
+        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<IEdgeLinkGetter>(_structData.Slice(TrianglesEndingPos), _package, 11, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
         protected int EdgeLinksEndingPos;
         #endregion
         #region DoorTriangles
-        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<IDoorTriangleGetter>(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
+        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<IDoorTriangleGetter>(_structData.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
         protected int DoorTrianglesEndingPos;
         #endregion
         #region Unknown
-        public IReadOnlyList<UInt64> Unknown => BinaryOverlayList.FactoryByCountLength<UInt64>(_data.Slice(DoorTrianglesEndingPos), _package, 8, countLength: 4, (s, p) => BinaryPrimitives.ReadUInt64LittleEndian(s));
+        public IReadOnlyList<UInt64> Unknown => BinaryOverlayList.FactoryByCountLength<UInt64>(_structData.Slice(DoorTrianglesEndingPos), _package, 8, countLength: 4, (s, p) => BinaryPrimitives.ReadUInt64LittleEndian(s));
         protected int UnknownEndingPos;
         #endregion
         #region Unknown2
-        public IReadOnlyList<UInt32> Unknown2 => BinaryOverlayList.FactoryByCountLength<UInt32>(_data.Slice(UnknownEndingPos), _package, 4, countLength: 4, (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
+        public IReadOnlyList<UInt32> Unknown2 => BinaryOverlayList.FactoryByCountLength<UInt32>(_structData.Slice(UnknownEndingPos), _package, 4, countLength: 4, (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
         protected int Unknown2EndingPos;
         #endregion
         #region Waypoints
-        public IReadOnlyList<INavmeshWaypointGetter> Waypoints => BinaryOverlayList.FactoryByCountLength<INavmeshWaypointGetter>(_data.Slice(Unknown2EndingPos), _package, 18, countLength: 4, (s, p) => NavmeshWaypointBinaryOverlay.NavmeshWaypointFactory(s, p));
+        public IReadOnlyList<INavmeshWaypointGetter> Waypoints => BinaryOverlayList.FactoryByCountLength<INavmeshWaypointGetter>(_structData.Slice(Unknown2EndingPos), _package, 18, countLength: 4, (s, p) => NavmeshWaypointBinaryOverlay.NavmeshWaypointFactory(s, p));
         protected int WaypointsEndingPos;
         #endregion
-        public UInt32 GridSize => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(WaypointsEndingPos, 0x4));
-        public P2Float GridMaxDistance => P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(WaypointsEndingPos + 0x4, 0x8));
-        public P3Float GridMin => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(WaypointsEndingPos + 0xC, 0xC));
-        public P3Float GridMax => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(WaypointsEndingPos + 0x18, 0xC));
+        public UInt32 GridSize => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(WaypointsEndingPos, 0x4));
+        public P2Float GridMaxDistance => P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(WaypointsEndingPos + 0x4, 0x8));
+        public P3Float GridMin => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(WaypointsEndingPos + 0xC, 0xC));
+        public P3Float GridMax => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(WaypointsEndingPos + 0x18, 0xC));
         #region GridArrays
-        public INavmeshGridArrayGetter GridArrays => NavmeshGridArrayBinaryOverlay.NavmeshGridArrayFactory(new OverlayStream(_data.Slice(WaypointsEndingPos + 0x24), _package), _package, default(TypedParseParams));
+        public INavmeshGridArrayGetter GridArrays => NavmeshGridArrayBinaryOverlay.NavmeshGridArrayFactory(_structData.Slice(WaypointsEndingPos + 0x24), _package, default(TypedParseParams));
         protected int GridArraysEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -2796,10 +2796,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected NavmeshGeometryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2810,18 +2810,23 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavmeshGeometryBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x10)) * 12 + 4;
+            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 12 + 4;
             ret.CustomTrianglesEndPos();
-            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.TrianglesEndingPos)) * 11 + 4;
-            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
-            ret.UnknownEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.DoorTrianglesEndingPos)) * 8 + 4;
-            ret.Unknown2EndingPos = ret.UnknownEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.UnknownEndingPos)) * 4 + 4;
-            ret.WaypointsEndingPos = ret.Unknown2EndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.Unknown2EndingPos)) * 18 + 4;
+            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 11 + 4;
+            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
+            ret.UnknownEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.DoorTrianglesEndingPos)) * 8 + 4;
+            ret.Unknown2EndingPos = ret.UnknownEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.UnknownEndingPos)) * 4 + 4;
+            ret.WaypointsEndingPos = ret.Unknown2EndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.Unknown2EndingPos)) * 18 + 4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial DateTime GetSunsetEndCustom(int location);
         public DateTime SunsetEnd => GetSunsetEndCustom(location: 0x3);
         #endregion
-        public Byte Volatility => _data.Span[0x4];
+        public Byte Volatility => _structData.Span[0x4];
         #region Phase
         public partial Climate.MoonPhase GetPhaseCustom(int location);
         public Climate.MoonPhase Phase => GetPhaseCustom(location: 0x5);
@@ -1533,10 +1533,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected ClimateDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1547,11 +1547,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ClimateDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

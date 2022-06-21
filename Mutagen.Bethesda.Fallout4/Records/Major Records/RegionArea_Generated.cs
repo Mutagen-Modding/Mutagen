@@ -1325,12 +1325,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region EdgeFallOff
         private int? _EdgeFallOffLocation;
-        public UInt32 EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EdgeFallOffLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EdgeFallOffLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         public IReadOnlyList<P2Float>? RegionPointListData { get; private set; }
         #region Unknown
         private int? _UnknownLocation;
-        public UInt32? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnknownLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1339,10 +1339,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected RegionAreaBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1353,10 +1353,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RegionAreaBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

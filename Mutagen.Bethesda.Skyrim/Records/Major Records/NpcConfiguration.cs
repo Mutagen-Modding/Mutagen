@@ -138,10 +138,10 @@ partial class NpcConfigurationBinaryOverlay
 {
     public partial IANpcLevelGetter GetLevelCustom(int location)
     {
-        uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_data);
+        uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_structData);
         if (EnumExt.HasFlag(rawFlags, NpcConfigurationBinaryCreateTranslation.PcLevelMultFlag))
         {
-            var raw = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
+            var raw = BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(location));
             float f = (float)raw;
             f /= 1000;
             return new PcLevelMult()
@@ -153,14 +153,14 @@ partial class NpcConfigurationBinaryOverlay
         {
             return new NpcLevel()
             {
-                Level = BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(location))
+                Level = BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(location))
             };
         }
     }
 
     public partial NpcConfiguration.Flag GetFlagsCustom(int location)
     {
-        uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_data);
+        uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_structData);
         // Clear out PcLevelMult flag, as that information is kept in the field type above
         rawFlags &= ~NpcConfigurationBinaryCreateTranslation.PcLevelMultFlag;
         return (NpcConfiguration.Flag)rawFlags;

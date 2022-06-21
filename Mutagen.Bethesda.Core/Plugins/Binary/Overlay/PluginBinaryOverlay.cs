@@ -11,6 +11,28 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
 internal abstract class PluginBinaryOverlay : ILoquiObject
 {
+    public readonly struct MemoryPair
+    {
+        public readonly ReadOnlyMemorySlice<byte> StructData;
+        public readonly ReadOnlyMemorySlice<byte> RecordData;
+
+        public MemoryPair(ReadOnlyMemorySlice<byte> structData, ReadOnlyMemorySlice<byte> recordData)
+        {
+            StructData = structData;
+            RecordData = recordData;
+        }
+
+        public static MemoryPair StructMemory(ReadOnlyMemorySlice<byte> mem)
+        {
+            return new MemoryPair(structData: mem, recordData: ReadOnlyMemorySlice<byte>.Empty);
+        }
+
+        public static MemoryPair RecordMemory(ReadOnlyMemorySlice<byte> mem)
+        {
+            return new MemoryPair(structData: ReadOnlyMemorySlice<byte>.Empty, recordData: mem);
+        }
+    }
+    
     public delegate ParseResult RecordTypeFillWrapper(
         OverlayStream stream,
         int finalPos,
@@ -29,14 +51,16 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
 
     ILoquiRegistration ILoquiObject.Registration => throw new NotImplementedException();
 
-    protected ReadOnlyMemorySlice<byte> _data;
+    protected ReadOnlyMemorySlice<byte> _structData;
+    protected ReadOnlyMemorySlice<byte> _recordData;
     protected BinaryOverlayFactoryPackage _package;
 
     protected PluginBinaryOverlay(
-        ReadOnlyMemorySlice<byte> bytes,
+        MemoryPair memoryPair,
         BinaryOverlayFactoryPackage package)
     {
-        _data = bytes;
+        _structData = memoryPair.StructData;
+        _recordData = memoryPair.RecordData;
         _package = package;
     }
 
@@ -771,5 +795,122 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 return data;
             }
         }
+    }
+
+    public static MemoryPair ExtractSubrecordStructMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta, TypedParseParams translationParams = default)
+    {
+        var subMeta = meta.SubrecordHeader(span);
+        return MemoryPair.StructMemory(span.Slice(subMeta.HeaderLength, translationParams.LengthOverride ?? subMeta.ContentLength));
+    }
+
+    public static MemoryPair ExtractRecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
+    {
+        var majorFrame = meta.MajorRecord(span);
+        return new MemoryPair(majorFrame.HeaderData.Slice(meta.MajorConstants.TypeAndLengthLength), majorFrame.Content);
+    }
+
+    public static MemoryPair ExtractGroupMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
+    {
+        var groupFrame = meta.Group(span);
+        return new MemoryPair(groupFrame.HeaderData.Slice(meta.MajorConstants.TypeAndLengthLength), groupFrame.Content);
+    }
+
+    public static OverlayStream ExtractSubrecordStructMemory(
+        OverlayStream stream,
+        GameConstants meta, 
+        TypedParseParams translationParams,
+        int length,
+        out MemoryPair memoryPair,
+        out int offset)
+    {
+        memoryPair = ExtractSubrecordStructMemory(stream.RemainingMemory.SliceUpTo(length), meta, translationParams);
+        stream.Position += meta.SubConstants.HeaderLength;
+        offset = meta.SubConstants.HeaderLength;
+        return stream;
+    }
+
+    public static OverlayStream ExtractSubrecordStructMemory(
+        OverlayStream stream,
+        GameConstants meta, 
+        TypedParseParams translationParams,
+        out MemoryPair memoryPair,
+        out int offset,
+        out int finalPos)
+    {
+        memoryPair = ExtractSubrecordStructMemory(stream.RemainingMemory, meta, translationParams);
+        stream.Position += meta.SubConstants.HeaderLength;
+        offset = meta.SubConstants.HeaderLength;
+        finalPos = stream.Position + memoryPair.RecordData.Length;
+        return stream;
+    }
+
+    public static OverlayStream ExtractTypelessSubrecordStructMemory(
+        OverlayStream stream,
+        GameConstants meta, 
+        TypedParseParams translationParams,
+        out MemoryPair memoryPair,
+        out int offset,
+        out int finalPos)
+    {
+        memoryPair = MemoryPair.StructMemory(stream.RemainingMemory);
+        offset = stream.Position;
+        finalPos = stream.RemainingMemory.Length;
+        return stream;
+    }
+
+    public static OverlayStream ExtractTypelessSubrecordStructMemory(
+        OverlayStream stream,
+        GameConstants meta, 
+        TypedParseParams translationParams,
+        int length,
+        out MemoryPair memoryPair,
+        out int offset)
+    {
+        memoryPair = MemoryPair.StructMemory(stream.RemainingMemory.SliceUpTo(length));
+        offset = stream.Position;
+        return stream;
+    }
+
+    public static OverlayStream ExtractTypelessSubrecordRecordMemory(
+        OverlayStream stream,
+        GameConstants meta, 
+        TypedParseParams translationParams,
+        out MemoryPair memoryPair,
+        out int offset,
+        out int finalPos)
+    {
+        memoryPair = MemoryPair.RecordMemory(stream.RemainingMemory);
+        offset = stream.Position;
+        finalPos = stream.RemainingMemory.Length;
+        return stream;
+    }
+
+    public static OverlayStream ExtractRecordMemory(
+        OverlayStream stream, 
+        GameConstants meta, 
+        out MemoryPair memoryPair,
+        out int offset,
+        out int finalPos)
+    {
+        // stream = Decompression.DecompressStream(stream);
+        memoryPair = ExtractRecordMemory(stream.RemainingMemory, meta);
+        stream.Position += meta.MajorConstants.HeaderLength;
+        offset = meta.MajorConstants.HeaderLength;
+        finalPos = stream.Position + memoryPair.RecordData.Length;
+        return stream;
+    }
+
+    public static OverlayStream ExtractGroupMemory(
+        OverlayStream stream,
+        GameConstants meta, 
+        out MemoryPair memoryPair,
+        out int offset,
+        out int finalPos)
+    {
+        memoryPair = ExtractGroupMemory(stream.RemainingMemory, meta);
+        stream.Position += meta.GroupConstants.HeaderLength;
+        offset = meta.GroupConstants.HeaderLength;
+        finalPos = stream.Position + memoryPair.RecordData.Length;
+        return stream;
     }
 }

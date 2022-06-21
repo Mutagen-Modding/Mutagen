@@ -1137,11 +1137,11 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         #region Master
         private int? _MasterLocation;
-        public ModKey Master => _MasterLocation.HasValue ? ModKey.FromNameAndExtension(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MasterLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated)) : ModKey.Null;
+        public ModKey Master => _MasterLocation.HasValue ? ModKey.FromNameAndExtension(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MasterLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated)) : ModKey.Null;
         #endregion
         #region FileSize
         private int? _FileSizeLocation;
-        public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FileSizeLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileSizeLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1150,10 +1150,10 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         partial void CustomCtor();
         protected MasterReferenceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1164,10 +1164,16 @@ namespace Mutagen.Bethesda.Plugins.Records
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MasterReferenceBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

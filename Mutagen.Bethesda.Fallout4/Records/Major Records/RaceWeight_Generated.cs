@@ -1148,9 +1148,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single Thin => _data.Slice(0x0, 0x4).Float();
-        public Single Muscular => _data.Slice(0x4, 0x4).Float();
-        public Single Fat => _data.Slice(0x8, 0x4).Float();
+        public Single Thin => _structData.Slice(0x0, 0x4).Float();
+        public Single Muscular => _structData.Slice(0x4, 0x4).Float();
+        public Single Fat => _structData.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1158,10 +1158,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected RaceWeightBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1172,10 +1172,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new RaceWeightBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xC),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xC;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -1656,12 +1656,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public ClassData.VersioningBreaks Versioning { get; private set; }
-        public ReadOnlyMemorySlice<ActorValue> PrimaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_data.Slice(0x0), amount: 2, enumLength: 4);
-        public Class.SpecializationFlag Specialization => (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
-        public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_data.Slice(0xC), amount: 7, enumLength: 4);
-        public ClassFlag Flags => (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x28, 0x4));
-        public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2C, 0x4));
-        public IClassTrainingGetter Training => ClassTrainingBinaryOverlay.ClassTrainingFactory(new OverlayStream(_data.Slice(0x30), _package), _package, default(TypedParseParams));
+        public ReadOnlyMemorySlice<ActorValue> PrimaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_structData.Slice(0x0), amount: 2, enumLength: 4);
+        public Class.SpecializationFlag Specialization => (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
+        public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_structData.Slice(0xC), amount: 7, enumLength: 4);
+        public ClassFlag Flags => (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x28, 0x4));
+        public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x2C, 0x4));
+        public IClassTrainingGetter Training => ClassTrainingBinaryOverlay.ClassTrainingFactory(_structData.Slice(0x30), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1669,10 +1669,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected ClassDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1683,12 +1683,17 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x34,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ClassDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x30)
+            if (ret._structData.Length <= 0x30)
             {
                 ret.Versioning |= ClassData.VersioningBreaks.Break0;
             }

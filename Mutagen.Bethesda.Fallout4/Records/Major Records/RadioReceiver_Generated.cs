@@ -1356,11 +1356,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public RadioReceiver.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<ISoundOutputModelGetter> SoundModel => new FormLink<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Single Frequency => _data.Slice(0x4, 0x4).Float();
-        public Single Volume => _data.Slice(0x8, 0x4).Float();
-        public Boolean StartsActive => _data.Slice(0xC, 0x1)[0] >= 1;
-        public Boolean NoSignalStatic => _data.Length <= 0xD ? default : _data.Slice(0xD, 0x1)[0] >= 1;
+        public IFormLinkGetter<ISoundOutputModelGetter> SoundModel => new FormLink<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Single Frequency => _structData.Slice(0x4, 0x4).Float();
+        public Single Volume => _structData.Slice(0x8, 0x4).Float();
+        public Boolean StartsActive => _structData.Slice(0xC, 0x1)[0] >= 1;
+        public Boolean NoSignalStatic => _structData.Length <= 0xD ? default : _structData.Slice(0xD, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1368,10 +1368,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected RadioReceiverBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1382,12 +1382,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xE,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new RadioReceiverBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0xD)
+            if (ret._structData.Length <= 0xD)
             {
                 ret.Versioning |= RadioReceiver.VersioningBreaks.Break0;
             }

@@ -1923,16 +1923,16 @@ namespace Mutagen.Bethesda.Oblivion
         public IModelGetter? Model { get; private set; }
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<UInt32>? SpeedTreeSeeds { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region BillboardDimensions
         private RangeInt32? _BillboardDimensionsLocation;
-        public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(new OverlayStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min), _package), _package) : default;
+        public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(_recordData.Slice(_BillboardDimensionsLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1941,10 +1941,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected TreeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1956,13 +1956,16 @@ namespace Mutagen.Bethesda.Oblivion
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TreeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

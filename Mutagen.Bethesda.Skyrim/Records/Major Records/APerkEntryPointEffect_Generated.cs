@@ -1206,8 +1206,8 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public APerkEntryPointEffect.EntryType EntryPoint => (APerkEntryPointEffect.EntryType)_data.Span.Slice(0x0, 0x1)[0];
-        public Byte PerkConditionTabCount => _data.Span[0x1];
+        public APerkEntryPointEffect.EntryType EntryPoint => (APerkEntryPointEffect.EntryType)_structData.Span.Slice(0x0, 0x1)[0];
+        public Byte PerkConditionTabCount => _structData.Span[0x1];
         #region FunctionParameters
         public partial ParseResult FunctionParametersCustomParse(
             OverlayStream stream,
@@ -1221,10 +1221,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected APerkEntryPointEffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

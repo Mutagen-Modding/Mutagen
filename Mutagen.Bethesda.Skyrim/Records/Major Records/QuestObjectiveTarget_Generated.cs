@@ -1402,12 +1402,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region AliasID
         private int _AliasIDLocation => _QSTALocation!.Value.Min;
         private bool _AliasID_IsSet => _QSTALocation.HasValue;
-        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_AliasIDLocation, 4)) : default;
+        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_AliasIDLocation, 4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _QSTALocation.HasValue;
-        public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
@@ -1417,10 +1417,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected QuestObjectiveTargetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1431,10 +1431,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestObjectiveTargetBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

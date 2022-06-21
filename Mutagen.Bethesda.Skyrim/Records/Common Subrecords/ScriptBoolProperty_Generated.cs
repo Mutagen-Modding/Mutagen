@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Boolean Data => _data.Slice(0x0, 0x1)[0] >= 1;
+        public Boolean Data => _structData.Slice(0x0, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1085,10 +1085,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ScriptBoolPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1099,10 +1099,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x1,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ScriptBoolPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x1),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x1;
             ret.CustomFactoryEnd(
                 stream: stream,

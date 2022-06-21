@@ -1343,11 +1343,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public LightData.VersioningBreaks Versioning { get; private set; }
-        public Single FovOffset => _data.Slice(0x0, 0x4).Float();
-        public Single FadeOffset => _data.Slice(0x4, 0x4).Float();
-        public Single EndDistanceCap => _data.Slice(0x8, 0x4).Float();
-        public Single ShadowDepthBias => _data.Slice(0xC, 0x4).Float();
-        public Int32 Unknown => _data.Length <= 0x10 ? default : BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
+        public Single FovOffset => _structData.Slice(0x0, 0x4).Float();
+        public Single FadeOffset => _structData.Slice(0x4, 0x4).Float();
+        public Single EndDistanceCap => _structData.Slice(0x8, 0x4).Float();
+        public Single ShadowDepthBias => _structData.Slice(0xC, 0x4).Float();
+        public Int32 Unknown => _structData.Length <= 0x10 ? default : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1355,10 +1355,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected LightDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1369,12 +1369,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LightDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x10)
+            if (ret._structData.Length <= 0x10)
             {
                 ret.Versioning |= LightData.VersioningBreaks.Break0;
             }

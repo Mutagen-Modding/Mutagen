@@ -1993,32 +1993,32 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
+        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
         private RangeInt32? _HNAMLocation;
         public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }
         #region HavokFriction
         private int _HavokFrictionLocation => _HNAMLocation!.Value.Min;
         private bool _HavokFriction_IsSet => _HNAMLocation.HasValue;
-        public Byte HavokFriction => _HavokFriction_IsSet ? _data.Span[_HavokFrictionLocation] : default;
+        public Byte HavokFriction => _HavokFriction_IsSet ? _recordData.Span[_HavokFrictionLocation] : default;
         #endregion
         #region HavokRestitution
         private int _HavokRestitutionLocation => _HNAMLocation!.Value.Min + 0x1;
         private bool _HavokRestitution_IsSet => _HNAMLocation.HasValue;
-        public Byte HavokRestitution => _HavokRestitution_IsSet ? _data.Span[_HavokRestitutionLocation] : default;
+        public Byte HavokRestitution => _HavokRestitution_IsSet ? _recordData.Span[_HavokRestitutionLocation] : default;
         #endregion
         #region TextureSpecularExponent
         private int? _TextureSpecularExponentLocation;
-        public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSpecularExponentLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureSpecularExponentLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = Array.Empty<IFormLinkGetter<IGrassGetter>>();
         #region Flags
         private int? _FlagsLocation;
-        public LandscapeTexture.Flag? Flags => _FlagsLocation.HasValue ? (LandscapeTexture.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LandscapeTexture.Flag?);
+        public LandscapeTexture.Flag? Flags => _FlagsLocation.HasValue ? (LandscapeTexture.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LandscapeTexture.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2027,10 +2027,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected LandscapeTextureBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2042,13 +2042,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LandscapeTextureBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

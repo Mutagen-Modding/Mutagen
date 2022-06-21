@@ -1466,17 +1466,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region Index
         private int _IndexLocation => _INDXLocation!.Value.Min;
         private bool _Index_IsSet => _INDXLocation.HasValue;
-        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_IndexLocation, 2)) : default;
+        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _INDXLocation!.Value.Min + 0x2;
         private bool _Flags_IsSet => _INDXLocation.HasValue;
-        public QuestStage.Flag Flags => _Flags_IsSet ? (QuestStage.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public QuestStage.Flag Flags => _Flags_IsSet ? (QuestStage.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _INDXLocation!.Value.Min + 0x3;
         private bool _Unknown_IsSet => _INDXLocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
         public IReadOnlyList<IQuestLogEntryGetter> LogEntries { get; private set; } = Array.Empty<IQuestLogEntryGetter>();
         partial void CustomFactoryEnd(
@@ -1486,10 +1486,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected QuestStageBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1500,10 +1500,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestStageBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

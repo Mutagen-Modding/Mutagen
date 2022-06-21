@@ -252,7 +252,8 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
-        Accessor dataAccessor,
+        Accessor structDataAccessor,
+        Accessor recordDataAccessor,
         int? currentPosition,
         string passedLengthAccessor,
         DataType dataType = null)
@@ -269,7 +270,6 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                     sb,
                     objGen,
                     typeGen,
-                    dataAccessor,
                     currentPosition,
                     passedLengthAccessor,
                     dataType);
@@ -298,7 +298,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 {
                     var subTypeDefault = gendered.SubTypeGeneration.GetDefault(getter: true);
                     sb.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {(typeGen.Nullable ? "default" : $"new GenderedItem<{typeName}>({subTypeDefault}, {subTypeDefault})")};");
-                    sb.AppendLine($"var data = HeaderTranslation.ExtractSubrecordMemory(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
+                    sb.AppendLine($"var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
                     using (var args = sb.Call(
                                $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                     {
@@ -331,7 +331,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             {
                                 sb.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault(getter: true)};");
                             }
-                            sb.AppendLine($"var data = {dataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
+                            sb.AppendLine($"var data = {structDataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
                             using (var args = sb.Call(
                                        $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                             {
@@ -352,7 +352,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                     using (sb.CurlyBrace())
                     {
                         sb.AppendLine($"if (!_{typeGen.Name}_IsSet) return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)});");
-                        sb.AppendLine($"var data = {dataAccessor}.Slice(_{typeGen.Name}Location);");
+                        sb.AppendLine($"var data = {recordDataAccessor}.Slice(_{typeGen.Name}Location);");
                         using (var args = sb.Call(
                                    $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                         {

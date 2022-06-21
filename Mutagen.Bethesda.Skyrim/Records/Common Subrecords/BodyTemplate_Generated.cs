@@ -1252,15 +1252,15 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         #region Flags
         private bool _Flags_IsSet => _package.FormVersion!.FormVersion!.Value < 44;
-        public BodyTemplate.Flag Flags => _Flags_IsSet ? (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4)) : default;
+        public BodyTemplate.Flag Flags => _Flags_IsSet ? (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4)) : default;
         int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 44 ? -4 : 0;
         #endregion
         #region ArmorType
         private bool _ArmorType_IsSet => _package.FormVersion!.FormVersion!.Value >= 22;
-        public ArmorType ArmorType => _ArmorType_IsSet ? (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(FlagsVersioningOffset + 0x8, 0x4)) : default;
+        public ArmorType ArmorType => _ArmorType_IsSet ? (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(FlagsVersioningOffset + 0x8, 0x4)) : default;
         int ArmorTypeVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 22 ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(
@@ -1270,10 +1270,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected BodyTemplateBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1284,11 +1284,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new BodyTemplateBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

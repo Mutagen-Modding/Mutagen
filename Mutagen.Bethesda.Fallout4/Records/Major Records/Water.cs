@@ -111,11 +111,11 @@ partial class WaterBinaryOverlay
     private SubrecordFrame? _nam4;
     private int _dataLoc => _SpecularInteriorSpecularPowerLocation + 4;
 
-    public IWaterNoisePropertiesGetter NoiseLayerOne => new WaterNoisePropertiesBinaryOverlay(_data.Slice(_dataLoc), _nam2, _package);
+    public IWaterNoisePropertiesGetter NoiseLayerOne => new WaterNoisePropertiesBinaryOverlay(_recordData.Slice(_dataLoc), _nam2, _package);
 
-    public IWaterNoisePropertiesGetter NoiseLayerTwo => new WaterNoisePropertiesBinaryOverlay(_data.Slice(_dataLoc + 4), _nam3, _package);
+    public IWaterNoisePropertiesGetter NoiseLayerTwo => new WaterNoisePropertiesBinaryOverlay(_recordData.Slice(_dataLoc + 4), _nam3, _package);
 
-    public IWaterNoisePropertiesGetter NoiseLayerThree => new WaterNoisePropertiesBinaryOverlay(_data.Slice(_dataLoc + 8), _nam4, _package);
+    public IWaterNoisePropertiesGetter NoiseLayerThree => new WaterNoisePropertiesBinaryOverlay(_recordData.Slice(_dataLoc + 8), _nam4, _package);
 
     public partial ParseResult NoiseTextureParsingCustomParse(
         OverlayStream stream,

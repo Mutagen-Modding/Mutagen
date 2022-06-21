@@ -2145,20 +2145,20 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INavigationMeshGetter> NavigationMesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0xC));
-        public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
+        public IFormLinkGetter<INavigationMeshGetter> NavigationMesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
+        public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
         #region MergedTo
-        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int MergedToEndingPos;
         #endregion
         #region PreferredMerges
-        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int PreferredMergesEndingPos;
         #endregion
         #region LinkedDoors
-        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList.FactoryByCountLength<ILinkedDoorGetter>(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
+        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList.FactoryByCountLength<ILinkedDoorGetter>(_structData.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
         protected int LinkedDoorsEndingPos;
         #endregion
         #region Island
@@ -2167,8 +2167,8 @@ namespace Mutagen.Bethesda.Fallout4
         protected int IslandEndingPos;
         partial void CustomIslandEndPos();
         #endregion
-        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(IslandEndingPos, 0x4));
-        public IFormLinkGetter<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x4, 0x4))));
+        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(IslandEndingPos, 0x4));
+        public IFormLinkGetter<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x4, 0x4))));
         #region ParentParseLogic
         partial void ParentParseLogicCustomParse(
             OverlayStream stream,
@@ -2182,10 +2182,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected NavigationMapInfoBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2196,14 +2196,19 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavigationMapInfoBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x18)) * 4 + 4;
-            ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.MergedToEndingPos)) * 4 + 4;
-            ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
+            ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 4 + 4;
+            ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MergedToEndingPos)) * 4 + 4;
+            ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
             ret.CustomIslandEndPos();
             ret.CustomFactoryEnd(
                 stream: stream,

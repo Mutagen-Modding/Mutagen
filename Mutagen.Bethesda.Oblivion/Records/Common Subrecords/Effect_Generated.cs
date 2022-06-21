@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        private IEffectDataGetter? _Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        private IEffectDataGetter? _Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         public IEffectDataGetter Data => _Data ?? new EffectData();
         #endregion
         public IScriptEffectGetter? ScriptEffect { get; private set; }
@@ -1291,10 +1291,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected EffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1305,10 +1305,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new EffectBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

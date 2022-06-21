@@ -9,9 +9,9 @@ partial class PreferredPathingBinaryOverlay
 
     partial void CustomNavmeshSetsEndPos()
     {
-        var count = BinaryPrimitives.ReadInt32LittleEndian(this._data);
+        var count = BinaryPrimitives.ReadInt32LittleEndian(_structData);
         int[] locs = new int[count];
-        var span = this._data.Slice(4);
+        var span = _structData.Slice(4);
         int loc = 0;
         for (int i = 0; i < count; i++)
         {
@@ -22,8 +22,8 @@ partial class PreferredPathingBinaryOverlay
             loc += len;
         }
         this.NavmeshSets = BinaryOverlayList.FactoryByArray<INavmeshSetGetter>(
-            this._data.Slice(4),
-            this._package,
+            _structData.Slice(4),
+            _package,
             (s, p) => NavmeshSetBinaryOverlay.NavmeshSetFactory(s, p),
             locs);
         this.NavmeshSetsEndingPos = 4 + loc;

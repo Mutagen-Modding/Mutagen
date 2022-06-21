@@ -1437,10 +1437,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public ImageSpaceDepthOfField.VersioningBreaks Versioning { get; private set; }
-        public Single Strength => _data.Slice(0x0, 0x4).Float();
-        public Single Distance => _data.Slice(0x4, 0x4).Float();
-        public Single Range => _data.Slice(0x8, 0x4).Float();
-        public Int16 Unknown => _data.Length <= 0xC ? default : BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xC, 0x2));
+        public Single Strength => _structData.Slice(0x0, 0x4).Float();
+        public Single Distance => _structData.Slice(0x4, 0x4).Float();
+        public Single Range => _structData.Slice(0x8, 0x4).Float();
+        public Int16 Unknown => _structData.Length <= 0xC ? default : BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xC, 0x2));
         #region BlurRadius
         public partial Byte GetBlurRadiusCustom(int location);
         public Byte BlurRadius => GetBlurRadiusCustom(location: 0xE);
@@ -1460,10 +1460,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ImageSpaceDepthOfFieldBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1474,12 +1474,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ImageSpaceDepthOfFieldBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0xC)
+            if (ret._structData.Length <= 0xC)
             {
                 ret.Versioning |= ImageSpaceDepthOfField.VersioningBreaks.Break0;
             }

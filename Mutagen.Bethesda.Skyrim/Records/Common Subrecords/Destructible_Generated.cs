@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IDestructableDataGetter? Data => _DataLocation.HasValue ? DestructableDataBinaryOverlay.DestructableDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IDestructableDataGetter? Data => _DataLocation.HasValue ? DestructableDataBinaryOverlay.DestructableDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = Array.Empty<IDestructionStageGetter>();
         partial void CustomFactoryEnd(
@@ -1340,10 +1340,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected DestructibleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1354,10 +1354,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DestructibleBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

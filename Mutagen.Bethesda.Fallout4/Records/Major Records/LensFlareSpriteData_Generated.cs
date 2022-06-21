@@ -1391,13 +1391,13 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Color Tint => _data.Slice(0x0, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
-        public Single Width => _data.Slice(0xC, 0x4).Float();
-        public Single Height => _data.Slice(0x10, 0x4).Float();
-        public Single Position => _data.Slice(0x14, 0x4).Float();
-        public Single AngularFade => _data.Slice(0x18, 0x4).Float();
-        public Single Opacity => _data.Slice(0x1C, 0x4).Float();
-        public LensFlareSpriteData.Flag Flags => (LensFlareSpriteData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x20, 0x4));
+        public Color Tint => _structData.Slice(0x0, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
+        public Single Width => _structData.Slice(0xC, 0x4).Float();
+        public Single Height => _structData.Slice(0x10, 0x4).Float();
+        public Single Position => _structData.Slice(0x14, 0x4).Float();
+        public Single AngularFade => _structData.Slice(0x18, 0x4).Float();
+        public Single Opacity => _structData.Slice(0x1C, 0x4).Float();
+        public LensFlareSpriteData.Flag Flags => (LensFlareSpriteData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x20, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1405,10 +1405,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected LensFlareSpriteDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1419,11 +1419,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LensFlareSpriteDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

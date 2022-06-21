@@ -1730,19 +1730,19 @@ namespace Mutagen.Bethesda.Skyrim
         #region Data
         private int? _DataLengthOverride;
         private RangeInt32? _DataLocation;
-        public INavigationMeshDataGetter? Data => _DataLocation.HasValue ? NavigationMeshDataBinaryOverlay.NavigationMeshDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, TypedParseParams.FromLengthOverride(_DataLengthOverride)) : default;
+        public INavigationMeshDataGetter? Data => _DataLocation.HasValue ? NavigationMeshDataBinaryOverlay.NavigationMeshDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_DataLengthOverride)) : default;
         #endregion
         #region ONAM
         private int? _ONAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ONAM => _ONAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ONAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? ONAM => _ONAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ONAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region PNAM
         private int? _PNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region NNAM
         private int? _NNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1751,10 +1751,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected NavigationMeshBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1766,13 +1766,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavigationMeshBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

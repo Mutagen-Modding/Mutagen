@@ -1384,13 +1384,13 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Byte Aggression => _data.Span[0x0];
-        public Byte Confidence => _data.Span[0x1];
-        public Byte EnergyLevel => _data.Span[0x2];
-        public Byte Responsibility => _data.Span[0x3];
-        public Npc.BuySellServiceFlag BuySellServices => (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public Skill Teaches => (Skill)_data.Span.Slice(0x8, 0x1)[0];
-        public Byte MaximumTrainingLevel => _data.Span[0x9];
+        public Byte Aggression => _structData.Span[0x0];
+        public Byte Confidence => _structData.Span[0x1];
+        public Byte EnergyLevel => _structData.Span[0x2];
+        public Byte Responsibility => _structData.Span[0x3];
+        public Npc.BuySellServiceFlag BuySellServices => (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public Skill Teaches => (Skill)_structData.Span.Slice(0x8, 0x1)[0];
+        public Byte MaximumTrainingLevel => _structData.Span[0x9];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1398,10 +1398,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected CreatureAIDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1412,11 +1412,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CreatureAIDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

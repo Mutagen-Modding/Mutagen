@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Stage
         private int? _StageLocation;
-        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StageLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StageLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         public IReadOnlyList<ILogEntryGetter> LogEntries { get; private set; } = Array.Empty<ILogEntryGetter>();
         partial void CustomFactoryEnd(
@@ -1294,10 +1294,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected QuestStageBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1308,10 +1308,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestStageBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

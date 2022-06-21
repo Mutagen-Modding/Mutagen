@@ -1354,12 +1354,12 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Package.Flag SetFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public Package.Flag ClearFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public Package.InterruptFlag SetInterruptFlags => (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x8, 0x2));
-        public Package.InterruptFlag ClearInterruptFlags => (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0xA, 0x2));
-        public Package.Speed PreferredSpeed => (Package.Speed)_data.Span.Slice(0xC, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0xD, 0x3).ToArray();
+        public Package.Flag SetFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public Package.Flag ClearFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public Package.InterruptFlag SetInterruptFlags => (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x8, 0x2));
+        public Package.InterruptFlag ClearInterruptFlags => (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0xA, 0x2));
+        public Package.Speed PreferredSpeed => (Package.Speed)_structData.Span.Slice(0xC, 0x1)[0];
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0xD, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1367,10 +1367,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected PackageFlagsOverrideBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1381,11 +1381,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PackageFlagsOverrideBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

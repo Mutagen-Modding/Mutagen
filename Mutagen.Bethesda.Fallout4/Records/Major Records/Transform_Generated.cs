@@ -1730,27 +1730,27 @@ namespace Mutagen.Bethesda.Fallout4
         #region Position
         private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
         #endregion
         #region Rotation
         private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
         #endregion
         #region Scale
         private int _ScaleLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Scale_IsSet => _DATALocation.HasValue;
-        public Single Scale => _Scale_IsSet ? _data.Slice(_ScaleLocation, 4).Float() : default;
+        public Single Scale => _Scale_IsSet ? _recordData.Slice(_ScaleLocation, 4).Float() : default;
         #endregion
         #region ZoomMin
         private int _ZoomMinLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _ZoomMin_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Transform.DATADataType.Break0);
-        public Single ZoomMin => _ZoomMin_IsSet ? _data.Slice(_ZoomMinLocation, 4).Float() : default;
+        public Single ZoomMin => _ZoomMin_IsSet ? _recordData.Slice(_ZoomMinLocation, 4).Float() : default;
         #endregion
         #region ZoomMax
         private int _ZoomMaxLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ZoomMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Transform.DATADataType.Break0);
-        public Single ZoomMax => _ZoomMax_IsSet ? _data.Slice(_ZoomMaxLocation, 4).Float() : default;
+        public Single ZoomMax => _ZoomMax_IsSet ? _recordData.Slice(_ZoomMaxLocation, 4).Float() : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1759,10 +1759,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected TransformBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1774,13 +1774,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TransformBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1821,7 +1824,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x1C)
                     {
                         this.DATADataTypeState |= Transform.DATADataType.Break0;

@@ -56,18 +56,18 @@ partial class NavmeshGeometryBinaryOverlay
 {
     public IReadOnlyList<INavmeshTriangleGetter> Triangles =>
         new TrianglesOverlay(
-            _data,
+            _structData,
             _package,
             trianglesStartPos: VerticesEndingPos);
 
     public partial IANavmeshParentGetter GetParentCustom(int location)
     {
-        return NavmeshGeometryBinaryCreateTranslation.GetBinaryParent(new OverlayStream(_data.Slice(8), _package));
+        return NavmeshGeometryBinaryCreateTranslation.GetBinaryParent(new OverlayStream(_structData.Slice(8), _package));
     }
 
     partial void CustomTrianglesEndPos()
     {
-        var count = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(VerticesEndingPos));
+        var count = BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(VerticesEndingPos));
         TrianglesEndingPos = VerticesEndingPos + checked((int)((count * 0x15) + 4));
     }
 

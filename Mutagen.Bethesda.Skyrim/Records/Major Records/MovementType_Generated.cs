@@ -2254,7 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -2265,61 +2265,61 @@ namespace Mutagen.Bethesda.Skyrim
         #region LeftWalk
         private int _LeftWalkLocation => _SPEDLocation!.Value.Min;
         private bool _LeftWalk_IsSet => _SPEDLocation.HasValue;
-        public Single LeftWalk => _LeftWalk_IsSet ? _data.Slice(_LeftWalkLocation, 4).Float() : default;
+        public Single LeftWalk => _LeftWalk_IsSet ? _recordData.Slice(_LeftWalkLocation, 4).Float() : default;
         #endregion
         #region LeftRun
         private int _LeftRunLocation => _SPEDLocation!.Value.Min + 0x4;
         private bool _LeftRun_IsSet => _SPEDLocation.HasValue;
-        public Single LeftRun => _LeftRun_IsSet ? _data.Slice(_LeftRunLocation, 4).Float() : default;
+        public Single LeftRun => _LeftRun_IsSet ? _recordData.Slice(_LeftRunLocation, 4).Float() : default;
         #endregion
         #region RightWalk
         private int _RightWalkLocation => _SPEDLocation!.Value.Min + 0x8;
         private bool _RightWalk_IsSet => _SPEDLocation.HasValue;
-        public Single RightWalk => _RightWalk_IsSet ? _data.Slice(_RightWalkLocation, 4).Float() : default;
+        public Single RightWalk => _RightWalk_IsSet ? _recordData.Slice(_RightWalkLocation, 4).Float() : default;
         #endregion
         #region RightRun
         private int _RightRunLocation => _SPEDLocation!.Value.Min + 0xC;
         private bool _RightRun_IsSet => _SPEDLocation.HasValue;
-        public Single RightRun => _RightRun_IsSet ? _data.Slice(_RightRunLocation, 4).Float() : default;
+        public Single RightRun => _RightRun_IsSet ? _recordData.Slice(_RightRunLocation, 4).Float() : default;
         #endregion
         #region ForwardWalk
         private int _ForwardWalkLocation => _SPEDLocation!.Value.Min + 0x10;
         private bool _ForwardWalk_IsSet => _SPEDLocation.HasValue;
-        public Single ForwardWalk => _ForwardWalk_IsSet ? _data.Slice(_ForwardWalkLocation, 4).Float() : default;
+        public Single ForwardWalk => _ForwardWalk_IsSet ? _recordData.Slice(_ForwardWalkLocation, 4).Float() : default;
         #endregion
         #region ForwardRun
         private int _ForwardRunLocation => _SPEDLocation!.Value.Min + 0x14;
         private bool _ForwardRun_IsSet => _SPEDLocation.HasValue;
-        public Single ForwardRun => _ForwardRun_IsSet ? _data.Slice(_ForwardRunLocation, 4).Float() : default;
+        public Single ForwardRun => _ForwardRun_IsSet ? _recordData.Slice(_ForwardRunLocation, 4).Float() : default;
         #endregion
         #region BackWalk
         private int _BackWalkLocation => _SPEDLocation!.Value.Min + 0x18;
         private bool _BackWalk_IsSet => _SPEDLocation.HasValue;
-        public Single BackWalk => _BackWalk_IsSet ? _data.Slice(_BackWalkLocation, 4).Float() : default;
+        public Single BackWalk => _BackWalk_IsSet ? _recordData.Slice(_BackWalkLocation, 4).Float() : default;
         #endregion
         #region BackRun
         private int _BackRunLocation => _SPEDLocation!.Value.Min + 0x1C;
         private bool _BackRun_IsSet => _SPEDLocation.HasValue;
-        public Single BackRun => _BackRun_IsSet ? _data.Slice(_BackRunLocation, 4).Float() : default;
+        public Single BackRun => _BackRun_IsSet ? _recordData.Slice(_BackRunLocation, 4).Float() : default;
         #endregion
         #region RotateInPlaceWalk
         private int _RotateInPlaceWalkLocation => _SPEDLocation!.Value.Min + 0x20;
         private bool _RotateInPlaceWalk_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _data.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57.2958f : default;
+        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _recordData.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region RotateInPlaceRun
         private int _RotateInPlaceRunLocation => _SPEDLocation!.Value.Min + 0x24;
         private bool _RotateInPlaceRun_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _data.Slice(_RotateInPlaceRunLocation, 4).Float() * 57.2958f : default;
+        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _recordData.Slice(_RotateInPlaceRunLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region RotateWhileMovingRun
         private int _RotateWhileMovingRunLocation => _SPEDLocation!.Value.Min + 0x28;
         private bool _RotateWhileMovingRun_IsSet => _SPEDLocation.HasValue && !SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0);
-        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _data.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57.2958f : default;
+        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _recordData.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region AnimationChangeThresholds
         private RangeInt32? _AnimationChangeThresholdsLocation;
-        public IAnimationChangeThresholdsGetter? AnimationChangeThresholds => _AnimationChangeThresholdsLocation.HasValue ? AnimationChangeThresholdsBinaryOverlay.AnimationChangeThresholdsFactory(new OverlayStream(_data.Slice(_AnimationChangeThresholdsLocation!.Value.Min), _package), _package) : default;
+        public IAnimationChangeThresholdsGetter? AnimationChangeThresholds => _AnimationChangeThresholdsLocation.HasValue ? AnimationChangeThresholdsBinaryOverlay.AnimationChangeThresholdsFactory(_recordData.Slice(_AnimationChangeThresholdsLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2328,10 +2328,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected MovementTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2343,13 +2343,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MovementTypeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2395,7 +2398,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.SPED:
                 {
                     _SPEDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x28)
                     {
                         this.SPEDDataTypeState |= MovementType.SPEDDataType.Break0;

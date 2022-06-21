@@ -1483,16 +1483,16 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         #region LodDisplayDistanceMultiplier
         private int? _LodDisplayDistanceMultiplierLocation;
-        public override Single? LodDisplayDistanceMultiplier => _LodDisplayDistanceMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LodDisplayDistanceMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public override Single? LodDisplayDistanceMultiplier => _LodDisplayDistanceMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LodDisplayDistanceMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region OcclusionAccuracyDist
         private int? _OcclusionAccuracyDistLocation;
-        public override Single? OcclusionAccuracyDist => _OcclusionAccuracyDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OcclusionAccuracyDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public override Single? OcclusionAccuracyDist => _OcclusionAccuracyDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OcclusionAccuracyDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1501,10 +1501,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected RegionSoundsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1515,10 +1515,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RegionSoundsBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

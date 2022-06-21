@@ -1158,8 +1158,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public ConstructibleCreatedObjectCount.VersioningBreaks Versioning { get; private set; }
-        public UInt16 Count => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public UInt16 Priority => _data.Length <= 0x2 ? default : BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
+        public UInt16 Count => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
+        public UInt16 Priority => _structData.Length <= 0x2 ? default : BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1167,10 +1167,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ConstructibleCreatedObjectCountBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1182,11 +1182,17 @@ namespace Mutagen.Bethesda.Fallout4
             int finalPos,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: finalPos - stream.Position,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ConstructibleCreatedObjectCountBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            if (ret._data.Length <= 0x2)
+            if (ret._structData.Length <= 0x2)
             {
                 ret.Versioning |= ConstructibleCreatedObjectCount.VersioningBreaks.Break0;
             }

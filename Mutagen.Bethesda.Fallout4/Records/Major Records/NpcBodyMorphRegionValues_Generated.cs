@@ -1258,11 +1258,11 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single Head => _data.Slice(0x0, 0x4).Float();
-        public Single UpperTorso => _data.Slice(0x4, 0x4).Float();
-        public Single Arms => _data.Slice(0x8, 0x4).Float();
-        public Single LowerTorso => _data.Slice(0xC, 0x4).Float();
-        public Single Legs => _data.Slice(0x10, 0x4).Float();
+        public Single Head => _structData.Slice(0x0, 0x4).Float();
+        public Single UpperTorso => _structData.Slice(0x4, 0x4).Float();
+        public Single Arms => _structData.Slice(0x8, 0x4).Float();
+        public Single LowerTorso => _structData.Slice(0xC, 0x4).Float();
+        public Single Legs => _structData.Slice(0x10, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1270,10 +1270,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected NpcBodyMorphRegionValuesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1284,10 +1284,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NpcBodyMorphRegionValuesBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x14),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x14;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -179,16 +179,17 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         StructuredStringBuilder sb, 
         ObjectGeneration objGen,  
         TypeGeneration typeGen,  
-        Accessor dataAccessor,  
+        Accessor structDataAccessor,  
+        Accessor recordDataAccessor, 
         int? currentPosition,  
         string passedLengthAccessor,  
-        DataType dataType = null) 
+        DataType? dataType = null) 
     { 
         StringType str = typeGen as StringType; 
         var data = str.GetFieldData(); 
         if (data.HasTrigger) 
         { 
-            await base.GenerateWrapperFields(sb, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
+            await base.GenerateWrapperFields(sb, objGen, typeGen, structDataAccessor, recordDataAccessor, currentPosition, passedLengthAccessor, dataType); 
             return; 
         } 
         switch (str.BinaryType) 
@@ -197,7 +198,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                 sb.AppendLine($"public {typeGen.TypeName(getter: true)}{str.NullChar} {typeGen.Name} {{ get; private set; }} = {(str.Translated.HasValue ? $"{nameof(TranslatedString)}.{nameof(TranslatedString.Empty)}" : "string.Empty")};"); 
                 break; 
             default: 
-                await base.GenerateWrapperFields(sb, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
+                await base.GenerateWrapperFields(sb, objGen, typeGen, structDataAccessor, recordDataAccessor, currentPosition, passedLengthAccessor, dataType); 
                 return; 
         } 
  
@@ -245,6 +246,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         StructuredStringBuilder sb,  
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
+        Accessor dataAccessor,
         int? passedLength, 
         string? passedLengthAccessor) 
     { 
@@ -252,13 +254,13 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         switch (str.BinaryType) 
         { 
             case StringBinaryType.PrependLength: 
-                sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;"); 
+                sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;"); 
                 break; 
             case StringBinaryType.PrependLengthUShort: 
-                sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;"); 
+                sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;"); 
                 break; 
             case StringBinaryType.NullTerminate: 
-                sb.AppendLine($"ret.{typeGen.Name} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});"); 
+                sb.AppendLine($"ret.{typeGen.Name} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});"); 
                 sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(str.Translated == null ? $"ret.{typeGen.Name}.Length + 1" : "5")};"); 
                 break; 
             default: 

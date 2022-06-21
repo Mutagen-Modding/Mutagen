@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected int MeshEndingPos;
         #endregion
         #region Data
-        public ReadOnlyMemorySlice<Byte> Data => _data.Span.Slice(MeshEndingPos).ToArray();
+        public ReadOnlyMemorySlice<Byte> Data => _structData.Span.Slice(MeshEndingPos).ToArray();
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1120,10 +1120,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected DistantLodBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1134,11 +1134,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DistantLodBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.Mesh = BinaryStringUtility.ParseUnknownLengthString(ret._data, package.MetaData.Encodings.NonTranslated);
+            ret.Mesh = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
             ret.MeshEndingPos = ret.Mesh.Length + 1;
             stream.Position += ret.DataEndingPos;
             ret.CustomFactoryEnd(

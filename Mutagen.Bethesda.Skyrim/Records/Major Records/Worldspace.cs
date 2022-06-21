@@ -166,14 +166,14 @@ partial class WorldspaceBinaryOverlay
 {
     public partial P2Float GetObjectBoundsMinCustom() => _NAM0Location.HasValue
         ? new P2Float(
-            _data.Slice(_NAM0Location.Value.Min).Float() / 4096f,
-            _data.Slice(_NAM0Location.Value.Min + 4).Float() / 4096f)
+            _recordData.Slice(_NAM0Location.Value.Min).Float() / 4096f,
+            _recordData.Slice(_NAM0Location.Value.Min + 4).Float() / 4096f)
         : default;
 
     public partial P2Float GetObjectBoundsMaxCustom() => _NAM9Location.HasValue
         ? new P2Float(
-            _data.Slice(_NAM9Location.Value.Min).Float() / 4096f,
-            _data.Slice(_NAM9Location.Value.Min + 4).Float() / 4096f)
+            _recordData.Slice(_NAM9Location.Value.Min).Float() / 4096f,
+            _recordData.Slice(_NAM9Location.Value.Min + 4).Float() / 4096f)
         : default;
 
     private ReadOnlyMemorySlice<byte>? _grupData;

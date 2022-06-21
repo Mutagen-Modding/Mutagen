@@ -3053,7 +3053,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -3065,7 +3065,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         #region DataParse
@@ -3077,15 +3077,15 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords { get; private set; }
         #region LooseMod
         private int? _LooseModLocation;
-        public IFormLinkNullableGetter<IMiscItemGetter> LooseMod => _LooseModLocation.HasValue ? new FormLinkNullable<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LooseModLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMiscItemGetter>.Null;
+        public IFormLinkNullableGetter<IMiscItemGetter> LooseMod => _LooseModLocation.HasValue ? new FormLinkNullable<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LooseModLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMiscItemGetter>.Null;
         #endregion
         #region Priority
         private int? _PriorityLocation;
-        public Byte? Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PriorityLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region Filter
         private int? _FilterLocation;
-        public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3094,10 +3094,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected AObjectModificationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

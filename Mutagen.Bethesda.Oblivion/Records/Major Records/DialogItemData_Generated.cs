@@ -1186,8 +1186,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public DialogItemData.VersioningBreaks Versioning { get; private set; }
-        public DialogType DialogType => (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
-        public DialogItem.Flag Flags => _data.Span.Length <= 0x2 ? default : (DialogItem.Flag)_data.Span.Slice(0x2, 0x1)[0];
+        public DialogType DialogType => (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
+        public DialogItem.Flag Flags => _structData.Span.Length <= 0x2 ? default : (DialogItem.Flag)_structData.Span.Slice(0x2, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1195,10 +1195,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected DialogItemDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1209,12 +1209,17 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x3,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new DialogItemDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x2)
+            if (ret._structData.Length <= 0x2)
             {
                 ret.Versioning |= DialogItemData.VersioningBreaks.Break0;
             }

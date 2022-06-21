@@ -1986,31 +1986,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Data
         private RangeInt32? _DataLocation;
-        public ISoundOutputDataGetter? Data => _DataLocation.HasValue ? SoundOutputDataBinaryOverlay.SoundOutputDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public ISoundOutputDataGetter? Data => _DataLocation.HasValue ? SoundOutputDataBinaryOverlay.SoundOutputDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region FNAM
         private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Type
         private int? _TypeLocation;
-        public SoundOutputModel.TypeEnum? Type => _TypeLocation.HasValue ? (SoundOutputModel.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundOutputModel.TypeEnum?);
+        public SoundOutputModel.TypeEnum? Type => _TypeLocation.HasValue ? (SoundOutputModel.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundOutputModel.TypeEnum?);
         #endregion
         #region CNAM
         private int? _CNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SNAM
         private int? _SNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? SNAM => _SNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? SNAM => _SNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region OutputChannels
         private RangeInt32? _OutputChannelsLocation;
-        public ISoundOutputChannelsGetter? OutputChannels => _OutputChannelsLocation.HasValue ? SoundOutputChannelsBinaryOverlay.SoundOutputChannelsFactory(new OverlayStream(_data.Slice(_OutputChannelsLocation!.Value.Min), _package), _package) : default;
+        public ISoundOutputChannelsGetter? OutputChannels => _OutputChannelsLocation.HasValue ? SoundOutputChannelsBinaryOverlay.SoundOutputChannelsFactory(_recordData.Slice(_OutputChannelsLocation!.Value.Min), _package) : default;
         #endregion
         #region Attenuation
         private RangeInt32? _AttenuationLocation;
-        public ISoundOutputAttenuationGetter? Attenuation => _AttenuationLocation.HasValue ? SoundOutputAttenuationBinaryOverlay.SoundOutputAttenuationFactory(new OverlayStream(_data.Slice(_AttenuationLocation!.Value.Min), _package), _package) : default;
+        public ISoundOutputAttenuationGetter? Attenuation => _AttenuationLocation.HasValue ? SoundOutputAttenuationBinaryOverlay.SoundOutputAttenuationFactory(_recordData.Slice(_AttenuationLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2019,10 +2019,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected SoundOutputModelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2034,13 +2034,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SoundOutputModelBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

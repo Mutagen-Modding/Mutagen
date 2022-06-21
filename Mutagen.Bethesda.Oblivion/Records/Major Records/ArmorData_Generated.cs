@@ -1243,9 +1243,9 @@ namespace Mutagen.Bethesda.Oblivion
         public partial Single GetArmorValueCustom(int location);
         public Single ArmorValue => GetArmorValueCustom(location: 0x0);
         #endregion
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x2, 0x4));
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x6, 0x4));
-        public Single Weight => _data.Slice(0xA, 0x4).Float();
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x2, 0x4));
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x6, 0x4));
+        public Single Weight => _structData.Slice(0xA, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1253,10 +1253,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected ArmorDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1267,11 +1267,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xE,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ArmorDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xE + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

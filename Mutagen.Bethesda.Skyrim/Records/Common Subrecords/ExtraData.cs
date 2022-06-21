@@ -79,5 +79,5 @@ partial class ExtraDataBinaryWriteTranslation
 
 partial class ExtraDataBinaryOverlay
 {
-    public partial IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_data.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences!);
+    public partial IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_structData.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences!);
 }

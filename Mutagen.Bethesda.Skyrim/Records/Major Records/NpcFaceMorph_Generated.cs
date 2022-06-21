@@ -2046,25 +2046,25 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Single NoseLongVsShort => _data.Slice(0x0, 0x4).Float();
-        public Single NoseUpVsDown => _data.Slice(0x4, 0x4).Float();
-        public Single JawUpVsDown => _data.Slice(0x8, 0x4).Float();
-        public Single JawNarrowVsWide => _data.Slice(0xC, 0x4).Float();
-        public Single JawForwardVsBack => _data.Slice(0x10, 0x4).Float();
-        public Single CheeksUpVsDown => _data.Slice(0x14, 0x4).Float();
-        public Single CheeksForwardVsBack => _data.Slice(0x18, 0x4).Float();
-        public Single EyesUpVsDown => _data.Slice(0x1C, 0x4).Float();
-        public Single EyesInVsOut => _data.Slice(0x20, 0x4).Float();
-        public Single BrowsUpVsDown => _data.Slice(0x24, 0x4).Float();
-        public Single BrowsInVsOut => _data.Slice(0x28, 0x4).Float();
-        public Single BrowsForwardVsBack => _data.Slice(0x2C, 0x4).Float();
-        public Single LipsUpVsDown => _data.Slice(0x30, 0x4).Float();
-        public Single LipsInVsOut => _data.Slice(0x34, 0x4).Float();
-        public Single ChinNarrowVsWide => _data.Slice(0x38, 0x4).Float();
-        public Single ChinUpVsDown => _data.Slice(0x3C, 0x4).Float();
-        public Single ChinUnderbiteVsOverbite => _data.Slice(0x40, 0x4).Float();
-        public Single EyesForwardVsBack => _data.Slice(0x44, 0x4).Float();
-        public Single Unknown => _data.Slice(0x48, 0x4).Float();
+        public Single NoseLongVsShort => _structData.Slice(0x0, 0x4).Float();
+        public Single NoseUpVsDown => _structData.Slice(0x4, 0x4).Float();
+        public Single JawUpVsDown => _structData.Slice(0x8, 0x4).Float();
+        public Single JawNarrowVsWide => _structData.Slice(0xC, 0x4).Float();
+        public Single JawForwardVsBack => _structData.Slice(0x10, 0x4).Float();
+        public Single CheeksUpVsDown => _structData.Slice(0x14, 0x4).Float();
+        public Single CheeksForwardVsBack => _structData.Slice(0x18, 0x4).Float();
+        public Single EyesUpVsDown => _structData.Slice(0x1C, 0x4).Float();
+        public Single EyesInVsOut => _structData.Slice(0x20, 0x4).Float();
+        public Single BrowsUpVsDown => _structData.Slice(0x24, 0x4).Float();
+        public Single BrowsInVsOut => _structData.Slice(0x28, 0x4).Float();
+        public Single BrowsForwardVsBack => _structData.Slice(0x2C, 0x4).Float();
+        public Single LipsUpVsDown => _structData.Slice(0x30, 0x4).Float();
+        public Single LipsInVsOut => _structData.Slice(0x34, 0x4).Float();
+        public Single ChinNarrowVsWide => _structData.Slice(0x38, 0x4).Float();
+        public Single ChinUpVsDown => _structData.Slice(0x3C, 0x4).Float();
+        public Single ChinUnderbiteVsOverbite => _structData.Slice(0x40, 0x4).Float();
+        public Single EyesForwardVsBack => _structData.Slice(0x44, 0x4).Float();
+        public Single Unknown => _structData.Slice(0x48, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2072,10 +2072,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected NpcFaceMorphBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2086,11 +2086,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NpcFaceMorphBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x4C + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

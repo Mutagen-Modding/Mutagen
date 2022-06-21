@@ -45,7 +45,7 @@ partial class LeveledItemBinaryOverlay
     bool GetFlagsIsSetCustom() => _FlagsLocation.HasValue || _vestigialMarker;
     public partial LeveledFlag? GetFlagsCustom()
     {
-        var ret = _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation.Value, _package.MetaData.Constants)[0] : default(LeveledFlag?);
+        var ret = _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation.Value, _package.MetaData.Constants)[0] : default(LeveledFlag?);
         if (_vestigialMarker)
         {
             if (ret.HasValue)

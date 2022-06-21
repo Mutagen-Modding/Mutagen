@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Header
         private RangeInt32? _HeaderLocation;
-        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(new OverlayStream(_data.Slice(_HeaderLocation!.Value.Min), _package), _package) : default;
+        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(_recordData.Slice(_HeaderLocation!.Value.Min), _package) : default;
         #endregion
         public IIconsGetter? Icons { get; private set; }
         partial void CustomFactoryEnd(
@@ -1246,10 +1246,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected RegionDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

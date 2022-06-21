@@ -1274,11 +1274,11 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public APerkEntryPointEffect.EntryType EntryPoint => (APerkEntryPointEffect.EntryType)_data.Span.Slice(0x0, 0x1)[0];
-        public Byte PerkConditionTabCount => _data.Span[0x1];
+        public APerkEntryPointEffect.EntryType EntryPoint => (APerkEntryPointEffect.EntryType)_structData.Span.Slice(0x0, 0x1)[0];
+        public Byte PerkConditionTabCount => _structData.Span[0x1];
         #region PerkEntryID
         private int? _PerkEntryIDLocation;
-        public UInt16? PerkEntryID => _PerkEntryIDLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkEntryIDLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16? PerkEntryID => _PerkEntryIDLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkEntryIDLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region FunctionParameters
         public partial ParseResult FunctionParametersCustomParse(
@@ -1293,10 +1293,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected APerkEntryPointEffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

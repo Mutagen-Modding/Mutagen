@@ -4178,62 +4178,62 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public EffectShaderData.VersioningBreaks Versioning { get; private set; }
-        public EffectShader.Flag Flags => (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public EffectShader.SourceBlendMode MembraneShaderSourceBlendMode => (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public EffectShader.BlendOperation MembraneShaderBlendOperation => (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
-        public EffectShader.ZTestFunction MembraneShaderZTestFunction => (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
-        public Color FillTextureEffectColor => _data.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single FillTextureEffectAlphaFadeInTime => _data.Slice(0x14, 0x4).Float();
-        public Single FillTextureEffectFullAlphaTime => _data.Slice(0x18, 0x4).Float();
-        public Single FillTextureEffectAlphaFadeOutTime => _data.Slice(0x1C, 0x4).Float();
-        public Single FillTextureEffectPersistentAlphaRatio => _data.Slice(0x20, 0x4).Float();
-        public Single FillTextureEffectAlphaPulseAmplitude => _data.Slice(0x24, 0x4).Float();
-        public Single FillTextureEffectAlphaPulseFrequency => _data.Slice(0x28, 0x4).Float();
-        public Single FillTextureEffectTextureAnimationSpeedU => _data.Slice(0x2C, 0x4).Float();
-        public Single FillTextureEffectTextureAnimationSpeedV => _data.Slice(0x30, 0x4).Float();
-        public Single EdgeEffectFallOff => _data.Slice(0x34, 0x4).Float();
-        public Color EdgeEffectColor => _data.Slice(0x38, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single EdgeEffectAlphaFadeInTime => _data.Slice(0x3C, 0x4).Float();
-        public Single EdgeEffectFullAlphaTime => _data.Slice(0x40, 0x4).Float();
-        public Single EdgeEffectAlphaFadeOutTime => _data.Slice(0x44, 0x4).Float();
-        public Single EdgeEffectPersistentAlphaRatio => _data.Slice(0x48, 0x4).Float();
-        public Single EdgeEffectAlphaPulseAmplitude => _data.Slice(0x4C, 0x4).Float();
-        public Single EdgeEffectAlphaPulseFrequency => _data.Slice(0x50, 0x4).Float();
-        public Single FillTextureEffectFullAlphaRatio => _data.Slice(0x54, 0x4).Float();
-        public Single EdgeEffectFullAlphaRatio => _data.Slice(0x58, 0x4).Float();
-        public EffectShader.SourceBlendMode MembraneShaderDestBlendMode => (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x5C, 0x4));
-        public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode => _data.Span.Length <= 0x60 ? default : (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x60, 0x4));
-        public EffectShader.BlendOperation ParticleShaderBlendOperation => _data.Span.Length <= 0x64 ? default : (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x64, 0x4));
-        public EffectShader.ZTestFunction ParticleShaderZTestFunction => _data.Span.Length <= 0x68 ? default : (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x68, 0x4));
-        public EffectShader.SourceBlendMode ParticleShaderDestBlendMode => _data.Span.Length <= 0x6C ? default : (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x6C, 0x4));
-        public Single ParticleShaderParticleBirthRampUpTime => _data.Length <= 0x70 ? default : _data.Slice(0x70, 0x4).Float();
-        public Single ParticleShaderFullParticleBirthTime => _data.Length <= 0x74 ? default : _data.Slice(0x74, 0x4).Float();
-        public Single ParticleShaderParticleBirthRampDownTime => _data.Length <= 0x78 ? default : _data.Slice(0x78, 0x4).Float();
-        public Single ParticleShaderFullParticleBirthRatio => _data.Length <= 0x7C ? default : _data.Slice(0x7C, 0x4).Float();
-        public Single ParticleShaderPersistentParticleBirthRatio => _data.Length <= 0x80 ? default : _data.Slice(0x80, 0x4).Float();
-        public Single ParticleShaderParticleLifetime => _data.Length <= 0x84 ? default : _data.Slice(0x84, 0x4).Float();
-        public Single ParticleShaderParticleLifetimePlusMinus => _data.Length <= 0x88 ? default : _data.Slice(0x88, 0x4).Float();
-        public Single ParticleShaderInitialSpeedAlongNormal => _data.Length <= 0x8C ? default : _data.Slice(0x8C, 0x4).Float();
-        public Single ParticleShaderAccelerationAlongNormal => _data.Length <= 0x90 ? default : _data.Slice(0x90, 0x4).Float();
-        public Single ParticleShaderInitialVelocity1 => _data.Length <= 0x94 ? default : _data.Slice(0x94, 0x4).Float();
-        public Single ParticleShaderInitialVelocity2 => _data.Length <= 0x98 ? default : _data.Slice(0x98, 0x4).Float();
-        public Single ParticleShaderInitialVelocity3 => _data.Length <= 0x9C ? default : _data.Slice(0x9C, 0x4).Float();
-        public Single ParticleShaderAcceleration1 => _data.Length <= 0xA0 ? default : _data.Slice(0xA0, 0x4).Float();
-        public Single ParticleShaderAcceleration2 => _data.Length <= 0xA4 ? default : _data.Slice(0xA4, 0x4).Float();
-        public Single ParticleShaderAcceleration3 => _data.Length <= 0xA8 ? default : _data.Slice(0xA8, 0x4).Float();
-        public Single ParticleShaderScaleKey1 => _data.Length <= 0xAC ? default : _data.Slice(0xAC, 0x4).Float();
-        public Single ParticleShaderScaleKey2 => _data.Length <= 0xB0 ? default : _data.Slice(0xB0, 0x4).Float();
-        public Single ParticleShaderScaleKey1Time => _data.Length <= 0xB4 ? default : _data.Slice(0xB4, 0x4).Float();
-        public Single ParticleShaderScaleKey2Time => _data.Length <= 0xB8 ? default : _data.Slice(0xB8, 0x4).Float();
-        public Color ColorKey1Color => _data.Length <= 0xBC ? default : _data.Slice(0xBC, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color ColorKey2Color => _data.Length <= 0xC0 ? default : _data.Slice(0xC0, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color ColorKey3Color => _data.Length <= 0xC4 ? default : _data.Slice(0xC4, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single ColorKey1ColorAlpha => _data.Length <= 0xC8 ? default : _data.Slice(0xC8, 0x4).Float();
-        public Single ColorKey2ColorAlpha => _data.Length <= 0xCC ? default : _data.Slice(0xCC, 0x4).Float();
-        public Single ColorKey3ColorAlpha => _data.Length <= 0xD0 ? default : _data.Slice(0xD0, 0x4).Float();
-        public Single ColorKey1ColorKeyTime => _data.Length <= 0xD4 ? default : _data.Slice(0xD4, 0x4).Float();
-        public Single ColorKey2ColorKeyTime => _data.Length <= 0xD8 ? default : _data.Slice(0xD8, 0x4).Float();
-        public Single ColorKey3ColorKeyTime => _data.Length <= 0xDC ? default : _data.Slice(0xDC, 0x4).Float();
+        public EffectShader.Flag Flags => (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public EffectShader.SourceBlendMode MembraneShaderSourceBlendMode => (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public EffectShader.BlendOperation MembraneShaderBlendOperation => (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
+        public EffectShader.ZTestFunction MembraneShaderZTestFunction => (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
+        public Color FillTextureEffectColor => _structData.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single FillTextureEffectAlphaFadeInTime => _structData.Slice(0x14, 0x4).Float();
+        public Single FillTextureEffectFullAlphaTime => _structData.Slice(0x18, 0x4).Float();
+        public Single FillTextureEffectAlphaFadeOutTime => _structData.Slice(0x1C, 0x4).Float();
+        public Single FillTextureEffectPersistentAlphaRatio => _structData.Slice(0x20, 0x4).Float();
+        public Single FillTextureEffectAlphaPulseAmplitude => _structData.Slice(0x24, 0x4).Float();
+        public Single FillTextureEffectAlphaPulseFrequency => _structData.Slice(0x28, 0x4).Float();
+        public Single FillTextureEffectTextureAnimationSpeedU => _structData.Slice(0x2C, 0x4).Float();
+        public Single FillTextureEffectTextureAnimationSpeedV => _structData.Slice(0x30, 0x4).Float();
+        public Single EdgeEffectFallOff => _structData.Slice(0x34, 0x4).Float();
+        public Color EdgeEffectColor => _structData.Slice(0x38, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single EdgeEffectAlphaFadeInTime => _structData.Slice(0x3C, 0x4).Float();
+        public Single EdgeEffectFullAlphaTime => _structData.Slice(0x40, 0x4).Float();
+        public Single EdgeEffectAlphaFadeOutTime => _structData.Slice(0x44, 0x4).Float();
+        public Single EdgeEffectPersistentAlphaRatio => _structData.Slice(0x48, 0x4).Float();
+        public Single EdgeEffectAlphaPulseAmplitude => _structData.Slice(0x4C, 0x4).Float();
+        public Single EdgeEffectAlphaPulseFrequency => _structData.Slice(0x50, 0x4).Float();
+        public Single FillTextureEffectFullAlphaRatio => _structData.Slice(0x54, 0x4).Float();
+        public Single EdgeEffectFullAlphaRatio => _structData.Slice(0x58, 0x4).Float();
+        public EffectShader.SourceBlendMode MembraneShaderDestBlendMode => (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x5C, 0x4));
+        public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode => _structData.Span.Length <= 0x60 ? default : (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x60, 0x4));
+        public EffectShader.BlendOperation ParticleShaderBlendOperation => _structData.Span.Length <= 0x64 ? default : (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x64, 0x4));
+        public EffectShader.ZTestFunction ParticleShaderZTestFunction => _structData.Span.Length <= 0x68 ? default : (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x68, 0x4));
+        public EffectShader.SourceBlendMode ParticleShaderDestBlendMode => _structData.Span.Length <= 0x6C ? default : (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x6C, 0x4));
+        public Single ParticleShaderParticleBirthRampUpTime => _structData.Length <= 0x70 ? default : _structData.Slice(0x70, 0x4).Float();
+        public Single ParticleShaderFullParticleBirthTime => _structData.Length <= 0x74 ? default : _structData.Slice(0x74, 0x4).Float();
+        public Single ParticleShaderParticleBirthRampDownTime => _structData.Length <= 0x78 ? default : _structData.Slice(0x78, 0x4).Float();
+        public Single ParticleShaderFullParticleBirthRatio => _structData.Length <= 0x7C ? default : _structData.Slice(0x7C, 0x4).Float();
+        public Single ParticleShaderPersistentParticleBirthRatio => _structData.Length <= 0x80 ? default : _structData.Slice(0x80, 0x4).Float();
+        public Single ParticleShaderParticleLifetime => _structData.Length <= 0x84 ? default : _structData.Slice(0x84, 0x4).Float();
+        public Single ParticleShaderParticleLifetimePlusMinus => _structData.Length <= 0x88 ? default : _structData.Slice(0x88, 0x4).Float();
+        public Single ParticleShaderInitialSpeedAlongNormal => _structData.Length <= 0x8C ? default : _structData.Slice(0x8C, 0x4).Float();
+        public Single ParticleShaderAccelerationAlongNormal => _structData.Length <= 0x90 ? default : _structData.Slice(0x90, 0x4).Float();
+        public Single ParticleShaderInitialVelocity1 => _structData.Length <= 0x94 ? default : _structData.Slice(0x94, 0x4).Float();
+        public Single ParticleShaderInitialVelocity2 => _structData.Length <= 0x98 ? default : _structData.Slice(0x98, 0x4).Float();
+        public Single ParticleShaderInitialVelocity3 => _structData.Length <= 0x9C ? default : _structData.Slice(0x9C, 0x4).Float();
+        public Single ParticleShaderAcceleration1 => _structData.Length <= 0xA0 ? default : _structData.Slice(0xA0, 0x4).Float();
+        public Single ParticleShaderAcceleration2 => _structData.Length <= 0xA4 ? default : _structData.Slice(0xA4, 0x4).Float();
+        public Single ParticleShaderAcceleration3 => _structData.Length <= 0xA8 ? default : _structData.Slice(0xA8, 0x4).Float();
+        public Single ParticleShaderScaleKey1 => _structData.Length <= 0xAC ? default : _structData.Slice(0xAC, 0x4).Float();
+        public Single ParticleShaderScaleKey2 => _structData.Length <= 0xB0 ? default : _structData.Slice(0xB0, 0x4).Float();
+        public Single ParticleShaderScaleKey1Time => _structData.Length <= 0xB4 ? default : _structData.Slice(0xB4, 0x4).Float();
+        public Single ParticleShaderScaleKey2Time => _structData.Length <= 0xB8 ? default : _structData.Slice(0xB8, 0x4).Float();
+        public Color ColorKey1Color => _structData.Length <= 0xBC ? default : _structData.Slice(0xBC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color ColorKey2Color => _structData.Length <= 0xC0 ? default : _structData.Slice(0xC0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color ColorKey3Color => _structData.Length <= 0xC4 ? default : _structData.Slice(0xC4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single ColorKey1ColorAlpha => _structData.Length <= 0xC8 ? default : _structData.Slice(0xC8, 0x4).Float();
+        public Single ColorKey2ColorAlpha => _structData.Length <= 0xCC ? default : _structData.Slice(0xCC, 0x4).Float();
+        public Single ColorKey3ColorAlpha => _structData.Length <= 0xD0 ? default : _structData.Slice(0xD0, 0x4).Float();
+        public Single ColorKey1ColorKeyTime => _structData.Length <= 0xD4 ? default : _structData.Slice(0xD4, 0x4).Float();
+        public Single ColorKey2ColorKeyTime => _structData.Length <= 0xD8 ? default : _structData.Slice(0xD8, 0x4).Float();
+        public Single ColorKey3ColorKeyTime => _structData.Length <= 0xDC ? default : _structData.Slice(0xDC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -4241,10 +4241,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected EffectShaderDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -4255,12 +4255,17 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xE0,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new EffectShaderDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x60)
+            if (ret._structData.Length <= 0x60)
             {
                 ret.Versioning |= EffectShaderData.VersioningBreaks.Break0;
             }

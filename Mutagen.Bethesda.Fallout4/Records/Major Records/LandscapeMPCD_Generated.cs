@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region MPCD
-        public ReadOnlyMemorySlice<Byte> MPCD => _data.Span.ToArray();
+        public ReadOnlyMemorySlice<Byte> MPCD => _structData.Span.ToArray();
         protected int MPCDEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1069,10 +1069,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected LandscapeMPCDBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1083,11 +1083,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LandscapeMPCDBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

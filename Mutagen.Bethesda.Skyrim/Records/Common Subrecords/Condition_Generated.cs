@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
         public partial Condition.Flag GetFlagsCustom(int location);
         public Condition.Flag Flags => GetFlagsCustom(location: 0x0);
         #endregion
-        public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(0x1, 0x3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown1 => _structData.Span.Slice(0x1, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1188,10 +1188,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ConditionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

@@ -84,45 +84,45 @@ partial class NavigationMeshDataBinaryWriteTranslation
 
 partial class NavigationMeshDataBinaryOverlay
 {
-    public uint NavmeshGridDivisor => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(CoverTrianglesLogicEndingPos));
+    public uint NavmeshGridDivisor => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(CoverTrianglesLogicEndingPos));
 
-    public float MaxDistanceX => _data.Slice(CoverTrianglesLogicEndingPos + 4).Float();
+    public float MaxDistanceX => _structData.Slice(CoverTrianglesLogicEndingPos + 4).Float();
 
-    public float MaxDistanceY => _data.Slice(CoverTrianglesLogicEndingPos + 8).Float();
+    public float MaxDistanceY => _structData.Slice(CoverTrianglesLogicEndingPos + 8).Float();
 
     public P3Float Min => new P3Float(
-        _data.Slice(CoverTrianglesLogicEndingPos + 12).Float(),
-        _data.Slice(CoverTrianglesLogicEndingPos + 16).Float(),
-        _data.Slice(CoverTrianglesLogicEndingPos + 20).Float());
+        _structData.Slice(CoverTrianglesLogicEndingPos + 12).Float(),
+        _structData.Slice(CoverTrianglesLogicEndingPos + 16).Float(),
+        _structData.Slice(CoverTrianglesLogicEndingPos + 20).Float());
 
     public P3Float Max => new P3Float(
-        _data.Slice(CoverTrianglesLogicEndingPos + 24).Float(),
-        _data.Slice(CoverTrianglesLogicEndingPos + 28).Float(),
-        _data.Slice(CoverTrianglesLogicEndingPos + 32).Float());
+        _structData.Slice(CoverTrianglesLogicEndingPos + 24).Float(),
+        _structData.Slice(CoverTrianglesLogicEndingPos + 28).Float(),
+        _structData.Slice(CoverTrianglesLogicEndingPos + 32).Float());
 
     public ReadOnlyMemorySlice<byte> NavmeshGrid { get; private set; }
 
     public IReadOnlyList<INavmeshTriangleGetter> Triangles =>
         new TrianglesOverlay(
-            _data,
+            _structData,
             _package,
             trianglesStartPos: VerticesEndingPos,
             coverIndicesStartPos: DoorTrianglesEndingPos);
 
     public partial IANavmeshParentGetter GetParentCustom(int location)
     {
-        return NavigationMeshDataBinaryCreateTranslation.GetBinaryParent(new OverlayStream(_data.Slice(8), _package));
+        return NavigationMeshDataBinaryCreateTranslation.GetBinaryParent(new OverlayStream(_structData.Slice(8), _package));
     }
 
     partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
     {
-        CoverTrianglesLogicEndingPos = DoorTrianglesEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(DoorTrianglesEndingPos)) * 2) + 4));
-        NavmeshGrid = _data.Slice(CoverTrianglesLogicEndingPos + 0x24);
+        CoverTrianglesLogicEndingPos = DoorTrianglesEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(DoorTrianglesEndingPos)) * 2) + 4));
+        NavmeshGrid = _structData.Slice(CoverTrianglesLogicEndingPos + 0x24);
     }
 
     partial void CustomTrianglesEndPos()
     {
-        var count = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(VerticesEndingPos));
+        var count = BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(VerticesEndingPos));
         TrianglesEndingPos = VerticesEndingPos + checked((int)((count * 0x10) + 4));
     }
 
@@ -140,13 +140,13 @@ partial class NavigationMeshDataBinaryOverlay
             int trianglesStartPos,
             int coverIndicesStartPos)
         {
-            this._data = data;
-            this._package = package;
-            this._trianglesStartPos = trianglesStartPos;
-            this._trianglesCount = BinaryPrimitives.ReadInt32LittleEndian(this._data.Slice(this._trianglesStartPos));
-            this._trianglesStartPos += 4;
-            this._isCover = new bool[this._trianglesCount];
-            var coverCount = BinaryPrimitives.ReadInt32LittleEndian(this._data.Slice(coverIndicesStartPos));
+            _data = data;
+            _package = package;
+            _trianglesStartPos = trianglesStartPos;
+            _trianglesCount = BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_trianglesStartPos));
+            _trianglesStartPos += 4;
+            _isCover = new bool[_trianglesCount];
+            var coverCount = BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(coverIndicesStartPos));
             coverIndicesStartPos += 4;
             var coverIndices = _data.Span.Slice(coverIndicesStartPos, coverCount * 2).AsInt16Span();
             foreach (var index in coverIndices)
@@ -178,6 +178,6 @@ partial class NavigationMeshDataBinaryOverlay
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

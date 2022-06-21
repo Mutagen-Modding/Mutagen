@@ -1367,11 +1367,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public WeatherMagic.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<ISpellGetter> OnLightningStrikeSpell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Single OnLightningStrikeThreshold => _data.Slice(0x4, 0x4).Float();
-        public IFormLinkGetter<ISpellGetter> OnWeatherActivateSpell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public Single OnWeatherActivateThreshold => _data.Length <= 0xC ? default : _data.Slice(0xC, 0x4).Float();
-        public UInt64 Unknown => _data.Length <= 0x10 ? default : BinaryPrimitives.ReadUInt64LittleEndian(_data.Slice(0x10, 0x8));
+        public IFormLinkGetter<ISpellGetter> OnLightningStrikeSpell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Single OnLightningStrikeThreshold => _structData.Slice(0x4, 0x4).Float();
+        public IFormLinkGetter<ISpellGetter> OnWeatherActivateSpell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public Single OnWeatherActivateThreshold => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
+        public UInt64 Unknown => _structData.Length <= 0x10 ? default : BinaryPrimitives.ReadUInt64LittleEndian(_structData.Slice(0x10, 0x8));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1379,10 +1379,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected WeatherMagicBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1393,12 +1393,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x18,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherMagicBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0xC)
+            if (ret._structData.Length <= 0xC)
             {
                 ret.Versioning |= WeatherMagic.VersioningBreaks.Break0;
             }

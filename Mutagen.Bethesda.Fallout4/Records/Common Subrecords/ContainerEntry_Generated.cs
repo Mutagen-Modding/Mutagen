@@ -1239,12 +1239,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Item
         private RangeInt32? _ItemLocation;
-        private IContainerItemGetter? _Item => _ItemLocation.HasValue ? ContainerItemBinaryOverlay.ContainerItemFactory(new OverlayStream(_data.Slice(_ItemLocation!.Value.Min), _package), _package) : default;
+        private IContainerItemGetter? _Item => _ItemLocation.HasValue ? ContainerItemBinaryOverlay.ContainerItemFactory(_recordData.Slice(_ItemLocation!.Value.Min), _package) : default;
         public IContainerItemGetter Item => _Item ?? new ContainerItem();
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1253,10 +1253,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ContainerEntryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1267,10 +1267,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ContainerEntryBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

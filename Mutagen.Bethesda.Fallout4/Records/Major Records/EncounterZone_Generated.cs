@@ -1760,32 +1760,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region Owner
         private int _OwnerLocation => _DATALocation!.Value.Min;
         private bool _Owner_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
         #endregion
         #region Location
         private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Location_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
+        public IFormLinkGetter<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue;
-        public SByte Rank => _Rank_IsSet ? (sbyte)_data.Slice(_RankLocation, 1)[0] : default;
+        public SByte Rank => _Rank_IsSet ? (sbyte)_recordData.Slice(_RankLocation, 1)[0] : default;
         #endregion
         #region MinLevel
         private int _MinLevelLocation => _DATALocation!.Value.Min + 0x9;
         private bool _MinLevel_IsSet => _DATALocation.HasValue;
-        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_data.Slice(_MinLevelLocation, 1)[0] : default;
+        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_recordData.Slice(_MinLevelLocation, 1)[0] : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xA;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region MaxLevel
         private int _MaxLevelLocation => _DATALocation!.Value.Min + 0xB;
         private bool _MaxLevel_IsSet => _DATALocation.HasValue;
-        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_data.Slice(_MaxLevelLocation, 1)[0] : default;
+        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_recordData.Slice(_MaxLevelLocation, 1)[0] : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1794,10 +1794,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected EncounterZoneBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1809,13 +1809,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new EncounterZoneBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

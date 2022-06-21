@@ -1164,11 +1164,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Chance
         private int? _ChanceLocation;
-        public Byte? Chance => _ChanceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ChanceLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? Chance => _ChanceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1177,10 +1177,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected SoundItemBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1191,10 +1191,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SoundItemBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

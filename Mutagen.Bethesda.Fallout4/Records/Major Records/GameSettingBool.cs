@@ -37,7 +37,7 @@ partial class GameSettingBoolBinaryOverlay
 {
     private int? _DataLocation;
     bool GetDataIsSetCustom() => _DataLocation.HasValue;
-    public partial bool? GetDataCustom() => _DataLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants)) != 0 : default;
+    public partial bool? GetDataCustom() => _DataLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants)) != 0 : default;
     partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
     {
         _DataLocation = (ushort)(stream.Position - offset);

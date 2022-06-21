@@ -1889,27 +1889,27 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Data
         private RangeInt32? _DataLocation;
-        public ISoundOutputDataGetter? Data => _DataLocation.HasValue ? SoundOutputDataBinaryOverlay.SoundOutputDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public ISoundOutputDataGetter? Data => _DataLocation.HasValue ? SoundOutputDataBinaryOverlay.SoundOutputDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region Type
         private int? _TypeLocation;
-        public SoundOutputModel.TypeEnum? Type => _TypeLocation.HasValue ? (SoundOutputModel.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundOutputModel.TypeEnum?);
+        public SoundOutputModel.TypeEnum? Type => _TypeLocation.HasValue ? (SoundOutputModel.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundOutputModel.TypeEnum?);
         #endregion
         #region StaticAttenuation
         private int? _StaticAttenuationLocation;
-        public Single? StaticAttenuation => _StaticAttenuationLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticAttenuationLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 0.01) : default(Single?);
+        public Single? StaticAttenuation => _StaticAttenuationLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StaticAttenuationLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 0.01) : default(Single?);
         #endregion
         #region OutputChannels
         private RangeInt32? _OutputChannelsLocation;
-        public ISoundOutputChannelsGetter? OutputChannels => _OutputChannelsLocation.HasValue ? SoundOutputChannelsBinaryOverlay.SoundOutputChannelsFactory(new OverlayStream(_data.Slice(_OutputChannelsLocation!.Value.Min), _package), _package) : default;
+        public ISoundOutputChannelsGetter? OutputChannels => _OutputChannelsLocation.HasValue ? SoundOutputChannelsBinaryOverlay.SoundOutputChannelsFactory(_recordData.Slice(_OutputChannelsLocation!.Value.Min), _package) : default;
         #endregion
         #region DynamicAttentuation
         private RangeInt32? _DynamicAttentuationLocation;
-        public IDynamicAttentuationValuesGetter? DynamicAttentuation => _DynamicAttentuationLocation.HasValue ? DynamicAttentuationValuesBinaryOverlay.DynamicAttentuationValuesFactory(new OverlayStream(_data.Slice(_DynamicAttentuationLocation!.Value.Min), _package), _package) : default;
+        public IDynamicAttentuationValuesGetter? DynamicAttentuation => _DynamicAttentuationLocation.HasValue ? DynamicAttentuationValuesBinaryOverlay.DynamicAttentuationValuesFactory(_recordData.Slice(_DynamicAttentuationLocation!.Value.Min), _package) : default;
         #endregion
         #region EffectChain
         private int? _EffectChainLocation;
-        public IFormLinkNullableGetter<IAudioEffectChainGetter> EffectChain => _EffectChainLocation.HasValue ? new FormLinkNullable<IAudioEffectChainGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EffectChainLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAudioEffectChainGetter>.Null;
+        public IFormLinkNullableGetter<IAudioEffectChainGetter> EffectChain => _EffectChainLocation.HasValue ? new FormLinkNullable<IAudioEffectChainGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EffectChainLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAudioEffectChainGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1918,10 +1918,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SoundOutputModelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1933,13 +1933,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SoundOutputModelBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

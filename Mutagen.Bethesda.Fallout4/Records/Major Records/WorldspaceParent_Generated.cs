@@ -1159,11 +1159,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLinkGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
+        public IFormLinkGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public WorldspaceParent.Flag Flags => _FlagsLocation.HasValue ? (WorldspaceParent.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(WorldspaceParent.Flag);
+        public WorldspaceParent.Flag Flags => _FlagsLocation.HasValue ? (WorldspaceParent.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(WorldspaceParent.Flag);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1172,10 +1172,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected WorldspaceParentBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1186,10 +1186,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WorldspaceParentBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

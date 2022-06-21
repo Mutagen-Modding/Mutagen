@@ -1496,15 +1496,15 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Single EyeAdaptSpeed => _data.Slice(0x0, 0x4).Float();
-        public Single BloomBlurRadius => _data.Slice(0x4, 0x4).Float();
-        public Single BloomThreshold => _data.Slice(0x8, 0x4).Float();
-        public Single BloomScale => _data.Slice(0xC, 0x4).Float();
-        public Single ReceiveBloomThreshold => _data.Slice(0x10, 0x4).Float();
-        public Single White => _data.Slice(0x14, 0x4).Float();
-        public Single SunlightScale => _data.Slice(0x18, 0x4).Float();
-        public Single SkyScale => _data.Slice(0x1C, 0x4).Float();
-        public Single EyeAdaptStrength => _data.Slice(0x20, 0x4).Float();
+        public Single EyeAdaptSpeed => _structData.Slice(0x0, 0x4).Float();
+        public Single BloomBlurRadius => _structData.Slice(0x4, 0x4).Float();
+        public Single BloomThreshold => _structData.Slice(0x8, 0x4).Float();
+        public Single BloomScale => _structData.Slice(0xC, 0x4).Float();
+        public Single ReceiveBloomThreshold => _structData.Slice(0x10, 0x4).Float();
+        public Single White => _structData.Slice(0x14, 0x4).Float();
+        public Single SunlightScale => _structData.Slice(0x18, 0x4).Float();
+        public Single SkyScale => _structData.Slice(0x1C, 0x4).Float();
+        public Single EyeAdaptStrength => _structData.Slice(0x20, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1512,10 +1512,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ImageSpaceHdrBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1526,11 +1526,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ImageSpaceHdrBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

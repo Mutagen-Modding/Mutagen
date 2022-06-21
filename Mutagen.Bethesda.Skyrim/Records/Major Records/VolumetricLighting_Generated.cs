@@ -2159,51 +2159,51 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Intensity
         private int? _IntensityLocation;
-        public Single? Intensity => _IntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Intensity => _IntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region CustomColorContribution
         private int? _CustomColorContributionLocation;
-        public Single? CustomColorContribution => _CustomColorContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CustomColorContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? CustomColorContribution => _CustomColorContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CustomColorContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorR
         private int? _ColorRLocation;
-        public Single? ColorR => _ColorRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorRLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? ColorR => _ColorRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorRLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorG
         private int? _ColorGLocation;
-        public Single? ColorG => _ColorGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorGLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? ColorG => _ColorGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorGLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorB
         private int? _ColorBLocation;
-        public Single? ColorB => _ColorBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorBLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? ColorB => _ColorBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorBLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityContribution
         private int? _DensityContributionLocation;
-        public Single? DensityContribution => _DensityContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DensityContribution => _DensityContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DensityContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensitySize
         private int? _DensitySizeLocation;
-        public Single? DensitySize => _DensitySizeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensitySizeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DensitySize => _DensitySizeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DensitySizeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityWindSpeed
         private int? _DensityWindSpeedLocation;
-        public Single? DensityWindSpeed => _DensityWindSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityWindSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DensityWindSpeed => _DensityWindSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DensityWindSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityFallingSpeed
         private int? _DensityFallingSpeedLocation;
-        public Single? DensityFallingSpeed => _DensityFallingSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityFallingSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DensityFallingSpeed => _DensityFallingSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DensityFallingSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region PhaseFunctionContribution
         private int? _PhaseFunctionContributionLocation;
-        public Single? PhaseFunctionContribution => _PhaseFunctionContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? PhaseFunctionContribution => _PhaseFunctionContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PhaseFunctionContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region PhaseFunctionScattering
         private int? _PhaseFunctionScatteringLocation;
-        public Single? PhaseFunctionScattering => _PhaseFunctionScatteringLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionScatteringLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? PhaseFunctionScattering => _PhaseFunctionScatteringLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PhaseFunctionScatteringLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region SamplingRepartitionRangeFactor
         private int? _SamplingRepartitionRangeFactorLocation;
-        public Single? SamplingRepartitionRangeFactor => _SamplingRepartitionRangeFactorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SamplingRepartitionRangeFactorLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? SamplingRepartitionRangeFactor => _SamplingRepartitionRangeFactorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SamplingRepartitionRangeFactorLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2212,10 +2212,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected VolumetricLightingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2227,13 +2227,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new VolumetricLightingBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

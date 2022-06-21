@@ -1832,20 +1832,20 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public ISkillBoostGetter SkillBoost0 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost1 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x2), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost2 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x4), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost3 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x6), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0xA), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0xC), _package), _package, default(TypedParseParams));
-        public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xE, 0x4));
+        public ISkillBoostGetter SkillBoost0 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData, _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost1 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0x2), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost2 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0x4), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost3 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0x6), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0x8), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0xA), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0xC), _package, default(TypedParseParams));
+        public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xE, 0x4));
         #region Height
         public IGenderedItemGetter<Single> Height
         {
             get
             {
-                var data = _data.Span.Slice(0x12, 8);
+                var data = _structData.Span.Slice(0x12, 8);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -1857,14 +1857,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             get
             {
-                var data = _data.Span.Slice(0x1A, 8);
+                var data = _structData.Span.Slice(0x1A, 8);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
             }
         }
         #endregion
-        public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x22, 0x2));
+        public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x22, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1872,10 +1872,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected RaceDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1886,11 +1886,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new RaceDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

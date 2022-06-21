@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Flags
         private int? _FlagsLocation;
-        public ActivateParents.Flag Flags => _FlagsLocation.HasValue ? (ActivateParents.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(ActivateParents.Flag);
+        public ActivateParents.Flag Flags => _FlagsLocation.HasValue ? (ActivateParents.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(ActivateParents.Flag);
         #endregion
         public IReadOnlyList<IActivateParentGetter> Parents { get; private set; } = Array.Empty<IActivateParentGetter>();
         partial void CustomFactoryEnd(
@@ -1286,10 +1286,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ActivateParentsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1300,10 +1300,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ActivateParentsBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

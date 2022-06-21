@@ -45,10 +45,10 @@ partial class CombatStyleDataBinaryOverlay
     private bool GetFlagsIsSetCustom() => true;
     public partial CombatStyle.Flag GetFlagsCustom(int location)
     {
-        var ret = (CombatStyle.Flag)_data[0x50];
+        var ret = (CombatStyle.Flag)_structData[0x50];
         if (!this.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break4))
         {
-            int flags = BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x78));
+            int flags = BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x78));
             var otherFlag = (CombatStyle.Flag)(flags << 8);
             ret |= otherFlag;
         }

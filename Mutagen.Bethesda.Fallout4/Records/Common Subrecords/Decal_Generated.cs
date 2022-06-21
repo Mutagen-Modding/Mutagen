@@ -1607,17 +1607,17 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single MinWidth => _data.Slice(0x0, 0x4).Float();
-        public Single MaxWidth => _data.Slice(0x4, 0x4).Float();
-        public Single MinHeight => _data.Slice(0x8, 0x4).Float();
-        public Single MaxHeight => _data.Slice(0xC, 0x4).Float();
-        public Single Depth => _data.Slice(0x10, 0x4).Float();
-        public Single Shininess => _data.Slice(0x14, 0x4).Float();
-        public Single ParallaxScale => _data.Slice(0x18, 0x4).Float();
-        public Byte ParallaxPasses => _data.Span[0x1C];
-        public Decal.Flag Flags => (Decal.Flag)_data.Span.Slice(0x1D, 0x1)[0];
-        public UInt16 AlphaThreshold => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1E, 0x2));
-        public Color Color => _data.Slice(0x20, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single MinWidth => _structData.Slice(0x0, 0x4).Float();
+        public Single MaxWidth => _structData.Slice(0x4, 0x4).Float();
+        public Single MinHeight => _structData.Slice(0x8, 0x4).Float();
+        public Single MaxHeight => _structData.Slice(0xC, 0x4).Float();
+        public Single Depth => _structData.Slice(0x10, 0x4).Float();
+        public Single Shininess => _structData.Slice(0x14, 0x4).Float();
+        public Single ParallaxScale => _structData.Slice(0x18, 0x4).Float();
+        public Byte ParallaxPasses => _structData.Span[0x1C];
+        public Decal.Flag Flags => (Decal.Flag)_structData.Span.Slice(0x1D, 0x1)[0];
+        public UInt16 AlphaThreshold => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x1E, 0x2));
+        public Color Color => _structData.Slice(0x20, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1625,10 +1625,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected DecalBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1639,11 +1639,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new DecalBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

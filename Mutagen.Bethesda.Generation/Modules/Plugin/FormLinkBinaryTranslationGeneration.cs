@@ -227,7 +227,8 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
-        Accessor dataAccessor,
+        Accessor structDataAccessor,  
+        Accessor recordDataAccessor, 
         int? currentPosition,
         string passedLengthAccessor,
         DataType dataType = null)
@@ -244,7 +245,6 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                     sb,
                     objGen,
                     typeGen,
-                    dataAccessor,
                     currentPosition,
                     passedLengthAccessor,
                     dataType);
@@ -262,8 +262,8 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         if (data.RecordType.HasValue)
         {
             if (dataType != null) throw new ArgumentException();
-            dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-            sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
+            recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
+            sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, recordDataAccessor, "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
         }
         else
         {
@@ -273,12 +273,12 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             }
             if (dataType == null)
             {
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
             }
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{recordDataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
             }
         }
     }

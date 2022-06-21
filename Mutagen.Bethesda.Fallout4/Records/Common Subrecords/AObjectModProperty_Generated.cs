@@ -829,8 +829,8 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public T Property => EnumExt<T>.Convert(_data.Span.Slice(0x0, 0x1)[0]);
-        public Single Step => _data.Slice(0x1, 0x4).Float();
+        public T Property => EnumExt<T>.Convert(_structData.Span.Slice(0x0, 0x1)[0]);
+        public Single Step => _structData.Slice(0x1, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -838,10 +838,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected AObjectModPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

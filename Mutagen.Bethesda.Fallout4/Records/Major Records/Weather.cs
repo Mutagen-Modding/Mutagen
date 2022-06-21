@@ -477,7 +477,7 @@ partial class WeatherBinaryOverlay
     {
         if (!_directionalLoc.HasValue) return null;
         return WeatherBinaryCreateTranslation.GetBinaryDirectionalAmbientLightingColors(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_directionalLoc.Value), _package.MetaData)));
+            new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_directionalLoc.Value), _package.MetaData)));
     }
 
     private ParseResult CustomRecordFallback(

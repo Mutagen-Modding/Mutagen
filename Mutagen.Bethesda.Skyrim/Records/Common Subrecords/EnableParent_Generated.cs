@@ -1261,9 +1261,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public EnableParent.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public EnableParent.Flag Flags => _data.Span.Length <= 0x4 ? default : (EnableParent.Flag)_data.Span.Slice(0x4, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
+        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public EnableParent.Flag Flags => _structData.Span.Length <= 0x4 ? default : (EnableParent.Flag)_structData.Span.Slice(0x4, 0x1)[0];
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1271,10 +1271,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected EnableParentBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1285,12 +1285,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new EnableParentBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x4)
+            if (ret._structData.Length <= 0x4)
             {
                 ret.Versioning |= EnableParent.VersioningBreaks.Break0;
             }

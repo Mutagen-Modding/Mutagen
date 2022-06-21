@@ -1209,10 +1209,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected PerkEntryPointSelectTextBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1223,11 +1223,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkEntryPointSelectTextBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.Text = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(0x2), package.MetaData.Encodings.NonTranslated);
+            ret.Text = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x2), package.MetaData.Encodings.NonTranslated);
             ret.TextEndingPos = 0x2 + ret.Text.Length + 1;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,

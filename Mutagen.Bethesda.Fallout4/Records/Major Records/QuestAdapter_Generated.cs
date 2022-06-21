@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public QuestAdapter.VersioningBreaks Versioning { get; private set; }
-        public Byte ExtraBindDataVersion => _data.Span[ScriptsEndingPos + 0x0];
+        public Byte ExtraBindDataVersion => _structData.Span[ScriptsEndingPos + 0x0];
         #region FragmentCount
         partial void FragmentCountCustomParse(
             OverlayStream stream,
@@ -1706,10 +1706,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected QuestAdapterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1720,14 +1720,19 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestAdapterBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomFragmentsEndPos();
             ret.CustomAliasesEndPos();
-            if (ret._data.Length <= ret.ScriptsEndingPos)
+            if (ret._structData.Length <= ret.ScriptsEndingPos)
             {
                 ret.Versioning |= QuestAdapter.VersioningBreaks.Break0;
             }

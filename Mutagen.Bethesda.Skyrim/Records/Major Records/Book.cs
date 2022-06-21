@@ -115,7 +115,7 @@ partial class BookBinaryOverlay
     public partial Book.Flag GetFlagsCustom()
     {
         if (!_DATALocation.HasValue) return default;
-        return (Book.Flag)_data[_FlagsLocation];
+        return (Book.Flag)_recordData[_FlagsLocation];
     }
 
     public partial IBookTeachTargetGetter? GetTeachesCustom()
@@ -126,21 +126,21 @@ partial class BookBinaryOverlay
         {
             return new BookSpell()
             {
-                Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
+                Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
             };
         }
         else if ((flags & BookBinaryCreateTranslation.SkillFlag) > 0)
         {
             return new BookSkill
             {
-                Skill = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_TeachesLocation, 4))
+                Skill = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_TeachesLocation, 4))
             };
         }
         else
         {
             return new BookTeachesNothing()
             {
-                RawContent = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_TeachesLocation, 4))
+                RawContent = BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TeachesLocation, 4))
             };
         }
     }

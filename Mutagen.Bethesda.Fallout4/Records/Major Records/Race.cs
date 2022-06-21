@@ -235,13 +235,13 @@ partial class RaceBinaryOverlay
     public partial Race.Flag GetFlagsCustom()
     {
         if (!_DATALocation.HasValue) return default;
-        var flag = (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4));
+        var flag = (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 4));
 
         // Clear out upper flags
         flag &= ((Race.Flag)0x00000000FFFFFFFF);
 
         // Set upper flags
-        ulong flags2 = BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Flags2Location, 4));
+        ulong flags2 = BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_Flags2Location, 4));
         flags2 <<= 32;
         flag |= ((Race.Flag)flags2);
         return flag;
@@ -275,7 +275,7 @@ partial class RaceBinaryOverlay
     {
         var ret = new FaceFxPhonemes();
         if (_faceFxPhonemesLoc == null) return ret;
-        var frame = new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_faceFxPhonemesLoc.Value), _package.MetaData));
+        var frame = new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_faceFxPhonemesLoc.Value), _package.MetaData));
         FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, ret);
         return ret;
     }

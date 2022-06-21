@@ -2444,11 +2444,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Type
         private int? _TypeLocation;
-        public SceneAction.TypeEnum Type => _TypeLocation.HasValue ? (SceneAction.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SceneAction.TypeEnum);
+        public SceneAction.TypeEnum Type => _TypeLocation.HasValue ? (SceneAction.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SceneAction.TypeEnum);
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -2456,56 +2456,56 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorID
         private int? _ActorIDLocation;
-        public Int32? ActorID => _ActorIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ActorIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? ActorID => _ActorIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region LNAM
         private int? _LNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? LNAM => _LNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? LNAM => _LNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Index
         private int? _IndexLocation;
-        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public SceneAction.Flag? Flags => _FlagsLocation.HasValue ? (SceneAction.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneAction.Flag?);
+        public SceneAction.Flag? Flags => _FlagsLocation.HasValue ? (SceneAction.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneAction.Flag?);
         #endregion
         #region StartPhase
         private int? _StartPhaseLocation;
-        public UInt32? StartPhase => _StartPhaseLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StartPhaseLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? StartPhase => _StartPhaseLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartPhaseLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region EndPhase
         private int? _EndPhaseLocation;
-        public UInt32? EndPhase => _EndPhaseLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EndPhaseLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? EndPhase => _EndPhaseLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EndPhaseLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region TimerSeconds
         private int? _TimerSecondsLocation;
-        public Single? TimerSeconds => _TimerSecondsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TimerSecondsLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? TimerSeconds => _TimerSecondsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TimerSecondsLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         #region HeadtrackActorID
         private int? _HeadtrackActorIDLocation;
-        public Int32? HeadtrackActorID => _HeadtrackActorIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadtrackActorIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? HeadtrackActorID => _HeadtrackActorIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadtrackActorIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region LoopingMax
         private int? _LoopingMaxLocation;
-        public Single? LoopingMax => _LoopingMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? LoopingMax => _LoopingMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoopingMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region LoopingMin
         private int? _LoopingMinLocation;
-        public Single? LoopingMin => _LoopingMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? LoopingMin => _LoopingMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoopingMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Emotion
         private int? _EmotionLocation;
-        public Emotion? Emotion => _EmotionLocation.HasValue ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmotionLocation!.Value, _package.MetaData.Constants)) : default(Emotion?);
+        public Emotion? Emotion => _EmotionLocation.HasValue ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmotionLocation!.Value, _package.MetaData.Constants)) : default(Emotion?);
         #endregion
         #region EmotionValue
         private int? _EmotionValueLocation;
-        public UInt32? EmotionValue => _EmotionValueLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmotionValueLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? EmotionValue => _EmotionValueLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmotionValueLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         public IScenePhaseUnusedDataGetter? Unused { get; private set; }
         partial void CustomFactoryEnd(
@@ -2515,10 +2515,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected SceneActionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2529,10 +2529,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SceneActionBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

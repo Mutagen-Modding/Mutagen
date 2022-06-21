@@ -9260,11 +9260,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region AnimationSound
         private int? _AnimationSoundLocation;
-        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
+        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -9276,16 +9276,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region BipedBodyTemplate
         private RangeInt32? _BipedBodyTemplateLocation;
-        public IBipedBodyTemplateGetter? BipedBodyTemplate => _BipedBodyTemplateLocation.HasValue ? BipedBodyTemplateBinaryOverlay.BipedBodyTemplateFactory(new OverlayStream(_data.Slice(_BipedBodyTemplateLocation!.Value.Min), _package), _package) : default;
+        public IBipedBodyTemplateGetter? BipedBodyTemplate => _BipedBodyTemplateLocation.HasValue ? BipedBodyTemplateBinaryOverlay.BipedBodyTemplateFactory(_recordData.Slice(_BipedBodyTemplateLocation!.Value.Min), _package) : default;
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -9303,7 +9303,7 @@ namespace Mutagen.Bethesda.Fallout4
             get
             {
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Slice(_HeightLocation);
+                var data = _recordData.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -9318,7 +9318,7 @@ namespace Mutagen.Bethesda.Fallout4
             get
             {
                 if (!_DefaultWeight_IsSet) return new GenderedItem<IRaceWeightGetter>(new RaceWeight(), new RaceWeight());
-                var data = _data.Slice(_DefaultWeightLocation);
+                var data = _recordData.Slice(_DefaultWeightLocation);
                 return new GenderedItem<IRaceWeightGetter>(
                     RaceWeightBinaryOverlay.RaceWeightFactory(data, _package),
                     RaceWeightBinaryOverlay.RaceWeightFactory(data.Slice(12), _package));
@@ -9334,63 +9334,63 @@ namespace Mutagen.Bethesda.Fallout4
         #region AccelerationRate
         private int _AccelerationRateLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x24;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AccelerationRate => _AccelerationRate_IsSet ? _data.Slice(_AccelerationRateLocation, 4).Float() : default;
+        public Single AccelerationRate => _AccelerationRate_IsSet ? _recordData.Slice(_AccelerationRateLocation, 4).Float() : default;
         #endregion
         #region DecelerationRate
         private int _DecelerationRateLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x28;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
-        public Single DecelerationRate => _DecelerationRate_IsSet ? _data.Slice(_DecelerationRateLocation, 4).Float() : default;
+        public Single DecelerationRate => _DecelerationRate_IsSet ? _recordData.Slice(_DecelerationRateLocation, 4).Float() : default;
         #endregion
         #region Size
         private int _SizeLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x2C;
         private bool _Size_IsSet => _DATALocation.HasValue;
-        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SizeLocation, 0x4)) : default;
+        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x30;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 8).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 8).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region InjuredHealthPercent
         private int _InjuredHealthPercentLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x38;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
-        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _data.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
+        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _recordData.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
         #endregion
         #region ShieldBipedObject
         private int _ShieldBipedObjectLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x3C;
         private bool _ShieldBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
+        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
         #endregion
         #region BeardBipedObject
         private int _BeardBipedObjectLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x40;
         private bool _BeardBipedObject_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 124;
-        public BipedObject BeardBipedObject => _BeardBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BeardBipedObjectLocation, 0x4)) : default;
+        public BipedObject BeardBipedObject => _BeardBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BeardBipedObjectLocation, 0x4)) : default;
         int BeardBipedObjectVersioningOffset => DefaultWeightVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 124 ? -4 : 0);
         #endregion
         #region BodyBipedObject
         private int _BodyBipedObjectLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x44;
         private bool _BodyBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
+        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
         #endregion
         #region AimAngleTolerance
         private int _AimAngleToleranceLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x48;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
-        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _data.Slice(_AimAngleToleranceLocation, 4).Float() : default;
+        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _recordData.Slice(_AimAngleToleranceLocation, 4).Float() : default;
         #endregion
         #region FlightRadius
         private int _FlightRadiusLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x4C;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
-        public Single FlightRadius => _FlightRadius_IsSet ? _data.Slice(_FlightRadiusLocation, 4).Float() : default;
+        public Single FlightRadius => _FlightRadius_IsSet ? _recordData.Slice(_FlightRadiusLocation, 4).Float() : default;
         #endregion
         #region AngularAccelerationRate
         private int _AngularAccelerationRateLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x50;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _data.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
+        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _recordData.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
         #endregion
         #region AngularTolerance
         private int _AngularToleranceLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x54;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
-        public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
+        public Single AngularTolerance => _AngularTolerance_IsSet ? _recordData.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
         private int _Flags2Location => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x58;
@@ -9402,130 +9402,130 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x5C;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _data.Span.Slice(_Unknown2Location, 36).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _recordData.Span.Slice(_Unknown2Location, 36).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region PipboyBipedObject
         private int _PipboyBipedObjectLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x80;
         private bool _PipboyBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject PipboyBipedObject => _PipboyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_PipboyBipedObjectLocation, 0x4)) : default;
+        public BipedObject PipboyBipedObject => _PipboyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_PipboyBipedObjectLocation, 0x4)) : default;
         #endregion
         #region XPValue
         private int _XPValueLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x84;
         private bool _XPValue_IsSet => _DATALocation.HasValue;
-        public Int16 XPValue => _XPValue_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_XPValueLocation, 2)) : default;
+        public Int16 XPValue => _XPValue_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XPValueLocation, 2)) : default;
         #endregion
         #region SeverableDebrisScale
         private int _SeverableDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x86;
         private bool _SeverableDebrisScale_IsSet => _DATALocation.HasValue;
-        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _data.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
+        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x8A;
         private bool _SeverableDebrisCount_IsSet => _DATALocation.HasValue;
-        public Byte SeverableDebrisCount => _SeverableDebrisCount_IsSet ? _data.Span[_SeverableDebrisCountLocation] : default;
+        public Byte SeverableDebrisCount => _SeverableDebrisCount_IsSet ? _recordData.Span[_SeverableDebrisCountLocation] : default;
         #endregion
         #region SeverableDecalCount
         private int _SeverableDecalCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x8B;
         private bool _SeverableDecalCount_IsSet => _DATALocation.HasValue;
-        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _data.Span[_SeverableDecalCountLocation] : default;
+        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default;
         #endregion
         #region ExplodableDebrisScale
         private int _ExplodableDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x8C;
         private bool _ExplodableDebrisScale_IsSet => _DATALocation.HasValue;
-        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _data.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
+        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region ExplodableDebrisCount
         private int _ExplodableDebrisCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x90;
         private bool _ExplodableDebrisCount_IsSet => _DATALocation.HasValue;
-        public Byte ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? _data.Span[_ExplodableDebrisCountLocation] : default;
+        public Byte ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? _recordData.Span[_ExplodableDebrisCountLocation] : default;
         #endregion
         #region ExplodableDecalCount
         private int _ExplodableDecalCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x91;
         private bool _ExplodableDecalCount_IsSet => _DATALocation.HasValue;
-        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _data.Span[_ExplodableDecalCountLocation] : default;
+        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default;
         #endregion
         #region SeverableExplosion
         private int _SeverableExplosionLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x92;
         private bool _SeverableExplosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region SeverableDebris
         private int _SeverableDebrisLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x96;
         private bool _SeverableDebris_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region SeverableImpactDataSet
         private int _SeverableImpactDataSetLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x9A;
         private bool _SeverableImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet => _SeverableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet => _SeverableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ExplodableExplosion
         private int _ExplodableExplosionLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x9E;
         private bool _ExplodableExplosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region ExplodableDebris
         private int _ExplodableDebrisLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xA2;
         private bool _ExplodableDebris_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ExplodableImpactDataSet
         private int _ExplodableImpactDataSetLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xA6;
         private bool _ExplodableImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet => _ExplodableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet => _ExplodableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region OnCrippleDebrisScale
         private int _OnCrippleDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xAA;
         private bool _OnCrippleDebrisScale_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _data.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default;
+        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _recordData.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default;
         int OnCrippleDebrisScaleVersioningOffset => BeardBipedObjectVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleDebrisCount
         private int _OnCrippleDebrisCountLocation => _DATALocation!.Value.Min + OnCrippleDebrisScaleVersioningOffset + 0xAE;
         private bool _OnCrippleDebrisCount_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _data.Span[_OnCrippleDebrisCountLocation] : default;
+        public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _recordData.Span[_OnCrippleDebrisCountLocation] : default;
         int OnCrippleDebrisCountVersioningOffset => OnCrippleDebrisScaleVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -1 : 0);
         #endregion
         #region OnCrippleDecalCount
         private int _OnCrippleDecalCountLocation => _DATALocation!.Value.Min + OnCrippleDebrisCountVersioningOffset + 0xAF;
         private bool _OnCrippleDecalCount_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _data.Span[_OnCrippleDecalCountLocation] : default;
+        public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _recordData.Span[_OnCrippleDecalCountLocation] : default;
         int OnCrippleDecalCountVersioningOffset => OnCrippleDebrisCountVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -1 : 0);
         #endregion
         #region OnCrippleExplosion
         private int _OnCrippleExplosionLocation => _DATALocation!.Value.Min + OnCrippleDecalCountVersioningOffset + 0xB0;
         private bool _OnCrippleExplosion_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         int OnCrippleExplosionVersioningOffset => OnCrippleDecalCountVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleDebris
         private int _OnCrippleDebrisLocation => _DATALocation!.Value.Min + OnCrippleExplosionVersioningOffset + 0xB4;
         private bool _OnCrippleDebris_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         int OnCrippleDebrisVersioningOffset => OnCrippleExplosionVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleImpactDataSet
         private int _OnCrippleImpactDataSetLocation => _DATALocation!.Value.Min + OnCrippleDebrisVersioningOffset + 0xB8;
         private bool _OnCrippleImpactDataSet_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet => _OnCrippleImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet => _OnCrippleImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         int OnCrippleImpactDataSetVersioningOffset => OnCrippleDebrisVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region ExplodableSubsegmentExplosion
         private int _ExplodableSubsegmentExplosionLocation => _DATALocation!.Value.Min + OnCrippleImpactDataSetVersioningOffset + 0xBC;
         private bool _ExplodableSubsegmentExplosion_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 118;
-        public IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion => _ExplodableSubsegmentExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion => _ExplodableSubsegmentExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         int ExplodableSubsegmentExplosionVersioningOffset => OnCrippleImpactDataSetVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 118 ? -4 : 0);
         #endregion
         #region OrientationLimitsPitch
         private int _OrientationLimitsPitchLocation => _DATALocation!.Value.Min + ExplodableSubsegmentExplosionVersioningOffset + 0xC0;
         private bool _OrientationLimitsPitch_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 98;
-        public Single OrientationLimitsPitch => _OrientationLimitsPitch_IsSet ? _data.Slice(_OrientationLimitsPitchLocation, 4).Float() : default;
+        public Single OrientationLimitsPitch => _OrientationLimitsPitch_IsSet ? _recordData.Slice(_OrientationLimitsPitchLocation, 4).Float() : default;
         int OrientationLimitsPitchVersioningOffset => ExplodableSubsegmentExplosionVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 98 ? -4 : 0);
         #endregion
         #region OrientationLimitsRoll
         private int _OrientationLimitsRollLocation => _DATALocation!.Value.Min + OrientationLimitsPitchVersioningOffset + 0xC4;
         private bool _OrientationLimitsRoll_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 98;
-        public Single OrientationLimitsRoll => _OrientationLimitsRoll_IsSet ? _data.Slice(_OrientationLimitsRollLocation, 4).Float() : default;
+        public Single OrientationLimitsRoll => _OrientationLimitsRoll_IsSet ? _recordData.Slice(_OrientationLimitsRollLocation, 4).Float() : default;
         int OrientationLimitsRollVersioningOffset => OrientationLimitsPitchVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 98 ? -4 : 0);
         #endregion
         #region SkeletalModel
@@ -9540,7 +9540,7 @@ namespace Mutagen.Bethesda.Fallout4
             get
             {
                 if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _VoicesLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
                     new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -9554,7 +9554,7 @@ namespace Mutagen.Bethesda.Fallout4
             get
             {
                 if (!_DefaultHairColorsLocation.HasValue) return default;
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IColorRecordGetter>>(
                     new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -9563,19 +9563,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region NumberOfTintsInList
         private int? _NumberOfTintsInListLocation;
-        public UInt16? NumberOfTintsInList => _NumberOfTintsInListLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NumberOfTintsInListLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16? NumberOfTintsInList => _NumberOfTintsInListLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NumberOfTintsInListLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region FacegenMainClamp
         private int? _FacegenMainClampLocation;
-        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region FacegenFaceClamp
         private int? _FacegenFaceClampLocation;
-        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region BodyData
@@ -9584,7 +9584,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
         #endregion
         #region ExtraNAM2
         partial void ExtraNAM2CustomParse(
@@ -9598,41 +9598,41 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ImpactMaterialType
         private int? _ImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => _ImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => _ImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region DispemberBloodArt
         private int? _DispemberBloodArtLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> DispemberBloodArt => _DispemberBloodArtLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DispemberBloodArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> DispemberBloodArt => _DispemberBloodArtLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DispemberBloodArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
         #region MeatCapTextureSet
         private int? _MeatCapTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => _MeatCapTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MeatCapTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => _MeatCapTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MeatCapTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region CollarTextureSet
         private int? _CollarTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => _CollarTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CollarTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => _CollarTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CollarTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region SoundOpenCorpse
         private int? _SoundOpenCorpseLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundOpenCorpse => _SoundOpenCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundOpenCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundOpenCorpse => _SoundOpenCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundOpenCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region SoundCloseCorpse
         private int? _SoundCloseCorpseLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundCloseCorpse => _SoundCloseCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundCloseCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundCloseCorpse => _SoundCloseCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundCloseCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; private set; } = Array.Empty<IMovementDataOverrideGetter>();
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
-        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
+        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
         #endregion
         public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = Array.Empty<IEquipmentSlotGetter>();
         #region UnarmedWeapon
         private int? _UnarmedWeaponLocation;
-        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => _UnarmedWeaponLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnarmedWeaponLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
+        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => _UnarmedWeaponLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnarmedWeaponLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
         #endregion
         #region FaceFxPhonemesListingParsing
         public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
@@ -9646,19 +9646,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region BaseMovementDefault
         private int? _BaseMovementDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => _BaseMovementDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => _BaseMovementDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSwim
         private int? _BaseMovementDefaultSwimLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultFly
         private int? _BaseMovementDefaultFlyLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSneak
         private int? _BaseMovementDefaultSneakLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region HeadData
         private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
@@ -9666,28 +9666,28 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MorphRace
         private int? _MorphRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         #region SubgraphTemplateRace
         private int? _SubgraphTemplateRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => _SubgraphTemplateRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SubgraphTemplateRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => _SubgraphTemplateRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubgraphTemplateRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         #region SubgraphAdditiveRace
         private int? _SubgraphAdditiveRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> SubgraphAdditiveRace => _SubgraphAdditiveRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SubgraphAdditiveRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphAdditiveRace => _SubgraphAdditiveRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubgraphAdditiveRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = Array.Empty<ISubgraphGetter>();
         #region IdleChatterTimeMin
         private int? _IdleChatterTimeMinLocation;
-        public Single? IdleChatterTimeMin => _IdleChatterTimeMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleChatterTimeMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? IdleChatterTimeMin => _IdleChatterTimeMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleChatterTimeMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region IdleChatterTimeMax
         private int? _IdleChatterTimeMaxLocation;
-        public Single? IdleChatterTimeMax => _IdleChatterTimeMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleChatterTimeMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? IdleChatterTimeMax => _IdleChatterTimeMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleChatterTimeMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region MorphValues
         partial void MorphValuesCustomParse(
@@ -9699,15 +9699,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region HairColorLookupTexture
         private int? _HairColorLookupTextureLocation;
-        public String? HairColorLookupTexture => _HairColorLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? HairColorLookupTexture => _HairColorLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region HairColorExtendedLookupTexture
         private int? _HairColorExtendedLookupTextureLocation;
-        public String? HairColorExtendedLookupTexture => _HairColorExtendedLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorExtendedLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? HairColorExtendedLookupTexture => _HairColorExtendedLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorExtendedLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region DialogueQuest
         private int? _DialogueQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => _DialogueQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DialogueQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => _DialogueQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogueQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region BoneDataParse
         public partial ParseResult BoneDataParseCustomParse(
@@ -9721,10 +9721,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected RaceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -9736,13 +9736,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RaceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

@@ -1609,17 +1609,17 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Aggression Aggression => (Aggression)_data.Span.Slice(0x0, 0x1)[0];
-        public Confidence Confidence => (Confidence)_data.Span.Slice(0x1, 0x1)[0];
-        public Byte EnergyLevel => _data.Span[0x2];
-        public Responsibility Responsibility => (Responsibility)_data.Span.Slice(0x3, 0x1)[0];
-        public Mood Mood => (Mood)_data.Span.Slice(0x4, 0x1)[0];
-        public Assistance Assistance => (Assistance)_data.Span.Slice(0x5, 0x1)[0];
-        public Boolean AggroRadiusBehavior => _data.Slice(0x6, 0x1)[0] >= 1;
-        public Byte Unused => _data.Span[0x7];
-        public UInt32 Warn => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public UInt32 WarnOrAttack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
-        public UInt32 Attack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x10, 0x4));
+        public Aggression Aggression => (Aggression)_structData.Span.Slice(0x0, 0x1)[0];
+        public Confidence Confidence => (Confidence)_structData.Span.Slice(0x1, 0x1)[0];
+        public Byte EnergyLevel => _structData.Span[0x2];
+        public Responsibility Responsibility => (Responsibility)_structData.Span.Slice(0x3, 0x1)[0];
+        public Mood Mood => (Mood)_structData.Span.Slice(0x4, 0x1)[0];
+        public Assistance Assistance => (Assistance)_structData.Span.Slice(0x5, 0x1)[0];
+        public Boolean AggroRadiusBehavior => _structData.Slice(0x6, 0x1)[0] >= 1;
+        public Byte Unused => _structData.Span[0x7];
+        public UInt32 Warn => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public UInt32 WarnOrAttack => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public UInt32 Attack => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1627,10 +1627,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected AIDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1641,11 +1641,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AIDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

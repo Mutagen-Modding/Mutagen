@@ -1173,9 +1173,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single FeedbackPercent => _data.Slice(0x4, 0x4).Float();
-        public Single WetMixPercent => _data.Slice(0x8, 0x4).Float();
-        public UInt32 Milliseconds => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
+        public Single FeedbackPercent => _structData.Slice(0x4, 0x4).Float();
+        public Single WetMixPercent => _structData.Slice(0x8, 0x4).Float();
+        public UInt32 Milliseconds => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1183,10 +1183,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected DelayAudioEffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1197,10 +1197,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new DelayAudioEffectBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x10),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,

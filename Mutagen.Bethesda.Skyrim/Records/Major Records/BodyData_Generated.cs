@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Index
         private int? _IndexLocation;
-        public BodyData.PartIndex? Index => _IndexLocation.HasValue ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation!.Value, _package.MetaData.Constants)) : default(BodyData.PartIndex?);
+        public BodyData.PartIndex? Index => _IndexLocation.HasValue ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation!.Value, _package.MetaData.Constants)) : default(BodyData.PartIndex?);
         #endregion
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
@@ -1243,10 +1243,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected BodyDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1257,10 +1257,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new BodyDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

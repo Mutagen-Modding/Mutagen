@@ -101,25 +101,25 @@ partial class AIPackageDataBinaryOverlay
 {
     public partial AIPackage.Flag GetFlagsCustom(int location)
     {
-        if (_data.Length > 4)
+        if (_structData.Length > 4)
         {
-            return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_data));
+            return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_structData));
         }
         else
         {
-            return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(_data));
+            return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(_structData));
         }
     }
 
     public partial AIPackage.Types GetTypeCustom(int location)
     {
-        if (_data.Length > 4)
+        if (_structData.Length > 4)
         {
-            return EnumExt<AIPackage.Types>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4)));
+            return EnumExt<AIPackage.Types>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(4)));
         }
         else
         {
-            return EnumExt<AIPackage.Types>.Convert(_data[2]);
+            return EnumExt<AIPackage.Types>.Convert(_structData[2]);
         }
     }
 }

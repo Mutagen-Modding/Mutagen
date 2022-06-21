@@ -149,7 +149,7 @@ partial class ImageSpaceDepthOfFieldBinaryOverlay
     {
         if (this.Versioning.HasFlag(ImageSpaceDepthOfField.VersioningBreaks.Break0)) return;
         ImageSpaceDepthOfFieldBinaryCreateTranslation.ParseSkyBlurRadius(
-            BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE)),
+            BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xE)),
             out _radius,
             out _sky);
     }

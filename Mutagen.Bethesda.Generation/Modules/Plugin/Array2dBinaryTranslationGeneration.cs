@@ -300,8 +300,14 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperFields(
-        StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, 
-        Accessor dataAccessor, int? passedLength, string passedLengthAccessor, DataType? dataType = null)
+        StructuredStringBuilder sb,
+        ObjectGeneration objGen, 
+        TypeGeneration typeGen, 
+        Accessor structDataAccessor, 
+        Accessor recordDataAccessor, 
+        int? passedLength,
+        string passedLengthAccessor,
+        DataType? dataType = null)
     {
         Array2dType arr2d = typeGen as Array2dType;
         var data = arr2d.GetFieldData();
@@ -357,7 +363,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                 using (var args = sb.Call(
                            $"public {arr2d.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayArray2d.Factory<{typeName}>"))
                 {
-                    args.Add($"mem: {dataAccessor}.Slice({passedLength})");
+                    args.Add($"mem: {structDataAccessor}.Slice({passedLength})");
                     args.Add($"package: _package");
                     args.Add($"itemLength: {subLen.Value}");
                     args.Add($"size: new P2Int({arr2d.FixedSize.Value.X}, {arr2d.FixedSize.Value.Y})");

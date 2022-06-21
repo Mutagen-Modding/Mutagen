@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         #region Action
         public String Action { get; private set; } = string.Empty;
         protected int ActionEndingPos;
@@ -1145,10 +1145,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected AnimationSoundTagBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1159,12 +1159,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AnimationSoundTagBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.Action = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(0x4), package.MetaData.Encodings.NonTranslated);
+            ret.Action = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x4), package.MetaData.Encodings.NonTranslated);
             ret.ActionEndingPos = 0x4 + ret.Action.Length + 1;
             ret.CustomFactoryEnd(
                 stream: stream,

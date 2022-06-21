@@ -1204,10 +1204,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Color Sunrise => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Day => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Sunset => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Night => _data.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Sunrise => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Day => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Sunset => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Night => _structData.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1215,10 +1215,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected WeatherColorBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1229,10 +1229,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherColorBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x10),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,

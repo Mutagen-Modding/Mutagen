@@ -144,7 +144,8 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
-        Accessor dataAccessor,
+        Accessor structDataAccessor,
+        Accessor recordDataAccessor,
         int? currentPosition,
         string passedLengthAccessor,
         DataType dataType)
@@ -163,7 +164,6 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
                     sb,
                     objGen,
                     typeGen,
-                    dataAccessor,
                     currentPosition,
                     passedLengthAccessor,
                     dataType);
@@ -185,11 +185,11 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         string slice;
         if (data.RecordType.HasValue)
         {
-            slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location!.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
+            slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location!.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
         }
         else
         {
-            slice = $"{dataAccessor}.Span.Slice({posStr}, 0x{eType.ByteLength:X})";
+            slice = $"{(dataType == null ? structDataAccessor : recordDataAccessor)}.Span.Slice({posStr}, 0x{eType.ByteLength:X})";
         }
         var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 
@@ -231,7 +231,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 if (data.IsAfterBreak)
                 {
-                    sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {dataAccessor}.Span.Length <= {posStr} ? default : {getType};");
+                    sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {structDataAccessor}.Span.Length <= {posStr} ? default : {getType};");
                 }
                 else
                 {

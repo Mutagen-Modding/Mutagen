@@ -1351,12 +1351,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public PlacedObjectSpline.VersioningBreaks Versioning { get; private set; }
-        public Single Slack => _data.Slice(0x0, 0x4).Float();
-        public Single Thickness => _data.Slice(0x4, 0x4).Float();
-        public P3Float HalfExtents => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0xC));
-        public Boolean IsWindDetachedEnd => _data.Length <= 0x14 ? default : _data.Slice(0x14, 0x1)[0] >= 1;
+        public Single Slack => _structData.Slice(0x0, 0x4).Float();
+        public Single Thickness => _structData.Slice(0x4, 0x4).Float();
+        public P3Float HalfExtents => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
+        public Boolean IsWindDetachedEnd => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x1)[0] >= 1;
         #region Unknown
-        public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x15).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x15).ToArray();
         protected int UnknownEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1366,10 +1366,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected PlacedObjectSplineBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1380,12 +1380,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PlacedObjectSplineBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x14)
+            if (ret._structData.Length <= 0x14)
             {
                 ret.Versioning |= PlacedObjectSpline.VersioningBreaks.Break0;
             }

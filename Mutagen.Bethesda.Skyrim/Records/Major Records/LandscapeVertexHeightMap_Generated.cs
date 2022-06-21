@@ -1275,16 +1275,16 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Single Offset => _data.Slice(0x0, 0x4).Float();
+        public Single Offset => _structData.Slice(0x0, 0x4).Float();
         #region HeightMap
         public IReadOnlyArray2d<Byte> HeightMap => BinaryOverlayArray2d.Factory<Byte>(
-            mem: _data.Slice(4),
+            mem: _structData.Slice(4),
             package: _package,
             itemLength: 1,
             size: new P2Int(33, 33),
             getter: (s, p) => s[0]);
         #endregion
-        public P3UInt8 Unknown => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x445, 0x3));
+        public P3UInt8 Unknown => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x445, 0x3));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1292,10 +1292,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected LandscapeVertexHeightMapBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1306,11 +1306,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x448,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LandscapeVertexHeightMapBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x448 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

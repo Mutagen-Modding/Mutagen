@@ -2604,12 +2604,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2621,7 +2621,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         public IIconsGetter? Icons { get; private set; }
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
@@ -2630,31 +2630,31 @@ namespace Mutagen.Bethesda.Skyrim
         #region Trait
         private int _TraitLocation => _DATALocation!.Value.Min;
         private bool _Trait_IsSet => _DATALocation.HasValue;
-        public Boolean Trait => _Trait_IsSet ? _data.Slice(_TraitLocation, 1)[0] >= 1 : default;
+        public Boolean Trait => _Trait_IsSet ? _recordData.Slice(_TraitLocation, 1)[0] >= 1 : default;
         #endregion
         #region Level
         private int _LevelLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Level_IsSet => _DATALocation.HasValue;
-        public Byte Level => _Level_IsSet ? _data.Span[_LevelLocation] : default;
+        public Byte Level => _Level_IsSet ? _recordData.Span[_LevelLocation] : default;
         #endregion
         #region NumRanks
         private int _NumRanksLocation => _DATALocation!.Value.Min + 0x2;
         private bool _NumRanks_IsSet => _DATALocation.HasValue;
-        public Byte NumRanks => _NumRanks_IsSet ? _data.Span[_NumRanksLocation] : default;
+        public Byte NumRanks => _NumRanks_IsSet ? _recordData.Span[_NumRanksLocation] : default;
         #endregion
         #region Playable
         private int _PlayableLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Playable_IsSet => _DATALocation.HasValue;
-        public Boolean Playable => _Playable_IsSet ? _data.Slice(_PlayableLocation, 1)[0] >= 1 : default;
+        public Boolean Playable => _Playable_IsSet ? _recordData.Slice(_PlayableLocation, 1)[0] >= 1 : default;
         #endregion
         #region Hidden
         private int _HiddenLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Hidden_IsSet => _DATALocation.HasValue;
-        public Boolean Hidden => _Hidden_IsSet ? _data.Slice(_HiddenLocation, 1)[0] >= 1 : default;
+        public Boolean Hidden => _Hidden_IsSet ? _recordData.Slice(_HiddenLocation, 1)[0] >= 1 : default;
         #endregion
         #region NextPerk
         private int? _NextPerkLocation;
-        public IFormLinkNullableGetter<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        public IFormLinkNullableGetter<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
         #endregion
         #region Effects
         partial void EffectsCustomParse(
@@ -2671,10 +2671,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected PerkBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2686,13 +2686,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

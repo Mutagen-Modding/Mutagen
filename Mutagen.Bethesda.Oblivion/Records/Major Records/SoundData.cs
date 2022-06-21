@@ -110,11 +110,11 @@ partial class SoundDataBinaryOverlay
 
     public partial ushort GetMinimumAttenuationDistanceCustom(int location)
     {
-        return (ushort)(_data.Span[location] * SoundData.MinAttenuationDistanceMultiplier);
+        return (ushort)(_structData.Span[location] * SoundData.MinAttenuationDistanceMultiplier);
     }
 
     public partial ushort GetMaximumAttenuationDistanceCustom(int location)
     {
-        return (ushort)(_data.Span[location] * SoundData.MaxAttenuationDistanceMultiplier);
+        return (ushort)(_structData.Span[location] * SoundData.MaxAttenuationDistanceMultiplier);
     }
 }

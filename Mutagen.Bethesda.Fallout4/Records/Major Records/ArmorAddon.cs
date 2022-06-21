@@ -134,8 +134,8 @@ partial class ArmorAddonBinaryWriteTranslation
 internal partial class ArmorAddonBinaryOverlay
 {
     public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new ArmorAddonWeightSliderContainer(
-        _data.Slice(_DNAMLocation!.Value.Min + 2)[0],
-        _data.Slice(_DNAMLocation!.Value.Min + 3)[0]);
+        _recordData.Slice(_DNAMLocation!.Value.Min + 2)[0],
+        _recordData.Slice(_DNAMLocation!.Value.Min + 3)[0]);
 
     private GenderedItem<IReadOnlyList<IBoneGetter>?>? _boneData;
     public IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData => _boneData ?? new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);

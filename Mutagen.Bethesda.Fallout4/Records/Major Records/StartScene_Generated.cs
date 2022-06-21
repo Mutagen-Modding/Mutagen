@@ -1453,15 +1453,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Scene
         private int? _SceneLocation;
-        public IFormLinkNullableGetter<ISceneGetter> Scene => _SceneLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SceneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        public IFormLinkNullableGetter<ISceneGetter> Scene => _SceneLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SceneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
         #endregion
         #region PhaseIndex
         private int? _PhaseIndexLocation;
-        public UInt16? PhaseIndex => _PhaseIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16? PhaseIndex => _PhaseIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PhaseIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region StartPhaseForScene
         private int? _StartPhaseForSceneLocation;
-        public String? StartPhaseForScene => _StartPhaseForSceneLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _StartPhaseForSceneLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? StartPhaseForScene => _StartPhaseForSceneLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartPhaseForSceneLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         partial void CustomFactoryEnd(
@@ -1471,10 +1471,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected StartSceneBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1485,10 +1485,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new StartSceneBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

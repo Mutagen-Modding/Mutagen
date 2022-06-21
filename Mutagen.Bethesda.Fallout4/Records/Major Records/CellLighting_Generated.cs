@@ -2606,33 +2606,33 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public CellLighting.VersioningBreaks Versioning { get; private set; }
-        public Color AmbientColor => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalColor => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color FogNearColor => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single FogNear => _data.Slice(0xC, 0x4).Float();
-        public Single FogFar => _data.Slice(0x10, 0x4).Float();
-        public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x18, 0x4));
-        public Single DirectionalFade => _data.Slice(0x1C, 0x4).Float();
-        public Single FogClipDistance => _data.Slice(0x20, 0x4).Float();
-        public Single FogPower => _data.Slice(0x24, 0x4).Float();
-        public IAmbientColorsGetter AmbientColors => AmbientColorsBinaryOverlay.AmbientColorsFactory(new OverlayStream(_data.Slice(0x28), _package), _package, default(TypedParseParams));
-        public Color FogFarColor => _data.Slice(0x48, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single FogMax => _data.Slice(0x4C, 0x4).Float();
-        public Single LightFadeBegin => _data.Slice(0x50, 0x4).Float();
-        public Single LightFadeEnd => _data.Slice(0x54, 0x4).Float();
-        public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
-        public Single NearHeightMid => _data.Length <= 0x5C ? default : _data.Slice(0x5C, 0x4).Float();
-        public Single NearHeightRange => _data.Length <= 0x60 ? default : _data.Slice(0x60, 0x4).Float();
-        public Color ForColorHighNear => _data.Length <= 0x64 ? default : _data.Slice(0x64, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color ForColorHighFar => _data.Length <= 0x68 ? default : _data.Slice(0x68, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single HighDensityScale => _data.Length <= 0x6C ? default : _data.Slice(0x6C, 0x4).Float();
-        public Single FogNearScale => _data.Length <= 0x70 ? default : _data.Slice(0x70, 0x4).Float();
-        public Single FogFarScale => _data.Length <= 0x74 ? default : _data.Slice(0x74, 0x4).Float();
-        public Single FogHighNearScale => _data.Length <= 0x78 ? default : _data.Slice(0x78, 0x4).Float();
-        public Single FogHighFarScale => _data.Length <= 0x7C ? default : _data.Slice(0x7C, 0x4).Float();
-        public Single FarHeightMid => _data.Length <= 0x80 ? default : _data.Slice(0x80, 0x4).Float();
-        public Single FarHeightRange => _data.Length <= 0x84 ? default : _data.Slice(0x84, 0x4).Float();
+        public Color AmbientColor => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalColor => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color FogNearColor => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single FogNear => _structData.Slice(0xC, 0x4).Float();
+        public Single FogFar => _structData.Slice(0x10, 0x4).Float();
+        public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x18, 0x4));
+        public Single DirectionalFade => _structData.Slice(0x1C, 0x4).Float();
+        public Single FogClipDistance => _structData.Slice(0x20, 0x4).Float();
+        public Single FogPower => _structData.Slice(0x24, 0x4).Float();
+        public IAmbientColorsGetter AmbientColors => AmbientColorsBinaryOverlay.AmbientColorsFactory(_structData.Slice(0x28), _package, default(TypedParseParams));
+        public Color FogFarColor => _structData.Slice(0x48, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single FogMax => _structData.Slice(0x4C, 0x4).Float();
+        public Single LightFadeBegin => _structData.Slice(0x50, 0x4).Float();
+        public Single LightFadeEnd => _structData.Slice(0x54, 0x4).Float();
+        public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x58, 0x4));
+        public Single NearHeightMid => _structData.Length <= 0x5C ? default : _structData.Slice(0x5C, 0x4).Float();
+        public Single NearHeightRange => _structData.Length <= 0x60 ? default : _structData.Slice(0x60, 0x4).Float();
+        public Color ForColorHighNear => _structData.Length <= 0x64 ? default : _structData.Slice(0x64, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color ForColorHighFar => _structData.Length <= 0x68 ? default : _structData.Slice(0x68, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single HighDensityScale => _structData.Length <= 0x6C ? default : _structData.Slice(0x6C, 0x4).Float();
+        public Single FogNearScale => _structData.Length <= 0x70 ? default : _structData.Slice(0x70, 0x4).Float();
+        public Single FogFarScale => _structData.Length <= 0x74 ? default : _structData.Slice(0x74, 0x4).Float();
+        public Single FogHighNearScale => _structData.Length <= 0x78 ? default : _structData.Slice(0x78, 0x4).Float();
+        public Single FogHighFarScale => _structData.Length <= 0x7C ? default : _structData.Slice(0x7C, 0x4).Float();
+        public Single FarHeightMid => _structData.Length <= 0x80 ? default : _structData.Slice(0x80, 0x4).Float();
+        public Single FarHeightRange => _structData.Length <= 0x84 ? default : _structData.Slice(0x84, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2640,10 +2640,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected CellLightingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2654,20 +2654,25 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x88,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CellLightingBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x5C)
+            if (ret._structData.Length <= 0x5C)
             {
                 ret.Versioning |= CellLighting.VersioningBreaks.Break0;
             }
-            if (ret._data.Length <= 0x70)
+            if (ret._structData.Length <= 0x70)
             {
                 ret.Versioning |= CellLighting.VersioningBreaks.Break1;
             }
-            if (ret._data.Length <= 0x80)
+            if (ret._structData.Length <= 0x80)
             {
                 ret.Versioning |= CellLighting.VersioningBreaks.Break2;
             }

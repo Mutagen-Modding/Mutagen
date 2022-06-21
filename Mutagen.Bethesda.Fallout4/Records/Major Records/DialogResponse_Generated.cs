@@ -2150,22 +2150,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region Emotion
         private int _EmotionLocation => _TRDALocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDALocation.HasValue;
-        public IFormLinkGetter<IKeywordGetter> Emotion => _Emotion_IsSet ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EmotionLocation, 0x4)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> Emotion => _Emotion_IsSet ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EmotionLocation, 0x4)))) : FormLink<IKeywordGetter>.Null;
         #endregion
         #region ResponseNumber
         private int _ResponseNumberLocation => _TRDALocation!.Value.Min + 0x4;
         private bool _ResponseNumber_IsSet => _TRDALocation.HasValue;
-        public Byte ResponseNumber => _ResponseNumber_IsSet ? _data.Span[_ResponseNumberLocation] : default;
+        public Byte ResponseNumber => _ResponseNumber_IsSet ? _recordData.Span[_ResponseNumberLocation] : default;
         #endregion
         #region Sound
         private int _SoundLocation => _TRDALocation!.Value.Min + 0x5;
         private bool _Sound_IsSet => _TRDALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Unknown
         private int _UnknownLocation => _TRDALocation!.Value.Min + 0x9;
         private bool _Unknown_IsSet => _TRDALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
         #region InterruptPercentage
         private int _InterruptPercentageLocation => _TRDALocation!.Value.Min + 0xA;
@@ -2176,36 +2176,36 @@ namespace Mutagen.Bethesda.Fallout4
         #region CameraTargetAlias
         private int _CameraTargetAliasLocation => InterruptPercentageEndingPos;
         private bool _CameraTargetAlias_IsSet => _TRDALocation.HasValue;
-        public Int32 CameraTargetAlias => _CameraTargetAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_CameraTargetAliasLocation, 4)) : default;
+        public Int32 CameraTargetAlias => _CameraTargetAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_CameraTargetAliasLocation, 4)) : default;
         #endregion
         #region CameraLocationAlias
         private int _CameraLocationAliasLocation => InterruptPercentageEndingPos + 0x4;
         private bool _CameraLocationAlias_IsSet => _TRDALocation.HasValue;
-        public Int32 CameraLocationAlias => _CameraLocationAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_CameraLocationAliasLocation, 4)) : default;
+        public Int32 CameraLocationAlias => _CameraLocationAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_CameraLocationAliasLocation, 4)) : default;
         #endregion
         #region Text
         private int? _TextLocation;
-        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.IL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.IL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         #region ScriptNotes
         private int? _ScriptNotesLocation;
-        public String ScriptNotes => _ScriptNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String ScriptNotes => _ScriptNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region Edits
         private int? _EditsLocation;
-        public String Edits => _EditsLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditsLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String Edits => _EditsLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EditsLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region AlternateLipText
         private int? _AlternateLipTextLocation;
-        public String AlternateLipText => _AlternateLipTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateLipTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String AlternateLipText => _AlternateLipTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlternateLipTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region SpeakerIdleAnimation
         private int? _SpeakerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => _SpeakerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpeakerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => _SpeakerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpeakerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         #region ListenerIdleAnimation
         private int? _ListenerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => _ListenerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ListenerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => _ListenerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ListenerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         #region InterruptPercentageTNAM
         public partial ParseResult InterruptPercentageTNAMCustomParse(
@@ -2215,11 +2215,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region TextHash
         private int? _TextHashLocation;
-        public ReadOnlyMemorySlice<Byte>? TextHash => _TextHashLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextHashLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TextHash => _TextHashLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextHashLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;
-        public IFormLinkNullableGetter<ICameraPathGetter> CameraPath => _CameraPathLocation.HasValue ? new FormLinkNullable<ICameraPathGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CameraPathLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICameraPathGetter>.Null;
+        public IFormLinkNullableGetter<ICameraPathGetter> CameraPath => _CameraPathLocation.HasValue ? new FormLinkNullable<ICameraPathGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICameraPathGetter>.Null;
         #endregion
         #region StopOnSceneEnd
         private int? _StopOnSceneEndLocation;
@@ -2232,10 +2232,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected DialogResponseBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2246,10 +2246,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DialogResponseBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

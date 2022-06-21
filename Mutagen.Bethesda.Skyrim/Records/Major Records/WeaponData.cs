@@ -110,9 +110,9 @@ partial class WeaponDataBinaryOverlay
 {
     public partial WeaponData.Flag GetFlagsCustom(int location)
     {
-        var flags = (uint)BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location, 2));
+        var flags = (uint)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(location, 2));
         location += 0x1C;
-        var flags2 = (uint)BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location, 2));
+        var flags2 = (uint)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(location, 2));
         flags2 <<= WeaponDataBinaryCreateTranslation.UpperFlagShift;
         flags |= flags2;
         return (WeaponData.Flag)flags;

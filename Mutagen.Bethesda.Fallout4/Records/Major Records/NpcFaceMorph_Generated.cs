@@ -1436,34 +1436,34 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Index
         private int? _IndexLocation;
-        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         private RangeInt32? _FMRSLocation;
         public NpcFaceMorph.FMRSDataType FMRSDataTypeState { get; private set; }
         #region Position
         private int _PositionLocation => _FMRSLocation!.Value.Min;
         private bool _Position_IsSet => _FMRSLocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
         #endregion
         #region Rotation
         private int _RotationLocation => _FMRSLocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _FMRSLocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
         #endregion
         #region Scale
         private int _ScaleLocation => _FMRSLocation!.Value.Min + 0x18;
         private bool _Scale_IsSet => _FMRSLocation.HasValue;
-        public Single Scale => _Scale_IsSet ? _data.Slice(_ScaleLocation, 4).Float() : default;
+        public Single Scale => _Scale_IsSet ? _recordData.Slice(_ScaleLocation, 4).Float() : default;
         #endregion
         #region Unknown1
         private int _Unknown1Location => _FMRSLocation!.Value.Min + 0x1C;
         private bool _Unknown1_IsSet => _FMRSLocation.HasValue;
-        public Single Unknown1 => _Unknown1_IsSet ? _data.Slice(_Unknown1Location, 4).Float() : default;
+        public Single Unknown1 => _Unknown1_IsSet ? _recordData.Slice(_Unknown1Location, 4).Float() : default;
         #endregion
         #region Unknown2
         private int _Unknown2Location => _FMRSLocation!.Value.Min + 0x20;
         private bool _Unknown2_IsSet => _FMRSLocation.HasValue;
-        public Single Unknown2 => _Unknown2_IsSet ? _data.Slice(_Unknown2Location, 4).Float() : default;
+        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1472,10 +1472,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected NpcFaceMorphBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1486,10 +1486,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NpcFaceMorphBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

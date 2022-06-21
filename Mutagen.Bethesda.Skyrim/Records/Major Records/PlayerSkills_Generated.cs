@@ -1748,23 +1748,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region SkillValues
         public IReadOnlyDictionary<Skill, Byte> SkillValues => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData)),
+            new MutagenFrame(new MutagenMemoryReadStream(_structData, _package.MetaData)),
             new Dictionary<Skill, Byte>(),
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region SkillOffsets
         public IReadOnlyDictionary<Skill, Byte> SkillOffsets => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x12), _package.MetaData)),
+            new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(0x12), _package.MetaData)),
             new Dictionary<Skill, Byte>(),
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
-        public UInt16 Health => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x24, 0x2));
-        public UInt16 Magicka => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x26, 0x2));
-        public UInt16 Stamina => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x28, 0x2));
-        public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2A, 0x2));
-        public Single FarAwayModelDistance => _data.Slice(0x2C, 0x4).Float();
-        public Byte GearedUpWeapons => _data.Span[0x30];
-        public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x31, 0x3).ToArray();
+        public UInt16 Health => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x24, 0x2));
+        public UInt16 Magicka => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x26, 0x2));
+        public UInt16 Stamina => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x28, 0x2));
+        public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2A, 0x2));
+        public Single FarAwayModelDistance => _structData.Slice(0x2C, 0x4).Float();
+        public Byte GearedUpWeapons => _structData.Span[0x30];
+        public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(0x31, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1772,10 +1772,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected PlayerSkillsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1786,11 +1786,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x34,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PlayerSkillsBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x34 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

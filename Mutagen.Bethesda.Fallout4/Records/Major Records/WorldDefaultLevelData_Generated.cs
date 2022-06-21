@@ -1313,18 +1313,18 @@ namespace Mutagen.Bethesda.Fallout4
         #region NorthwestCellCoords
         private int _NorthwestCellCoordsLocation => _WLEVLocation!.Value.Min;
         private bool _NorthwestCellCoords_IsSet => _WLEVLocation.HasValue;
-        public P2UInt8 NorthwestCellCoords => _NorthwestCellCoords_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_NorthwestCellCoordsLocation, 2)) : default;
+        public P2UInt8 NorthwestCellCoords => _NorthwestCellCoords_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellCoordsLocation, 2)) : default;
         #endregion
         #region NorthwestCellSize
         private int _NorthwestCellSizeLocation => _WLEVLocation!.Value.Min + 0x2;
         private bool _NorthwestCellSize_IsSet => _WLEVLocation.HasValue;
-        public P2UInt8 NorthwestCellSize => _NorthwestCellSize_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_NorthwestCellSizeLocation, 2)) : default;
+        public P2UInt8 NorthwestCellSize => _NorthwestCellSize_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellSizeLocation, 2)) : default;
         #endregion
         #region Data
         private int? _DataLocation;
         private int? _DataLengthOverride;
         public ReadOnlyMemorySlice<Byte>? Data => PluginUtilityTranslation.ReadByteArrayWithOverflow(
-            _data,
+            _recordData,
             _package.MetaData.Constants,
             _DataLocation,
             _DataLengthOverride);
@@ -1336,10 +1336,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected WorldDefaultLevelDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1350,10 +1350,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WorldDefaultLevelDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

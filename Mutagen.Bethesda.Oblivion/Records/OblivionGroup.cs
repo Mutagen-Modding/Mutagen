@@ -60,7 +60,7 @@ internal partial class OblivionGroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
     {
         _recordCache = GroupMajorRecordCacheWrapper<T>.Factory(
             stream,
-            _data,
+            _recordData,
             _package,
             offset);
     }

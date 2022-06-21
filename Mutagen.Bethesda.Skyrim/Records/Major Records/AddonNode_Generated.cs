@@ -1939,24 +1939,24 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         public IModelGetter? Model { get; private set; }
         #region NodeIndex
         private int? _NodeIndexLocation;
-        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         private RangeInt32? _DNAMLocation;
         public AddonNode.DNAMDataType DNAMDataTypeState { get; private set; }
         #region MasterParticleSystemCap
         private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value.Min;
         private bool _MasterParticleSystemCap_IsSet => _DNAMLocation.HasValue;
-        public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_MasterParticleSystemCapLocation, 2)) : default;
+        public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_MasterParticleSystemCapLocation, 2)) : default;
         #endregion
         #region AlwaysLoaded
         private int _AlwaysLoadedLocation => _DNAMLocation!.Value.Min + 0x2;
@@ -1970,10 +1970,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected AddonNodeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1985,13 +1985,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AddonNodeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

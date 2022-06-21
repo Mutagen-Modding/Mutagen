@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Type
         private int? _TypeLocation;
-        public FindMatchingRefNearAlias.TypeEnum? Type => _TypeLocation.HasValue ? (FindMatchingRefNearAlias.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(FindMatchingRefNearAlias.TypeEnum?);
+        public FindMatchingRefNearAlias.TypeEnum? Type => _TypeLocation.HasValue ? (FindMatchingRefNearAlias.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(FindMatchingRefNearAlias.TypeEnum?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1186,10 +1186,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected FindMatchingRefNearAliasBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1200,10 +1200,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FindMatchingRefNearAliasBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

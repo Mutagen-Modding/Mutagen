@@ -1407,14 +1407,14 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Byte L => _data.Span[0x0];
-        public Byte R => _data.Span[0x1];
-        public Byte C => _data.Span[0x2];
-        public Byte LFE => _data.Span[0x3];
-        public Byte RL => _data.Span[0x4];
-        public Byte RR => _data.Span[0x5];
-        public Byte BL => _data.Span[0x6];
-        public Byte BR => _data.Span[0x7];
+        public Byte L => _structData.Span[0x0];
+        public Byte R => _structData.Span[0x1];
+        public Byte C => _structData.Span[0x2];
+        public Byte LFE => _structData.Span[0x3];
+        public Byte RL => _structData.Span[0x4];
+        public Byte RR => _structData.Span[0x5];
+        public Byte BL => _structData.Span[0x6];
+        public Byte BR => _structData.Span[0x7];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1422,10 +1422,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected SoundOutputChannelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1436,10 +1436,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundOutputChannelBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,

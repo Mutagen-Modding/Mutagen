@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Percentage
         private int _PercentageLocation => _DATALocation!.Value.Min;
         private bool _Percentage_IsSet => _DATALocation.HasValue;
-        public Byte Percentage => _Percentage_IsSet ? _data.Span[_PercentageLocation] : default;
+        public Byte Percentage => _Percentage_IsSet ? _recordData.Span[_PercentageLocation] : default;
         #endregion
         #region ModelFilename
         public String ModelFilename { get; private set; } = string.Empty;
@@ -1373,11 +1373,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => ModelFilenameEndingPos;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0);
-        public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region TextureFileHashes
         private int? _TextureFileHashesLocation;
-        public ReadOnlyMemorySlice<Byte>? TextureFileHashes => _TextureFileHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureFileHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TextureFileHashes => _TextureFileHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureFileHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1386,10 +1386,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected DebrisModelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1400,17 +1400,23 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DebrisModelBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
+            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
             ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.Length + 1;
             return ret;
         }
@@ -1442,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= ModelFilenameEndingPos)
                     {
                         this.DATADataTypeState |= DebrisModel.DATADataType.Break0;

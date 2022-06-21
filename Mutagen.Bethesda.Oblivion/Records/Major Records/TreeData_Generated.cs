@@ -1439,14 +1439,14 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Single LeafCurvature => _data.Slice(0x0, 0x4).Float();
-        public Single MinimumLeafAngle => _data.Slice(0x4, 0x4).Float();
-        public Single MaximumLeafAngle => _data.Slice(0x8, 0x4).Float();
-        public Single BranchDimmingValue => _data.Slice(0xC, 0x4).Float();
-        public Single LeafDimmingValue => _data.Slice(0x10, 0x4).Float();
-        public Int32 ShadowRadius => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public Single RockingSpeed => _data.Slice(0x18, 0x4).Float();
-        public Single RustleSpeed => _data.Slice(0x1C, 0x4).Float();
+        public Single LeafCurvature => _structData.Slice(0x0, 0x4).Float();
+        public Single MinimumLeafAngle => _structData.Slice(0x4, 0x4).Float();
+        public Single MaximumLeafAngle => _structData.Slice(0x8, 0x4).Float();
+        public Single BranchDimmingValue => _structData.Slice(0xC, 0x4).Float();
+        public Single LeafDimmingValue => _structData.Slice(0x10, 0x4).Float();
+        public Int32 ShadowRadius => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public Single RockingSpeed => _structData.Slice(0x18, 0x4).Float();
+        public Single RustleSpeed => _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1454,10 +1454,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected TreeDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1468,11 +1468,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new TreeDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x20 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

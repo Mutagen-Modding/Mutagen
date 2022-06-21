@@ -1800,16 +1800,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region NavMeshVersion
         private int? _NavMeshVersionLocation;
-        public UInt32? NavMeshVersion => _NavMeshVersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NavMeshVersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? NavMeshVersion => _NavMeshVersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NavMeshVersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = Array.Empty<INavigationMapInfoGetter>();
         #region PreferredPathing
         private RangeInt32? _PreferredPathingLocation;
-        public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(new OverlayStream(_data.Slice(_PreferredPathingLocation!.Value.Min), _package), _package) : default;
+        public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(_recordData.Slice(_PreferredPathingLocation!.Value.Min), _package) : default;
         #endregion
         #region NVSI
         private int? _NVSILocation;
-        public ReadOnlyMemorySlice<Byte>? NVSI => _NVSILocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NVSILocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? NVSI => _NVSILocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NVSILocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1818,10 +1818,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected NavigationMeshInfoMapBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1833,13 +1833,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavigationMeshInfoMapBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

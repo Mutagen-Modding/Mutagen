@@ -1540,14 +1540,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public CombatStyleFlight.VersioningBreaks Versioning { get; private set; }
-        public Single HoverChance => _data.Slice(0x0, 0x4).Float();
-        public Single DiveBombChance => _data.Length <= 0x4 ? default : _data.Slice(0x4, 0x4).Float();
-        public Single GroundAttackChance => _data.Length <= 0x8 ? default : _data.Slice(0x8, 0x4).Float();
-        public Single HoverTime => _data.Length <= 0xC ? default : _data.Slice(0xC, 0x4).Float();
-        public Single GroundAttackTime => _data.Length <= 0x10 ? default : _data.Slice(0x10, 0x4).Float();
-        public Single PerchAttackChance => _data.Length <= 0x14 ? default : _data.Slice(0x14, 0x4).Float();
-        public Single PerchAttackTime => _data.Length <= 0x18 ? default : _data.Slice(0x18, 0x4).Float();
-        public Single FlyingAttackChance => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).Float();
+        public Single HoverChance => _structData.Slice(0x0, 0x4).Float();
+        public Single DiveBombChance => _structData.Length <= 0x4 ? default : _structData.Slice(0x4, 0x4).Float();
+        public Single GroundAttackChance => _structData.Length <= 0x8 ? default : _structData.Slice(0x8, 0x4).Float();
+        public Single HoverTime => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
+        public Single GroundAttackTime => _structData.Length <= 0x10 ? default : _structData.Slice(0x10, 0x4).Float();
+        public Single PerchAttackChance => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x4).Float();
+        public Single PerchAttackTime => _structData.Length <= 0x18 ? default : _structData.Slice(0x18, 0x4).Float();
+        public Single FlyingAttackChance => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1555,10 +1555,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected CombatStyleFlightBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1569,24 +1569,29 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CombatStyleFlightBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x4)
+            if (ret._structData.Length <= 0x4)
             {
                 ret.Versioning |= CombatStyleFlight.VersioningBreaks.Break0;
             }
-            if (ret._data.Length <= 0xC)
+            if (ret._structData.Length <= 0xC)
             {
                 ret.Versioning |= CombatStyleFlight.VersioningBreaks.Break1;
             }
-            if (ret._data.Length <= 0x14)
+            if (ret._structData.Length <= 0x14)
             {
                 ret.Versioning |= CombatStyleFlight.VersioningBreaks.Break2;
             }
-            if (ret._data.Length <= 0x1C)
+            if (ret._structData.Length <= 0x1C)
             {
                 ret.Versioning |= CombatStyleFlight.VersioningBreaks.Break3;
             }

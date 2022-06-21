@@ -1407,14 +1407,14 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Byte Strength => _data.Span[0x0];
-        public Byte Intelligence => _data.Span[0x1];
-        public Byte Willpower => _data.Span[0x2];
-        public Byte Agility => _data.Span[0x3];
-        public Byte Speed => _data.Span[0x4];
-        public Byte Endurance => _data.Span[0x5];
-        public Byte Personality => _data.Span[0x6];
-        public Byte Luck => _data.Span[0x7];
+        public Byte Strength => _structData.Span[0x0];
+        public Byte Intelligence => _structData.Span[0x1];
+        public Byte Willpower => _structData.Span[0x2];
+        public Byte Agility => _structData.Span[0x3];
+        public Byte Speed => _structData.Span[0x4];
+        public Byte Endurance => _structData.Span[0x5];
+        public Byte Personality => _structData.Span[0x6];
+        public Byte Luck => _structData.Span[0x7];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1422,10 +1422,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected RaceStatsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1436,10 +1436,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new RaceStatsBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,

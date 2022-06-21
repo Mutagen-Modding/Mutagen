@@ -2803,7 +2803,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         private RangeInt32? _DNAMLocation;
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; private set; }
@@ -2815,7 +2815,7 @@ namespace Mutagen.Bethesda.Skyrim
             get
             {
                 if (!_Priority_IsSet) return new GenderedItem<Byte>(default, default);
-                var data = _data.Slice(_PriorityLocation);
+                var data = _recordData.Slice(_PriorityLocation);
                 return new GenderedItem<Byte>(
                     data[0],
                     data.Slice(1)[0]);
@@ -2830,22 +2830,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region DetectionSoundValue
         private int _DetectionSoundValueLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _DetectionSoundValue_IsSet => _DNAMLocation.HasValue;
-        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _data.Span[_DetectionSoundValueLocation] : default;
+        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _recordData.Span[_DetectionSoundValueLocation] : default;
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DNAMLocation!.Value.Min + 0x7;
         private bool _Unknown2_IsSet => _DNAMLocation.HasValue;
-        public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
+        public Byte Unknown2 => _Unknown2_IsSet ? _recordData.Span[_Unknown2Location] : default;
         #endregion
         #region WeaponAdjust
         private int _WeaponAdjustLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _WeaponAdjust_IsSet => _DNAMLocation.HasValue;
-        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _data.Slice(_WeaponAdjustLocation, 4).Float() : default;
+        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _recordData.Slice(_WeaponAdjustLocation, 4).Float() : default;
         #endregion
         #region WorldModel
         private IGenderedItemGetter<IModelGetter?>? _WorldModelOverlay;
@@ -2866,11 +2866,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = Array.Empty<IFormLinkGetter<IRaceGetter>>();
         #region FootstepSound
         private int? _FootstepSoundLocation;
-        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
+        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
         #endregion
         #region ArtObject
         private int? _ArtObjectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2879,10 +2879,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ArmorAddonBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2894,13 +2894,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ArmorAddonBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

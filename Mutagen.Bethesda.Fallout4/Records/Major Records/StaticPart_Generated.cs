@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Static
         private int? _StaticLocation;
-        public IFormLinkNullableGetter<IStaticTargetGetter> Static => _StaticLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
+        public IFormLinkNullableGetter<IStaticTargetGetter> Static => _StaticLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StaticLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
         #endregion
         public IReadOnlyList<IStaticPlacementGetter>? Placements { get; private set; }
         partial void CustomFactoryEnd(
@@ -1299,10 +1299,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected StaticPartBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1313,10 +1313,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new StaticPartBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

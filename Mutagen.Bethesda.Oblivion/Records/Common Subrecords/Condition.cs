@@ -68,8 +68,8 @@ partial class ConditionBinaryWriteTranslation
 
 partial class ConditionBinaryOverlay
 {
-    public Condition.Flag Flags => ConditionBinaryCreateTranslation.GetFlag(_data.Span[0]);
-    public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
+    public Condition.Flag Flags => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[0]);
+    public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_structData.Span[0]);
 
     static IConditionGetter CustomRecordTypeTrigger(
         OverlayStream stream,

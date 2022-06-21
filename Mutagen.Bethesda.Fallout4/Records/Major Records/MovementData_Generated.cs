@@ -1642,14 +1642,14 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IMovementDirectionDataGetter Left => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(TypedParseParams));
-        public IMovementDirectionDataGetter Right => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(new OverlayStream(_data.Slice(0x10), _package), _package, default(TypedParseParams));
-        public IMovementDirectionDataGetter Forward => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(new OverlayStream(_data.Slice(0x20), _package), _package, default(TypedParseParams));
-        public IMovementDirectionDataGetter Back => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(new OverlayStream(_data.Slice(0x30), _package), _package, default(TypedParseParams));
-        public IMovementRotationDataGetter Pitch => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(new OverlayStream(_data.Slice(0x40), _package), _package, default(TypedParseParams));
-        public IMovementRotationDataGetter Roll => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(new OverlayStream(_data.Slice(0x50), _package), _package, default(TypedParseParams));
-        public IMovementRotationDataGetter Yaw => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(new OverlayStream(_data.Slice(0x60), _package), _package, default(TypedParseParams));
-        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x70, 0xC).ToArray();
+        public IMovementDirectionDataGetter Left => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(_structData, _package, default(TypedParseParams));
+        public IMovementDirectionDataGetter Right => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(_structData.Slice(0x10), _package, default(TypedParseParams));
+        public IMovementDirectionDataGetter Forward => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(_structData.Slice(0x20), _package, default(TypedParseParams));
+        public IMovementDirectionDataGetter Back => MovementDirectionDataBinaryOverlay.MovementDirectionDataFactory(_structData.Slice(0x30), _package, default(TypedParseParams));
+        public IMovementRotationDataGetter Pitch => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x40), _package, default(TypedParseParams));
+        public IMovementRotationDataGetter Roll => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x50), _package, default(TypedParseParams));
+        public IMovementRotationDataGetter Yaw => MovementRotationDataBinaryOverlay.MovementRotationDataFactory(_structData.Slice(0x60), _package, default(TypedParseParams));
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x70, 0xC).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1657,10 +1657,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected MovementDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1671,10 +1671,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x7C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new MovementDataBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x7C),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x7C;
             ret.CustomFactoryEnd(
                 stream: stream,

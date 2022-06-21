@@ -2347,7 +2347,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2355,18 +2355,18 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         private RangeInt32? _DATALocation;
         public Class.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region Teaches
         private int _TeachesLocation => _DATALocation!.Value.Min + 0x4;
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get
             {
-                var val = (Skill)_data.Span.Slice(_TeachesLocation, 0x1)[0];
+                var val = (Skill)_recordData.Span.Slice(_TeachesLocation, 0x1)[0];
                 if (((int)val) == -1) return null;
                 return val;
             }
@@ -2384,38 +2384,38 @@ namespace Mutagen.Bethesda.Skyrim
         #region MaxTrainingLevel
         private int _MaxTrainingLevelLocation => _DATALocation!.Value.Min + 0x5;
         private bool _MaxTrainingLevel_IsSet => _DATALocation.HasValue;
-        public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _data.Span[_MaxTrainingLevelLocation] : default;
+        public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _recordData.Span[_MaxTrainingLevelLocation] : default;
         #endregion
         #region SkillWeights
         private int _SkillWeightsLocation => _DATALocation!.Value.Min + 0x6;
         private bool _SkillWeights_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<Skill, Byte> SkillWeights => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_SkillWeightsLocation), _package.MetaData)),
+            new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_SkillWeightsLocation), _package.MetaData)),
             new Dictionary<Skill, Byte>(),
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region BleedoutDefault
         private int _BleedoutDefaultLocation => _DATALocation!.Value.Min + 0x18;
         private bool _BleedoutDefault_IsSet => _DATALocation.HasValue;
-        public Single BleedoutDefault => _BleedoutDefault_IsSet ? _data.Slice(_BleedoutDefaultLocation, 4).Float() : default;
+        public Single BleedoutDefault => _BleedoutDefault_IsSet ? _recordData.Slice(_BleedoutDefaultLocation, 4).Float() : default;
         #endregion
         #region VoicePoints
         private int _VoicePointsLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _VoicePoints_IsSet => _DATALocation.HasValue;
-        public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_VoicePointsLocation, 4)) : default;
+        public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_VoicePointsLocation, 4)) : default;
         #endregion
         #region StatWeights
         private int _StatWeightsLocation => _DATALocation!.Value.Min + 0x20;
         private bool _StatWeights_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Byte> StatWeights => DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StatWeightsLocation), _package.MetaData)),
+            new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_StatWeightsLocation), _package.MetaData)),
             new Dictionary<BasicStat, Byte>(),
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value.Min + 0x23;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
+        public Byte Unknown2 => _Unknown2_IsSet ? _recordData.Span[_Unknown2Location] : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2424,10 +2424,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ClassBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2439,13 +2439,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ClassBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

@@ -23,9 +23,9 @@ partial class SceneAdapterBinaryOverlay
 {
     public partial ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
     {
-        if (this.ScriptsEndingPos == _data.Length) return null;
+        if (this.ScriptsEndingPos == _structData.Length) return null;
         return SceneScriptFragmentsBinaryOverlay.SceneScriptFragmentsFactory(
-            _data.Slice(this.ScriptsEndingPos),
+            _structData.Slice(this.ScriptsEndingPos),
             _package);
     }
 }

@@ -1959,7 +1959,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = Array.Empty<IFormLinkGetter<ICameraPathGetter>>();
         #region Zoom
         private int? _ZoomLocation;
-        public CameraPath.Flags Zoom => _ZoomLocation.HasValue ? (CameraPath.Flags)HeaderTranslation.ExtractSubrecordMemory(_data, _ZoomLocation!.Value, _package.MetaData.Constants)[0] : default(CameraPath.Flags);
+        public CameraPath.Flags Zoom => _ZoomLocation.HasValue ? (CameraPath.Flags)HeaderTranslation.ExtractSubrecordMemory(_recordData, _ZoomLocation!.Value, _package.MetaData.Constants)[0] : default(CameraPath.Flags);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = Array.Empty<IFormLinkGetter<ICameraShotGetter>>();
         partial void CustomFactoryEnd(
@@ -1969,10 +1969,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected CameraPathBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1984,13 +1984,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CameraPathBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

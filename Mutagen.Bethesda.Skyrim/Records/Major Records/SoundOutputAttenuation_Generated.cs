@@ -1290,11 +1290,11 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public Single MinDistance => _data.Slice(0x4, 0x4).Float();
-        public Single MaxDistance => _data.Slice(0x8, 0x4).Float();
-        public ReadOnlyMemorySlice<Byte> Curve => _data.Span.Slice(0xC, 0x5).ToArray();
-        public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x11, 0x3).ToArray();
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public Single MinDistance => _structData.Slice(0x4, 0x4).Float();
+        public Single MaxDistance => _structData.Slice(0x8, 0x4).Float();
+        public ReadOnlyMemorySlice<Byte> Curve => _structData.Span.Slice(0xC, 0x5).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _structData.Span.Slice(0x11, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1302,10 +1302,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected SoundOutputAttenuationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1316,11 +1316,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundOutputAttenuationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

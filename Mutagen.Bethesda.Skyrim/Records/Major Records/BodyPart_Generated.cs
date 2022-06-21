@@ -3044,7 +3044,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -3052,153 +3052,153 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PoseMatching
         private int? _PoseMatchingLocation;
-        public String? PoseMatching => _PoseMatchingLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _PoseMatchingLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? PoseMatching => _PoseMatchingLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PoseMatchingLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region PartNode
         private int? _PartNodeLocation;
-        public String PartNode => _PartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _PartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String PartNode => _PartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region VatsTarget
         private int? _VatsTargetLocation;
-        public String VatsTarget => _VatsTargetLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _VatsTargetLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String VatsTarget => _VatsTargetLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VatsTargetLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region IkStartNode
         private int? _IkStartNodeLocation;
-        public String IkStartNode => _IkStartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IkStartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String IkStartNode => _IkStartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IkStartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         private RangeInt32? _BPNDLocation;
         public BodyPart.BPNDDataType BPNDDataTypeState { get; private set; }
         #region DamageMult
         private int _DamageMultLocation => _BPNDLocation!.Value.Min;
         private bool _DamageMult_IsSet => _BPNDLocation.HasValue;
-        public Single DamageMult => _DamageMult_IsSet ? _data.Slice(_DamageMultLocation, 4).Float() : default;
+        public Single DamageMult => _DamageMult_IsSet ? _recordData.Slice(_DamageMultLocation, 4).Float() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _BPNDLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _BPNDLocation.HasValue;
-        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Type
         private int _TypeLocation => _BPNDLocation!.Value.Min + 0x5;
         private bool _Type_IsSet => _BPNDLocation.HasValue;
-        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_data.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
         #endregion
         #region HealthPercent
         private int _HealthPercentLocation => _BPNDLocation!.Value.Min + 0x6;
         private bool _HealthPercent_IsSet => _BPNDLocation.HasValue;
-        public Byte HealthPercent => _HealthPercent_IsSet ? _data.Span[_HealthPercentLocation] : default;
+        public Byte HealthPercent => _HealthPercent_IsSet ? _recordData.Span[_HealthPercentLocation] : default;
         #endregion
         #region ActorValue
         private int _ActorValueLocation => _BPNDLocation!.Value.Min + 0x7;
         private bool _ActorValue_IsSet => _BPNDLocation.HasValue;
-        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)_data.Span.Slice(_ActorValueLocation, 0x1)[0] : default;
+        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)_recordData.Span.Slice(_ActorValueLocation, 0x1)[0] : default;
         #endregion
         #region ToHitChance
         private int _ToHitChanceLocation => _BPNDLocation!.Value.Min + 0x8;
         private bool _ToHitChance_IsSet => _BPNDLocation.HasValue;
-        public Byte ToHitChance => _ToHitChance_IsSet ? _data.Span[_ToHitChanceLocation] : default;
+        public Byte ToHitChance => _ToHitChance_IsSet ? _recordData.Span[_ToHitChanceLocation] : default;
         #endregion
         #region ExplodableExplosionChance
         private int _ExplodableExplosionChanceLocation => _BPNDLocation!.Value.Min + 0x9;
         private bool _ExplodableExplosionChance_IsSet => _BPNDLocation.HasValue;
-        public Byte ExplodableExplosionChance => _ExplodableExplosionChance_IsSet ? _data.Span[_ExplodableExplosionChanceLocation] : default;
+        public Byte ExplodableExplosionChance => _ExplodableExplosionChance_IsSet ? _recordData.Span[_ExplodableExplosionChanceLocation] : default;
         #endregion
         #region ExplodableDebrisCount
         private int _ExplodableDebrisCountLocation => _BPNDLocation!.Value.Min + 0xA;
         private bool _ExplodableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public UInt16 ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_ExplodableDebrisCountLocation, 2)) : default;
+        public UInt16 ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ExplodableDebrisCountLocation, 2)) : default;
         #endregion
         #region ExplodableDebris
         private int _ExplodableDebrisLocation => _BPNDLocation!.Value.Min + 0xC;
         private bool _ExplodableDebris_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ExplodableExplosion
         private int _ExplodableExplosionLocation => _BPNDLocation!.Value.Min + 0x10;
         private bool _ExplodableExplosion_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region TrackingMaxAngle
         private int _TrackingMaxAngleLocation => _BPNDLocation!.Value.Min + 0x14;
         private bool _TrackingMaxAngle_IsSet => _BPNDLocation.HasValue;
-        public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? _data.Slice(_TrackingMaxAngleLocation, 4).Float() : default;
+        public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? _recordData.Slice(_TrackingMaxAngleLocation, 4).Float() : default;
         #endregion
         #region ExplodableDebrisScale
         private int _ExplodableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x18;
         private bool _ExplodableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _data.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
+        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _BPNDLocation!.Value.Min + 0x1C;
         private bool _SeverableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public Int32 SeverableDebrisCount => _SeverableDebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_SeverableDebrisCountLocation, 4)) : default;
+        public Int32 SeverableDebrisCount => _SeverableDebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SeverableDebrisCountLocation, 4)) : default;
         #endregion
         #region SeverableDebris
         private int _SeverableDebrisLocation => _BPNDLocation!.Value.Min + 0x20;
         private bool _SeverableDebris_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region SeverableExplosion
         private int _SeverableExplosionLocation => _BPNDLocation!.Value.Min + 0x24;
         private bool _SeverableExplosion_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region SeverableDebrisScale
         private int _SeverableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x28;
         private bool _SeverableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _data.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
+        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region GorePositioning
         private int _GorePositioningLocation => _BPNDLocation!.Value.Min + 0x2C;
         private bool _GorePositioning_IsSet => _BPNDLocation.HasValue;
-        public P3Float GorePositioning => _GorePositioning_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_GorePositioningLocation, 12)) : default;
+        public P3Float GorePositioning => _GorePositioning_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_GorePositioningLocation, 12)) : default;
         #endregion
         #region GoreRotation
         private int _GoreRotationLocation => _BPNDLocation!.Value.Min + 0x38;
         private bool _GoreRotation_IsSet => _BPNDLocation.HasValue;
-        public P3Float GoreRotation => _GoreRotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_GoreRotationLocation, 12)) : default;
+        public P3Float GoreRotation => _GoreRotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_GoreRotationLocation, 12)) : default;
         #endregion
         #region SeverableImpactData
         private int _SeverableImpactDataLocation => _BPNDLocation!.Value.Min + 0x44;
         private bool _SeverableImpactData_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactData => _SeverableImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactData => _SeverableImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ExplodableImpactData
         private int _ExplodableImpactDataLocation => _BPNDLocation!.Value.Min + 0x48;
         private bool _ExplodableImpactData_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactData => _ExplodableImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactData => _ExplodableImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region SeverableDecalCount
         private int _SeverableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4C;
         private bool _SeverableDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _data.Span[_SeverableDecalCountLocation] : default;
+        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default;
         #endregion
         #region ExplodableDecalCount
         private int _ExplodableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4D;
         private bool _ExplodableDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _data.Span[_ExplodableDecalCountLocation] : default;
+        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _BPNDLocation!.Value.Min + 0x4E;
         private bool _Unknown_IsSet => _BPNDLocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region LimbReplacementScale
         private int _LimbReplacementScaleLocation => _BPNDLocation!.Value.Min + 0x50;
         private bool _LimbReplacementScale_IsSet => _BPNDLocation.HasValue;
-        public Single LimbReplacementScale => _LimbReplacementScale_IsSet ? _data.Slice(_LimbReplacementScaleLocation, 4).Float() : default;
+        public Single LimbReplacementScale => _LimbReplacementScale_IsSet ? _recordData.Slice(_LimbReplacementScaleLocation, 4).Float() : default;
         #endregion
         #region LimbReplacementModel
         private int? _LimbReplacementModelLocation;
-        public String LimbReplacementModel => _LimbReplacementModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LimbReplacementModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String LimbReplacementModel => _LimbReplacementModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LimbReplacementModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region GoreTargetBone
         private int? _GoreTargetBoneLocation;
-        public String GoreTargetBone => _GoreTargetBoneLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _GoreTargetBoneLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String GoreTargetBone => _GoreTargetBoneLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoreTargetBoneLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;
-        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureFilesHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureFilesHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3207,10 +3207,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected BodyPartBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -3221,10 +3221,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new BodyPartBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

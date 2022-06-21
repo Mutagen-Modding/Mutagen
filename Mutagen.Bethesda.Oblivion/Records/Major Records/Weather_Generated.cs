@@ -2308,25 +2308,25 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region TextureLowerLayer
         private int? _TextureLowerLayerLocation;
-        public String? TextureLowerLayer => _TextureLowerLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLowerLayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? TextureLowerLayer => _TextureLowerLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLowerLayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region TextureUpperLayer
         private int? _TextureUpperLayerLocation;
-        public String? TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureUpperLayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureUpperLayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IWeatherColorsGetter>? Colors { get; private set; }
         #region FogDistance
         private RangeInt32? _FogDistanceLocation;
-        public IFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? FogDistanceBinaryOverlay.FogDistanceFactory(new OverlayStream(_data.Slice(_FogDistanceLocation!.Value.Min), _package), _package) : default;
+        public IFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? FogDistanceBinaryOverlay.FogDistanceFactory(_recordData.Slice(_FogDistanceLocation!.Value.Min), _package) : default;
         #endregion
         #region HDRData
         private RangeInt32? _HDRDataLocation;
-        public IHDRDataGetter? HDRData => _HDRDataLocation.HasValue ? HDRDataBinaryOverlay.HDRDataFactory(new OverlayStream(_data.Slice(_HDRDataLocation!.Value.Min), _package), _package) : default;
+        public IHDRDataGetter? HDRData => _HDRDataLocation.HasValue ? HDRDataBinaryOverlay.HDRDataFactory(_recordData.Slice(_HDRDataLocation!.Value.Min), _package) : default;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IWeatherDataGetter? Data => _DataLocation.HasValue ? WeatherDataBinaryOverlay.WeatherDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IWeatherDataGetter? Data => _DataLocation.HasValue ? WeatherDataBinaryOverlay.WeatherDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
         partial void CustomFactoryEnd(
@@ -2336,10 +2336,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected WeatherBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2351,13 +2351,16 @@ namespace Mutagen.Bethesda.Oblivion
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WeatherBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

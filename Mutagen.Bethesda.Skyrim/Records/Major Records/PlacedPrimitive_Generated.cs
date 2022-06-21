@@ -1249,9 +1249,9 @@ namespace Mutagen.Bethesda.Skyrim
         public partial P3Float GetBoundsCustom(int location);
         public P3Float Bounds => GetBoundsCustom(location: 0x0);
         #endregion
-        public Color Color => _data.Slice(0xC, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
-        public Single Unknown => _data.Slice(0x18, 0x4).Float();
-        public PlacedPrimitive.TypeEnum Type => (PlacedPrimitive.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));
+        public Color Color => _structData.Slice(0xC, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
+        public Single Unknown => _structData.Slice(0x18, 0x4).Float();
+        public PlacedPrimitive.TypeEnum Type => (PlacedPrimitive.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1259,10 +1259,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected PlacedPrimitiveBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1273,11 +1273,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PlacedPrimitiveBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x20 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -1229,10 +1229,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected GameSettingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

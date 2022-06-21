@@ -1647,22 +1647,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region FovMult
         private int _FovMultLocation => _GNAMLocation!.Value.Min;
         private bool _FovMult_IsSet => _GNAMLocation.HasValue;
-        public Single FovMult => _FovMult_IsSet ? _data.Slice(_FovMultLocation, 4).Float() : default;
+        public Single FovMult => _FovMult_IsSet ? _recordData.Slice(_FovMultLocation, 4).Float() : default;
         #endregion
         #region Overlay
         private int _OverlayLocation => _GNAMLocation!.Value.Min + 0x4;
         private bool _Overlay_IsSet => _GNAMLocation.HasValue;
-        public Zoom.OverlayType Overlay => _Overlay_IsSet ? (Zoom.OverlayType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_OverlayLocation, 0x4)) : default;
+        public Zoom.OverlayType Overlay => _Overlay_IsSet ? (Zoom.OverlayType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OverlayLocation, 0x4)) : default;
         #endregion
         #region ImagespaceModifier
         private int _ImagespaceModifierLocation => _GNAMLocation!.Value.Min + 0x8;
         private bool _ImagespaceModifier_IsSet => _GNAMLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => _ImagespaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImagespaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => _ImagespaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImagespaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
         #endregion
         #region CameraOffset
         private int _CameraOffsetLocation => _GNAMLocation!.Value.Min + 0xC;
         private bool _CameraOffset_IsSet => _GNAMLocation.HasValue;
-        public P3Float CameraOffset => _CameraOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_CameraOffsetLocation, 12)) : default;
+        public P3Float CameraOffset => _CameraOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_CameraOffsetLocation, 12)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1671,10 +1671,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ZoomBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1686,13 +1686,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ZoomBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

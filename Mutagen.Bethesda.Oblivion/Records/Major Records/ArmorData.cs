@@ -34,6 +34,6 @@ partial class ArmorDataBinaryOverlay
     public bool GetArmorValueIsSetCustom() => true;
     public partial float GetArmorValueCustom(int location)
     {
-        return ArmorDataBinaryCreateTranslation.GetArmorValue(BinaryPrimitives.ReadUInt16LittleEndian(_data));
+        return ArmorDataBinaryCreateTranslation.GetArmorValue(BinaryPrimitives.ReadUInt16LittleEndian(_structData));
     }
 }

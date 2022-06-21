@@ -23,8 +23,8 @@ partial class DialogResponsesAdapterBinaryOverlay
 {
     public partial IScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
     {
-        if (this.ScriptsEndingPos == _data.Length) return null;
+        if (this.ScriptsEndingPos == _structData.Length) return null;
         return ScriptFragmentsBinaryCreateTranslation.ReadFragments(frame: new MutagenFrame(
-            new MutagenMemoryReadStream(_data.Slice(ScriptsEndingPos), _package.MetaData)), objectFormat: this.ObjectFormat);
+            new MutagenMemoryReadStream(_structData.Slice(ScriptsEndingPos), _package.MetaData)), objectFormat: this.ObjectFormat);
     }
 }

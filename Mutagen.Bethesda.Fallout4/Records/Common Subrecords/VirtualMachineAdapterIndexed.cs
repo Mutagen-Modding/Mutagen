@@ -50,9 +50,9 @@ partial class VirtualMachineAdapterIndexedBinaryOverlay
 {
     public partial IScriptFragmentsIndexedGetter? GetScriptFragmentsCustom(int location)
     {
-        if (this.ScriptsEndingPos == _data.Length) return null;
+        if (this.ScriptsEndingPos == _structData.Length) return null;
 
-        var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))
+        var frame = new MutagenFrame(new MutagenMemoryReadStream(_structData, _package.MetaData))
         {
             Position = ScriptsEndingPos
         };

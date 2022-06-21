@@ -1164,11 +1164,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region AddonIndex
         private int? _AddonIndexLocation;
-        public UInt16? AddonIndex => _AddonIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AddonIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16? AddonIndex => _AddonIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddonIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region AddonModel
         private int? _AddonModelLocation;
-        public IFormLinkNullableGetter<IArmorAddonGetter> AddonModel => _AddonModelLocation.HasValue ? new FormLinkNullable<IArmorAddonGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AddonModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorAddonGetter>.Null;
+        public IFormLinkNullableGetter<IArmorAddonGetter> AddonModel => _AddonModelLocation.HasValue ? new FormLinkNullable<IArmorAddonGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddonModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorAddonGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1177,10 +1177,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ArmorAddonModelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1191,10 +1191,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ArmorAddonModelBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

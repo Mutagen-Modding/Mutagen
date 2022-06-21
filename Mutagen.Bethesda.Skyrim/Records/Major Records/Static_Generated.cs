@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         public IModelGetter? Model { get; private set; }
@@ -2077,26 +2077,26 @@ namespace Mutagen.Bethesda.Skyrim
         #region MaxAngle
         private int _MaxAngleLocation => _DNAMLocation!.Value.Min;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
-        public Single MaxAngle => _MaxAngle_IsSet ? _data.Slice(_MaxAngleLocation, 4).Float() : default;
+        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default;
         #endregion
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Flags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
-        public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Unused
         private int _UnusedLocation => _DNAMLocation!.Value.Min + 0x9;
         private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
-        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;
-        public ILodGetter? Lod => _LodLocation.HasValue ? LodBinaryOverlay.LodFactory(new OverlayStream(_data.Slice(_LodLocation!.Value.Min), _package), _package) : default;
+        public ILodGetter? Lod => _LodLocation.HasValue ? LodBinaryOverlay.LodFactory(_recordData.Slice(_LodLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2105,10 +2105,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected StaticBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2120,13 +2120,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new StaticBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2180,7 +2183,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x8)
                     {
                         this.DNAMDataTypeState |= Static.DNAMDataType.Break0;

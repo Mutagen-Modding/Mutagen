@@ -2497,50 +2497,50 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public WeaponAnimationType AnimationType => (WeaponAnimationType)_data.Span.Slice(0x0, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public Single Speed => _data.Slice(0x4, 0x4).Float();
-        public Single Reach => _data.Slice(0x8, 0x4).Float();
+        public WeaponAnimationType AnimationType => (WeaponAnimationType)_structData.Span.Slice(0x0, 0x1)[0];
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x1, 0x3).ToArray();
+        public Single Speed => _structData.Slice(0x4, 0x4).Float();
+        public Single Reach => _structData.Slice(0x8, 0x4).Float();
         #region Flags
         public partial WeaponData.Flag GetFlagsCustom(int location);
         public WeaponData.Flag Flags => GetFlagsCustom(location: 0xC);
         #endregion
-        public Int16 Unused2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xE, 0x2));
-        public Single SightFOV => _data.Slice(0x10, 0x4).Float();
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public Byte BaseVATStoHitChance => _data.Span[0x18];
-        public WeaponData.AttackAnimationType AttackAnimation => (WeaponData.AttackAnimationType)_data.Span.Slice(0x19, 0x1)[0];
-        public Byte NumProjectiles => _data.Span[0x1A];
-        public Byte EmbeddedWeaponAV => _data.Span[0x1B];
-        public Single RangeMin => _data.Slice(0x1C, 0x4).Float();
-        public Single RangeMax => _data.Slice(0x20, 0x4).Float();
-        public WeaponData.OnHitType OnHit => (WeaponData.OnHitType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x24, 0x4));
+        public Int16 Unused2 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xE, 0x2));
+        public Single SightFOV => _structData.Slice(0x10, 0x4).Float();
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public Byte BaseVATStoHitChance => _structData.Span[0x18];
+        public WeaponData.AttackAnimationType AttackAnimation => (WeaponData.AttackAnimationType)_structData.Span.Slice(0x19, 0x1)[0];
+        public Byte NumProjectiles => _structData.Span[0x1A];
+        public Byte EmbeddedWeaponAV => _structData.Span[0x1B];
+        public Single RangeMin => _structData.Slice(0x1C, 0x4).Float();
+        public Single RangeMax => _structData.Slice(0x20, 0x4).Float();
+        public WeaponData.OnHitType OnHit => (WeaponData.OnHitType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x24, 0x4));
         #region Flags2
         partial void Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
-        public Single AnimationAttackMult => _data.Slice(0x2C, 0x4).Float();
-        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x30, 0x4));
-        public Single RumbleLeftMotorStrength => _data.Slice(0x34, 0x4).Float();
-        public Single RumbleRightMotorStrength => _data.Slice(0x38, 0x4).Float();
-        public Single RumbleDuration => _data.Slice(0x3C, 0x4).Float();
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _data.Span.Slice(0x40, 0xC).ToArray();
+        public Single AnimationAttackMult => _structData.Slice(0x2C, 0x4).Float();
+        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x30, 0x4));
+        public Single RumbleLeftMotorStrength => _structData.Slice(0x34, 0x4).Float();
+        public Single RumbleRightMotorStrength => _structData.Slice(0x38, 0x4).Float();
+        public Single RumbleDuration => _structData.Slice(0x3C, 0x4).Float();
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _structData.Span.Slice(0x40, 0xC).ToArray();
         #region Skill
         public Skill? Skill
         {
             get
             {
-                var val = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4C, 0x4));
+                var val = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4C, 0x4));
                 if (((int)val) == -1) return null;
                 return val;
             }
         }
         #endregion
-        public Int64 Unknown4 => BinaryPrimitives.ReadInt64LittleEndian(_data.Slice(0x50, 0x8));
-        public ActorValue Resist => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
-        public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x5C, 0x4));
-        public Single Stagger => _data.Slice(0x60, 0x4).Float();
+        public Int64 Unknown4 => BinaryPrimitives.ReadInt64LittleEndian(_structData.Slice(0x50, 0x8));
+        public ActorValue Resist => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x58, 0x4));
+        public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x5C, 0x4));
+        public Single Stagger => _structData.Slice(0x60, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2548,10 +2548,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected WeaponDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2562,11 +2562,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x64,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeaponDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x64 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

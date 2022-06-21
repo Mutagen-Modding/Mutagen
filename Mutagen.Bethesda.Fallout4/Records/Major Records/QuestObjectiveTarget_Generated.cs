@@ -1475,17 +1475,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region AliasID
         private int _AliasIDLocation => _QSTALocation!.Value.Min;
         private bool _AliasID_IsSet => _QSTALocation.HasValue;
-        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_AliasIDLocation, 4)) : default;
+        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_AliasIDLocation, 4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _QSTALocation.HasValue;
-        public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Keyword
         private int _KeywordLocation => _QSTALocation!.Value.Min + 0x8;
         private bool _Keyword_IsSet => _QSTALocation.HasValue && !QSTADataTypeState.HasFlag(QuestObjectiveTarget.QSTADataType.Break0);
-        public IFormLinkGetter<IKeywordGetter> Keyword => _Keyword_IsSet ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_KeywordLocation, 0x4)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> Keyword => _Keyword_IsSet ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_KeywordLocation, 0x4)))) : FormLink<IKeywordGetter>.Null;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
@@ -1495,10 +1495,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected QuestObjectiveTargetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1509,10 +1509,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestObjectiveTargetBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1549,7 +1555,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     _QSTALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x8)
                     {
                         this.QSTADataTypeState |= QuestObjectiveTarget.QSTADataType.Break0;

@@ -187,7 +187,7 @@ partial class ImageSpaceBinaryOverlay
     public partial byte GetDepthOfFieldBlurRadiusCustom()
     {
         ImageSpaceBinaryCreateTranslation.ParseSkyBlurRadius(
-            BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DNAMLocation!.Value.Min + 0xE)),
+            BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DNAMLocation!.Value.Min + 0xE)),
             out var radius,
             out _);
         return radius;
@@ -196,7 +196,7 @@ partial class ImageSpaceBinaryOverlay
     public partial Boolean GetDepthOfFieldSkyCustom()
     {
         ImageSpaceBinaryCreateTranslation.ParseSkyBlurRadius(
-            BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DNAMLocation!.Value.Min + 0xE)),
+            BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DNAMLocation!.Value.Min + 0xE)),
             out var _,
             out var sky);
         return sky;
@@ -218,13 +218,16 @@ partial class ImageSpaceBinaryOverlay
             return ImageSpace.CreateFromBinary(new MutagenFrame(stream));
         }
         stream = Decompression.DecompressStream(stream);
+        stream = ExtractRecordMemory(
+            stream,
+            package.MetaData.Constants,
+            out var memoryPair,
+            out var offset,
+            out var finalPos);
         var ret = new ImageSpaceBinaryOverlay(
-            bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+            memoryPair: memoryPair,
             package: package);
-        var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-        int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
         ret._package.FormVersion = ret;
-        stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
         ret.CustomFactoryEnd(
             stream: stream,
             finalPos: finalPos,

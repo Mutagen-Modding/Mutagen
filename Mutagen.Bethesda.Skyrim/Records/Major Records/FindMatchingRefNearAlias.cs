@@ -38,7 +38,7 @@ partial class FindMatchingRefNearAliasBinaryWriteTranslation
 partial class FindMatchingRefNearAliasBinaryOverlay
 {
     int? _aliasIDLoc;
-    public partial Int16? GetAliasIDCustom() => _aliasIDLoc == null ? default(short?) : checked((short)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _aliasIDLoc.Value, _package.MetaData.Constants)));
+    public partial Int16? GetAliasIDCustom() => _aliasIDLoc == null ? default(short?) : checked((short)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _aliasIDLoc.Value, _package.MetaData.Constants)));
 
     partial void AliasIDCustomParse(OverlayStream stream, long finalPos, int offset)
     {

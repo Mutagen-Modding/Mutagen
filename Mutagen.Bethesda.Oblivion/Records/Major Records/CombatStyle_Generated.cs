@@ -1539,11 +1539,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Data
         private RangeInt32? _DataLocation;
-        public ICombatStyleDataGetter? Data => _DataLocation.HasValue ? CombatStyleDataBinaryOverlay.CombatStyleDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public ICombatStyleDataGetter? Data => _DataLocation.HasValue ? CombatStyleDataBinaryOverlay.CombatStyleDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region Advanced
         private RangeInt32? _AdvancedLocation;
-        public ICombatStyleAdvancedGetter? Advanced => _AdvancedLocation.HasValue ? CombatStyleAdvancedBinaryOverlay.CombatStyleAdvancedFactory(new OverlayStream(_data.Slice(_AdvancedLocation!.Value.Min), _package), _package) : default;
+        public ICombatStyleAdvancedGetter? Advanced => _AdvancedLocation.HasValue ? CombatStyleAdvancedBinaryOverlay.CombatStyleAdvancedFactory(_recordData.Slice(_AdvancedLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1552,10 +1552,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected CombatStyleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1567,13 +1567,16 @@ namespace Mutagen.Bethesda.Oblivion
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CombatStyleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

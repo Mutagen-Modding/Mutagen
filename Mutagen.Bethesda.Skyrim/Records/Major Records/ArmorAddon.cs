@@ -94,11 +94,11 @@ partial class ArmorAddonBinaryWriteTranslation
 partial class ArmorAddonBinaryOverlay
 {
     public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new GenderedItem<bool>(
-        ArmorAddonBinaryCreateTranslation.IsEnabled(_data.Slice(_DNAMLocation!.Value.Min + 2)[0]),
-        ArmorAddonBinaryCreateTranslation.IsEnabled(_data.Slice(_DNAMLocation!.Value.Min + 3)[0]));
+        ArmorAddonBinaryCreateTranslation.IsEnabled(_recordData.Slice(_DNAMLocation!.Value.Min + 2)[0]),
+        ArmorAddonBinaryCreateTranslation.IsEnabled(_recordData.Slice(_DNAMLocation!.Value.Min + 3)[0]));
 
     private int? _BodyTemplateLocation;
-    public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
+    public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_recordData.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
     public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
 
     partial void BodyTemplateCustomParse(OverlayStream stream, long finalPos, int offset)

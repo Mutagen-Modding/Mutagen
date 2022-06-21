@@ -103,9 +103,9 @@ internal abstract class AListGroupBinaryOverlay<T> : PluginBinaryOverlay
     public IReadOnlyList<T> Records => _Records!;
 
     protected AListGroupBinaryOverlay(
-        ReadOnlyMemorySlice<byte> bytes,
+        PluginBinaryOverlay.MemoryPair memoryPair,
         BinaryOverlayFactoryPackage package)
-        : base(bytes, package)
+        : base(memoryPair, package)
     {
     }
 }

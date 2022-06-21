@@ -1400,12 +1400,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public WorldspaceMap.VersioningBreaks Versioning { get; private set; }
-        public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x8));
-        public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0x4));
-        public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0x4));
-        public Single CameraMinHeight => _data.Length <= 0x10 ? default : _data.Slice(0x10, 0x4).Float();
-        public Single CameraMaxHeight => _data.Length <= 0x14 ? default : _data.Slice(0x14, 0x4).Float();
-        public Single CameraInitialPitch => _data.Length <= 0x18 ? default : _data.Slice(0x18, 0x4).Float();
+        public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x8));
+        public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4));
+        public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0xC, 0x4));
+        public Single CameraMinHeight => _structData.Length <= 0x10 ? default : _structData.Slice(0x10, 0x4).Float();
+        public Single CameraMaxHeight => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x4).Float();
+        public Single CameraInitialPitch => _structData.Length <= 0x18 ? default : _structData.Slice(0x18, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1413,10 +1413,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected WorldspaceMapBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1427,12 +1427,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x1C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WorldspaceMapBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x10)
+            if (ret._structData.Length <= 0x10)
             {
                 ret.Versioning |= WorldspaceMap.VersioningBreaks.Break0;
             }

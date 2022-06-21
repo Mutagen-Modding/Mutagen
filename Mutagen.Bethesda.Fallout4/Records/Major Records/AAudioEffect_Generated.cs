@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Boolean Enabled => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4)) >= 1;
+        public Boolean Enabled => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4)) >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1018,10 +1018,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected AAudioEffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

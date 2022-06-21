@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Navmeshes
-        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_data, _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData, _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int NavmeshesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1174,10 +1174,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected NavmeshSetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1188,11 +1188,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavmeshSetBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 4 + 4;
+            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 4 + 4;
             stream.Position += ret.NavmeshesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

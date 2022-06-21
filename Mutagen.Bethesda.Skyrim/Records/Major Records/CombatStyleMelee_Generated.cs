@@ -1510,14 +1510,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public CombatStyleMelee.VersioningBreaks Versioning { get; private set; }
-        public Single AttackStaggeredMult => _data.Slice(0x0, 0x4).Float();
-        public Single PowerAttackStaggeredMult => _data.Slice(0x4, 0x4).Float();
-        public Single PowerAttackBlockingMult => _data.Slice(0x8, 0x4).Float();
-        public Single BashMult => _data.Slice(0xC, 0x4).Float();
-        public Single BashRecoilMult => _data.Slice(0x10, 0x4).Float();
-        public Single BashAttackMult => _data.Slice(0x14, 0x4).Float();
-        public Single BashPowerAttackMult => _data.Slice(0x18, 0x4).Float();
-        public Single SpecialAttackMult => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).Float();
+        public Single AttackStaggeredMult => _structData.Slice(0x0, 0x4).Float();
+        public Single PowerAttackStaggeredMult => _structData.Slice(0x4, 0x4).Float();
+        public Single PowerAttackBlockingMult => _structData.Slice(0x8, 0x4).Float();
+        public Single BashMult => _structData.Slice(0xC, 0x4).Float();
+        public Single BashRecoilMult => _structData.Slice(0x10, 0x4).Float();
+        public Single BashAttackMult => _structData.Slice(0x14, 0x4).Float();
+        public Single BashPowerAttackMult => _structData.Slice(0x18, 0x4).Float();
+        public Single SpecialAttackMult => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1525,10 +1525,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected CombatStyleMeleeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1539,12 +1539,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CombatStyleMeleeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x1C)
+            if (ret._structData.Length <= 0x1C)
             {
                 ret.Versioning |= CombatStyleMelee.VersioningBreaks.Break0;
             }

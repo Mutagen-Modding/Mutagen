@@ -2393,7 +2393,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         public IModelGetter? Model { get; private set; }
@@ -2402,67 +2402,67 @@ namespace Mutagen.Bethesda.Skyrim
         #region Density
         private int _DensityLocation => _DATALocation!.Value.Min;
         private bool _Density_IsSet => _DATALocation.HasValue;
-        public Byte Density => _Density_IsSet ? _data.Span[_DensityLocation] : default;
+        public Byte Density => _Density_IsSet ? _recordData.Span[_DensityLocation] : default;
         #endregion
         #region MinSlope
         private int _MinSlopeLocation => _DATALocation!.Value.Min + 0x1;
         private bool _MinSlope_IsSet => _DATALocation.HasValue;
-        public Byte MinSlope => _MinSlope_IsSet ? _data.Span[_MinSlopeLocation] : default;
+        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default;
         #endregion
         #region MaxSlope
         private int _MaxSlopeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _MaxSlope_IsSet => _DATALocation.HasValue;
-        public Byte MaxSlope => _MaxSlope_IsSet ? _data.Span[_MaxSlopeLocation] : default;
+        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
         #region UnitsFromWater
         private int _UnitsFromWaterLocation => _DATALocation!.Value.Min + 0x4;
         private bool _UnitsFromWater_IsSet => _DATALocation.HasValue;
-        public UInt16 UnitsFromWater => _UnitsFromWater_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnitsFromWaterLocation, 2)) : default;
+        public UInt16 UnitsFromWater => _UnitsFromWater_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnitsFromWaterLocation, 2)) : default;
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value.Min + 0x6;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_Unknown2Location, 2)) : default;
+        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default;
         #endregion
         #region UnitsFromWaterType
         private int _UnitsFromWaterTypeLocation => _DATALocation!.Value.Min + 0x8;
         private bool _UnitsFromWaterType_IsSet => _DATALocation.HasValue;
-        public Grass.UnitsFromWaterTypeEnum UnitsFromWaterType => _UnitsFromWaterType_IsSet ? (Grass.UnitsFromWaterTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_UnitsFromWaterTypeLocation, 0x4)) : default;
+        public Grass.UnitsFromWaterTypeEnum UnitsFromWaterType => _UnitsFromWaterType_IsSet ? (Grass.UnitsFromWaterTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_UnitsFromWaterTypeLocation, 0x4)) : default;
         #endregion
         #region PositionRange
         private int _PositionRangeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _PositionRange_IsSet => _DATALocation.HasValue;
-        public Single PositionRange => _PositionRange_IsSet ? _data.Slice(_PositionRangeLocation, 4).Float() : default;
+        public Single PositionRange => _PositionRange_IsSet ? _recordData.Slice(_PositionRangeLocation, 4).Float() : default;
         #endregion
         #region HeightRange
         private int _HeightRangeLocation => _DATALocation!.Value.Min + 0x10;
         private bool _HeightRange_IsSet => _DATALocation.HasValue;
-        public Single HeightRange => _HeightRange_IsSet ? _data.Slice(_HeightRangeLocation, 4).Float() : default;
+        public Single HeightRange => _HeightRange_IsSet ? _recordData.Slice(_HeightRangeLocation, 4).Float() : default;
         #endregion
         #region ColorRange
         private int _ColorRangeLocation => _DATALocation!.Value.Min + 0x14;
         private bool _ColorRange_IsSet => _DATALocation.HasValue;
-        public Single ColorRange => _ColorRange_IsSet ? _data.Slice(_ColorRangeLocation, 4).Float() : default;
+        public Single ColorRange => _ColorRange_IsSet ? _recordData.Slice(_ColorRangeLocation, 4).Float() : default;
         #endregion
         #region WavePeriod
         private int _WavePeriodLocation => _DATALocation!.Value.Min + 0x18;
         private bool _WavePeriod_IsSet => _DATALocation.HasValue;
-        public Single WavePeriod => _WavePeriod_IsSet ? _data.Slice(_WavePeriodLocation, 4).Float() : default;
+        public Single WavePeriod => _WavePeriod_IsSet ? _recordData.Slice(_WavePeriodLocation, 4).Float() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Grass.Flag Flags => _Flags_IsSet ? (Grass.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Grass.Flag Flags => _Flags_IsSet ? (Grass.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Unknown3
         private int _Unknown3Location => _DATALocation!.Value.Min + 0x1D;
         private bool _Unknown3_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _data.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2471,10 +2471,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected GrassBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2486,13 +2486,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new GrassBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

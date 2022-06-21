@@ -915,8 +915,8 @@ namespace Mutagen.Bethesda.Fallout4
         public String Value { get; private set; } = string.Empty;
         protected int ValueEndingPos;
         #endregion
-        public UInt32 Unused => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(ValueEndingPos, 0x4));
-        public ObjectModProperty.FloatFunctionType FunctionType => (ObjectModProperty.FloatFunctionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(ValueEndingPos + 0x4, 0x4));
+        public UInt32 Unused => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(ValueEndingPos, 0x4));
+        public ObjectModProperty.FloatFunctionType FunctionType => (ObjectModProperty.FloatFunctionType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(ValueEndingPos + 0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -924,10 +924,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ObjectModStringPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -938,11 +938,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ObjectModStringPropertyBinaryOverlay<T>(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.Value = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(0x5), package.MetaData.Encodings.NonTranslated);
+            ret.Value = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x5), package.MetaData.Encodings.NonTranslated);
             ret.ValueEndingPos = 0x5 + ret.Value.Length + 1;
             stream.Position += ret.ValueEndingPos + 0x8;
             ret.CustomFactoryEnd(

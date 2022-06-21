@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region File
         private int? _FileLocation;
-        public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Data
         private RecordType _DataType;
@@ -1518,9 +1518,9 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (_DataType.TypeInt)
                 {
                     case RecordTypeInts.SNDD:
-                        return SoundDataBinaryOverlay.SoundDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, default(TypedParseParams));
+                        return SoundDataBinaryOverlay.SoundDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package, default(TypedParseParams));
                     case RecordTypeInts.SNDX:
-                        return SoundDataExtendedBinaryOverlay.SoundDataExtendedFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, default(TypedParseParams));
+                        return SoundDataExtendedBinaryOverlay.SoundDataExtendedFactory(_recordData.Slice(_DataLocation!.Value.Min), _package, default(TypedParseParams));
                     default:
                         throw new ArgumentException();
                 }
@@ -1534,10 +1534,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected SoundBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1549,13 +1549,16 @@ namespace Mutagen.Bethesda.Oblivion
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SoundBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

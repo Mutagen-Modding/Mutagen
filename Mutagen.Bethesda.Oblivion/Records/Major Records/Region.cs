@@ -132,11 +132,11 @@ partial class RegionBinaryOverlay : IRegionGetter
     {
         if (_iconLocation.HasValue)
         {
-            return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _iconLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonLocalized);
+            return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _iconLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonLocalized);
         }
         if (_secondaryIconLocation.HasValue)
         {
-            return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _secondaryIconLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonLocalized);
+            return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _secondaryIconLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonLocalized);
         }
         return default;
     }
@@ -195,13 +195,13 @@ partial class RegionBinaryOverlay : IRegionGetter
         switch (dataType)
         {
             case RegionData.RegionDataType.Object:
-                _objectsSpan = this._data.Slice(loc, len);
+                _objectsSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Map:
-                _mapSpan = this._data.Slice(loc, len);
+                _mapSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Grass:
-                _grassesSpan = this._data.Slice(loc, len);
+                _grassesSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Sound:
                 var nextRec = stream.GetSubrecordHeader();
@@ -209,10 +209,10 @@ partial class RegionBinaryOverlay : IRegionGetter
                 {
                     len += nextRec.TotalLength;
                 }
-                _soundsSpan = this._data.Slice(loc, len);
+                _soundsSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Weather:
-                _weatherSpan = this._data.Slice(loc, len);
+                _weatherSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Icon:
                 _secondaryIconLocation = loc + rdatFrame.TotalLength;

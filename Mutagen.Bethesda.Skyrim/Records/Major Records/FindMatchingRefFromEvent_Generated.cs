@@ -1162,11 +1162,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region FromEvent
         private int? _FromEventLocation;
-        public RecordType? FromEvent => _FromEventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FromEventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
+        public RecordType? FromEvent => _FromEventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FromEventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
         #endregion
         #region EventData
         private int? _EventDataLocation;
-        public ReadOnlyMemorySlice<Byte>? EventData => _EventDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _EventDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? EventData => _EventDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _EventDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1175,10 +1175,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected FindMatchingRefFromEventBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1189,10 +1189,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FindMatchingRefFromEventBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

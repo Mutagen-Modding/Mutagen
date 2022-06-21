@@ -24302,647 +24302,647 @@ namespace Mutagen.Bethesda.Fallout4
         uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;
         public ModKey ModKey { get; }
         private readonly BinaryOverlayFactoryPackage _package;
-        private readonly IBinaryReadStream _data;
+        private readonly IBinaryReadStream _stream;
         private readonly bool _shouldDispose;
         public void Dispose()
         {
             if (!_shouldDispose) return;
-            _data.Dispose();
+            _stream.Dispose();
         }
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
-        private IFallout4ModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? Fallout4ModHeaderBinaryOverlay.Fallout4ModHeaderFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
+        private IFallout4ModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? Fallout4ModHeaderBinaryOverlay.Fallout4ModHeaderFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package) : default;
         public IFallout4ModHeaderGetter ModHeader => _ModHeader ?? new Fallout4ModHeader();
         #endregion
         #region GameSettings
         private List<RangeInt64>? _GameSettingsLocations;
-        private IFallout4GroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? Fallout4GroupBinaryOverlay<IGameSettingGetter>.Fallout4GroupFactory(_data, _GameSettingsLocations, _package) : default;
+        private IFallout4GroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? Fallout4GroupBinaryOverlay<IGameSettingGetter>.Fallout4GroupFactory(_stream, _GameSettingsLocations, _package) : default;
         public IFallout4GroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Fallout4Group<GameSetting>(this);
         #endregion
         #region Keywords
         private List<RangeInt64>? _KeywordsLocations;
-        private IFallout4GroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? Fallout4GroupBinaryOverlay<IKeywordGetter>.Fallout4GroupFactory(_data, _KeywordsLocations, _package) : default;
+        private IFallout4GroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? Fallout4GroupBinaryOverlay<IKeywordGetter>.Fallout4GroupFactory(_stream, _KeywordsLocations, _package) : default;
         public IFallout4GroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Fallout4Group<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
         private List<RangeInt64>? _LocationReferenceTypesLocations;
-        private IFallout4GroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? Fallout4GroupBinaryOverlay<ILocationReferenceTypeGetter>.Fallout4GroupFactory(_data, _LocationReferenceTypesLocations, _package) : default;
+        private IFallout4GroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? Fallout4GroupBinaryOverlay<ILocationReferenceTypeGetter>.Fallout4GroupFactory(_stream, _LocationReferenceTypesLocations, _package) : default;
         public IFallout4GroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Fallout4Group<LocationReferenceType>(this);
         #endregion
         #region Actions
         private List<RangeInt64>? _ActionsLocations;
-        private IFallout4GroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? Fallout4GroupBinaryOverlay<IActionRecordGetter>.Fallout4GroupFactory(_data, _ActionsLocations, _package) : default;
+        private IFallout4GroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? Fallout4GroupBinaryOverlay<IActionRecordGetter>.Fallout4GroupFactory(_stream, _ActionsLocations, _package) : default;
         public IFallout4GroupGetter<IActionRecordGetter> Actions => _Actions ?? new Fallout4Group<ActionRecord>(this);
         #endregion
         #region Transforms
         private List<RangeInt64>? _TransformsLocations;
-        private IFallout4GroupGetter<ITransformGetter>? _Transforms => _TransformsLocations != null ? Fallout4GroupBinaryOverlay<ITransformGetter>.Fallout4GroupFactory(_data, _TransformsLocations, _package) : default;
+        private IFallout4GroupGetter<ITransformGetter>? _Transforms => _TransformsLocations != null ? Fallout4GroupBinaryOverlay<ITransformGetter>.Fallout4GroupFactory(_stream, _TransformsLocations, _package) : default;
         public IFallout4GroupGetter<ITransformGetter> Transforms => _Transforms ?? new Fallout4Group<Transform>(this);
         #endregion
         #region Components
         private List<RangeInt64>? _ComponentsLocations;
-        private IFallout4GroupGetter<IComponentGetter>? _Components => _ComponentsLocations != null ? Fallout4GroupBinaryOverlay<IComponentGetter>.Fallout4GroupFactory(_data, _ComponentsLocations, _package) : default;
+        private IFallout4GroupGetter<IComponentGetter>? _Components => _ComponentsLocations != null ? Fallout4GroupBinaryOverlay<IComponentGetter>.Fallout4GroupFactory(_stream, _ComponentsLocations, _package) : default;
         public IFallout4GroupGetter<IComponentGetter> Components => _Components ?? new Fallout4Group<Component>(this);
         #endregion
         #region TextureSets
         private List<RangeInt64>? _TextureSetsLocations;
-        private IFallout4GroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? Fallout4GroupBinaryOverlay<ITextureSetGetter>.Fallout4GroupFactory(_data, _TextureSetsLocations, _package) : default;
+        private IFallout4GroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? Fallout4GroupBinaryOverlay<ITextureSetGetter>.Fallout4GroupFactory(_stream, _TextureSetsLocations, _package) : default;
         public IFallout4GroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Fallout4Group<TextureSet>(this);
         #endregion
         #region Globals
         private List<RangeInt64>? _GlobalsLocations;
-        private IFallout4GroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? Fallout4GroupBinaryOverlay<IGlobalGetter>.Fallout4GroupFactory(_data, _GlobalsLocations, _package) : default;
+        private IFallout4GroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? Fallout4GroupBinaryOverlay<IGlobalGetter>.Fallout4GroupFactory(_stream, _GlobalsLocations, _package) : default;
         public IFallout4GroupGetter<IGlobalGetter> Globals => _Globals ?? new Fallout4Group<Global>(this);
         #endregion
         #region DamageTypes
         private List<RangeInt64>? _DamageTypesLocations;
-        private IFallout4GroupGetter<IADamageTypeGetter>? _DamageTypes => _DamageTypesLocations != null ? Fallout4GroupBinaryOverlay<IADamageTypeGetter>.Fallout4GroupFactory(_data, _DamageTypesLocations, _package) : default;
+        private IFallout4GroupGetter<IADamageTypeGetter>? _DamageTypes => _DamageTypesLocations != null ? Fallout4GroupBinaryOverlay<IADamageTypeGetter>.Fallout4GroupFactory(_stream, _DamageTypesLocations, _package) : default;
         public IFallout4GroupGetter<IADamageTypeGetter> DamageTypes => _DamageTypes ?? new Fallout4Group<ADamageType>(this);
         #endregion
         #region Classes
         private List<RangeInt64>? _ClassesLocations;
-        private IFallout4GroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? Fallout4GroupBinaryOverlay<IClassGetter>.Fallout4GroupFactory(_data, _ClassesLocations, _package) : default;
+        private IFallout4GroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? Fallout4GroupBinaryOverlay<IClassGetter>.Fallout4GroupFactory(_stream, _ClassesLocations, _package) : default;
         public IFallout4GroupGetter<IClassGetter> Classes => _Classes ?? new Fallout4Group<Class>(this);
         #endregion
         #region Factions
         private List<RangeInt64>? _FactionsLocations;
-        private IFallout4GroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? Fallout4GroupBinaryOverlay<IFactionGetter>.Fallout4GroupFactory(_data, _FactionsLocations, _package) : default;
+        private IFallout4GroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? Fallout4GroupBinaryOverlay<IFactionGetter>.Fallout4GroupFactory(_stream, _FactionsLocations, _package) : default;
         public IFallout4GroupGetter<IFactionGetter> Factions => _Factions ?? new Fallout4Group<Faction>(this);
         #endregion
         #region HeadParts
         private List<RangeInt64>? _HeadPartsLocations;
-        private IFallout4GroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? Fallout4GroupBinaryOverlay<IHeadPartGetter>.Fallout4GroupFactory(_data, _HeadPartsLocations, _package) : default;
+        private IFallout4GroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? Fallout4GroupBinaryOverlay<IHeadPartGetter>.Fallout4GroupFactory(_stream, _HeadPartsLocations, _package) : default;
         public IFallout4GroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Fallout4Group<HeadPart>(this);
         #endregion
         #region Races
         private List<RangeInt64>? _RacesLocations;
-        private IFallout4GroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? Fallout4GroupBinaryOverlay<IRaceGetter>.Fallout4GroupFactory(_data, _RacesLocations, _package) : default;
+        private IFallout4GroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? Fallout4GroupBinaryOverlay<IRaceGetter>.Fallout4GroupFactory(_stream, _RacesLocations, _package) : default;
         public IFallout4GroupGetter<IRaceGetter> Races => _Races ?? new Fallout4Group<Race>(this);
         #endregion
         #region SoundMarkers
         private List<RangeInt64>? _SoundMarkersLocations;
-        private IFallout4GroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? Fallout4GroupBinaryOverlay<ISoundMarkerGetter>.Fallout4GroupFactory(_data, _SoundMarkersLocations, _package) : default;
+        private IFallout4GroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? Fallout4GroupBinaryOverlay<ISoundMarkerGetter>.Fallout4GroupFactory(_stream, _SoundMarkersLocations, _package) : default;
         public IFallout4GroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new Fallout4Group<SoundMarker>(this);
         #endregion
         #region AcousticSpaces
         private List<RangeInt64>? _AcousticSpacesLocations;
-        private IFallout4GroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? Fallout4GroupBinaryOverlay<IAcousticSpaceGetter>.Fallout4GroupFactory(_data, _AcousticSpacesLocations, _package) : default;
+        private IFallout4GroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? Fallout4GroupBinaryOverlay<IAcousticSpaceGetter>.Fallout4GroupFactory(_stream, _AcousticSpacesLocations, _package) : default;
         public IFallout4GroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new Fallout4Group<AcousticSpace>(this);
         #endregion
         #region MagicEffects
         private List<RangeInt64>? _MagicEffectsLocations;
-        private IFallout4GroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? Fallout4GroupBinaryOverlay<IMagicEffectGetter>.Fallout4GroupFactory(_data, _MagicEffectsLocations, _package) : default;
+        private IFallout4GroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? Fallout4GroupBinaryOverlay<IMagicEffectGetter>.Fallout4GroupFactory(_stream, _MagicEffectsLocations, _package) : default;
         public IFallout4GroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new Fallout4Group<MagicEffect>(this);
         #endregion
         #region LandscapeTextures
         private List<RangeInt64>? _LandscapeTexturesLocations;
-        private IFallout4GroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? Fallout4GroupBinaryOverlay<ILandscapeTextureGetter>.Fallout4GroupFactory(_data, _LandscapeTexturesLocations, _package) : default;
+        private IFallout4GroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? Fallout4GroupBinaryOverlay<ILandscapeTextureGetter>.Fallout4GroupFactory(_stream, _LandscapeTexturesLocations, _package) : default;
         public IFallout4GroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new Fallout4Group<LandscapeTexture>(this);
         #endregion
         #region ObjectEffects
         private List<RangeInt64>? _ObjectEffectsLocations;
-        private IFallout4GroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? Fallout4GroupBinaryOverlay<IObjectEffectGetter>.Fallout4GroupFactory(_data, _ObjectEffectsLocations, _package) : default;
+        private IFallout4GroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? Fallout4GroupBinaryOverlay<IObjectEffectGetter>.Fallout4GroupFactory(_stream, _ObjectEffectsLocations, _package) : default;
         public IFallout4GroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new Fallout4Group<ObjectEffect>(this);
         #endregion
         #region Spells
         private List<RangeInt64>? _SpellsLocations;
-        private IFallout4GroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? Fallout4GroupBinaryOverlay<ISpellGetter>.Fallout4GroupFactory(_data, _SpellsLocations, _package) : default;
+        private IFallout4GroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? Fallout4GroupBinaryOverlay<ISpellGetter>.Fallout4GroupFactory(_stream, _SpellsLocations, _package) : default;
         public IFallout4GroupGetter<ISpellGetter> Spells => _Spells ?? new Fallout4Group<Spell>(this);
         #endregion
         #region Activators
         private List<RangeInt64>? _ActivatorsLocations;
-        private IFallout4GroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? Fallout4GroupBinaryOverlay<IActivatorGetter>.Fallout4GroupFactory(_data, _ActivatorsLocations, _package) : default;
+        private IFallout4GroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? Fallout4GroupBinaryOverlay<IActivatorGetter>.Fallout4GroupFactory(_stream, _ActivatorsLocations, _package) : default;
         public IFallout4GroupGetter<IActivatorGetter> Activators => _Activators ?? new Fallout4Group<Activator>(this);
         #endregion
         #region TalkingActivators
         private List<RangeInt64>? _TalkingActivatorsLocations;
-        private IFallout4GroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? Fallout4GroupBinaryOverlay<ITalkingActivatorGetter>.Fallout4GroupFactory(_data, _TalkingActivatorsLocations, _package) : default;
+        private IFallout4GroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? Fallout4GroupBinaryOverlay<ITalkingActivatorGetter>.Fallout4GroupFactory(_stream, _TalkingActivatorsLocations, _package) : default;
         public IFallout4GroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new Fallout4Group<TalkingActivator>(this);
         #endregion
         #region Armors
         private List<RangeInt64>? _ArmorsLocations;
-        private IFallout4GroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? Fallout4GroupBinaryOverlay<IArmorGetter>.Fallout4GroupFactory(_data, _ArmorsLocations, _package) : default;
+        private IFallout4GroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? Fallout4GroupBinaryOverlay<IArmorGetter>.Fallout4GroupFactory(_stream, _ArmorsLocations, _package) : default;
         public IFallout4GroupGetter<IArmorGetter> Armors => _Armors ?? new Fallout4Group<Armor>(this);
         #endregion
         #region Books
         private List<RangeInt64>? _BooksLocations;
-        private IFallout4GroupGetter<IBookGetter>? _Books => _BooksLocations != null ? Fallout4GroupBinaryOverlay<IBookGetter>.Fallout4GroupFactory(_data, _BooksLocations, _package) : default;
+        private IFallout4GroupGetter<IBookGetter>? _Books => _BooksLocations != null ? Fallout4GroupBinaryOverlay<IBookGetter>.Fallout4GroupFactory(_stream, _BooksLocations, _package) : default;
         public IFallout4GroupGetter<IBookGetter> Books => _Books ?? new Fallout4Group<Book>(this);
         #endregion
         #region Containers
         private List<RangeInt64>? _ContainersLocations;
-        private IFallout4GroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? Fallout4GroupBinaryOverlay<IContainerGetter>.Fallout4GroupFactory(_data, _ContainersLocations, _package) : default;
+        private IFallout4GroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? Fallout4GroupBinaryOverlay<IContainerGetter>.Fallout4GroupFactory(_stream, _ContainersLocations, _package) : default;
         public IFallout4GroupGetter<IContainerGetter> Containers => _Containers ?? new Fallout4Group<Container>(this);
         #endregion
         #region Doors
         private List<RangeInt64>? _DoorsLocations;
-        private IFallout4GroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? Fallout4GroupBinaryOverlay<IDoorGetter>.Fallout4GroupFactory(_data, _DoorsLocations, _package) : default;
+        private IFallout4GroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? Fallout4GroupBinaryOverlay<IDoorGetter>.Fallout4GroupFactory(_stream, _DoorsLocations, _package) : default;
         public IFallout4GroupGetter<IDoorGetter> Doors => _Doors ?? new Fallout4Group<Door>(this);
         #endregion
         #region Ingredients
         private List<RangeInt64>? _IngredientsLocations;
-        private IFallout4GroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? Fallout4GroupBinaryOverlay<IIngredientGetter>.Fallout4GroupFactory(_data, _IngredientsLocations, _package) : default;
+        private IFallout4GroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? Fallout4GroupBinaryOverlay<IIngredientGetter>.Fallout4GroupFactory(_stream, _IngredientsLocations, _package) : default;
         public IFallout4GroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new Fallout4Group<Ingredient>(this);
         #endregion
         #region Lights
         private List<RangeInt64>? _LightsLocations;
-        private IFallout4GroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? Fallout4GroupBinaryOverlay<ILightGetter>.Fallout4GroupFactory(_data, _LightsLocations, _package) : default;
+        private IFallout4GroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? Fallout4GroupBinaryOverlay<ILightGetter>.Fallout4GroupFactory(_stream, _LightsLocations, _package) : default;
         public IFallout4GroupGetter<ILightGetter> Lights => _Lights ?? new Fallout4Group<Light>(this);
         #endregion
         #region MiscItems
         private List<RangeInt64>? _MiscItemsLocations;
-        private IFallout4GroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? Fallout4GroupBinaryOverlay<IMiscItemGetter>.Fallout4GroupFactory(_data, _MiscItemsLocations, _package) : default;
+        private IFallout4GroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? Fallout4GroupBinaryOverlay<IMiscItemGetter>.Fallout4GroupFactory(_stream, _MiscItemsLocations, _package) : default;
         public IFallout4GroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new Fallout4Group<MiscItem>(this);
         #endregion
         #region Statics
         private List<RangeInt64>? _StaticsLocations;
-        private IFallout4GroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? Fallout4GroupBinaryOverlay<IStaticGetter>.Fallout4GroupFactory(_data, _StaticsLocations, _package) : default;
+        private IFallout4GroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? Fallout4GroupBinaryOverlay<IStaticGetter>.Fallout4GroupFactory(_stream, _StaticsLocations, _package) : default;
         public IFallout4GroupGetter<IStaticGetter> Statics => _Statics ?? new Fallout4Group<Static>(this);
         #endregion
         #region StaticCollections
         private List<RangeInt64>? _StaticCollectionsLocations;
-        private IFallout4GroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? Fallout4GroupBinaryOverlay<IStaticCollectionGetter>.Fallout4GroupFactory(_data, _StaticCollectionsLocations, _package) : default;
+        private IFallout4GroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? Fallout4GroupBinaryOverlay<IStaticCollectionGetter>.Fallout4GroupFactory(_stream, _StaticCollectionsLocations, _package) : default;
         public IFallout4GroupGetter<IStaticCollectionGetter> StaticCollections => _StaticCollections ?? new Fallout4Group<StaticCollection>(this);
         #endregion
         #region MovableStatics
         private List<RangeInt64>? _MovableStaticsLocations;
-        private IFallout4GroupGetter<IMovableStaticGetter>? _MovableStatics => _MovableStaticsLocations != null ? Fallout4GroupBinaryOverlay<IMovableStaticGetter>.Fallout4GroupFactory(_data, _MovableStaticsLocations, _package) : default;
+        private IFallout4GroupGetter<IMovableStaticGetter>? _MovableStatics => _MovableStaticsLocations != null ? Fallout4GroupBinaryOverlay<IMovableStaticGetter>.Fallout4GroupFactory(_stream, _MovableStaticsLocations, _package) : default;
         public IFallout4GroupGetter<IMovableStaticGetter> MovableStatics => _MovableStatics ?? new Fallout4Group<MovableStatic>(this);
         #endregion
         #region Grasses
         private List<RangeInt64>? _GrassesLocations;
-        private IFallout4GroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? Fallout4GroupBinaryOverlay<IGrassGetter>.Fallout4GroupFactory(_data, _GrassesLocations, _package) : default;
+        private IFallout4GroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? Fallout4GroupBinaryOverlay<IGrassGetter>.Fallout4GroupFactory(_stream, _GrassesLocations, _package) : default;
         public IFallout4GroupGetter<IGrassGetter> Grasses => _Grasses ?? new Fallout4Group<Grass>(this);
         #endregion
         #region Trees
         private List<RangeInt64>? _TreesLocations;
-        private IFallout4GroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? Fallout4GroupBinaryOverlay<ITreeGetter>.Fallout4GroupFactory(_data, _TreesLocations, _package) : default;
+        private IFallout4GroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? Fallout4GroupBinaryOverlay<ITreeGetter>.Fallout4GroupFactory(_stream, _TreesLocations, _package) : default;
         public IFallout4GroupGetter<ITreeGetter> Trees => _Trees ?? new Fallout4Group<Tree>(this);
         #endregion
         #region Florae
         private List<RangeInt64>? _FloraeLocations;
-        private IFallout4GroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? Fallout4GroupBinaryOverlay<IFloraGetter>.Fallout4GroupFactory(_data, _FloraeLocations, _package) : default;
+        private IFallout4GroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? Fallout4GroupBinaryOverlay<IFloraGetter>.Fallout4GroupFactory(_stream, _FloraeLocations, _package) : default;
         public IFallout4GroupGetter<IFloraGetter> Florae => _Florae ?? new Fallout4Group<Flora>(this);
         #endregion
         #region Furniture
         private List<RangeInt64>? _FurnitureLocations;
-        private IFallout4GroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? Fallout4GroupBinaryOverlay<IFurnitureGetter>.Fallout4GroupFactory(_data, _FurnitureLocations, _package) : default;
+        private IFallout4GroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? Fallout4GroupBinaryOverlay<IFurnitureGetter>.Fallout4GroupFactory(_stream, _FurnitureLocations, _package) : default;
         public IFallout4GroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new Fallout4Group<Furniture>(this);
         #endregion
         #region Weapons
         private List<RangeInt64>? _WeaponsLocations;
-        private IFallout4GroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? Fallout4GroupBinaryOverlay<IWeaponGetter>.Fallout4GroupFactory(_data, _WeaponsLocations, _package) : default;
+        private IFallout4GroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? Fallout4GroupBinaryOverlay<IWeaponGetter>.Fallout4GroupFactory(_stream, _WeaponsLocations, _package) : default;
         public IFallout4GroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Fallout4Group<Weapon>(this);
         #endregion
         #region Ammunitions
         private List<RangeInt64>? _AmmunitionsLocations;
-        private IFallout4GroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? Fallout4GroupBinaryOverlay<IAmmunitionGetter>.Fallout4GroupFactory(_data, _AmmunitionsLocations, _package) : default;
+        private IFallout4GroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? Fallout4GroupBinaryOverlay<IAmmunitionGetter>.Fallout4GroupFactory(_stream, _AmmunitionsLocations, _package) : default;
         public IFallout4GroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new Fallout4Group<Ammunition>(this);
         #endregion
         #region Npcs
         private List<RangeInt64>? _NpcsLocations;
-        private IFallout4GroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? Fallout4GroupBinaryOverlay<INpcGetter>.Fallout4GroupFactory(_data, _NpcsLocations, _package) : default;
+        private IFallout4GroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? Fallout4GroupBinaryOverlay<INpcGetter>.Fallout4GroupFactory(_stream, _NpcsLocations, _package) : default;
         public IFallout4GroupGetter<INpcGetter> Npcs => _Npcs ?? new Fallout4Group<Npc>(this);
         #endregion
         #region LeveledNpcs
         private List<RangeInt64>? _LeveledNpcsLocations;
-        private IFallout4GroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? Fallout4GroupBinaryOverlay<ILeveledNpcGetter>.Fallout4GroupFactory(_data, _LeveledNpcsLocations, _package) : default;
+        private IFallout4GroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? Fallout4GroupBinaryOverlay<ILeveledNpcGetter>.Fallout4GroupFactory(_stream, _LeveledNpcsLocations, _package) : default;
         public IFallout4GroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new Fallout4Group<LeveledNpc>(this);
         #endregion
         #region Keys
         private List<RangeInt64>? _KeysLocations;
-        private IFallout4GroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? Fallout4GroupBinaryOverlay<IKeyGetter>.Fallout4GroupFactory(_data, _KeysLocations, _package) : default;
+        private IFallout4GroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? Fallout4GroupBinaryOverlay<IKeyGetter>.Fallout4GroupFactory(_stream, _KeysLocations, _package) : default;
         public IFallout4GroupGetter<IKeyGetter> Keys => _Keys ?? new Fallout4Group<Key>(this);
         #endregion
         #region Ingestibles
         private List<RangeInt64>? _IngestiblesLocations;
-        private IFallout4GroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? Fallout4GroupBinaryOverlay<IIngestibleGetter>.Fallout4GroupFactory(_data, _IngestiblesLocations, _package) : default;
+        private IFallout4GroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? Fallout4GroupBinaryOverlay<IIngestibleGetter>.Fallout4GroupFactory(_stream, _IngestiblesLocations, _package) : default;
         public IFallout4GroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new Fallout4Group<Ingestible>(this);
         #endregion
         #region IdleMarkers
         private List<RangeInt64>? _IdleMarkersLocations;
-        private IFallout4GroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? Fallout4GroupBinaryOverlay<IIdleMarkerGetter>.Fallout4GroupFactory(_data, _IdleMarkersLocations, _package) : default;
+        private IFallout4GroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? Fallout4GroupBinaryOverlay<IIdleMarkerGetter>.Fallout4GroupFactory(_stream, _IdleMarkersLocations, _package) : default;
         public IFallout4GroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new Fallout4Group<IdleMarker>(this);
         #endregion
         #region Holotapes
         private List<RangeInt64>? _HolotapesLocations;
-        private IFallout4GroupGetter<IHolotapeGetter>? _Holotapes => _HolotapesLocations != null ? Fallout4GroupBinaryOverlay<IHolotapeGetter>.Fallout4GroupFactory(_data, _HolotapesLocations, _package) : default;
+        private IFallout4GroupGetter<IHolotapeGetter>? _Holotapes => _HolotapesLocations != null ? Fallout4GroupBinaryOverlay<IHolotapeGetter>.Fallout4GroupFactory(_stream, _HolotapesLocations, _package) : default;
         public IFallout4GroupGetter<IHolotapeGetter> Holotapes => _Holotapes ?? new Fallout4Group<Holotape>(this);
         #endregion
         #region Projectiles
         private List<RangeInt64>? _ProjectilesLocations;
-        private IFallout4GroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? Fallout4GroupBinaryOverlay<IProjectileGetter>.Fallout4GroupFactory(_data, _ProjectilesLocations, _package) : default;
+        private IFallout4GroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? Fallout4GroupBinaryOverlay<IProjectileGetter>.Fallout4GroupFactory(_stream, _ProjectilesLocations, _package) : default;
         public IFallout4GroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new Fallout4Group<Projectile>(this);
         #endregion
         #region Hazards
         private List<RangeInt64>? _HazardsLocations;
-        private IFallout4GroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? Fallout4GroupBinaryOverlay<IHazardGetter>.Fallout4GroupFactory(_data, _HazardsLocations, _package) : default;
+        private IFallout4GroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? Fallout4GroupBinaryOverlay<IHazardGetter>.Fallout4GroupFactory(_stream, _HazardsLocations, _package) : default;
         public IFallout4GroupGetter<IHazardGetter> Hazards => _Hazards ?? new Fallout4Group<Hazard>(this);
         #endregion
         #region BendableSplines
         private List<RangeInt64>? _BendableSplinesLocations;
-        private IFallout4GroupGetter<IBendableSplineGetter>? _BendableSplines => _BendableSplinesLocations != null ? Fallout4GroupBinaryOverlay<IBendableSplineGetter>.Fallout4GroupFactory(_data, _BendableSplinesLocations, _package) : default;
+        private IFallout4GroupGetter<IBendableSplineGetter>? _BendableSplines => _BendableSplinesLocations != null ? Fallout4GroupBinaryOverlay<IBendableSplineGetter>.Fallout4GroupFactory(_stream, _BendableSplinesLocations, _package) : default;
         public IFallout4GroupGetter<IBendableSplineGetter> BendableSplines => _BendableSplines ?? new Fallout4Group<BendableSpline>(this);
         #endregion
         #region Terminals
         private List<RangeInt64>? _TerminalsLocations;
-        private IFallout4GroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? Fallout4GroupBinaryOverlay<ITerminalGetter>.Fallout4GroupFactory(_data, _TerminalsLocations, _package) : default;
+        private IFallout4GroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? Fallout4GroupBinaryOverlay<ITerminalGetter>.Fallout4GroupFactory(_stream, _TerminalsLocations, _package) : default;
         public IFallout4GroupGetter<ITerminalGetter> Terminals => _Terminals ?? new Fallout4Group<Terminal>(this);
         #endregion
         #region LeveledItems
         private List<RangeInt64>? _LeveledItemsLocations;
-        private IFallout4GroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? Fallout4GroupBinaryOverlay<ILeveledItemGetter>.Fallout4GroupFactory(_data, _LeveledItemsLocations, _package) : default;
+        private IFallout4GroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? Fallout4GroupBinaryOverlay<ILeveledItemGetter>.Fallout4GroupFactory(_stream, _LeveledItemsLocations, _package) : default;
         public IFallout4GroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new Fallout4Group<LeveledItem>(this);
         #endregion
         #region Weather
         private List<RangeInt64>? _WeatherLocations;
-        private IFallout4GroupGetter<IWeatherGetter>? _Weather => _WeatherLocations != null ? Fallout4GroupBinaryOverlay<IWeatherGetter>.Fallout4GroupFactory(_data, _WeatherLocations, _package) : default;
+        private IFallout4GroupGetter<IWeatherGetter>? _Weather => _WeatherLocations != null ? Fallout4GroupBinaryOverlay<IWeatherGetter>.Fallout4GroupFactory(_stream, _WeatherLocations, _package) : default;
         public IFallout4GroupGetter<IWeatherGetter> Weather => _Weather ?? new Fallout4Group<Weather>(this);
         #endregion
         #region Climates
         private List<RangeInt64>? _ClimatesLocations;
-        private IFallout4GroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? Fallout4GroupBinaryOverlay<IClimateGetter>.Fallout4GroupFactory(_data, _ClimatesLocations, _package) : default;
+        private IFallout4GroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? Fallout4GroupBinaryOverlay<IClimateGetter>.Fallout4GroupFactory(_stream, _ClimatesLocations, _package) : default;
         public IFallout4GroupGetter<IClimateGetter> Climates => _Climates ?? new Fallout4Group<Climate>(this);
         #endregion
         #region ShaderParticleGeometries
         private List<RangeInt64>? _ShaderParticleGeometriesLocations;
-        private IFallout4GroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? Fallout4GroupBinaryOverlay<IShaderParticleGeometryGetter>.Fallout4GroupFactory(_data, _ShaderParticleGeometriesLocations, _package) : default;
+        private IFallout4GroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? Fallout4GroupBinaryOverlay<IShaderParticleGeometryGetter>.Fallout4GroupFactory(_stream, _ShaderParticleGeometriesLocations, _package) : default;
         public IFallout4GroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries => _ShaderParticleGeometries ?? new Fallout4Group<ShaderParticleGeometry>(this);
         #endregion
         #region VisualEffects
         private List<RangeInt64>? _VisualEffectsLocations;
-        private IFallout4GroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocations != null ? Fallout4GroupBinaryOverlay<IVisualEffectGetter>.Fallout4GroupFactory(_data, _VisualEffectsLocations, _package) : default;
+        private IFallout4GroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocations != null ? Fallout4GroupBinaryOverlay<IVisualEffectGetter>.Fallout4GroupFactory(_stream, _VisualEffectsLocations, _package) : default;
         public IFallout4GroupGetter<IVisualEffectGetter> VisualEffects => _VisualEffects ?? new Fallout4Group<VisualEffect>(this);
         #endregion
         #region Regions
         private List<RangeInt64>? _RegionsLocations;
-        private IFallout4GroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? Fallout4GroupBinaryOverlay<IRegionGetter>.Fallout4GroupFactory(_data, _RegionsLocations, _package) : default;
+        private IFallout4GroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? Fallout4GroupBinaryOverlay<IRegionGetter>.Fallout4GroupFactory(_stream, _RegionsLocations, _package) : default;
         public IFallout4GroupGetter<IRegionGetter> Regions => _Regions ?? new Fallout4Group<Region>(this);
         #endregion
         #region NavigationMeshInfoMaps
         private List<RangeInt64>? _NavigationMeshInfoMapsLocations;
-        private IFallout4GroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? Fallout4GroupBinaryOverlay<INavigationMeshInfoMapGetter>.Fallout4GroupFactory(_data, _NavigationMeshInfoMapsLocations, _package) : default;
+        private IFallout4GroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? Fallout4GroupBinaryOverlay<INavigationMeshInfoMapGetter>.Fallout4GroupFactory(_stream, _NavigationMeshInfoMapsLocations, _package) : default;
         public IFallout4GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new Fallout4Group<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
         private RangeInt64? _CellsLocation;
-        private IFallout4ListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? Fallout4ListGroupBinaryOverlay<ICellBlockGetter>.Fallout4ListGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package), _package) : default;
+        private IFallout4ListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? Fallout4ListGroupBinaryOverlay<ICellBlockGetter>.Fallout4ListGroupFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package) : default;
         public IFallout4ListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new Fallout4ListGroup<CellBlock>();
         #endregion
         #region Worldspaces
         private List<RangeInt64>? _WorldspacesLocations;
-        private IFallout4GroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? Fallout4GroupBinaryOverlay<IWorldspaceGetter>.Fallout4GroupFactory(_data, _WorldspacesLocations, _package) : default;
+        private IFallout4GroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? Fallout4GroupBinaryOverlay<IWorldspaceGetter>.Fallout4GroupFactory(_stream, _WorldspacesLocations, _package) : default;
         public IFallout4GroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new Fallout4Group<Worldspace>(this);
         #endregion
         #region Quests
         private List<RangeInt64>? _QuestsLocations;
-        private IFallout4GroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? Fallout4GroupBinaryOverlay<IQuestGetter>.Fallout4GroupFactory(_data, _QuestsLocations, _package) : default;
+        private IFallout4GroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? Fallout4GroupBinaryOverlay<IQuestGetter>.Fallout4GroupFactory(_stream, _QuestsLocations, _package) : default;
         public IFallout4GroupGetter<IQuestGetter> Quests => _Quests ?? new Fallout4Group<Quest>(this);
         #endregion
         #region IdleAnimations
         private List<RangeInt64>? _IdleAnimationsLocations;
-        private IFallout4GroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? Fallout4GroupBinaryOverlay<IIdleAnimationGetter>.Fallout4GroupFactory(_data, _IdleAnimationsLocations, _package) : default;
+        private IFallout4GroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? Fallout4GroupBinaryOverlay<IIdleAnimationGetter>.Fallout4GroupFactory(_stream, _IdleAnimationsLocations, _package) : default;
         public IFallout4GroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new Fallout4Group<IdleAnimation>(this);
         #endregion
         #region Packages
         private List<RangeInt64>? _PackagesLocations;
-        private IFallout4GroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? Fallout4GroupBinaryOverlay<IPackageGetter>.Fallout4GroupFactory(_data, _PackagesLocations, _package) : default;
+        private IFallout4GroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? Fallout4GroupBinaryOverlay<IPackageGetter>.Fallout4GroupFactory(_stream, _PackagesLocations, _package) : default;
         public IFallout4GroupGetter<IPackageGetter> Packages => _Packages ?? new Fallout4Group<Package>(this);
         #endregion
         #region CombatStyles
         private List<RangeInt64>? _CombatStylesLocations;
-        private IFallout4GroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? Fallout4GroupBinaryOverlay<ICombatStyleGetter>.Fallout4GroupFactory(_data, _CombatStylesLocations, _package) : default;
+        private IFallout4GroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? Fallout4GroupBinaryOverlay<ICombatStyleGetter>.Fallout4GroupFactory(_stream, _CombatStylesLocations, _package) : default;
         public IFallout4GroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new Fallout4Group<CombatStyle>(this);
         #endregion
         #region LoadScreens
         private List<RangeInt64>? _LoadScreensLocations;
-        private IFallout4GroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? Fallout4GroupBinaryOverlay<ILoadScreenGetter>.Fallout4GroupFactory(_data, _LoadScreensLocations, _package) : default;
+        private IFallout4GroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? Fallout4GroupBinaryOverlay<ILoadScreenGetter>.Fallout4GroupFactory(_stream, _LoadScreensLocations, _package) : default;
         public IFallout4GroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new Fallout4Group<LoadScreen>(this);
         #endregion
         #region AnimatedObjects
         private List<RangeInt64>? _AnimatedObjectsLocations;
-        private IFallout4GroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? Fallout4GroupBinaryOverlay<IAnimatedObjectGetter>.Fallout4GroupFactory(_data, _AnimatedObjectsLocations, _package) : default;
+        private IFallout4GroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? Fallout4GroupBinaryOverlay<IAnimatedObjectGetter>.Fallout4GroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
         public IFallout4GroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Fallout4Group<AnimatedObject>(this);
         #endregion
         #region Waters
         private List<RangeInt64>? _WatersLocations;
-        private IFallout4GroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? Fallout4GroupBinaryOverlay<IWaterGetter>.Fallout4GroupFactory(_data, _WatersLocations, _package) : default;
+        private IFallout4GroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? Fallout4GroupBinaryOverlay<IWaterGetter>.Fallout4GroupFactory(_stream, _WatersLocations, _package) : default;
         public IFallout4GroupGetter<IWaterGetter> Waters => _Waters ?? new Fallout4Group<Water>(this);
         #endregion
         #region EffectShaders
         private List<RangeInt64>? _EffectShadersLocations;
-        private IFallout4GroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? Fallout4GroupBinaryOverlay<IEffectShaderGetter>.Fallout4GroupFactory(_data, _EffectShadersLocations, _package) : default;
+        private IFallout4GroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? Fallout4GroupBinaryOverlay<IEffectShaderGetter>.Fallout4GroupFactory(_stream, _EffectShadersLocations, _package) : default;
         public IFallout4GroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Fallout4Group<EffectShader>(this);
         #endregion
         #region Explosions
         private List<RangeInt64>? _ExplosionsLocations;
-        private IFallout4GroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? Fallout4GroupBinaryOverlay<IExplosionGetter>.Fallout4GroupFactory(_data, _ExplosionsLocations, _package) : default;
+        private IFallout4GroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? Fallout4GroupBinaryOverlay<IExplosionGetter>.Fallout4GroupFactory(_stream, _ExplosionsLocations, _package) : default;
         public IFallout4GroupGetter<IExplosionGetter> Explosions => _Explosions ?? new Fallout4Group<Explosion>(this);
         #endregion
         #region Debris
         private List<RangeInt64>? _DebrisLocations;
-        private IFallout4GroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? Fallout4GroupBinaryOverlay<IDebrisGetter>.Fallout4GroupFactory(_data, _DebrisLocations, _package) : default;
+        private IFallout4GroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? Fallout4GroupBinaryOverlay<IDebrisGetter>.Fallout4GroupFactory(_stream, _DebrisLocations, _package) : default;
         public IFallout4GroupGetter<IDebrisGetter> Debris => _Debris ?? new Fallout4Group<Debris>(this);
         #endregion
         #region ImageSpaces
         private List<RangeInt64>? _ImageSpacesLocations;
-        private IFallout4GroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? Fallout4GroupBinaryOverlay<IImageSpaceGetter>.Fallout4GroupFactory(_data, _ImageSpacesLocations, _package) : default;
+        private IFallout4GroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? Fallout4GroupBinaryOverlay<IImageSpaceGetter>.Fallout4GroupFactory(_stream, _ImageSpacesLocations, _package) : default;
         public IFallout4GroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new Fallout4Group<ImageSpace>(this);
         #endregion
         #region ImageSpaceAdapters
         private List<RangeInt64>? _ImageSpaceAdaptersLocations;
-        private IFallout4GroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? Fallout4GroupBinaryOverlay<IImageSpaceAdapterGetter>.Fallout4GroupFactory(_data, _ImageSpaceAdaptersLocations, _package) : default;
+        private IFallout4GroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? Fallout4GroupBinaryOverlay<IImageSpaceAdapterGetter>.Fallout4GroupFactory(_stream, _ImageSpaceAdaptersLocations, _package) : default;
         public IFallout4GroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new Fallout4Group<ImageSpaceAdapter>(this);
         #endregion
         #region FormLists
         private List<RangeInt64>? _FormListsLocations;
-        private IFallout4GroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? Fallout4GroupBinaryOverlay<IFormListGetter>.Fallout4GroupFactory(_data, _FormListsLocations, _package) : default;
+        private IFallout4GroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? Fallout4GroupBinaryOverlay<IFormListGetter>.Fallout4GroupFactory(_stream, _FormListsLocations, _package) : default;
         public IFallout4GroupGetter<IFormListGetter> FormLists => _FormLists ?? new Fallout4Group<FormList>(this);
         #endregion
         #region Perks
         private List<RangeInt64>? _PerksLocations;
-        private IFallout4GroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? Fallout4GroupBinaryOverlay<IPerkGetter>.Fallout4GroupFactory(_data, _PerksLocations, _package) : default;
+        private IFallout4GroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? Fallout4GroupBinaryOverlay<IPerkGetter>.Fallout4GroupFactory(_stream, _PerksLocations, _package) : default;
         public IFallout4GroupGetter<IPerkGetter> Perks => _Perks ?? new Fallout4Group<Perk>(this);
         #endregion
         #region BodyParts
         private List<RangeInt64>? _BodyPartsLocations;
-        private IFallout4GroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? Fallout4GroupBinaryOverlay<IBodyPartDataGetter>.Fallout4GroupFactory(_data, _BodyPartsLocations, _package) : default;
+        private IFallout4GroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? Fallout4GroupBinaryOverlay<IBodyPartDataGetter>.Fallout4GroupFactory(_stream, _BodyPartsLocations, _package) : default;
         public IFallout4GroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new Fallout4Group<BodyPartData>(this);
         #endregion
         #region AddonNodes
         private List<RangeInt64>? _AddonNodesLocations;
-        private IFallout4GroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? Fallout4GroupBinaryOverlay<IAddonNodeGetter>.Fallout4GroupFactory(_data, _AddonNodesLocations, _package) : default;
+        private IFallout4GroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? Fallout4GroupBinaryOverlay<IAddonNodeGetter>.Fallout4GroupFactory(_stream, _AddonNodesLocations, _package) : default;
         public IFallout4GroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new Fallout4Group<AddonNode>(this);
         #endregion
         #region ActorValueInformation
         private List<RangeInt64>? _ActorValueInformationLocations;
-        private IFallout4GroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? Fallout4GroupBinaryOverlay<IActorValueInformationGetter>.Fallout4GroupFactory(_data, _ActorValueInformationLocations, _package) : default;
+        private IFallout4GroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? Fallout4GroupBinaryOverlay<IActorValueInformationGetter>.Fallout4GroupFactory(_stream, _ActorValueInformationLocations, _package) : default;
         public IFallout4GroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new Fallout4Group<ActorValueInformation>(this);
         #endregion
         #region CameraShots
         private List<RangeInt64>? _CameraShotsLocations;
-        private IFallout4GroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? Fallout4GroupBinaryOverlay<ICameraShotGetter>.Fallout4GroupFactory(_data, _CameraShotsLocations, _package) : default;
+        private IFallout4GroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? Fallout4GroupBinaryOverlay<ICameraShotGetter>.Fallout4GroupFactory(_stream, _CameraShotsLocations, _package) : default;
         public IFallout4GroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new Fallout4Group<CameraShot>(this);
         #endregion
         #region CameraPaths
         private List<RangeInt64>? _CameraPathsLocations;
-        private IFallout4GroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? Fallout4GroupBinaryOverlay<ICameraPathGetter>.Fallout4GroupFactory(_data, _CameraPathsLocations, _package) : default;
+        private IFallout4GroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? Fallout4GroupBinaryOverlay<ICameraPathGetter>.Fallout4GroupFactory(_stream, _CameraPathsLocations, _package) : default;
         public IFallout4GroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new Fallout4Group<CameraPath>(this);
         #endregion
         #region VoiceTypes
         private List<RangeInt64>? _VoiceTypesLocations;
-        private IFallout4GroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? Fallout4GroupBinaryOverlay<IVoiceTypeGetter>.Fallout4GroupFactory(_data, _VoiceTypesLocations, _package) : default;
+        private IFallout4GroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? Fallout4GroupBinaryOverlay<IVoiceTypeGetter>.Fallout4GroupFactory(_stream, _VoiceTypesLocations, _package) : default;
         public IFallout4GroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new Fallout4Group<VoiceType>(this);
         #endregion
         #region MaterialTypes
         private List<RangeInt64>? _MaterialTypesLocations;
-        private IFallout4GroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? Fallout4GroupBinaryOverlay<IMaterialTypeGetter>.Fallout4GroupFactory(_data, _MaterialTypesLocations, _package) : default;
+        private IFallout4GroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? Fallout4GroupBinaryOverlay<IMaterialTypeGetter>.Fallout4GroupFactory(_stream, _MaterialTypesLocations, _package) : default;
         public IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new Fallout4Group<MaterialType>(this);
         #endregion
         #region Impacts
         private List<RangeInt64>? _ImpactsLocations;
-        private IFallout4GroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? Fallout4GroupBinaryOverlay<IImpactGetter>.Fallout4GroupFactory(_data, _ImpactsLocations, _package) : default;
+        private IFallout4GroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? Fallout4GroupBinaryOverlay<IImpactGetter>.Fallout4GroupFactory(_stream, _ImpactsLocations, _package) : default;
         public IFallout4GroupGetter<IImpactGetter> Impacts => _Impacts ?? new Fallout4Group<Impact>(this);
         #endregion
         #region ImpactDataSets
         private List<RangeInt64>? _ImpactDataSetsLocations;
-        private IFallout4GroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? Fallout4GroupBinaryOverlay<IImpactDataSetGetter>.Fallout4GroupFactory(_data, _ImpactDataSetsLocations, _package) : default;
+        private IFallout4GroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? Fallout4GroupBinaryOverlay<IImpactDataSetGetter>.Fallout4GroupFactory(_stream, _ImpactDataSetsLocations, _package) : default;
         public IFallout4GroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new Fallout4Group<ImpactDataSet>(this);
         #endregion
         #region ArmorAddons
         private List<RangeInt64>? _ArmorAddonsLocations;
-        private IFallout4GroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? Fallout4GroupBinaryOverlay<IArmorAddonGetter>.Fallout4GroupFactory(_data, _ArmorAddonsLocations, _package) : default;
+        private IFallout4GroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? Fallout4GroupBinaryOverlay<IArmorAddonGetter>.Fallout4GroupFactory(_stream, _ArmorAddonsLocations, _package) : default;
         public IFallout4GroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new Fallout4Group<ArmorAddon>(this);
         #endregion
         #region EncounterZones
         private List<RangeInt64>? _EncounterZonesLocations;
-        private IFallout4GroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? Fallout4GroupBinaryOverlay<IEncounterZoneGetter>.Fallout4GroupFactory(_data, _EncounterZonesLocations, _package) : default;
+        private IFallout4GroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? Fallout4GroupBinaryOverlay<IEncounterZoneGetter>.Fallout4GroupFactory(_stream, _EncounterZonesLocations, _package) : default;
         public IFallout4GroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new Fallout4Group<EncounterZone>(this);
         #endregion
         #region Locations
         private List<RangeInt64>? _LocationsLocations;
-        private IFallout4GroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? Fallout4GroupBinaryOverlay<ILocationGetter>.Fallout4GroupFactory(_data, _LocationsLocations, _package) : default;
+        private IFallout4GroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? Fallout4GroupBinaryOverlay<ILocationGetter>.Fallout4GroupFactory(_stream, _LocationsLocations, _package) : default;
         public IFallout4GroupGetter<ILocationGetter> Locations => _Locations ?? new Fallout4Group<Location>(this);
         #endregion
         #region Messages
         private List<RangeInt64>? _MessagesLocations;
-        private IFallout4GroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? Fallout4GroupBinaryOverlay<IMessageGetter>.Fallout4GroupFactory(_data, _MessagesLocations, _package) : default;
+        private IFallout4GroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? Fallout4GroupBinaryOverlay<IMessageGetter>.Fallout4GroupFactory(_stream, _MessagesLocations, _package) : default;
         public IFallout4GroupGetter<IMessageGetter> Messages => _Messages ?? new Fallout4Group<Message>(this);
         #endregion
         #region DefaultObjectManagers
         private List<RangeInt64>? _DefaultObjectManagersLocations;
-        private IFallout4GroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? Fallout4GroupBinaryOverlay<IDefaultObjectManagerGetter>.Fallout4GroupFactory(_data, _DefaultObjectManagersLocations, _package) : default;
+        private IFallout4GroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? Fallout4GroupBinaryOverlay<IDefaultObjectManagerGetter>.Fallout4GroupFactory(_stream, _DefaultObjectManagersLocations, _package) : default;
         public IFallout4GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new Fallout4Group<DefaultObjectManager>(this);
         #endregion
         #region DefaultObjects
         private List<RangeInt64>? _DefaultObjectsLocations;
-        private IFallout4GroupGetter<IDefaultObjectGetter>? _DefaultObjects => _DefaultObjectsLocations != null ? Fallout4GroupBinaryOverlay<IDefaultObjectGetter>.Fallout4GroupFactory(_data, _DefaultObjectsLocations, _package) : default;
+        private IFallout4GroupGetter<IDefaultObjectGetter>? _DefaultObjects => _DefaultObjectsLocations != null ? Fallout4GroupBinaryOverlay<IDefaultObjectGetter>.Fallout4GroupFactory(_stream, _DefaultObjectsLocations, _package) : default;
         public IFallout4GroupGetter<IDefaultObjectGetter> DefaultObjects => _DefaultObjects ?? new Fallout4Group<DefaultObject>(this);
         #endregion
         #region LightingTemplates
         private List<RangeInt64>? _LightingTemplatesLocations;
-        private IFallout4GroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? Fallout4GroupBinaryOverlay<ILightingTemplateGetter>.Fallout4GroupFactory(_data, _LightingTemplatesLocations, _package) : default;
+        private IFallout4GroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? Fallout4GroupBinaryOverlay<ILightingTemplateGetter>.Fallout4GroupFactory(_stream, _LightingTemplatesLocations, _package) : default;
         public IFallout4GroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new Fallout4Group<LightingTemplate>(this);
         #endregion
         #region MusicTypes
         private List<RangeInt64>? _MusicTypesLocations;
-        private IFallout4GroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? Fallout4GroupBinaryOverlay<IMusicTypeGetter>.Fallout4GroupFactory(_data, _MusicTypesLocations, _package) : default;
+        private IFallout4GroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? Fallout4GroupBinaryOverlay<IMusicTypeGetter>.Fallout4GroupFactory(_stream, _MusicTypesLocations, _package) : default;
         public IFallout4GroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new Fallout4Group<MusicType>(this);
         #endregion
         #region Footsteps
         private List<RangeInt64>? _FootstepsLocations;
-        private IFallout4GroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? Fallout4GroupBinaryOverlay<IFootstepGetter>.Fallout4GroupFactory(_data, _FootstepsLocations, _package) : default;
+        private IFallout4GroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? Fallout4GroupBinaryOverlay<IFootstepGetter>.Fallout4GroupFactory(_stream, _FootstepsLocations, _package) : default;
         public IFallout4GroupGetter<IFootstepGetter> Footsteps => _Footsteps ?? new Fallout4Group<Footstep>(this);
         #endregion
         #region FootstepSets
         private List<RangeInt64>? _FootstepSetsLocations;
-        private IFallout4GroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? Fallout4GroupBinaryOverlay<IFootstepSetGetter>.Fallout4GroupFactory(_data, _FootstepSetsLocations, _package) : default;
+        private IFallout4GroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? Fallout4GroupBinaryOverlay<IFootstepSetGetter>.Fallout4GroupFactory(_stream, _FootstepSetsLocations, _package) : default;
         public IFallout4GroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new Fallout4Group<FootstepSet>(this);
         #endregion
         #region StoryManagerBranchNodes
         private List<RangeInt64>? _StoryManagerBranchNodesLocations;
-        private IFallout4GroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerBranchNodeGetter>.Fallout4GroupFactory(_data, _StoryManagerBranchNodesLocations, _package) : default;
+        private IFallout4GroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerBranchNodeGetter>.Fallout4GroupFactory(_stream, _StoryManagerBranchNodesLocations, _package) : default;
         public IFallout4GroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes => _StoryManagerBranchNodes ?? new Fallout4Group<StoryManagerBranchNode>(this);
         #endregion
         #region StoryManagerQuestNodes
         private List<RangeInt64>? _StoryManagerQuestNodesLocations;
-        private IFallout4GroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerQuestNodeGetter>.Fallout4GroupFactory(_data, _StoryManagerQuestNodesLocations, _package) : default;
+        private IFallout4GroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerQuestNodeGetter>.Fallout4GroupFactory(_stream, _StoryManagerQuestNodesLocations, _package) : default;
         public IFallout4GroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes => _StoryManagerQuestNodes ?? new Fallout4Group<StoryManagerQuestNode>(this);
         #endregion
         #region StoryManagerEventNodes
         private List<RangeInt64>? _StoryManagerEventNodesLocations;
-        private IFallout4GroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerEventNodeGetter>.Fallout4GroupFactory(_data, _StoryManagerEventNodesLocations, _package) : default;
+        private IFallout4GroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerEventNodeGetter>.Fallout4GroupFactory(_stream, _StoryManagerEventNodesLocations, _package) : default;
         public IFallout4GroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new Fallout4Group<StoryManagerEventNode>(this);
         #endregion
         #region MusicTracks
         private List<RangeInt64>? _MusicTracksLocations;
-        private IFallout4GroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? Fallout4GroupBinaryOverlay<IMusicTrackGetter>.Fallout4GroupFactory(_data, _MusicTracksLocations, _package) : default;
+        private IFallout4GroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? Fallout4GroupBinaryOverlay<IMusicTrackGetter>.Fallout4GroupFactory(_stream, _MusicTracksLocations, _package) : default;
         public IFallout4GroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new Fallout4Group<MusicTrack>(this);
         #endregion
         #region DialogViews
         private List<RangeInt64>? _DialogViewsLocations;
-        private IFallout4GroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocations != null ? Fallout4GroupBinaryOverlay<IDialogViewGetter>.Fallout4GroupFactory(_data, _DialogViewsLocations, _package) : default;
+        private IFallout4GroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocations != null ? Fallout4GroupBinaryOverlay<IDialogViewGetter>.Fallout4GroupFactory(_stream, _DialogViewsLocations, _package) : default;
         public IFallout4GroupGetter<IDialogViewGetter> DialogViews => _DialogViews ?? new Fallout4Group<DialogView>(this);
         #endregion
         #region EquipTypes
         private List<RangeInt64>? _EquipTypesLocations;
-        private IFallout4GroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? Fallout4GroupBinaryOverlay<IEquipTypeGetter>.Fallout4GroupFactory(_data, _EquipTypesLocations, _package) : default;
+        private IFallout4GroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? Fallout4GroupBinaryOverlay<IEquipTypeGetter>.Fallout4GroupFactory(_stream, _EquipTypesLocations, _package) : default;
         public IFallout4GroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new Fallout4Group<EquipType>(this);
         #endregion
         #region Relationships
         private List<RangeInt64>? _RelationshipsLocations;
-        private IFallout4GroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocations != null ? Fallout4GroupBinaryOverlay<IRelationshipGetter>.Fallout4GroupFactory(_data, _RelationshipsLocations, _package) : default;
+        private IFallout4GroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocations != null ? Fallout4GroupBinaryOverlay<IRelationshipGetter>.Fallout4GroupFactory(_stream, _RelationshipsLocations, _package) : default;
         public IFallout4GroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new Fallout4Group<Relationship>(this);
         #endregion
         #region AssociationTypes
         private List<RangeInt64>? _AssociationTypesLocations;
-        private IFallout4GroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocations != null ? Fallout4GroupBinaryOverlay<IAssociationTypeGetter>.Fallout4GroupFactory(_data, _AssociationTypesLocations, _package) : default;
+        private IFallout4GroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocations != null ? Fallout4GroupBinaryOverlay<IAssociationTypeGetter>.Fallout4GroupFactory(_stream, _AssociationTypesLocations, _package) : default;
         public IFallout4GroupGetter<IAssociationTypeGetter> AssociationTypes => _AssociationTypes ?? new Fallout4Group<AssociationType>(this);
         #endregion
         #region Outfits
         private List<RangeInt64>? _OutfitsLocations;
-        private IFallout4GroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? Fallout4GroupBinaryOverlay<IOutfitGetter>.Fallout4GroupFactory(_data, _OutfitsLocations, _package) : default;
+        private IFallout4GroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? Fallout4GroupBinaryOverlay<IOutfitGetter>.Fallout4GroupFactory(_stream, _OutfitsLocations, _package) : default;
         public IFallout4GroupGetter<IOutfitGetter> Outfits => _Outfits ?? new Fallout4Group<Outfit>(this);
         #endregion
         #region ArtObjects
         private List<RangeInt64>? _ArtObjectsLocations;
-        private IFallout4GroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocations != null ? Fallout4GroupBinaryOverlay<IArtObjectGetter>.Fallout4GroupFactory(_data, _ArtObjectsLocations, _package) : default;
+        private IFallout4GroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocations != null ? Fallout4GroupBinaryOverlay<IArtObjectGetter>.Fallout4GroupFactory(_stream, _ArtObjectsLocations, _package) : default;
         public IFallout4GroupGetter<IArtObjectGetter> ArtObjects => _ArtObjects ?? new Fallout4Group<ArtObject>(this);
         #endregion
         #region MaterialObjects
         private List<RangeInt64>? _MaterialObjectsLocations;
-        private IFallout4GroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocations != null ? Fallout4GroupBinaryOverlay<IMaterialObjectGetter>.Fallout4GroupFactory(_data, _MaterialObjectsLocations, _package) : default;
+        private IFallout4GroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocations != null ? Fallout4GroupBinaryOverlay<IMaterialObjectGetter>.Fallout4GroupFactory(_stream, _MaterialObjectsLocations, _package) : default;
         public IFallout4GroupGetter<IMaterialObjectGetter> MaterialObjects => _MaterialObjects ?? new Fallout4Group<MaterialObject>(this);
         #endregion
         #region MovementTypes
         private List<RangeInt64>? _MovementTypesLocations;
-        private IFallout4GroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? Fallout4GroupBinaryOverlay<IMovementTypeGetter>.Fallout4GroupFactory(_data, _MovementTypesLocations, _package) : default;
+        private IFallout4GroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? Fallout4GroupBinaryOverlay<IMovementTypeGetter>.Fallout4GroupFactory(_stream, _MovementTypesLocations, _package) : default;
         public IFallout4GroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new Fallout4Group<MovementType>(this);
         #endregion
         #region SoundDescriptors
         private List<RangeInt64>? _SoundDescriptorsLocations;
-        private IFallout4GroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocations != null ? Fallout4GroupBinaryOverlay<ISoundDescriptorGetter>.Fallout4GroupFactory(_data, _SoundDescriptorsLocations, _package) : default;
+        private IFallout4GroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocations != null ? Fallout4GroupBinaryOverlay<ISoundDescriptorGetter>.Fallout4GroupFactory(_stream, _SoundDescriptorsLocations, _package) : default;
         public IFallout4GroupGetter<ISoundDescriptorGetter> SoundDescriptors => _SoundDescriptors ?? new Fallout4Group<SoundDescriptor>(this);
         #endregion
         #region SoundCategories
         private List<RangeInt64>? _SoundCategoriesLocations;
-        private IFallout4GroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocations != null ? Fallout4GroupBinaryOverlay<ISoundCategoryGetter>.Fallout4GroupFactory(_data, _SoundCategoriesLocations, _package) : default;
+        private IFallout4GroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocations != null ? Fallout4GroupBinaryOverlay<ISoundCategoryGetter>.Fallout4GroupFactory(_stream, _SoundCategoriesLocations, _package) : default;
         public IFallout4GroupGetter<ISoundCategoryGetter> SoundCategories => _SoundCategories ?? new Fallout4Group<SoundCategory>(this);
         #endregion
         #region SoundOutputModels
         private List<RangeInt64>? _SoundOutputModelsLocations;
-        private IFallout4GroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocations != null ? Fallout4GroupBinaryOverlay<ISoundOutputModelGetter>.Fallout4GroupFactory(_data, _SoundOutputModelsLocations, _package) : default;
+        private IFallout4GroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocations != null ? Fallout4GroupBinaryOverlay<ISoundOutputModelGetter>.Fallout4GroupFactory(_stream, _SoundOutputModelsLocations, _package) : default;
         public IFallout4GroupGetter<ISoundOutputModelGetter> SoundOutputModels => _SoundOutputModels ?? new Fallout4Group<SoundOutputModel>(this);
         #endregion
         #region CollisionLayers
         private List<RangeInt64>? _CollisionLayersLocations;
-        private IFallout4GroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? Fallout4GroupBinaryOverlay<ICollisionLayerGetter>.Fallout4GroupFactory(_data, _CollisionLayersLocations, _package) : default;
+        private IFallout4GroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? Fallout4GroupBinaryOverlay<ICollisionLayerGetter>.Fallout4GroupFactory(_stream, _CollisionLayersLocations, _package) : default;
         public IFallout4GroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new Fallout4Group<CollisionLayer>(this);
         #endregion
         #region Colors
         private List<RangeInt64>? _ColorsLocations;
-        private IFallout4GroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? Fallout4GroupBinaryOverlay<IColorRecordGetter>.Fallout4GroupFactory(_data, _ColorsLocations, _package) : default;
+        private IFallout4GroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? Fallout4GroupBinaryOverlay<IColorRecordGetter>.Fallout4GroupFactory(_stream, _ColorsLocations, _package) : default;
         public IFallout4GroupGetter<IColorRecordGetter> Colors => _Colors ?? new Fallout4Group<ColorRecord>(this);
         #endregion
         #region ReverbParameters
         private List<RangeInt64>? _ReverbParametersLocations;
-        private IFallout4GroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? Fallout4GroupBinaryOverlay<IReverbParametersGetter>.Fallout4GroupFactory(_data, _ReverbParametersLocations, _package) : default;
+        private IFallout4GroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? Fallout4GroupBinaryOverlay<IReverbParametersGetter>.Fallout4GroupFactory(_stream, _ReverbParametersLocations, _package) : default;
         public IFallout4GroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new Fallout4Group<ReverbParameters>(this);
         #endregion
         #region PackIns
         private List<RangeInt64>? _PackInsLocations;
-        private IFallout4GroupGetter<IPackInGetter>? _PackIns => _PackInsLocations != null ? Fallout4GroupBinaryOverlay<IPackInGetter>.Fallout4GroupFactory(_data, _PackInsLocations, _package) : default;
+        private IFallout4GroupGetter<IPackInGetter>? _PackIns => _PackInsLocations != null ? Fallout4GroupBinaryOverlay<IPackInGetter>.Fallout4GroupFactory(_stream, _PackInsLocations, _package) : default;
         public IFallout4GroupGetter<IPackInGetter> PackIns => _PackIns ?? new Fallout4Group<PackIn>(this);
         #endregion
         #region ReferenceGroups
         private List<RangeInt64>? _ReferenceGroupsLocations;
-        private IFallout4GroupGetter<IReferenceGroupGetter>? _ReferenceGroups => _ReferenceGroupsLocations != null ? Fallout4GroupBinaryOverlay<IReferenceGroupGetter>.Fallout4GroupFactory(_data, _ReferenceGroupsLocations, _package) : default;
+        private IFallout4GroupGetter<IReferenceGroupGetter>? _ReferenceGroups => _ReferenceGroupsLocations != null ? Fallout4GroupBinaryOverlay<IReferenceGroupGetter>.Fallout4GroupFactory(_stream, _ReferenceGroupsLocations, _package) : default;
         public IFallout4GroupGetter<IReferenceGroupGetter> ReferenceGroups => _ReferenceGroups ?? new Fallout4Group<ReferenceGroup>(this);
         #endregion
         #region AimModels
         private List<RangeInt64>? _AimModelsLocations;
-        private IFallout4GroupGetter<IAimModelGetter>? _AimModels => _AimModelsLocations != null ? Fallout4GroupBinaryOverlay<IAimModelGetter>.Fallout4GroupFactory(_data, _AimModelsLocations, _package) : default;
+        private IFallout4GroupGetter<IAimModelGetter>? _AimModels => _AimModelsLocations != null ? Fallout4GroupBinaryOverlay<IAimModelGetter>.Fallout4GroupFactory(_stream, _AimModelsLocations, _package) : default;
         public IFallout4GroupGetter<IAimModelGetter> AimModels => _AimModels ?? new Fallout4Group<AimModel>(this);
         #endregion
         #region Layers
         private List<RangeInt64>? _LayersLocations;
-        private IFallout4GroupGetter<ILayerGetter>? _Layers => _LayersLocations != null ? Fallout4GroupBinaryOverlay<ILayerGetter>.Fallout4GroupFactory(_data, _LayersLocations, _package) : default;
+        private IFallout4GroupGetter<ILayerGetter>? _Layers => _LayersLocations != null ? Fallout4GroupBinaryOverlay<ILayerGetter>.Fallout4GroupFactory(_stream, _LayersLocations, _package) : default;
         public IFallout4GroupGetter<ILayerGetter> Layers => _Layers ?? new Fallout4Group<Layer>(this);
         #endregion
         #region ConstructibleObjects
         private List<RangeInt64>? _ConstructibleObjectsLocations;
-        private IFallout4GroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? Fallout4GroupBinaryOverlay<IConstructibleObjectGetter>.Fallout4GroupFactory(_data, _ConstructibleObjectsLocations, _package) : default;
+        private IFallout4GroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? Fallout4GroupBinaryOverlay<IConstructibleObjectGetter>.Fallout4GroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
         public IFallout4GroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new Fallout4Group<ConstructibleObject>(this);
         #endregion
         #region ObjectModifications
         private List<RangeInt64>? _ObjectModificationsLocations;
-        private IFallout4GroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? Fallout4GroupBinaryOverlay<IAObjectModificationGetter>.Fallout4GroupFactory(_data, _ObjectModificationsLocations, _package) : default;
+        private IFallout4GroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? Fallout4GroupBinaryOverlay<IAObjectModificationGetter>.Fallout4GroupFactory(_stream, _ObjectModificationsLocations, _package) : default;
         public IFallout4GroupGetter<IAObjectModificationGetter> ObjectModifications => _ObjectModifications ?? new Fallout4Group<AObjectModification>(this);
         #endregion
         #region MaterialSwaps
         private List<RangeInt64>? _MaterialSwapsLocations;
-        private IFallout4GroupGetter<IMaterialSwapGetter>? _MaterialSwaps => _MaterialSwapsLocations != null ? Fallout4GroupBinaryOverlay<IMaterialSwapGetter>.Fallout4GroupFactory(_data, _MaterialSwapsLocations, _package) : default;
+        private IFallout4GroupGetter<IMaterialSwapGetter>? _MaterialSwaps => _MaterialSwapsLocations != null ? Fallout4GroupBinaryOverlay<IMaterialSwapGetter>.Fallout4GroupFactory(_stream, _MaterialSwapsLocations, _package) : default;
         public IFallout4GroupGetter<IMaterialSwapGetter> MaterialSwaps => _MaterialSwaps ?? new Fallout4Group<MaterialSwap>(this);
         #endregion
         #region Zooms
         private List<RangeInt64>? _ZoomsLocations;
-        private IFallout4GroupGetter<IZoomGetter>? _Zooms => _ZoomsLocations != null ? Fallout4GroupBinaryOverlay<IZoomGetter>.Fallout4GroupFactory(_data, _ZoomsLocations, _package) : default;
+        private IFallout4GroupGetter<IZoomGetter>? _Zooms => _ZoomsLocations != null ? Fallout4GroupBinaryOverlay<IZoomGetter>.Fallout4GroupFactory(_stream, _ZoomsLocations, _package) : default;
         public IFallout4GroupGetter<IZoomGetter> Zooms => _Zooms ?? new Fallout4Group<Zoom>(this);
         #endregion
         #region InstanceNamingRules
         private List<RangeInt64>? _InstanceNamingRulesLocations;
-        private IFallout4GroupGetter<IInstanceNamingRulesGetter>? _InstanceNamingRules => _InstanceNamingRulesLocations != null ? Fallout4GroupBinaryOverlay<IInstanceNamingRulesGetter>.Fallout4GroupFactory(_data, _InstanceNamingRulesLocations, _package) : default;
+        private IFallout4GroupGetter<IInstanceNamingRulesGetter>? _InstanceNamingRules => _InstanceNamingRulesLocations != null ? Fallout4GroupBinaryOverlay<IInstanceNamingRulesGetter>.Fallout4GroupFactory(_stream, _InstanceNamingRulesLocations, _package) : default;
         public IFallout4GroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules => _InstanceNamingRules ?? new Fallout4Group<InstanceNamingRules>(this);
         #endregion
         #region SoundKeywordMappings
         private List<RangeInt64>? _SoundKeywordMappingsLocations;
-        private IFallout4GroupGetter<ISoundKeywordMappingGetter>? _SoundKeywordMappings => _SoundKeywordMappingsLocations != null ? Fallout4GroupBinaryOverlay<ISoundKeywordMappingGetter>.Fallout4GroupFactory(_data, _SoundKeywordMappingsLocations, _package) : default;
+        private IFallout4GroupGetter<ISoundKeywordMappingGetter>? _SoundKeywordMappings => _SoundKeywordMappingsLocations != null ? Fallout4GroupBinaryOverlay<ISoundKeywordMappingGetter>.Fallout4GroupFactory(_stream, _SoundKeywordMappingsLocations, _package) : default;
         public IFallout4GroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings => _SoundKeywordMappings ?? new Fallout4Group<SoundKeywordMapping>(this);
         #endregion
         #region AudioEffectChains
         private List<RangeInt64>? _AudioEffectChainsLocations;
-        private IFallout4GroupGetter<IAudioEffectChainGetter>? _AudioEffectChains => _AudioEffectChainsLocations != null ? Fallout4GroupBinaryOverlay<IAudioEffectChainGetter>.Fallout4GroupFactory(_data, _AudioEffectChainsLocations, _package) : default;
+        private IFallout4GroupGetter<IAudioEffectChainGetter>? _AudioEffectChains => _AudioEffectChainsLocations != null ? Fallout4GroupBinaryOverlay<IAudioEffectChainGetter>.Fallout4GroupFactory(_stream, _AudioEffectChainsLocations, _package) : default;
         public IFallout4GroupGetter<IAudioEffectChainGetter> AudioEffectChains => _AudioEffectChains ?? new Fallout4Group<AudioEffectChain>(this);
         #endregion
         #region SceneCollections
         private List<RangeInt64>? _SceneCollectionsLocations;
-        private IFallout4GroupGetter<ISceneCollectionGetter>? _SceneCollections => _SceneCollectionsLocations != null ? Fallout4GroupBinaryOverlay<ISceneCollectionGetter>.Fallout4GroupFactory(_data, _SceneCollectionsLocations, _package) : default;
+        private IFallout4GroupGetter<ISceneCollectionGetter>? _SceneCollections => _SceneCollectionsLocations != null ? Fallout4GroupBinaryOverlay<ISceneCollectionGetter>.Fallout4GroupFactory(_stream, _SceneCollectionsLocations, _package) : default;
         public IFallout4GroupGetter<ISceneCollectionGetter> SceneCollections => _SceneCollections ?? new Fallout4Group<SceneCollection>(this);
         #endregion
         #region AttractionRules
         private List<RangeInt64>? _AttractionRulesLocations;
-        private IFallout4GroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? Fallout4GroupBinaryOverlay<IAttractionRuleGetter>.Fallout4GroupFactory(_data, _AttractionRulesLocations, _package) : default;
+        private IFallout4GroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? Fallout4GroupBinaryOverlay<IAttractionRuleGetter>.Fallout4GroupFactory(_stream, _AttractionRulesLocations, _package) : default;
         public IFallout4GroupGetter<IAttractionRuleGetter> AttractionRules => _AttractionRules ?? new Fallout4Group<AttractionRule>(this);
         #endregion
         #region AudioCategorySnapshots
         private List<RangeInt64>? _AudioCategorySnapshotsLocations;
-        private IFallout4GroupGetter<IAudioCategorySnapshotGetter>? _AudioCategorySnapshots => _AudioCategorySnapshotsLocations != null ? Fallout4GroupBinaryOverlay<IAudioCategorySnapshotGetter>.Fallout4GroupFactory(_data, _AudioCategorySnapshotsLocations, _package) : default;
+        private IFallout4GroupGetter<IAudioCategorySnapshotGetter>? _AudioCategorySnapshots => _AudioCategorySnapshotsLocations != null ? Fallout4GroupBinaryOverlay<IAudioCategorySnapshotGetter>.Fallout4GroupFactory(_stream, _AudioCategorySnapshotsLocations, _package) : default;
         public IFallout4GroupGetter<IAudioCategorySnapshotGetter> AudioCategorySnapshots => _AudioCategorySnapshots ?? new Fallout4Group<AudioCategorySnapshot>(this);
         #endregion
         #region AnimationSoundTagSets
         private List<RangeInt64>? _AnimationSoundTagSetsLocations;
-        private IFallout4GroupGetter<IAnimationSoundTagSetGetter>? _AnimationSoundTagSets => _AnimationSoundTagSetsLocations != null ? Fallout4GroupBinaryOverlay<IAnimationSoundTagSetGetter>.Fallout4GroupFactory(_data, _AnimationSoundTagSetsLocations, _package) : default;
+        private IFallout4GroupGetter<IAnimationSoundTagSetGetter>? _AnimationSoundTagSets => _AnimationSoundTagSetsLocations != null ? Fallout4GroupBinaryOverlay<IAnimationSoundTagSetGetter>.Fallout4GroupFactory(_stream, _AnimationSoundTagSetsLocations, _package) : default;
         public IFallout4GroupGetter<IAnimationSoundTagSetGetter> AnimationSoundTagSets => _AnimationSoundTagSets ?? new Fallout4Group<AnimationSoundTagSet>(this);
         #endregion
         #region NavigationMeshObstacleManagers
         private List<RangeInt64>? _NavigationMeshObstacleManagersLocations;
-        private IFallout4GroupGetter<INavigationMeshObstacleManagerGetter>? _NavigationMeshObstacleManagers => _NavigationMeshObstacleManagersLocations != null ? Fallout4GroupBinaryOverlay<INavigationMeshObstacleManagerGetter>.Fallout4GroupFactory(_data, _NavigationMeshObstacleManagersLocations, _package) : default;
+        private IFallout4GroupGetter<INavigationMeshObstacleManagerGetter>? _NavigationMeshObstacleManagers => _NavigationMeshObstacleManagersLocations != null ? Fallout4GroupBinaryOverlay<INavigationMeshObstacleManagerGetter>.Fallout4GroupFactory(_stream, _NavigationMeshObstacleManagersLocations, _package) : default;
         public IFallout4GroupGetter<INavigationMeshObstacleManagerGetter> NavigationMeshObstacleManagers => _NavigationMeshObstacleManagers ?? new Fallout4Group<NavigationMeshObstacleManager>(this);
         #endregion
         #region LensFlares
         private List<RangeInt64>? _LensFlaresLocations;
-        private IFallout4GroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? Fallout4GroupBinaryOverlay<ILensFlareGetter>.Fallout4GroupFactory(_data, _LensFlaresLocations, _package) : default;
+        private IFallout4GroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? Fallout4GroupBinaryOverlay<ILensFlareGetter>.Fallout4GroupFactory(_stream, _LensFlaresLocations, _package) : default;
         public IFallout4GroupGetter<ILensFlareGetter> LensFlares => _LensFlares ?? new Fallout4Group<LensFlare>(this);
         #endregion
         #region GodRays
         private List<RangeInt64>? _GodRaysLocations;
-        private IFallout4GroupGetter<IGodRaysGetter>? _GodRays => _GodRaysLocations != null ? Fallout4GroupBinaryOverlay<IGodRaysGetter>.Fallout4GroupFactory(_data, _GodRaysLocations, _package) : default;
+        private IFallout4GroupGetter<IGodRaysGetter>? _GodRays => _GodRaysLocations != null ? Fallout4GroupBinaryOverlay<IGodRaysGetter>.Fallout4GroupFactory(_stream, _GodRaysLocations, _package) : default;
         public IFallout4GroupGetter<IGodRaysGetter> GodRays => _GodRays ?? new Fallout4Group<GodRays>(this);
         #endregion
         #region ObjectVisibilityManagers
         private List<RangeInt64>? _ObjectVisibilityManagersLocations;
-        private IFallout4GroupGetter<IObjectVisibilityManagerGetter>? _ObjectVisibilityManagers => _ObjectVisibilityManagersLocations != null ? Fallout4GroupBinaryOverlay<IObjectVisibilityManagerGetter>.Fallout4GroupFactory(_data, _ObjectVisibilityManagersLocations, _package) : default;
+        private IFallout4GroupGetter<IObjectVisibilityManagerGetter>? _ObjectVisibilityManagers => _ObjectVisibilityManagersLocations != null ? Fallout4GroupBinaryOverlay<IObjectVisibilityManagerGetter>.Fallout4GroupFactory(_stream, _ObjectVisibilityManagersLocations, _package) : default;
         public IFallout4GroupGetter<IObjectVisibilityManagerGetter> ObjectVisibilityManagers => _ObjectVisibilityManagers ?? new Fallout4Group<ObjectVisibilityManager>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
@@ -24951,7 +24951,7 @@ namespace Mutagen.Bethesda.Fallout4
             bool shouldDispose)
         {
             this.ModKey = modKey;
-            this._data = stream;
+            this._stream = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._shouldDispose = shouldDispose;
         }

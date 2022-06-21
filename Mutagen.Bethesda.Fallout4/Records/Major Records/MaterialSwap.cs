@@ -136,13 +136,13 @@ partial class MaterialSwapBinaryOverlay
     {
         if (_formVersion >= MaterialSwapBinaryCreateTranslation.NewFormVersion)
         {
-            return _fnamLoc.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _fnamLoc.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+            return _fnamLoc.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _fnamLoc.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         }
         else
         {
             string? str = null;
             foreach (var fnam in RecordSpanExtensions.FindAllOfSubrecord(
-                         _data.Slice(_package.MetaData.Constants.MajorConstants.HeaderLength - _offset),
+                         _recordData.Slice(_package.MetaData.Constants.MajorConstants.HeaderLength - _offset),
                          _package.MetaData.Constants, 
                          RecordTypes.FNAM))
             {

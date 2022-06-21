@@ -259,7 +259,7 @@ partial class NpcBinaryOverlay
 
     public partial Npc.Flag GetFlagsCustom()
     {
-        uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_FlagsLocation));
+        uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_FlagsLocation));
         // Clear out PcLevelMult flag, as that information is kept in the field type above
         rawFlags &= ~NpcBinaryCreateTranslation.PcLevelMultFlag;
         return (Npc.Flag)rawFlags;
@@ -267,10 +267,10 @@ partial class NpcBinaryOverlay
 
     public partial IANpcLevelGetter GetLevelCustom()
     {
-        uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_FlagsLocation));
+        uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_FlagsLocation));
         if (EnumExt.HasFlag(rawFlags, NpcBinaryCreateTranslation.PcLevelMultFlag))
         {
-            var raw = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_LevelLocation));
+            var raw = BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_LevelLocation));
             float f = (float)raw;
             f /= 1000;
             return new PcLevelMult()
@@ -282,7 +282,7 @@ partial class NpcBinaryOverlay
         {
             return new NpcLevel()
             {
-                Level = BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_LevelLocation))
+                Level = BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_LevelLocation))
             };
         }
     }
@@ -309,8 +309,8 @@ partial class NpcBinaryOverlay
         get
         {
             if (!_MSDVLocation.HasValue && !_MSDKLocation.HasValue) return Array.Empty<INpcMorphGetter>();
-            ReadOnlyMemorySlice<byte> msdk = _MSDKLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MSDKLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
-            ReadOnlyMemorySlice<byte> msdv = _MSDVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MSDVLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
+            ReadOnlyMemorySlice<byte> msdk = _MSDKLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSDKLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
+            ReadOnlyMemorySlice<byte> msdv = _MSDVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSDVLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
             var amount = Math.Max(msdk.Length, msdv.Length) / 4; 
             var ret = new List<INpcMorphGetter>(amount);
             for (int i = 0; i < amount; i++)

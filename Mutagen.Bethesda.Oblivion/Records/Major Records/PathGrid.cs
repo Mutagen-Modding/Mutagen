@@ -155,7 +155,7 @@ internal partial class PathGridBinaryOverlay
 
     private int? _PGAGLocation;
     public bool PGAG_IsSet => _PGAGLocation.HasValue;
-    public ReadOnlyMemorySlice<byte>? PGAG => _PGAGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PGAGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+    public ReadOnlyMemorySlice<byte>? PGAG => _PGAGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PGAGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
 
     partial void PointToPointConnectionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

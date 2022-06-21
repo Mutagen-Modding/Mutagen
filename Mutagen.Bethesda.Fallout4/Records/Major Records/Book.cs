@@ -91,28 +91,28 @@ partial class BookBinaryOverlay
         {
             return new BookActorValue()
             {
-                ActorValue = new FormLink<IActorValueInformationGetter>(FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
+                ActorValue = new FormLink<IActorValueInformationGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
             };
         }
         else if ((flags & BookBinaryCreateTranslation.SpellFlag) > 0)
         {
             return new BookSpell()
             {
-                Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
+                Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
             };
         }
         else if ((flags & BookBinaryCreateTranslation.PerkFlag) > 0)
         {
             return new BookPerk()
             {
-                Perk = new FormLink<IPerkGetter>(FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
+                Perk = new FormLink<IPerkGetter>(FormKeyBinaryTranslation.Instance.Parse(_recordData.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
             };
         }
         else
         {
             return new BookTeachesNothing()
             {
-                RawContent = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_TeachesLocation, 4))
+                RawContent = BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TeachesLocation, 4))
             };
         }
     }

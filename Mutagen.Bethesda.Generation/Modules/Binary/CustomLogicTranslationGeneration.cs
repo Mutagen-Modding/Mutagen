@@ -181,7 +181,6 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
-        Accessor dataAccessor,
         int? currentPosition,
         string passedLenAccessor,
         DataType? dataType = null)
@@ -239,7 +238,8 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
-        Accessor dataAccessor, 
+        Accessor structDataAccessor,
+        Accessor recordDataAccessor,
         int? passedLength,
         string passedLengthAccessor,
         DataType? data = null)

@@ -1959,19 +1959,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IAIPackageDataGetter? Data => _DataLocation.HasValue ? AIPackageDataBinaryOverlay.AIPackageDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IAIPackageDataGetter? Data => _DataLocation.HasValue ? AIPackageDataBinaryOverlay.AIPackageDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region Location
         private RangeInt32? _LocationLocation;
-        public IAIPackageLocationGetter? Location => _LocationLocation.HasValue ? AIPackageLocationBinaryOverlay.AIPackageLocationFactory(new OverlayStream(_data.Slice(_LocationLocation!.Value.Min), _package), _package) : default;
+        public IAIPackageLocationGetter? Location => _LocationLocation.HasValue ? AIPackageLocationBinaryOverlay.AIPackageLocationFactory(_recordData.Slice(_LocationLocation!.Value.Min), _package) : default;
         #endregion
         #region Schedule
         private RangeInt32? _ScheduleLocation;
-        public IAIPackageScheduleGetter? Schedule => _ScheduleLocation.HasValue ? AIPackageScheduleBinaryOverlay.AIPackageScheduleFactory(new OverlayStream(_data.Slice(_ScheduleLocation!.Value.Min), _package), _package) : default;
+        public IAIPackageScheduleGetter? Schedule => _ScheduleLocation.HasValue ? AIPackageScheduleBinaryOverlay.AIPackageScheduleFactory(_recordData.Slice(_ScheduleLocation!.Value.Min), _package) : default;
         #endregion
         #region Target
         private RangeInt32? _TargetLocation;
-        public IAIPackageTargetGetter? Target => _TargetLocation.HasValue ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new OverlayStream(_data.Slice(_TargetLocation!.Value.Min), _package), _package) : default;
+        public IAIPackageTargetGetter? Target => _TargetLocation.HasValue ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(_recordData.Slice(_TargetLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
@@ -1981,10 +1981,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected AIPackageBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1996,13 +1996,16 @@ namespace Mutagen.Bethesda.Oblivion
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AIPackageBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

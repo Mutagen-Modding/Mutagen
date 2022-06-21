@@ -1221,9 +1221,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlacedObjectGetter> Reference => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> Reference => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         #region Triangles
-        public IReadOnlyList<UInt16> Triangles => BinaryOverlayList.FactoryByCountLength<UInt16>(_data.Slice(0x4), _package, 2, countLength: 2, (s, p) => BinaryPrimitives.ReadUInt16LittleEndian(s));
+        public IReadOnlyList<UInt16> Triangles => BinaryOverlayList.FactoryByCountLength<UInt16>(_structData.Slice(0x4), _package, 2, countLength: 2, (s, p) => BinaryPrimitives.ReadUInt16LittleEndian(s));
         protected int TrianglesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1233,10 +1233,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected PreCutMapEntryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1247,11 +1247,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PreCutMapEntryBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.TrianglesEndingPos = 0x4 + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(0x4)) * 2 + 2;
+            ret.TrianglesEndingPos = 0x4 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x4)) * 2 + 2;
             stream.Position += ret.TrianglesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

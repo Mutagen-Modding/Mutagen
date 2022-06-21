@@ -12772,12 +12772,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Animatable
         private int _AnimatableLocation => _DNAMLocation!.Value.Min;
         private bool _Animatable_IsSet => _DNAMLocation.HasValue;
-        public Boolean Animatable => _Animatable_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AnimatableLocation, 4)) >= 1 : default;
+        public Boolean Animatable => _Animatable_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AnimatableLocation, 4)) >= 1 : default;
         #endregion
         #region Duration
         private int _DurationLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Duration_IsSet => _DNAMLocation.HasValue;
-        public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
+        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Counts1
         private int _Counts1Location => _DNAMLocation!.Value.Min + 0x8;
@@ -12789,12 +12789,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region RadialBlurUseTarget
         private int _RadialBlurUseTargetLocation => _DNAMLocation!.Value.Min + 0xC8;
         private bool _RadialBlurUseTarget_IsSet => _DNAMLocation.HasValue;
-        public Boolean RadialBlurUseTarget => _RadialBlurUseTarget_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_RadialBlurUseTargetLocation, 4)) >= 1 : default;
+        public Boolean RadialBlurUseTarget => _RadialBlurUseTarget_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadialBlurUseTargetLocation, 4)) >= 1 : default;
         #endregion
         #region RadialBlurCenter
         private int _RadialBlurCenterLocation => _DNAMLocation!.Value.Min + 0xCC;
         private bool _RadialBlurCenter_IsSet => _DNAMLocation.HasValue;
-        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RadialBlurCenterLocation, 8)) : default;
+        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RadialBlurCenterLocation, 8)) : default;
         #endregion
         #region Counts2
         private int _Counts2Location => _DNAMLocation!.Value.Min + 0xD4;
@@ -12806,7 +12806,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DepthOfFieldFlags
         private int _DepthOfFieldFlagsLocation => _DNAMLocation!.Value.Min + 0xE0;
         private bool _DepthOfFieldFlags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DepthOfFieldFlagsLocation, 0x4)) : default;
+        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_DepthOfFieldFlagsLocation, 0x4)) : default;
         #endregion
         #region Counts3
         private int _Counts3Location => _DNAMLocation!.Value.Min + 0xE4;
@@ -12818,7 +12818,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0xF4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
-        public UInt64 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt64LittleEndian(_data.Slice(_UnknownLocation, 8)) : default;
+        public UInt64 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt64LittleEndian(_recordData.Slice(_UnknownLocation, 8)) : default;
         #endregion
         public IReadOnlyList<IKeyFrameGetter>? BlurRadius { get; private set; }
         public IReadOnlyList<IKeyFrameGetter>? DoubleVisionStrength { get; private set; }
@@ -12884,10 +12884,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ImageSpaceAdapterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -12899,13 +12899,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ImageSpaceAdapterBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -12946,7 +12949,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0xF4)
                     {
                         this.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break0;

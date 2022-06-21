@@ -1344,23 +1344,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Object
         private int? _ObjectLocation;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         private RangeInt32? _ALCALocation;
         public CreateReferenceToObject.ALCADataType ALCADataTypeState { get; private set; }
         #region AliasID
         private int _AliasIDLocation => _ALCALocation!.Value.Min;
         private bool _AliasID_IsSet => _ALCALocation.HasValue;
-        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_AliasIDLocation, 2)) : default;
+        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_AliasIDLocation, 2)) : default;
         #endregion
         #region Create
         private int _CreateLocation => _ALCALocation!.Value.Min + 0x2;
         private bool _Create_IsSet => _ALCALocation.HasValue;
-        public CreateReferenceToObject.CreateEnum Create => _Create_IsSet ? (CreateReferenceToObject.CreateEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CreateLocation, 0x2)) : default;
+        public CreateReferenceToObject.CreateEnum Create => _Create_IsSet ? (CreateReferenceToObject.CreateEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_CreateLocation, 0x2)) : default;
         #endregion
         #region Level
         private int? _LevelLocation;
-        public Level Level => _LevelLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LevelLocation!.Value, _package.MetaData.Constants)) : default(Level);
+        public Level Level => _LevelLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelLocation!.Value, _package.MetaData.Constants)) : default(Level);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1369,10 +1369,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected CreateReferenceToObjectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1383,10 +1383,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CreateReferenceToObjectBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

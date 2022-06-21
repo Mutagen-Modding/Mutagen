@@ -13,7 +13,7 @@ internal partial class PathGridPointBinaryOverlay
         BinaryOverlayFactoryPackage package)
     {
         return new PathGridPointBinaryOverlay(
-            bytes: stream.Slice(0, 16),
+            memoryPair: MemoryPair.StructMemory(stream.Slice(0, 16)), 
             package: package);
     }
 }

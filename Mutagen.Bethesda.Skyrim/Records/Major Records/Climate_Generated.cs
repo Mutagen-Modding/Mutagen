@@ -2292,11 +2292,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
-        public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region SunGlareTexture
         private int? _SunGlareTextureLocation;
-        public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;
@@ -2304,27 +2304,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region SunriseBeginRaw
         private int _SunriseBeginRawLocation => _TNAMLocation!.Value.Min;
         private bool _SunriseBeginRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunriseBeginRaw => _SunriseBeginRaw_IsSet ? _data.Span[_SunriseBeginRawLocation] : default;
+        public Byte SunriseBeginRaw => _SunriseBeginRaw_IsSet ? _recordData.Span[_SunriseBeginRawLocation] : default;
         #endregion
         #region SunriseEndRaw
         private int _SunriseEndRawLocation => _TNAMLocation!.Value.Min + 0x1;
         private bool _SunriseEndRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunriseEndRaw => _SunriseEndRaw_IsSet ? _data.Span[_SunriseEndRawLocation] : default;
+        public Byte SunriseEndRaw => _SunriseEndRaw_IsSet ? _recordData.Span[_SunriseEndRawLocation] : default;
         #endregion
         #region SunsetBeginRaw
         private int _SunsetBeginRawLocation => _TNAMLocation!.Value.Min + 0x2;
         private bool _SunsetBeginRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunsetBeginRaw => _SunsetBeginRaw_IsSet ? _data.Span[_SunsetBeginRawLocation] : default;
+        public Byte SunsetBeginRaw => _SunsetBeginRaw_IsSet ? _recordData.Span[_SunsetBeginRawLocation] : default;
         #endregion
         #region SunsetEndRaw
         private int _SunsetEndRawLocation => _TNAMLocation!.Value.Min + 0x3;
         private bool _SunsetEndRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunsetEndRaw => _SunsetEndRaw_IsSet ? _data.Span[_SunsetEndRawLocation] : default;
+        public Byte SunsetEndRaw => _SunsetEndRaw_IsSet ? _recordData.Span[_SunsetEndRawLocation] : default;
         #endregion
         #region Volatility
         private int _VolatilityLocation => _TNAMLocation!.Value.Min + 0x4;
         private bool _Volatility_IsSet => _TNAMLocation.HasValue;
-        public Byte Volatility => _Volatility_IsSet ? _data.Span[_VolatilityLocation] : default;
+        public Byte Volatility => _Volatility_IsSet ? _recordData.Span[_VolatilityLocation] : default;
         #endregion
         #region MoonAndPhaseLength
         private int _MoonAndPhaseLengthLocation => _TNAMLocation!.Value.Min + 0x5;
@@ -2343,10 +2343,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ClimateBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2358,13 +2358,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ClimateBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

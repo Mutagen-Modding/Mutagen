@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim
             OverlayStream stream,
             int offset);
         #endregion
-        public Int32 CountOrDistance => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public Int32 CountOrDistance => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1053,10 +1053,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected APackageTargetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

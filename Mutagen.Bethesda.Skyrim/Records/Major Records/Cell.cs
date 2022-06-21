@@ -383,15 +383,18 @@ partial class CellBinaryOverlay
     {
         var origStream = stream;
         stream = Decompression.DecompressStream(stream);
+        stream = ExtractRecordMemory(
+            stream,
+            package.MetaData.Constants,
+            out var memoryPair,
+            out var offset,
+            out var finalPos);
         var ret = new CellBinaryOverlay(
-            bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+            memoryPair: memoryPair,
             package: package)
         {
             InsideWorldspace = insideWorldspace
         };
-        var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecordHeader(stream.RemainingMemory).TotalLength));
-        int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-        stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
         ret.CustomFactoryEnd(
             stream: stream,
             finalPos: finalPos,
@@ -557,7 +560,7 @@ partial class CellBinaryOverlay
     public partial Cell.Flag GetFlagsCustom()
     {
         if (!_flagsLoc.HasValue) return default(Cell.Flag);
-        var subHeader = _package.MetaData.Constants.Subrecord(_data.Slice(_flagsLoc.Value));
+        var subHeader = _package.MetaData.Constants.Subrecord(_recordData.Slice(_flagsLoc.Value));
         switch (subHeader.Content.Length)
         {
             case 1:

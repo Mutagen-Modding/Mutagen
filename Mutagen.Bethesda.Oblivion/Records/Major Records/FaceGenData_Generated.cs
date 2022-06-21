@@ -1257,15 +1257,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region SymmetricGeometry
         private int? _SymmetricGeometryLocation;
-        public ReadOnlyMemorySlice<Byte>? SymmetricGeometry => _SymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SymmetricGeometryLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? SymmetricGeometry => _SymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SymmetricGeometryLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region AsymmetricGeometry
         private int? _AsymmetricGeometryLocation;
-        public ReadOnlyMemorySlice<Byte>? AsymmetricGeometry => _AsymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _AsymmetricGeometryLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? AsymmetricGeometry => _AsymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _AsymmetricGeometryLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SymmetricTexture
         private int? _SymmetricTextureLocation;
-        public ReadOnlyMemorySlice<Byte>? SymmetricTexture => _SymmetricTextureLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SymmetricTextureLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? SymmetricTexture => _SymmetricTextureLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SymmetricTextureLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1274,10 +1274,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected FaceGenDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1288,10 +1288,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FaceGenDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

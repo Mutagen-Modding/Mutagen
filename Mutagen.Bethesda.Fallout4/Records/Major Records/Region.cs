@@ -181,22 +181,22 @@ partial class RegionBinaryOverlay
         switch (dataType)
         {
             case RegionData.RegionDataType.Object:
-                _objectsSpan = _data.Slice(loc);
+                _objectsSpan = _recordData.Slice(loc);
                 break;
             case RegionData.RegionDataType.Map:
-                _mapSpan = _data.Slice(loc);
+                _mapSpan = _recordData.Slice(loc);
                 break;
             case RegionData.RegionDataType.Grass:
-                _grassesSpan = _data.Slice(loc);
+                _grassesSpan = _recordData.Slice(loc);
                 break;
             case RegionData.RegionDataType.Land:
-                _landSpan = _data.Slice(loc);
+                _landSpan = _recordData.Slice(loc);
                 break;
             case RegionData.RegionDataType.Sound:
-                _soundsSpan = _data.Slice(loc);
+                _soundsSpan = _recordData.Slice(loc);
                 break;
             case RegionData.RegionDataType.Weather:
-                _weatherSpan = _data.Slice(loc);
+                _weatherSpan = _recordData.Slice(loc);
                 break;
             default:
                 throw new NotImplementedException();

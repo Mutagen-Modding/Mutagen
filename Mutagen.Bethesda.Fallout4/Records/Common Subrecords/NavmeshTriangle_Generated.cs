@@ -1416,14 +1416,14 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public P3Int16 Vertices => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x6));
-        public Int16 EdgeLink_0_1 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public Int16 EdgeLink_1_2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
-        public Int16 EdgeLink_2_0 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
-        public Single Height => _data.Slice(0xC, 0x4).Float();
-        public Byte Unknown => _data.Span[0x10];
-        public NavmeshTriangle.Flag Flags => (NavmeshTriangle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x11, 0x2));
-        public UInt16 CoverFlags => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x13, 0x2));
+        public P3Int16 Vertices => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x6));
+        public Int16 EdgeLink_0_1 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x6, 0x2));
+        public Int16 EdgeLink_1_2 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
+        public Int16 EdgeLink_2_0 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xA, 0x2));
+        public Single Height => _structData.Slice(0xC, 0x4).Float();
+        public Byte Unknown => _structData.Span[0x10];
+        public NavmeshTriangle.Flag Flags => (NavmeshTriangle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x11, 0x2));
+        public UInt16 CoverFlags => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x13, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1431,10 +1431,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected NavmeshTriangleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1445,10 +1445,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x15,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NavmeshTriangleBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x15),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x15;
             ret.CustomFactoryEnd(
                 stream: stream,

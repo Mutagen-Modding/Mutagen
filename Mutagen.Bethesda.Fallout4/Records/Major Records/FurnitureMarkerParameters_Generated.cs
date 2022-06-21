@@ -1417,11 +1417,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public FurnitureMarkerParameters.VersioningBreaks Versioning { get; private set; }
-        public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
-        public Single RotationZ => _data.Slice(0xC, 0x4).Float() * 57.2958f;
-        public IFormLinkGetter<IKeywordGetter> Keyword => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x10, 0x4))));
-        public Furniture.EntryParameterType EntryTypes => _data.Span.Length <= 0x14 ? default : (Furniture.EntryParameterType)_data.Span.Slice(0x14, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x15, 0x3).ToArray();
+        public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
+        public Single RotationZ => _structData.Slice(0xC, 0x4).Float() * 57.2958f;
+        public IFormLinkGetter<IKeywordGetter> Keyword => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
+        public Furniture.EntryParameterType EntryTypes => _structData.Span.Length <= 0x14 ? default : (Furniture.EntryParameterType)_structData.Span.Slice(0x14, 0x1)[0];
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x15, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1429,10 +1429,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected FurnitureMarkerParametersBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1444,15 +1444,21 @@ namespace Mutagen.Bethesda.Fallout4
             int finalPos,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: finalPos - stream.Position,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new FurnitureMarkerParametersBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            if (ret._data.Length <= 0x10)
+            if (ret._structData.Length <= 0x10)
             {
                 ret.Versioning |= FurnitureMarkerParameters.VersioningBreaks.Break0;
             }
-            if (ret._data.Length <= 0x14)
+            if (ret._structData.Length <= 0x14)
             {
                 ret.Versioning |= FurnitureMarkerParameters.VersioningBreaks.Break1;
             }

@@ -2727,12 +2727,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2748,58 +2748,58 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         private RangeInt32? _SPITLocation;
         public Spell.SPITDataType SPITDataTypeState { get; private set; }
         #region BaseCost
         private int _BaseCostLocation => _SPITLocation!.Value.Min;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;
-        public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_BaseCostLocation, 4)) : default;
+        public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BaseCostLocation, 4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _SPITLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _SPITLocation.HasValue;
-        public SpellDataFlag Flags => _Flags_IsSet ? (SpellDataFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public SpellDataFlag Flags => _Flags_IsSet ? (SpellDataFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Type
         private int _TypeLocation => _SPITLocation!.Value.Min + 0x8;
         private bool _Type_IsSet => _SPITLocation.HasValue;
-        public SpellType Type => _Type_IsSet ? (SpellType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 0x4)) : default;
+        public SpellType Type => _Type_IsSet ? (SpellType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
         #endregion
         #region ChargeTime
         private int _ChargeTimeLocation => _SPITLocation!.Value.Min + 0xC;
         private bool _ChargeTime_IsSet => _SPITLocation.HasValue;
-        public Single ChargeTime => _ChargeTime_IsSet ? _data.Slice(_ChargeTimeLocation, 4).Float() : default;
+        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default;
         #endregion
         #region CastType
         private int _CastTypeLocation => _SPITLocation!.Value.Min + 0x10;
         private bool _CastType_IsSet => _SPITLocation.HasValue;
-        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default;
         #endregion
         #region TargetType
         private int _TargetTypeLocation => _SPITLocation!.Value.Min + 0x14;
         private bool _TargetType_IsSet => _SPITLocation.HasValue;
-        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default;
         #endregion
         #region CastDuration
         private int _CastDurationLocation => _SPITLocation!.Value.Min + 0x18;
         private bool _CastDuration_IsSet => _SPITLocation.HasValue;
-        public Single CastDuration => _CastDuration_IsSet ? _data.Slice(_CastDurationLocation, 4).Float() : default;
+        public Single CastDuration => _CastDuration_IsSet ? _recordData.Slice(_CastDurationLocation, 4).Float() : default;
         #endregion
         #region Range
         private int _RangeLocation => _SPITLocation!.Value.Min + 0x1C;
         private bool _Range_IsSet => _SPITLocation.HasValue;
-        public Single Range => _Range_IsSet ? _data.Slice(_RangeLocation, 4).Float() : default;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default;
         #endregion
         #region CastingPerk
         private int _CastingPerkLocation => _SPITLocation!.Value.Min + 0x20;
         private bool _CastingPerk_IsSet => _SPITLocation.HasValue;
-        public IFormLinkGetter<IPerkGetter> CastingPerk => _CastingPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> CastingPerk => _CastingPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
@@ -2809,10 +2809,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SpellBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2824,13 +2824,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SpellBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

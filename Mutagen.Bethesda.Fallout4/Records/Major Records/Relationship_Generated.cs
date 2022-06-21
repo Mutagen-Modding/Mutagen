@@ -1776,32 +1776,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region Parent
         private int _ParentLocation => _DATALocation!.Value.Min;
         private bool _Parent_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public IFormLinkGetter<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Child
         private int _ChildLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Child_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public IFormLinkGetter<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue;
-        public Relationship.RankType Rank => _Rank_IsSet ? (Relationship.RankType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_RankLocation, 0x2)) : default;
+        public Relationship.RankType Rank => _Rank_IsSet ? (Relationship.RankType)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_RankLocation, 0x2)) : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0xA;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xB;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Relationship.Flag Flags => _Flags_IsSet ? (Relationship.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Relationship.Flag Flags => _Flags_IsSet ? (Relationship.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region AssociationType
         private int _AssociationTypeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _AssociationType_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
+        public IFormLinkGetter<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1810,10 +1810,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected RelationshipBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1825,13 +1825,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RelationshipBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

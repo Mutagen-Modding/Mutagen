@@ -113,7 +113,7 @@ partial class FootstepSetBinaryOverlay
         IReadOnlyList<IFormLinkGetter<IFootstepGetter>> Get(int index)
         {
             var ret =  BinaryOverlayList.FactoryByCount<IFormLinkGetter<IFootstepGetter>>(
-                _data.Slice(stream.Position - offset, 4 * counts[index]),
+                _recordData.Slice(stream.Position - offset, 4 * counts[index]),
                 _package,
                 itemLength: 4,
                 count: checked((uint)counts[index]),

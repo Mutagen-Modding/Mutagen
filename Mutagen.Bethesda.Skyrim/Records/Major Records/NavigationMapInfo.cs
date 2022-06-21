@@ -69,8 +69,8 @@ partial class NavigationMapInfoBinaryOverlay
         get
         {
             return new P2Int16(
-                BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(IslandEndingPos + 0x8)),
-                BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(IslandEndingPos + 0xA)));
+                BinaryPrimitives.ReadInt16LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8)),
+                BinaryPrimitives.ReadInt16LittleEndian(_structData.Span.Slice(IslandEndingPos + 0xA)));
         }
     }
 
@@ -78,15 +78,15 @@ partial class NavigationMapInfoBinaryOverlay
     {
         get
         {
-            return new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x8, 0x4))));
+            return new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8, 0x4))));
         }
     }
 
     partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
     {
-        if (_data[LinkedDoorsEndingPos] > 0)
+        if (_structData[LinkedDoorsEndingPos] > 0)
         {
-            using var islandStream = new OverlayStream(_data.Slice(LinkedDoorsEndingPos + 1), stream.MetaData);
+            using var islandStream = new OverlayStream(_structData.Slice(LinkedDoorsEndingPos + 1), stream.MetaData);
             this._island =  IslandDataBinaryOverlay.IslandDataFactory(
                 islandStream,
                 _package);

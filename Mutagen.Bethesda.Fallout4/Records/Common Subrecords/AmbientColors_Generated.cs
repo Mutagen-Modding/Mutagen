@@ -1425,14 +1425,14 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Color DirectionalXPlus => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalXMinus => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalYPlus => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalYMinus => _data.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalZPlus => _data.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalZMinus => _data.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Specular => _data.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single Scale => _data.Slice(0x1C, 0x4).Float();
+        public Color DirectionalXPlus => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalXMinus => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalYPlus => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalYMinus => _structData.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalZPlus => _structData.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalZMinus => _structData.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Specular => _structData.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single Scale => _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1440,10 +1440,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected AmbientColorsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1454,10 +1454,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AmbientColorsBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x20),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x20;
             ret.CustomFactoryEnd(
                 stream: stream,

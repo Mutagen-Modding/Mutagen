@@ -1264,10 +1264,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
-        public ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes => _data.Span.Slice(0xC, 0x3).ToArray();
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
+        public ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes => _structData.Span.Slice(0xC, 0x3).ToArray();
         #region Connections
-        public IReadOnlyList<P3Float> Connections => BinaryOverlayList.FactoryByStartIndex<P3Float>(_data.Slice(0xF), _package, 12, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
+        public IReadOnlyList<P3Float> Connections => BinaryOverlayList.FactoryByStartIndex<P3Float>(_structData.Slice(0xF), _package, 12, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int ConnectionsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1277,10 +1277,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected RoadPointBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1291,11 +1291,17 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RoadPointBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.ConnectionsEndingPos = ret._data.Length;
+            ret.ConnectionsEndingPos = ret._structData.Length;
             stream.Position += ret.ConnectionsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -2069,62 +2069,62 @@ namespace Mutagen.Bethesda.Skyrim
         #region DecayMilliseconds
         private int _DecayMillisecondsLocation => _DATALocation!.Value.Min;
         private bool _DecayMilliseconds_IsSet => _DATALocation.HasValue;
-        public UInt16 DecayMilliseconds => _DecayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DecayMillisecondsLocation, 2)) : default;
+        public UInt16 DecayMilliseconds => _DecayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DecayMillisecondsLocation, 2)) : default;
         #endregion
         #region HfReferenceHertz
         private int _HfReferenceHertzLocation => _DATALocation!.Value.Min + 0x2;
         private bool _HfReferenceHertz_IsSet => _DATALocation.HasValue;
-        public UInt16 HfReferenceHertz => _HfReferenceHertz_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_HfReferenceHertzLocation, 2)) : default;
+        public UInt16 HfReferenceHertz => _HfReferenceHertz_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_HfReferenceHertzLocation, 2)) : default;
         #endregion
         #region RoomFilter
         private int _RoomFilterLocation => _DATALocation!.Value.Min + 0x4;
         private bool _RoomFilter_IsSet => _DATALocation.HasValue;
-        public SByte RoomFilter => _RoomFilter_IsSet ? (sbyte)_data.Slice(_RoomFilterLocation, 1)[0] : default;
+        public SByte RoomFilter => _RoomFilter_IsSet ? (sbyte)_recordData.Slice(_RoomFilterLocation, 1)[0] : default;
         #endregion
         #region RoomHfFilter
         private int _RoomHfFilterLocation => _DATALocation!.Value.Min + 0x5;
         private bool _RoomHfFilter_IsSet => _DATALocation.HasValue;
-        public SByte RoomHfFilter => _RoomHfFilter_IsSet ? (sbyte)_data.Slice(_RoomHfFilterLocation, 1)[0] : default;
+        public SByte RoomHfFilter => _RoomHfFilter_IsSet ? (sbyte)_recordData.Slice(_RoomHfFilterLocation, 1)[0] : default;
         #endregion
         #region Reflections
         private int _ReflectionsLocation => _DATALocation!.Value.Min + 0x6;
         private bool _Reflections_IsSet => _DATALocation.HasValue;
-        public SByte Reflections => _Reflections_IsSet ? (sbyte)_data.Slice(_ReflectionsLocation, 1)[0] : default;
+        public SByte Reflections => _Reflections_IsSet ? (sbyte)_recordData.Slice(_ReflectionsLocation, 1)[0] : default;
         #endregion
         #region ReverbAmp
         private int _ReverbAmpLocation => _DATALocation!.Value.Min + 0x7;
         private bool _ReverbAmp_IsSet => _DATALocation.HasValue;
-        public SByte ReverbAmp => _ReverbAmp_IsSet ? (sbyte)_data.Slice(_ReverbAmpLocation, 1)[0] : default;
+        public SByte ReverbAmp => _ReverbAmp_IsSet ? (sbyte)_recordData.Slice(_ReverbAmpLocation, 1)[0] : default;
         #endregion
         #region DecayHfRatio
         private int _DecayHfRatioLocation => _DATALocation!.Value.Min + 0x8;
         private bool _DecayHfRatio_IsSet => _DATALocation.HasValue;
-        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
+        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
         #endregion
         #region ReflectDelayMS
         private int _ReflectDelayMSLocation => _DATALocation!.Value.Min + 0x9;
         private bool _ReflectDelayMS_IsSet => _DATALocation.HasValue;
-        public Byte ReflectDelayMS => _ReflectDelayMS_IsSet ? _data.Span[_ReflectDelayMSLocation] : default;
+        public Byte ReflectDelayMS => _ReflectDelayMS_IsSet ? _recordData.Span[_ReflectDelayMSLocation] : default;
         #endregion
         #region ReverbDelayMS
         private int _ReverbDelayMSLocation => _DATALocation!.Value.Min + 0xA;
         private bool _ReverbDelayMS_IsSet => _DATALocation.HasValue;
-        public Byte ReverbDelayMS => _ReverbDelayMS_IsSet ? _data.Span[_ReverbDelayMSLocation] : default;
+        public Byte ReverbDelayMS => _ReverbDelayMS_IsSet ? _recordData.Span[_ReverbDelayMSLocation] : default;
         #endregion
         #region DiffusionPercent
         private int _DiffusionPercentLocation => _DATALocation!.Value.Min + 0xB;
         private bool _DiffusionPercent_IsSet => _DATALocation.HasValue;
-        public Percent DiffusionPercent => _DiffusionPercent_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_DiffusionPercentLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent DiffusionPercent => _DiffusionPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DiffusionPercentLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region DensityPercent
         private int _DensityPercentLocation => _DATALocation!.Value.Min + 0xC;
         private bool _DensityPercent_IsSet => _DATALocation.HasValue;
-        public Percent DensityPercent => _DensityPercent_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_DensityPercentLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent DensityPercent => _DensityPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DensityPercentLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0xD;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2133,10 +2133,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ReverbParametersBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2148,13 +2148,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ReverbParametersBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

@@ -2633,76 +2633,76 @@ namespace Mutagen.Bethesda.Skyrim
         #region OffensiveMult
         private int _OffensiveMultLocation => _CSGDLocation!.Value.Min;
         private bool _OffensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single OffensiveMult => _OffensiveMult_IsSet ? _data.Slice(_OffensiveMultLocation, 4).Float() : default;
+        public Single OffensiveMult => _OffensiveMult_IsSet ? _recordData.Slice(_OffensiveMultLocation, 4).Float() : default;
         #endregion
         #region DefensiveMult
         private int _DefensiveMultLocation => _CSGDLocation!.Value.Min + 0x4;
         private bool _DefensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single DefensiveMult => _DefensiveMult_IsSet ? _data.Slice(_DefensiveMultLocation, 4).Float() : default;
+        public Single DefensiveMult => _DefensiveMult_IsSet ? _recordData.Slice(_DefensiveMultLocation, 4).Float() : default;
         #endregion
         #region GroupOffensiveMult
         private int _GroupOffensiveMultLocation => _CSGDLocation!.Value.Min + 0x8;
         private bool _GroupOffensiveMult_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? _data.Slice(_GroupOffensiveMultLocation, 4).Float() : default;
+        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? _recordData.Slice(_GroupOffensiveMultLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultMelee
         private int _EquipmentScoreMultMeleeLocation => _CSGDLocation!.Value.Min + 0xC;
         private bool _EquipmentScoreMultMelee_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultMelee => _EquipmentScoreMultMelee_IsSet ? _data.Slice(_EquipmentScoreMultMeleeLocation, 4).Float() : default;
+        public Single EquipmentScoreMultMelee => _EquipmentScoreMultMelee_IsSet ? _recordData.Slice(_EquipmentScoreMultMeleeLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultMagic
         private int _EquipmentScoreMultMagicLocation => _CSGDLocation!.Value.Min + 0x10;
         private bool _EquipmentScoreMultMagic_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultMagic => _EquipmentScoreMultMagic_IsSet ? _data.Slice(_EquipmentScoreMultMagicLocation, 4).Float() : default;
+        public Single EquipmentScoreMultMagic => _EquipmentScoreMultMagic_IsSet ? _recordData.Slice(_EquipmentScoreMultMagicLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultRanged
         private int _EquipmentScoreMultRangedLocation => _CSGDLocation!.Value.Min + 0x14;
         private bool _EquipmentScoreMultRanged_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultRanged => _EquipmentScoreMultRanged_IsSet ? _data.Slice(_EquipmentScoreMultRangedLocation, 4).Float() : default;
+        public Single EquipmentScoreMultRanged => _EquipmentScoreMultRanged_IsSet ? _recordData.Slice(_EquipmentScoreMultRangedLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultShout
         private int _EquipmentScoreMultShoutLocation => _CSGDLocation!.Value.Min + 0x18;
         private bool _EquipmentScoreMultShout_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultShout => _EquipmentScoreMultShout_IsSet ? _data.Slice(_EquipmentScoreMultShoutLocation, 4).Float() : default;
+        public Single EquipmentScoreMultShout => _EquipmentScoreMultShout_IsSet ? _recordData.Slice(_EquipmentScoreMultShoutLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultUnarmed
         private int _EquipmentScoreMultUnarmedLocation => _CSGDLocation!.Value.Min + 0x1C;
         private bool _EquipmentScoreMultUnarmed_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultUnarmed => _EquipmentScoreMultUnarmed_IsSet ? _data.Slice(_EquipmentScoreMultUnarmedLocation, 4).Float() : default;
+        public Single EquipmentScoreMultUnarmed => _EquipmentScoreMultUnarmed_IsSet ? _recordData.Slice(_EquipmentScoreMultUnarmedLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultStaff
         private int _EquipmentScoreMultStaffLocation => _CSGDLocation!.Value.Min + 0x20;
         private bool _EquipmentScoreMultStaff_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1);
-        public Single EquipmentScoreMultStaff => _EquipmentScoreMultStaff_IsSet ? _data.Slice(_EquipmentScoreMultStaffLocation, 4).Float() : default;
+        public Single EquipmentScoreMultStaff => _EquipmentScoreMultStaff_IsSet ? _recordData.Slice(_EquipmentScoreMultStaffLocation, 4).Float() : default;
         #endregion
         #region AvoidThreatChance
         private int _AvoidThreatChanceLocation => _CSGDLocation!.Value.Min + 0x24;
         private bool _AvoidThreatChance_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1);
-        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? _data.Slice(_AvoidThreatChanceLocation, 4).Float() : default;
+        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? _recordData.Slice(_AvoidThreatChanceLocation, 4).Float() : default;
         #endregion
         #region CSMD
         private int? _CSMDLocation;
-        public ReadOnlyMemorySlice<Byte>? CSMD => _CSMDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CSMDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? CSMD => _CSMDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CSMDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Melee
         private RangeInt32? _MeleeLocation;
-        public ICombatStyleMeleeGetter? Melee => _MeleeLocation.HasValue ? CombatStyleMeleeBinaryOverlay.CombatStyleMeleeFactory(new OverlayStream(_data.Slice(_MeleeLocation!.Value.Min), _package), _package) : default;
+        public ICombatStyleMeleeGetter? Melee => _MeleeLocation.HasValue ? CombatStyleMeleeBinaryOverlay.CombatStyleMeleeFactory(_recordData.Slice(_MeleeLocation!.Value.Min), _package) : default;
         #endregion
         #region CloseRange
         private RangeInt32? _CloseRangeLocation;
-        public ICombatStyleCloseRangeGetter? CloseRange => _CloseRangeLocation.HasValue ? CombatStyleCloseRangeBinaryOverlay.CombatStyleCloseRangeFactory(new OverlayStream(_data.Slice(_CloseRangeLocation!.Value.Min), _package), _package) : default;
+        public ICombatStyleCloseRangeGetter? CloseRange => _CloseRangeLocation.HasValue ? CombatStyleCloseRangeBinaryOverlay.CombatStyleCloseRangeFactory(_recordData.Slice(_CloseRangeLocation!.Value.Min), _package) : default;
         #endregion
         #region LongRangeStrafeMult
         private int? _LongRangeStrafeMultLocation;
-        public Single? LongRangeStrafeMult => _LongRangeStrafeMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LongRangeStrafeMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? LongRangeStrafeMult => _LongRangeStrafeMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LongRangeStrafeMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Flight
         private RangeInt32? _FlightLocation;
-        public ICombatStyleFlightGetter? Flight => _FlightLocation.HasValue ? CombatStyleFlightBinaryOverlay.CombatStyleFlightFactory(new OverlayStream(_data.Slice(_FlightLocation!.Value.Min), _package), _package) : default;
+        public ICombatStyleFlightGetter? Flight => _FlightLocation.HasValue ? CombatStyleFlightBinaryOverlay.CombatStyleFlightFactory(_recordData.Slice(_FlightLocation!.Value.Min), _package) : default;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public CombatStyle.Flag? Flags => _FlagsLocation.HasValue ? (CombatStyle.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CombatStyle.Flag?);
+        public CombatStyle.Flag? Flags => _FlagsLocation.HasValue ? (CombatStyle.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CombatStyle.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2711,10 +2711,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected CombatStyleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2726,13 +2726,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CombatStyleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2773,7 +2776,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CSGD:
                 {
                     _CSGDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x8)
                     {
                         this.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break0;

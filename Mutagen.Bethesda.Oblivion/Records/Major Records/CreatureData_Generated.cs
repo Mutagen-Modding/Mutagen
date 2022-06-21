@@ -1806,21 +1806,21 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Creature.Types Type => (Creature.Types)_data.Span.Slice(0x0, 0x1)[0];
-        public Byte CombatSkill => _data.Span[0x1];
-        public Byte MagicSkill => _data.Span[0x2];
-        public Byte StealthSkill => _data.Span[0x3];
-        public SoulLevel SoulLevel => (SoulLevel)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x6, 0x4));
-        public UInt16 AttackDamage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
-        public Byte Strength => _data.Span[0xC];
-        public Byte Intelligence => _data.Span[0xD];
-        public Byte Willpower => _data.Span[0xE];
-        public Byte Agility => _data.Span[0xF];
-        public Byte Speed => _data.Span[0x10];
-        public Byte Endurance => _data.Span[0x11];
-        public Byte Personality => _data.Span[0x12];
-        public Byte Luck => _data.Span[0x13];
+        public Creature.Types Type => (Creature.Types)_structData.Span.Slice(0x0, 0x1)[0];
+        public Byte CombatSkill => _structData.Span[0x1];
+        public Byte MagicSkill => _structData.Span[0x2];
+        public Byte StealthSkill => _structData.Span[0x3];
+        public SoulLevel SoulLevel => (SoulLevel)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x4, 0x2));
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x6, 0x4));
+        public UInt16 AttackDamage => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xA, 0x2));
+        public Byte Strength => _structData.Span[0xC];
+        public Byte Intelligence => _structData.Span[0xD];
+        public Byte Willpower => _structData.Span[0xE];
+        public Byte Agility => _structData.Span[0xF];
+        public Byte Speed => _structData.Span[0x10];
+        public Byte Endurance => _structData.Span[0x11];
+        public Byte Personality => _structData.Span[0x12];
+        public Byte Luck => _structData.Span[0x13];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1828,10 +1828,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected CreatureDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1842,11 +1842,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CreatureDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

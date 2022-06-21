@@ -1493,14 +1493,14 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public WeatherColor.VersioningBreaks Versioning { get; private set; }
-        public Color Sunrise => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Day => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Sunset => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Night => _data.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color EarlySunrise => _data.Length <= 0x10 ? default : _data.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color LateSunrise => _data.Length <= 0x14 ? default : _data.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color EarlySunset => _data.Length <= 0x18 ? default : _data.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color LateSunset => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Sunrise => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Day => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Sunset => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Night => _structData.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color EarlySunrise => _structData.Length <= 0x10 ? default : _structData.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color LateSunrise => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color EarlySunset => _structData.Length <= 0x18 ? default : _structData.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color LateSunset => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1508,10 +1508,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected WeatherColorBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1523,11 +1523,17 @@ namespace Mutagen.Bethesda.Fallout4
             int finalPos,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: finalPos - stream.Position,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherColorBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            if (ret._data.Length <= 0x10)
+            if (ret._structData.Length <= 0x10)
             {
                 ret.Versioning |= WeatherColor.VersioningBreaks.Break0;
             }

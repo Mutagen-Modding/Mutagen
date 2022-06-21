@@ -1124,13 +1124,13 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public WorkbenchData.Type BenchType => (WorkbenchData.Type)_data.Span.Slice(0x0, 0x1)[0];
+        public WorkbenchData.Type BenchType => (WorkbenchData.Type)_structData.Span.Slice(0x0, 0x1)[0];
         #region UsesSkill
         public Skill? UsesSkill
         {
             get
             {
-                var val = (Skill)_data.Span.Slice(0x1, 0x1)[0];
+                var val = (Skill)_structData.Span.Slice(0x1, 0x1)[0];
                 if (((int)val) == -1) return null;
                 return val;
             }
@@ -1143,10 +1143,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected WorkbenchDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1157,11 +1157,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x2,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WorkbenchDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x2 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

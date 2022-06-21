@@ -1162,11 +1162,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Scene
         private int? _SceneLocation;
-        public IFormLinkGetter<ISceneGetter> Scene => _SceneLocation.HasValue ? new FormLink<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SceneLocation.Value, _package.MetaData.Constants)))) : FormLink<ISceneGetter>.Null;
+        public IFormLinkGetter<ISceneGetter> Scene => _SceneLocation.HasValue ? new FormLink<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SceneLocation.Value, _package.MetaData.Constants)))) : FormLink<ISceneGetter>.Null;
         #endregion
         #region XNAM
         private int? _XNAMLocation;
-        public UInt64? XNAM => _XNAMLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _XNAMLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
+        public UInt64? XNAM => _XNAMLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XNAMLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1175,10 +1175,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SceneCollectionItemBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1189,10 +1189,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SceneCollectionItemBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

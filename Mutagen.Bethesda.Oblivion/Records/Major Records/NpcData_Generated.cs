@@ -2591,36 +2591,36 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Byte Armorer => _data.Span[0x0];
-        public Byte Athletics => _data.Span[0x1];
-        public Byte Blade => _data.Span[0x2];
-        public Byte Block => _data.Span[0x3];
-        public Byte Blunt => _data.Span[0x4];
-        public Byte HandToHand => _data.Span[0x5];
-        public Byte HeavyArmor => _data.Span[0x6];
-        public Byte Alchemy => _data.Span[0x7];
-        public Byte Alteration => _data.Span[0x8];
-        public Byte Conjuration => _data.Span[0x9];
-        public Byte Destruction => _data.Span[0xA];
-        public Byte Illusion => _data.Span[0xB];
-        public Byte Mysticism => _data.Span[0xC];
-        public Byte Restoration => _data.Span[0xD];
-        public Byte Acrobatics => _data.Span[0xE];
-        public Byte LightArmor => _data.Span[0xF];
-        public Byte Marksman => _data.Span[0x10];
-        public Byte Mercantile => _data.Span[0x11];
-        public Byte Security => _data.Span[0x12];
-        public Byte Sneak => _data.Span[0x13];
-        public Byte Speechcraft => _data.Span[0x14];
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x15, 0x4));
-        public Byte Strength => _data.Span[0x19];
-        public Byte Intelligence => _data.Span[0x1A];
-        public Byte Willpower => _data.Span[0x1B];
-        public Byte Agility => _data.Span[0x1C];
-        public Byte Speed => _data.Span[0x1D];
-        public Byte Endurance => _data.Span[0x1E];
-        public Byte Personality => _data.Span[0x1F];
-        public Byte Luck => _data.Span[0x20];
+        public Byte Armorer => _structData.Span[0x0];
+        public Byte Athletics => _structData.Span[0x1];
+        public Byte Blade => _structData.Span[0x2];
+        public Byte Block => _structData.Span[0x3];
+        public Byte Blunt => _structData.Span[0x4];
+        public Byte HandToHand => _structData.Span[0x5];
+        public Byte HeavyArmor => _structData.Span[0x6];
+        public Byte Alchemy => _structData.Span[0x7];
+        public Byte Alteration => _structData.Span[0x8];
+        public Byte Conjuration => _structData.Span[0x9];
+        public Byte Destruction => _structData.Span[0xA];
+        public Byte Illusion => _structData.Span[0xB];
+        public Byte Mysticism => _structData.Span[0xC];
+        public Byte Restoration => _structData.Span[0xD];
+        public Byte Acrobatics => _structData.Span[0xE];
+        public Byte LightArmor => _structData.Span[0xF];
+        public Byte Marksman => _structData.Span[0x10];
+        public Byte Mercantile => _structData.Span[0x11];
+        public Byte Security => _structData.Span[0x12];
+        public Byte Sneak => _structData.Span[0x13];
+        public Byte Speechcraft => _structData.Span[0x14];
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x15, 0x4));
+        public Byte Strength => _structData.Span[0x19];
+        public Byte Intelligence => _structData.Span[0x1A];
+        public Byte Willpower => _structData.Span[0x1B];
+        public Byte Agility => _structData.Span[0x1C];
+        public Byte Speed => _structData.Span[0x1D];
+        public Byte Endurance => _structData.Span[0x1E];
+        public Byte Personality => _structData.Span[0x1F];
+        public Byte Luck => _structData.Span[0x20];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2628,10 +2628,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected NpcDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2642,11 +2642,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x21,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NpcDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x21 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

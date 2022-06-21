@@ -2629,74 +2629,74 @@ namespace Mutagen.Bethesda.Fallout4
         #region Duration
         private int _DurationLocation => _DATALocation!.Value.Min;
         private bool _Duration_IsSet => _DATALocation.HasValue;
-        public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
+        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Orientation
         private int _OrientationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Orientation_IsSet => _DATALocation.HasValue;
-        public Impact.OrientationType Orientation => _Orientation_IsSet ? (Impact.OrientationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_OrientationLocation, 0x4)) : default;
+        public Impact.OrientationType Orientation => _Orientation_IsSet ? (Impact.OrientationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OrientationLocation, 0x4)) : default;
         #endregion
         #region AngleThreshold
         private int _AngleThresholdLocation => _DATALocation!.Value.Min + 0x8;
         private bool _AngleThreshold_IsSet => _DATALocation.HasValue;
-        public Single AngleThreshold => _AngleThreshold_IsSet ? _data.Slice(_AngleThresholdLocation, 4).Float() : default;
+        public Single AngleThreshold => _AngleThreshold_IsSet ? _recordData.Slice(_AngleThresholdLocation, 4).Float() : default;
         #endregion
         #region PlacementRadius
         private int _PlacementRadiusLocation => _DATALocation!.Value.Min + 0xC;
         private bool _PlacementRadius_IsSet => _DATALocation.HasValue;
-        public Single PlacementRadius => _PlacementRadius_IsSet ? _data.Slice(_PlacementRadiusLocation, 4).Float() : default;
+        public Single PlacementRadius => _PlacementRadius_IsSet ? _recordData.Slice(_PlacementRadiusLocation, 4).Float() : default;
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x10;
         private bool _SoundLevel_IsSet => _DATALocation.HasValue;
-        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
         #endregion
         #region NoDecalData
         private int _NoDecalDataLocation => _DATALocation!.Value.Min + 0x14;
         private bool _NoDecalData_IsSet => _DATALocation.HasValue;
-        public Boolean NoDecalData => _NoDecalData_IsSet ? _data.Slice(_NoDecalDataLocation, 1)[0] >= 1 : default;
+        public Boolean NoDecalData => _NoDecalData_IsSet ? _recordData.Slice(_NoDecalDataLocation, 1)[0] >= 1 : default;
         #endregion
         #region Result
         private int _ResultLocation => _DATALocation!.Value.Min + 0x15;
         private bool _Result_IsSet => _DATALocation.HasValue;
-        public Impact.ResultType Result => _Result_IsSet ? (Impact.ResultType)_data.Span.Slice(_ResultLocation, 0x1)[0] : default;
+        public Impact.ResultType Result => _Result_IsSet ? (Impact.ResultType)_recordData.Span.Slice(_ResultLocation, 0x1)[0] : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x16;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;
-        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new OverlayStream(_data.Slice(_DecalLocation!.Value.Min), _package), _package) : default;
+        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(_recordData.Slice(_DecalLocation!.Value.Min), _package) : default;
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region SecondaryTextureSet
         private int? _SecondaryTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Sound1
         private int? _Sound1Location;
-        public IFormLinkNullableGetter<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Sound2
         private int? _Sound2Location;
-        public IFormLinkNullableGetter<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region FootstepExplosion
         private int? _FootstepExplosionLocation;
-        public IFormLinkNullableGetter<IExplosionGetter> FootstepExplosion => _FootstepExplosionLocation.HasValue ? new FormLinkNullable<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FootstepExplosionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IExplosionGetter>.Null;
+        public IFormLinkNullableGetter<IExplosionGetter> FootstepExplosion => _FootstepExplosionLocation.HasValue ? new FormLinkNullable<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FootstepExplosionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IExplosionGetter>.Null;
         #endregion
         #region Hazard
         private int? _HazardLocation;
-        public IFormLinkNullableGetter<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
+        public IFormLinkNullableGetter<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
         #endregion
         #region FootstepParticleMaxDist
         private int? _FootstepParticleMaxDistLocation;
-        public Single? FootstepParticleMaxDist => _FootstepParticleMaxDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FootstepParticleMaxDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? FootstepParticleMaxDist => _FootstepParticleMaxDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FootstepParticleMaxDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2705,10 +2705,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ImpactBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2720,13 +2720,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ImpactBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

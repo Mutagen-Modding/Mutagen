@@ -9,20 +9,20 @@ partial class WaterNoisePropertiesBinaryOverlay
 {
     private readonly SubrecordFrame? _textureRec;
 
-    public float WindDirection => BinaryPrimitives.ReadSingleLittleEndian(_data);
+    public float WindDirection => BinaryPrimitives.ReadSingleLittleEndian(_structData);
 
-    public float WindSpeed => BinaryPrimitives.ReadSingleLittleEndian(_data.Slice(12));
+    public float WindSpeed => BinaryPrimitives.ReadSingleLittleEndian(_structData.Slice(12));
 
-    public float AmplitudeScale => BinaryPrimitives.ReadSingleLittleEndian(_data.Slice(24));
+    public float AmplitudeScale => BinaryPrimitives.ReadSingleLittleEndian(_structData.Slice(24));
 
-    public float UvScale => BinaryPrimitives.ReadSingleLittleEndian(_data.Slice(36));
+    public float UvScale => BinaryPrimitives.ReadSingleLittleEndian(_structData.Slice(36));
 
-    public float NoiseFalloff => BinaryPrimitives.ReadSingleLittleEndian(_data.Slice(48));
+    public float NoiseFalloff => BinaryPrimitives.ReadSingleLittleEndian(_structData.Slice(48));
 
     public string? Texture => _textureRec?.AsString(_package.MetaData.Encodings.NonTranslated);
 
     public WaterNoisePropertiesBinaryOverlay(ReadOnlyMemorySlice<byte> data, SubrecordFrame? textureRec, BinaryOverlayFactoryPackage package)
-        : base(data, package)
+        : base(MemoryPair.StructMemory(data), package)
     {
         _textureRec = textureRec;
     }

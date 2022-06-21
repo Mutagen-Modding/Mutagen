@@ -1704,15 +1704,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Flags
         private int? _FlagsLocation;
-        public AStoryManagerNode.Flag? Flags => _FlagsLocation.HasValue ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AStoryManagerNode.Flag?);
+        public AStoryManagerNode.Flag? Flags => _FlagsLocation.HasValue ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AStoryManagerNode.Flag?);
         #endregion
         #region MaxConcurrentQuests
         private int? _MaxConcurrentQuestsLocation;
-        public UInt32? MaxConcurrentQuests => _MaxConcurrentQuestsLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaxConcurrentQuestsLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? MaxConcurrentQuests => _MaxConcurrentQuestsLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxConcurrentQuestsLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region Type
         private int? _TypeLocation;
-        public RecordType? Type => _TypeLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
+        public RecordType? Type => _TypeLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1721,10 +1721,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected StoryManagerEventNodeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1736,13 +1736,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new StoryManagerEventNodeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

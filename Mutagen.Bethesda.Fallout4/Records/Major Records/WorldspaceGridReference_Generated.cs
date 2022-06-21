@@ -1248,9 +1248,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public P2Int16 GridPosition => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));
+        public P2Int16 GridPosition => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x4));
         #region References
-        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<IWorldspaceReferenceGetter>(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
+        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<IWorldspaceReferenceGetter>(_structData.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
         protected int ReferencesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1260,10 +1260,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected WorldspaceGridReferenceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1274,12 +1274,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WorldspaceGridReferenceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x4)) * 8 + 4;
+            ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) * 8 + 4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

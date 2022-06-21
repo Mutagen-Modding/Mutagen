@@ -57,7 +57,7 @@ partial class GlobalShortBinaryOverlay
     public partial short? GetDataCustom()
     {
         if (!_DataLocation.HasValue) return null;
-        return (short)HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants).Float();
+        return (short)HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants).Float();
     }
     partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
     {

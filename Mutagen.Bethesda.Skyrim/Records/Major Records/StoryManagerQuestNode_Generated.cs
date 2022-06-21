@@ -1991,20 +1991,20 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public AStoryManagerNode.Flag Flags => _Flags_IsSet ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
+        public AStoryManagerNode.Flag Flags => _Flags_IsSet ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
         #endregion
         #region QuestFlags
         private int _QuestFlagsLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _QuestFlags_IsSet => _DNAMLocation.HasValue;
-        public StoryManagerQuestNode.QuestFlag QuestFlags => _QuestFlags_IsSet ? (StoryManagerQuestNode.QuestFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_QuestFlagsLocation, 0x2)) : default;
+        public StoryManagerQuestNode.QuestFlag QuestFlags => _QuestFlags_IsSet ? (StoryManagerQuestNode.QuestFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_QuestFlagsLocation, 0x2)) : default;
         #endregion
         #region MaxConcurrentQuests
         private int? _MaxConcurrentQuestsLocation;
-        public UInt32? MaxConcurrentQuests => _MaxConcurrentQuestsLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaxConcurrentQuestsLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? MaxConcurrentQuests => _MaxConcurrentQuestsLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxConcurrentQuestsLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region MaxNumQuestsToRun
         private int? _MaxNumQuestsToRunLocation;
-        public UInt32? MaxNumQuestsToRun => _MaxNumQuestsToRunLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaxNumQuestsToRunLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? MaxNumQuestsToRun => _MaxNumQuestsToRunLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxNumQuestsToRunLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = Array.Empty<IStoryManagerQuestGetter>();
         partial void CustomFactoryEnd(
@@ -2014,10 +2014,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected StoryManagerQuestNodeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2029,13 +2029,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new StoryManagerQuestNodeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

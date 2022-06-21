@@ -1287,11 +1287,11 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Percent PercentFrequencyShift => PercentBinaryTranslation.GetPercent(_data.Slice(0x0, 0x1), FloatIntegerType.Byte);
-        public Percent PercentFrequencyVariance => PercentBinaryTranslation.GetPercent(_data.Slice(0x1, 0x1), FloatIntegerType.Byte);
-        public SByte Priority => (sbyte)_data.Slice(0x2, 0x1)[0];
-        public SByte Variance => (sbyte)_data.Slice(0x3, 0x1)[0];
-        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(0x4, 0x2), FloatIntegerType.UShort, 0.01);
+        public Percent PercentFrequencyShift => PercentBinaryTranslation.GetPercent(_structData.Slice(0x0, 0x1), FloatIntegerType.Byte);
+        public Percent PercentFrequencyVariance => PercentBinaryTranslation.GetPercent(_structData.Slice(0x1, 0x1), FloatIntegerType.Byte);
+        public SByte Priority => (sbyte)_structData.Slice(0x2, 0x1)[0];
+        public SByte Variance => (sbyte)_structData.Slice(0x3, 0x1)[0];
+        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x4, 0x2), FloatIntegerType.UShort, 0.01);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1299,10 +1299,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SoundDescriptorStandardDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1313,10 +1313,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x6,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundDescriptorStandardDataBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x6),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x6;
             ret.CustomFactoryEnd(
                 stream: stream,

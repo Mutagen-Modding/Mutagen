@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Data
         private RangeInt32? _DataLocation;
-        private IQuestTargetDataGetter? _Data => _DataLocation.HasValue ? QuestTargetDataBinaryOverlay.QuestTargetDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        private IQuestTargetDataGetter? _Data => _DataLocation.HasValue ? QuestTargetDataBinaryOverlay.QuestTargetDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         public IQuestTargetDataGetter Data => _Data ?? new QuestTargetData();
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
@@ -1315,10 +1315,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected QuestTargetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1329,10 +1329,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestTargetBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

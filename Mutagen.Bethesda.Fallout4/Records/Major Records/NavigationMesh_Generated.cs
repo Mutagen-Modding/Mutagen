@@ -1835,15 +1835,15 @@ namespace Mutagen.Bethesda.Fallout4
         #region NavmeshGeometry
         private int? _NavmeshGeometryLengthOverride;
         private RangeInt32? _NavmeshGeometryLocation;
-        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package, TypedParseParams.FromLengthOverride(_NavmeshGeometryLengthOverride)) : default;
+        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(_recordData.Slice(_NavmeshGeometryLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_NavmeshGeometryLengthOverride)) : default;
         #endregion
         #region ONAM
         private int? _ONAMLocation;
-        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => _ONAMLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ONAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
+        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => _ONAMLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ONAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
         #endregion
         #region NNAM
         private int? _NNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IPreCutMapEntryGetter>? PreCutMapEntries { get; private set; }
         partial void CustomFactoryEnd(
@@ -1853,10 +1853,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected NavigationMeshBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1868,13 +1868,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavigationMeshBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

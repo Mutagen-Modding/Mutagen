@@ -217,7 +217,7 @@ partial class AObjectModificationBinaryOverlay
         OverlayStream stream,
         int offset)
     {
-        _dataBytes = HeaderTranslation.ExtractSubrecordMemory(_data, stream.Position - offset, _package.MetaData.Constants);
+        _dataBytes = HeaderTranslation.ExtractSubrecordMemory(_recordData, stream.Position - offset, _package.MetaData.Constants);
         var includeCount = BinaryPrimitives.ReadUInt32LittleEndian(_dataBytes);
         var propertyCount = BinaryPrimitives.ReadUInt32LittleEndian(_dataBytes.Slice(4));
         var attachParentSlotsCount = BinaryPrimitives.ReadUInt32LittleEndian(_dataBytes.Slice(0x14));

@@ -58,39 +58,39 @@ partial class LodBinaryWriteTranslation
 
 partial class LodBinaryOverlay
 {
-    public string Level0 => LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData)), out var _);
+    public string Level0 => LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_structData, _package.MetaData)), out var _);
     public ReadOnlyMemorySlice<byte>? Level0Extra
     {
         get
         {
-            LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData)), out var bytes);
+            LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_structData, _package.MetaData)), out var bytes);
             return bytes;
         }
     }
-    public string Level1 => LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(LodBinaryCreateTranslation.TotalLen), _package.MetaData)), out var _);
+    public string Level1 => LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen), _package.MetaData)), out var _);
     public ReadOnlyMemorySlice<byte>? Level1Extra
     {
         get
         {
-            LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(LodBinaryCreateTranslation.TotalLen), _package.MetaData)), out var bytes);
+            LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen), _package.MetaData)), out var bytes);
             return bytes;
         }
     }
-    public string Level2 => LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(LodBinaryCreateTranslation.TotalLen * 2), _package.MetaData)), out var _);
+    public string Level2 => LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen * 2), _package.MetaData)), out var _);
     public ReadOnlyMemorySlice<byte>? Level2Extra
     {
         get
         {
-            LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(LodBinaryCreateTranslation.TotalLen * 2), _package.MetaData)), out var bytes);
+            LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen * 2), _package.MetaData)), out var bytes);
             return bytes;
         }
     }
-    public string Level3 => LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(LodBinaryCreateTranslation.TotalLen * 3), _package.MetaData)), out var _);
+    public string Level3 => LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen * 3), _package.MetaData)), out var _);
     public ReadOnlyMemorySlice<byte>? Level3Extra
     {
         get
         {
-            LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(LodBinaryCreateTranslation.TotalLen * 3), _package.MetaData)), out var bytes);
+            LodBinaryCreateTranslation.ReadString(new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen * 3), _package.MetaData)), out var bytes);
             return bytes;
         }
     }

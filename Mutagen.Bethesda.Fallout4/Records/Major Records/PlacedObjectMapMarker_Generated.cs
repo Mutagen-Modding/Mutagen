@@ -1370,11 +1370,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Flags
         private int? _FlagsLocation;
-        public PlacedObjectMapMarker.Flag Flags => _FlagsLocation.HasValue ? (PlacedObjectMapMarker.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(PlacedObjectMapMarker.Flag);
+        public PlacedObjectMapMarker.Flag Flags => _FlagsLocation.HasValue ? (PlacedObjectMapMarker.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(PlacedObjectMapMarker.Flag);
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -1385,12 +1385,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Type
         private int _TypeLocation => _TNAMLocation!.Value.Min;
         private bool _Type_IsSet => _TNAMLocation.HasValue;
-        public PlacedObjectMapMarker.Types Type => _Type_IsSet ? (PlacedObjectMapMarker.Types)_data.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public PlacedObjectMapMarker.Types Type => _Type_IsSet ? (PlacedObjectMapMarker.Types)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _TNAMLocation!.Value.Min + 0x1;
         private bool _Unknown_IsSet => _TNAMLocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1399,10 +1399,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected PlacedObjectMapMarkerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1413,10 +1413,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PlacedObjectMapMarkerBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

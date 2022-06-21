@@ -1271,17 +1271,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region Owner
         private int _OwnerLocation => _XOWNLocation!.Value.Min;
         private bool _Owner_IsSet => _XOWNLocation.HasValue;
-        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
         #endregion
         #region Unknown
         private int _UnknownLocation => _XOWNLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _XOWNLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region NoCrime
         private int _NoCrimeLocation => _XOWNLocation!.Value.Min + 0x8;
         private bool _NoCrime_IsSet => _XOWNLocation.HasValue;
-        public Boolean NoCrime => _NoCrime_IsSet ? _data.Slice(_NoCrimeLocation, 4)[0] >= 1 : default;
+        public Boolean NoCrime => _NoCrime_IsSet ? _recordData.Slice(_NoCrimeLocation, 4)[0] >= 1 : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1290,10 +1290,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected OwnershipBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1304,10 +1304,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new OwnershipBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

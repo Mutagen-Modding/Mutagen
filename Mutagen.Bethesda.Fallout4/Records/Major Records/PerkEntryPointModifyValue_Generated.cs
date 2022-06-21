@@ -1302,10 +1302,10 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public PerkEntryPointModifyValue.ModificationType Modification => (PerkEntryPointModifyValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
+        public PerkEntryPointModifyValue.ModificationType Modification => (PerkEntryPointModifyValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x2, 0x4));
         #region Value
         private int? _ValueLocation;
-        public Single? Value => _ValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Value => _ValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1314,10 +1314,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected PerkEntryPointModifyValueBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1328,10 +1328,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkEntryPointModifyValueBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

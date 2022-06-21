@@ -1202,7 +1202,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Structs
-        public IReadOnlyList<IScriptStructPropertyGetter> Structs => BinaryOverlayList.FactoryByLazyParse<IScriptStructPropertyGetter>(_data, _package, countLength: 4, (s, p) => ScriptStructPropertyBinaryOverlay.ScriptStructPropertyFactory(s, p));
+        public IReadOnlyList<IScriptStructPropertyGetter> Structs => BinaryOverlayList.FactoryByLazyParse<IScriptStructPropertyGetter>(_structData, _package, countLength: 4, (s, p) => ScriptStructPropertyBinaryOverlay.ScriptStructPropertyFactory(s, p));
         protected int StructsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1212,10 +1212,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ScriptStructListPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1226,10 +1226,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ScriptStructListPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += ret.StructsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

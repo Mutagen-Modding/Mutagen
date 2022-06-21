@@ -94,10 +94,10 @@ partial class QuestAdapterBinaryOverlay
 
     partial void CustomFileNameEndPos()
     {
-        if (this._data.Length <= this.ScriptsEndingPos) return;
+        if (_structData.Length <= this.ScriptsEndingPos) return;
         var frame = new MutagenFrame(
             new MutagenInterfaceReadStream(
-                new BinaryMemoryReadStream(_data.Slice(ScriptsEndingPos)),
+                new BinaryMemoryReadStream(_structData.Slice(ScriptsEndingPos)),
                 _package.MetaData));
         // Skip unknown
         frame.Position += 1;

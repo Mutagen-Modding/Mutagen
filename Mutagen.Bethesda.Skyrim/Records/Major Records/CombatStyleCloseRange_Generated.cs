@@ -1290,10 +1290,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public CombatStyleCloseRange.VersioningBreaks Versioning { get; private set; }
-        public Single CircleMult => _data.Slice(0x0, 0x4).Float();
-        public Single FallbackMult => _data.Slice(0x4, 0x4).Float();
-        public Single FlankDistance => _data.Length <= 0x8 ? default : _data.Slice(0x8, 0x4).Float();
-        public Single StalkTime => _data.Length <= 0xC ? default : _data.Slice(0xC, 0x4).Float();
+        public Single CircleMult => _structData.Slice(0x0, 0x4).Float();
+        public Single FallbackMult => _structData.Slice(0x4, 0x4).Float();
+        public Single FlankDistance => _structData.Length <= 0x8 ? default : _structData.Slice(0x8, 0x4).Float();
+        public Single StalkTime => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1301,10 +1301,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected CombatStyleCloseRangeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1315,12 +1315,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CombatStyleCloseRangeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x8)
+            if (ret._structData.Length <= 0x8)
             {
                 ret.Versioning |= CombatStyleCloseRange.VersioningBreaks.Break0;
             }

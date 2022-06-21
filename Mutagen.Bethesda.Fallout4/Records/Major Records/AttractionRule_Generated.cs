@@ -1733,32 +1733,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region Radius
         private int _RadiusLocation => _AOR2Location!.Value.Min;
         private bool _Radius_IsSet => _AOR2Location.HasValue;
-        public Single Radius => _Radius_IsSet ? _data.Slice(_RadiusLocation, 4).Float() : default;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
         #endregion
         #region MinDelay
         private int _MinDelayLocation => _AOR2Location!.Value.Min + 0x4;
         private bool _MinDelay_IsSet => _AOR2Location.HasValue;
-        public Single MinDelay => _MinDelay_IsSet ? _data.Slice(_MinDelayLocation, 4).Float() : default;
+        public Single MinDelay => _MinDelay_IsSet ? _recordData.Slice(_MinDelayLocation, 4).Float() : default;
         #endregion
         #region MaxDelay
         private int _MaxDelayLocation => _AOR2Location!.Value.Min + 0x8;
         private bool _MaxDelay_IsSet => _AOR2Location.HasValue;
-        public Single MaxDelay => _MaxDelay_IsSet ? _data.Slice(_MaxDelayLocation, 4).Float() : default;
+        public Single MaxDelay => _MaxDelay_IsSet ? _recordData.Slice(_MaxDelayLocation, 4).Float() : default;
         #endregion
         #region RequiresLineOfSight
         private int _RequiresLineOfSightLocation => _AOR2Location!.Value.Min + 0xC;
         private bool _RequiresLineOfSight_IsSet => _AOR2Location.HasValue;
-        public Boolean RequiresLineOfSight => _RequiresLineOfSight_IsSet ? _data.Slice(_RequiresLineOfSightLocation, 1)[0] >= 1 : default;
+        public Boolean RequiresLineOfSight => _RequiresLineOfSight_IsSet ? _recordData.Slice(_RequiresLineOfSightLocation, 1)[0] >= 1 : default;
         #endregion
         #region IsCombatTarget
         private int _IsCombatTargetLocation => _AOR2Location!.Value.Min + 0xD;
         private bool _IsCombatTarget_IsSet => _AOR2Location.HasValue;
-        public Boolean IsCombatTarget => _IsCombatTarget_IsSet ? _data.Slice(_IsCombatTargetLocation, 1)[0] >= 1 : default;
+        public Boolean IsCombatTarget => _IsCombatTarget_IsSet ? _recordData.Slice(_IsCombatTargetLocation, 1)[0] >= 1 : default;
         #endregion
         #region Unused
         private int _UnusedLocation => _AOR2Location!.Value.Min + 0xE;
         private bool _Unused_IsSet => _AOR2Location.HasValue;
-        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnusedLocation, 2)) : default;
+        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1767,10 +1767,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected AttractionRuleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1782,13 +1782,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AttractionRuleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

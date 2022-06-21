@@ -1166,11 +1166,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region AliasID
         private int? _AliasIDLocation;
-        public Int32 AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIDLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AliasIDLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         #region MaxInitialFillCount
         private int? _MaxInitialFillCountLocation;
-        public Byte? MaxInitialFillCount => _MaxInitialFillCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MaxInitialFillCountLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? MaxInitialFillCount => _MaxInitialFillCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxInitialFillCountLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1179,10 +1179,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected CollectionAliasBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1193,10 +1193,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CollectionAliasBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

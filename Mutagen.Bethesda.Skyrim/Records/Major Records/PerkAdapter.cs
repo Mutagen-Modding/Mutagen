@@ -23,9 +23,9 @@ partial class PerkAdapterBinaryOverlay
 {
     public partial IPerkScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
     {
-        if (this.ScriptsEndingPos == _data.Length) return null;
+        if (ScriptsEndingPos == _structData.Length) return null;
         return PerkScriptFragmentsBinaryOverlay.PerkScriptFragmentsFactory(
-            _data.Slice(this.ScriptsEndingPos),
+            _structData.Slice(this.ScriptsEndingPos),
             _package);
     }
 }

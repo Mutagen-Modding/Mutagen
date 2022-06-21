@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Header
         private RangeInt32? _HeaderLocation;
-        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(new OverlayStream(_data.Slice(_HeaderLocation!.Value.Min), _package), _package) : default;
+        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(_recordData.Slice(_HeaderLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1113,10 +1113,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected RegionDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

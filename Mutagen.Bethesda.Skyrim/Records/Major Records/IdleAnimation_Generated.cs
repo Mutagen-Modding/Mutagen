@@ -2206,11 +2206,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Filename
         private int? _FilenameLocation;
-        public String? Filename => _FilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Filename => _FilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region AnimationEvent
         private int? _AnimationEventLocation;
-        public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = Array.Empty<IFormLinkGetter<IIdleRelationGetter>>();
         private RangeInt32? _DATALocation;
@@ -2218,27 +2218,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region LoopingSecondsMin
         private int _LoopingSecondsMinLocation => _DATALocation!.Value.Min;
         private bool _LoopingSecondsMin_IsSet => _DATALocation.HasValue;
-        public Byte LoopingSecondsMin => _LoopingSecondsMin_IsSet ? _data.Span[_LoopingSecondsMinLocation] : default;
+        public Byte LoopingSecondsMin => _LoopingSecondsMin_IsSet ? _recordData.Span[_LoopingSecondsMinLocation] : default;
         #endregion
         #region LoopingSecondsMax
         private int _LoopingSecondsMaxLocation => _DATALocation!.Value.Min + 0x1;
         private bool _LoopingSecondsMax_IsSet => _DATALocation.HasValue;
-        public Byte LoopingSecondsMax => _LoopingSecondsMax_IsSet ? _data.Span[_LoopingSecondsMaxLocation] : default;
+        public Byte LoopingSecondsMax => _LoopingSecondsMax_IsSet ? _recordData.Span[_LoopingSecondsMaxLocation] : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public IdleAnimation.Flag Flags => _Flags_IsSet ? (IdleAnimation.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public IdleAnimation.Flag Flags => _Flags_IsSet ? (IdleAnimation.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region AnimationGroupSection
         private int _AnimationGroupSectionLocation => _DATALocation!.Value.Min + 0x3;
         private bool _AnimationGroupSection_IsSet => _DATALocation.HasValue;
-        public Byte AnimationGroupSection => _AnimationGroupSection_IsSet ? _data.Span[_AnimationGroupSectionLocation] : default;
+        public Byte AnimationGroupSection => _AnimationGroupSection_IsSet ? _recordData.Span[_AnimationGroupSectionLocation] : default;
         #endregion
         #region ReplayDelay
         private int _ReplayDelayLocation => _DATALocation!.Value.Min + 0x4;
         private bool _ReplayDelay_IsSet => _DATALocation.HasValue;
-        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_ReplayDelayLocation, 2)) : default;
+        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ReplayDelayLocation, 2)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2247,10 +2247,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected IdleAnimationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2262,13 +2262,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new IdleAnimationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

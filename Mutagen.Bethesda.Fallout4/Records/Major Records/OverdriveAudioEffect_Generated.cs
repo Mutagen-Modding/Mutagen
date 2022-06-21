@@ -1230,10 +1230,10 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single InputGain => _data.Slice(0x4, 0x4).Float();
-        public Single OutputGain => _data.Slice(0x8, 0x4).Float();
-        public Single UpperThreshold => _data.Slice(0xC, 0x4).Float();
-        public Single LowerThreshold => _data.Slice(0x10, 0x4).Float();
+        public Single InputGain => _structData.Slice(0x4, 0x4).Float();
+        public Single OutputGain => _structData.Slice(0x8, 0x4).Float();
+        public Single UpperThreshold => _structData.Slice(0xC, 0x4).Float();
+        public Single LowerThreshold => _structData.Slice(0x10, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1241,10 +1241,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected OverdriveAudioEffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1255,10 +1255,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new OverdriveAudioEffectBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x14),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x14;
             ret.CustomFactoryEnd(
                 stream: stream,

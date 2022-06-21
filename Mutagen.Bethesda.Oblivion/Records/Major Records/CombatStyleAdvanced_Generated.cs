@@ -2156,27 +2156,27 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Single DodgeFatigueModMult => _data.Slice(0x0, 0x4).Float();
-        public Single DodgeFatigueModBase => _data.Slice(0x4, 0x4).Float();
-        public Single EncumbSpeedModBase => _data.Slice(0x8, 0x4).Float();
-        public Single EncumbSpeedModMult => _data.Slice(0xC, 0x4).Float();
-        public Single DodgeWhileUnderAttackMult => _data.Slice(0x10, 0x4).Float();
-        public Single DodgeNotUnderAttackMult => _data.Slice(0x14, 0x4).Float();
-        public Single DodgeBackWhileUnderAttackMult => _data.Slice(0x18, 0x4).Float();
-        public Single DodgeBackNotUnderAttackMult => _data.Slice(0x1C, 0x4).Float();
-        public Single DodgeForwardWhileUnderAttackMult => _data.Slice(0x20, 0x4).Float();
-        public Single DodgeForwardNotUnderAttackMult => _data.Slice(0x24, 0x4).Float();
-        public Single BlockSkillModifierMult => _data.Slice(0x28, 0x4).Float();
-        public Single BlockSkillModifierBase => _data.Slice(0x2C, 0x4).Float();
-        public Single BlockWhileUnderAttackMult => _data.Slice(0x30, 0x4).Float();
-        public Single BlockNotUnderAttackMult => _data.Slice(0x34, 0x4).Float();
-        public Single AttackSkillModifierMult => _data.Slice(0x38, 0x4).Float();
-        public Single AttackSkillModifierBase => _data.Slice(0x3C, 0x4).Float();
-        public Single AttackWhileUnderAttackMult => _data.Slice(0x40, 0x4).Float();
-        public Single AttackNotUnderAttackMult => _data.Slice(0x44, 0x4).Float();
-        public Single AttackDuringBlockMult => _data.Slice(0x48, 0x4).Float();
-        public Single PowerAttackFatigueModBase => _data.Slice(0x4C, 0x4).Float();
-        public Single PowerAttackFatigueModMult => _data.Slice(0x50, 0x4).Float();
+        public Single DodgeFatigueModMult => _structData.Slice(0x0, 0x4).Float();
+        public Single DodgeFatigueModBase => _structData.Slice(0x4, 0x4).Float();
+        public Single EncumbSpeedModBase => _structData.Slice(0x8, 0x4).Float();
+        public Single EncumbSpeedModMult => _structData.Slice(0xC, 0x4).Float();
+        public Single DodgeWhileUnderAttackMult => _structData.Slice(0x10, 0x4).Float();
+        public Single DodgeNotUnderAttackMult => _structData.Slice(0x14, 0x4).Float();
+        public Single DodgeBackWhileUnderAttackMult => _structData.Slice(0x18, 0x4).Float();
+        public Single DodgeBackNotUnderAttackMult => _structData.Slice(0x1C, 0x4).Float();
+        public Single DodgeForwardWhileUnderAttackMult => _structData.Slice(0x20, 0x4).Float();
+        public Single DodgeForwardNotUnderAttackMult => _structData.Slice(0x24, 0x4).Float();
+        public Single BlockSkillModifierMult => _structData.Slice(0x28, 0x4).Float();
+        public Single BlockSkillModifierBase => _structData.Slice(0x2C, 0x4).Float();
+        public Single BlockWhileUnderAttackMult => _structData.Slice(0x30, 0x4).Float();
+        public Single BlockNotUnderAttackMult => _structData.Slice(0x34, 0x4).Float();
+        public Single AttackSkillModifierMult => _structData.Slice(0x38, 0x4).Float();
+        public Single AttackSkillModifierBase => _structData.Slice(0x3C, 0x4).Float();
+        public Single AttackWhileUnderAttackMult => _structData.Slice(0x40, 0x4).Float();
+        public Single AttackNotUnderAttackMult => _structData.Slice(0x44, 0x4).Float();
+        public Single AttackDuringBlockMult => _structData.Slice(0x48, 0x4).Float();
+        public Single PowerAttackFatigueModBase => _structData.Slice(0x4C, 0x4).Float();
+        public Single PowerAttackFatigueModMult => _structData.Slice(0x50, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2184,10 +2184,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected CombatStyleAdvancedBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2198,11 +2198,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x54,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CombatStyleAdvancedBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x54 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

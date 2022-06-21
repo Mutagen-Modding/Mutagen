@@ -2104,16 +2104,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Slot
         private int _SlotLocation => _TETILocation!.Value.Min;
         private bool _Slot_IsSet => _TETILocation.HasValue;
-        public TintTemplateOption.TintSlot Slot => _Slot_IsSet ? (TintTemplateOption.TintSlot)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_SlotLocation, 0x2)) : default;
+        public TintTemplateOption.TintSlot Slot => _Slot_IsSet ? (TintTemplateOption.TintSlot)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_SlotLocation, 0x2)) : default;
         #endregion
         #region Index
         private int _IndexLocation => _TETILocation!.Value.Min + 0x2;
         private bool _Index_IsSet => _TETILocation.HasValue;
-        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_IndexLocation, 2)) : default;
+        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default;
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2125,18 +2125,18 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public TintTemplateOption.Flag? Flags => _FlagsLocation.HasValue ? (TintTemplateOption.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TintTemplateOption.Flag?);
+        public TintTemplateOption.Flag? Flags => _FlagsLocation.HasValue ? (TintTemplateOption.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TintTemplateOption.Flag?);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IReadOnlyList<String> Textures { get; private set; } = Array.Empty<String>();
         #region BlendOperation
         private int? _BlendOperationLocation;
-        public BlendOperation? BlendOperation => _BlendOperationLocation.HasValue ? (BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BlendOperationLocation!.Value, _package.MetaData.Constants)) : default(BlendOperation?);
+        public BlendOperation? BlendOperation => _BlendOperationLocation.HasValue ? (BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlendOperationLocation!.Value, _package.MetaData.Constants)) : default(BlendOperation?);
         #endregion
         public IReadOnlyList<ITintTemplateColorGetter>? TemplateColors { get; private set; }
         #region Default
         private int? _DefaultLocation;
-        public Single? Default => _DefaultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Default => _DefaultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2145,10 +2145,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected TintTemplateOptionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2159,10 +2159,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TintTemplateOptionBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

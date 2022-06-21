@@ -1514,14 +1514,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public LightData.VersioningBreaks Versioning { get; private set; }
-        public Int32 Time => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public Color Color => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Light.LightFlag Flags => (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
-        public Single FalloffExponent => _data.Slice(0x10, 0x4).Float();
-        public Single FOV => _data.Slice(0x14, 0x4).Float();
-        public UInt32 Value => _data.Length <= 0x18 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x18, 0x4));
-        public Single Weight => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).Float();
+        public Int32 Time => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Color Color => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Light.LightFlag Flags => (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
+        public Single FalloffExponent => _structData.Slice(0x10, 0x4).Float();
+        public Single FOV => _structData.Slice(0x14, 0x4).Float();
+        public UInt32 Value => _structData.Length <= 0x18 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x18, 0x4));
+        public Single Weight => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1529,10 +1529,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected LightDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1543,12 +1543,17 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LightDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x18)
+            if (ret._structData.Length <= 0x18)
             {
                 ret.Versioning |= LightData.VersioningBreaks.Break0;
             }

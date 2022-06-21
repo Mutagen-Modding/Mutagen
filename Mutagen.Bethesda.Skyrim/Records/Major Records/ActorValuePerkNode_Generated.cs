@@ -1759,36 +1759,36 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Perk
         private int? _PerkLocation;
-        public IFormLinkGetter<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
         #endregion
         #region FNAM
         private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region PerkGridX
         private int? _PerkGridXLocation;
-        public UInt32? PerkGridX => _PerkGridXLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkGridXLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? PerkGridX => _PerkGridXLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkGridXLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region PerkGridY
         private int? _PerkGridYLocation;
-        public UInt32? PerkGridY => _PerkGridYLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkGridYLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? PerkGridY => _PerkGridYLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkGridYLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region HorizontalPosition
         private int? _HorizontalPositionLocation;
-        public Single? HorizontalPosition => _HorizontalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HorizontalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? HorizontalPosition => _HorizontalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HorizontalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region VerticalPosition
         private int? _VerticalPositionLocation;
-        public Single? VerticalPosition => _VerticalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VerticalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? VerticalPosition => _VerticalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VerticalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region AssociatedSkill
         private int? _AssociatedSkillLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
         #endregion
         public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = Array.Empty<UInt32>();
         #region Index
         private int? _IndexLocation;
-        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1797,10 +1797,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ActorValuePerkNodeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1811,10 +1811,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ActorValuePerkNodeBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

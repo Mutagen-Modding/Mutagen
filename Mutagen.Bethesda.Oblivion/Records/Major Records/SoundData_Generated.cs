@@ -1302,8 +1302,8 @@ namespace Mutagen.Bethesda.Oblivion
         public partial UInt16 GetMaximumAttenuationDistanceCustom(int location);
         public UInt16 MaximumAttenuationDistance => GetMaximumAttenuationDistanceCustom(location: 0x1);
         #endregion
-        public SByte FrequencyAdjustment => (sbyte)_data.Slice(0x2, 0x1)[0];
-        public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public SByte FrequencyAdjustment => (sbyte)_structData.Slice(0x2, 0x1)[0];
+        public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1311,10 +1311,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected SoundDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1325,11 +1325,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1338,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ISoundDataGetter SoundDataFactory(
+        public static ISoundDataInternalGetter SoundDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)

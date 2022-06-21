@@ -1540,18 +1540,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public CriticalData.VersioningBreaks Versioning { get; private set; }
-        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public Single PercentMult => _data.Slice(0x4, 0x4).Float();
-        public CriticalData.Flag Flags => (CriticalData.Flag)_data.Span.Slice(0x8, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x9, 0x3).ToArray();
+        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
+        public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public Single PercentMult => _structData.Slice(0x4, 0x4).Float();
+        public CriticalData.Flag Flags => (CriticalData.Flag)_structData.Span.Slice(0x8, 0x1)[0];
+        public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(0x9, 0x3).ToArray();
         #region Unused3
-        public Int32 Unused3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
+        public Int32 Unused3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         int Unused3VersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
-        public IFormLinkGetter<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(Unused3VersioningOffset + 0x10, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(Unused3VersioningOffset + 0x10, 0x4))));
         #region Unused4
-        public Int32 Unused4 => _data.Length <= Unused3VersioningOffset + 0x14 ? default : BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(Unused3VersioningOffset + 0x14, 0x4));
+        public Int32 Unused4 => _structData.Length <= Unused3VersioningOffset + 0x14 ? default : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(Unused3VersioningOffset + 0x14, 0x4));
         int Unused4VersioningOffset => Unused3VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(
@@ -1561,10 +1561,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected CriticalDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1575,12 +1575,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x18,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CriticalDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= ret.Unused3VersioningOffset + 0x10)
+            if (ret._structData.Length <= ret.Unused3VersioningOffset + 0x10)
             {
                 ret.Versioning |= CriticalData.VersioningBreaks.Break0;
             }

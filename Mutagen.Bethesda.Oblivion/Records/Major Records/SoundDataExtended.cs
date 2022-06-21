@@ -61,11 +61,11 @@ partial class SoundDataExtendedBinaryOverlay
 
     public partial float GetStopTimeCustom(int location)
     {
-        return SoundDataExtendedBinaryCreateTranslation.ConvertTime(_data.Span[location]);
+        return SoundDataExtendedBinaryCreateTranslation.ConvertTime(_structData.Span[location]);
     }
 
     public partial float GetStartTimeCustom(int location)
     {
-        return SoundDataExtendedBinaryCreateTranslation.ConvertTime(_data.Span[location]);
+        return SoundDataExtendedBinaryCreateTranslation.ConvertTime(_structData.Span[location]);
     }
 }

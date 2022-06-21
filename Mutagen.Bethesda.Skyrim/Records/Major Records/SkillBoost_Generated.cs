@@ -1095,8 +1095,8 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public ActorValue Skill => (ActorValue)_data.Span.Slice(0x0, 0x1)[0];
-        public SByte Boost => (sbyte)_data.Slice(0x1, 0x1)[0];
+        public ActorValue Skill => (ActorValue)_structData.Span.Slice(0x0, 0x1)[0];
+        public SByte Boost => (sbyte)_structData.Slice(0x1, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1104,10 +1104,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected SkillBoostBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1118,10 +1118,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x2,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SkillBoostBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x2),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x2;
             ret.CustomFactoryEnd(
                 stream: stream,

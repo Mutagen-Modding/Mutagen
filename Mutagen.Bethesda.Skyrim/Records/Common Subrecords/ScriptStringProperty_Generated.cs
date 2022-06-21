@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Data
-        public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
+        public String Data => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x0), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1093,10 +1093,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ScriptStringPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1107,11 +1107,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ScriptStringPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.DataEndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._data) + 2;
+            ret.DataEndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
             stream.Position += ret.DataEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

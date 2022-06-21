@@ -15,8 +15,8 @@ internal class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGenderedItem
     private readonly T _fallback;
     private readonly Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> _creator;
 
-    public T Male => _male.HasValue ? _creator(_data.Slice(_male.Value), _package) : _fallback;
-    public T Female => _female.HasValue ? _creator(_data.Slice(_female.Value), _package) : _fallback;
+    public T Male => _male.HasValue ? _creator(_recordData.Slice(_male.Value), _package) : _fallback;
+    public T Female => _female.HasValue ? _creator(_recordData.Slice(_female.Value), _package) : _fallback;
 
     public GenderedItemBinaryOverlay(
         ReadOnlyMemorySlice<byte> bytes,
@@ -25,7 +25,7 @@ internal class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGenderedItem
         int? female,
         Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator,
         T fallback)
-        : base(bytes, package)
+        : base(new MemoryPair(bytes, bytes), package)
     {
         _male = male;
         _female = female;

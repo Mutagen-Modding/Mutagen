@@ -26,8 +26,8 @@ partial class SceneAdapterBinaryOverlay
 {
     public partial ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
     {
-        if (this.ScriptsEndingPos == _data.Length) return null;
+        if (this.ScriptsEndingPos == _structData.Length) return null;
         return SceneScriptFragmentsBinaryCreateTranslation.ReadFragments(frame: new MutagenFrame(
-            new OverlayStream(_data.Slice(ScriptsEndingPos), _package)), objectFormat: ObjectFormat);
+            new OverlayStream(_structData.Slice(ScriptsEndingPos), _package)), objectFormat: ObjectFormat);
     }
 }

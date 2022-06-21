@@ -58,7 +58,7 @@ partial class ClimateBinaryOverlay
         get
         {
             if (!_TNAMLocation.HasValue) return default;
-            var raw = _data[_TNAMLocation.Value.Min + 5];
+            var raw = _recordData[_TNAMLocation.Value.Min + 5];
             var ret = default(Climate.Moon);
             if (EnumExt.HasFlag(raw, ClimateBinaryCreateTranslation.MasserFlag))
             {
@@ -77,7 +77,7 @@ partial class ClimateBinaryOverlay
         get
         {
             if (!_TNAMLocation.HasValue) return default;
-            return (byte)(_data[_TNAMLocation.Value.Min + 5] % 64);
+            return (byte)(_recordData[_TNAMLocation.Value.Min + 5] % 64);
         }
     }
 }

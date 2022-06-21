@@ -1431,14 +1431,14 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single Sunrise => _data.Slice(0x0, 0x4).Float();
-        public Single Day => _data.Slice(0x4, 0x4).Float();
-        public Single Sunset => _data.Slice(0x8, 0x4).Float();
-        public Single Night => _data.Slice(0xC, 0x4).Float();
-        public Single EarlySunrise => _data.Slice(0x10, 0x4).Float();
-        public Single LateSunrise => _data.Slice(0x14, 0x4).Float();
-        public Single EarlySunset => _data.Slice(0x18, 0x4).Float();
-        public Single LateSunset => _data.Slice(0x1C, 0x4).Float();
+        public Single Sunrise => _structData.Slice(0x0, 0x4).Float();
+        public Single Day => _structData.Slice(0x4, 0x4).Float();
+        public Single Sunset => _structData.Slice(0x8, 0x4).Float();
+        public Single Night => _structData.Slice(0xC, 0x4).Float();
+        public Single EarlySunrise => _structData.Slice(0x10, 0x4).Float();
+        public Single LateSunrise => _structData.Slice(0x14, 0x4).Float();
+        public Single EarlySunset => _structData.Slice(0x18, 0x4).Float();
+        public Single LateSunset => _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1446,10 +1446,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected WeatherAlphaBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1460,10 +1460,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherAlphaBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x20),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x20;
             ret.CustomFactoryEnd(
                 stream: stream,

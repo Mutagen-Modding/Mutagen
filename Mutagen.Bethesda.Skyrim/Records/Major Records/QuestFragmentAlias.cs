@@ -45,13 +45,13 @@ partial class QuestFragmentAliasBinaryOverlay
 
     partial void CustomCtor()
     {
-        var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))
+        var frame = new MutagenFrame(new MutagenMemoryReadStream(_structData, _package.MetaData))
         {
             Position = PropertyEndingPos + 0x4
         };
         var ret = new ExtendedList<IScriptEntryGetter>();
-        ret.AddRange(VirtualMachineAdapterBinaryCreateTranslation.ReadEntries(frame, this.ObjectFormat));
-        this.Scripts = ret;
-        this.ScriptsEndingPos = checked((int)frame.Position);
+        ret.AddRange(VirtualMachineAdapterBinaryCreateTranslation.ReadEntries(frame, ObjectFormat));
+        Scripts = ret;
+        ScriptsEndingPos = checked((int)frame.Position);
     }
 }

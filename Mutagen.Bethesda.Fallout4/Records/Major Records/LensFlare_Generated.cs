@@ -1666,11 +1666,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region ColorInfluence
         private int? _ColorInfluenceLocation;
-        public Single? ColorInfluence => _ColorInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? ColorInfluence => _ColorInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region FadeDistanceRadiusScale
         private int? _FadeDistanceRadiusScaleLocation;
-        public Single? FadeDistanceRadiusScale => _FadeDistanceRadiusScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FadeDistanceRadiusScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? FadeDistanceRadiusScale => _FadeDistanceRadiusScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeDistanceRadiusScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; private set; }
         partial void CustomFactoryEnd(
@@ -1680,10 +1680,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected LensFlareBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1695,13 +1695,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LensFlareBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

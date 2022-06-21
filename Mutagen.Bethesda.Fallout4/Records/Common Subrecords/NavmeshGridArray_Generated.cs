@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region GridCell
-        public IReadOnlyList<Int16> GridCell => BinaryOverlayList.FactoryByStartIndex<Int16>(_data, _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
+        public IReadOnlyList<Int16> GridCell => BinaryOverlayList.FactoryByStartIndex<Int16>(_structData, _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         protected int GridCellEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1151,10 +1151,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected NavmeshGridArrayBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1165,11 +1165,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavmeshGridArrayBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.GridCellEndingPos = ret._data.Length;
+            ret.GridCellEndingPos = ret._structData.Length;
             stream.Position += ret.GridCellEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

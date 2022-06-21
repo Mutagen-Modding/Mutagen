@@ -34,7 +34,7 @@ partial class AddonNodeBinaryWriteTranslation
 
 partial class AddonNodeBinaryOverlay
 {
-    public partial Boolean GetAlwaysLoadedCustom() => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_AlwaysLoadedLocation)) switch
+    public partial Boolean GetAlwaysLoadedCustom() => BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_AlwaysLoadedLocation)) switch
     {
         1 => false,
         3 => true,

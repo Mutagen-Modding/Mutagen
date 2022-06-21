@@ -1683,12 +1683,12 @@ namespace Mutagen.Bethesda.Plugins.Records
                 translationParams: translationParams);
         }
 
-        public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences!);
-        public UInt32 VersionControl => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_structData.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences!);
+        public UInt32 VersionControl => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         #region EditorID
         private int? _EditorIDLocation;
-        public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditorIDLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EditorIDLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1697,10 +1697,10 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         partial void CustomCtor();
         protected MajorRecordBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();

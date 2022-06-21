@@ -293,7 +293,8 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
         StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
-        Accessor dataAccessor,
+        Accessor structDataAccessor,
+        Accessor recordDataAccessor,
         int? passedLength,
         string passedLengthAccessor,
         DataType data = null)
@@ -316,10 +317,12 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
             DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, data, objGen, typeGen, passedLengthAccessor);
         }
 
+        var accessor = data == null ? structDataAccessor : recordDataAccessor;
+
         using (var args = sb.Call(
                    $"public IReadOnlyDictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}> {typeGen.Name} => DictBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse<{dict.KeyTypeGen.TypeName(false)}>"))
         {
-            args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}{(posStr == null ? null : $".Slice({posStr})")}, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}))");
+            args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({accessor}{(posStr == null ? null : $".Slice({posStr})")}, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}))");
             args.Add($"new Dictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}>()");
             args.Add($"{subTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: true)}.Parse");
         }

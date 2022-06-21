@@ -1222,15 +1222,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region File
         private int? _FileLocation;
-        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region BoundRadius
         private int? _BoundRadiusLocation;
-        public Single BoundRadius => _BoundRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _BoundRadiusLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single BoundRadius => _BoundRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BoundRadiusLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Hashes
         private int? _HashesLocation;
-        public ReadOnlyMemorySlice<Byte>? Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1239,10 +1239,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected ModelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1253,10 +1253,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ModelBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

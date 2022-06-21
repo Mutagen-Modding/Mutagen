@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -1333,11 +1333,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LodDisplayDistanceMultiplier
         private int? _LodDisplayDistanceMultiplierLocation;
-        public override Single? LodDisplayDistanceMultiplier => _LodDisplayDistanceMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LodDisplayDistanceMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public override Single? LodDisplayDistanceMultiplier => _LodDisplayDistanceMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LodDisplayDistanceMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region OcclusionAccuracyDist
         private int? _OcclusionAccuracyDistLocation;
-        public override Single? OcclusionAccuracyDist => _OcclusionAccuracyDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OcclusionAccuracyDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public override Single? OcclusionAccuracyDist => _OcclusionAccuracyDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OcclusionAccuracyDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1346,10 +1346,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected RegionMapBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1360,10 +1360,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RegionMapBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

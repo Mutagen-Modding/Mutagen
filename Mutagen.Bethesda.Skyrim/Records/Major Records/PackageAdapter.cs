@@ -23,9 +23,9 @@ partial class PackageAdapterBinaryOverlay
 {
     public partial IPackageScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
     {
-        if (this.ScriptsEndingPos == _data.Length) return null;
+        if (ScriptsEndingPos == _structData.Length) return null;
         return PackageScriptFragmentsBinaryOverlay.PackageScriptFragmentsFactory(
-            _data.Slice(this.ScriptsEndingPos),
+            _structData.Slice(ScriptsEndingPos),
             _package);
     }
 }

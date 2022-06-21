@@ -1222,10 +1222,10 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IColorRecordGetter> Color => new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Single Alpha => _data.Slice(0x4, 0x4).Float();
-        public Int16 TemplateIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
-        public BlendOperation BlendOperation => (BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xA, 0x4));
+        public IFormLinkGetter<IColorRecordGetter> Color => new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Single Alpha => _structData.Slice(0x4, 0x4).Float();
+        public Int16 TemplateIndex => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
+        public BlendOperation BlendOperation => (BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xA, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1233,10 +1233,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected TintTemplateColorBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1247,10 +1247,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xE,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new TintTemplateColorBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xE),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xE;
             ret.CustomFactoryEnd(
                 stream: stream,

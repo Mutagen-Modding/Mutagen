@@ -62,7 +62,8 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
-        Accessor dataAccessor,
+        Accessor structDataAccessor,  
+        Accessor recordDataAccessor, 
         int? passedLength,
         string passedLengthAccesor,
         DataType _)
@@ -78,7 +79,8 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                     sb,
                     objGen,
                     typeGen,
-                    dataAccessor,
+                    structDataAccessor,
+                    recordDataAccessor,
                     passedLength,
                     passedLengthAccesor);
                 break;
@@ -120,7 +122,8 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                     sb,
                     objGen,
                     field.Field,
-                    dataAccessor,
+                    structDataAccessor,
+                    recordDataAccessor,
                     length.PassedLength,
                     passIn,
                     data: dataType);
@@ -195,7 +198,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 if (!generatedStart)
                 {
                     generatedStart = true;
-                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubrecordHeader(_data.Slice({locationAccessor})).ContentLength;");
+                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubrecordHeader(_recordData.Slice({locationAccessor})).ContentLength;");
                 }
                 sb.AppendLine($"if (subLen <= {length.PassedAccessor})");
                 using (sb.CurlyBrace())
@@ -262,6 +265,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         StructuredStringBuilder sb, 
         ObjectGeneration objGen,
         TypeGeneration typeGen,
+        Accessor dataAccessor, 
         int? passedLength,
         string passedLengthAccessor)
     {
@@ -304,6 +308,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                         sb,
                         objGen,
                         field.Field,
+                        dataAccessor,
                         length.PassedLength,
                         $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {length.PassedAccessor}");
                     break;

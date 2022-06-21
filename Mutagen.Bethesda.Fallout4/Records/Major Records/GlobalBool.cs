@@ -57,7 +57,7 @@ partial class GlobalBoolBinaryOverlay
     public partial bool? GetDataCustom()
     {
         if (!_DataLocation.HasValue) return null;
-        return HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants).Float() != 0;
+        return HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants).Float() != 0;
     }
     partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
     {

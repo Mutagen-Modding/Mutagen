@@ -1368,13 +1368,13 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Single Width => _data.Slice(0x0, 0x4).Float();
-        public Single Height => _data.Slice(0x4, 0x4).Float();
-        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0xC));
-        public Single RotationQ1 => _data.Slice(0x14, 0x4).Float();
-        public Single RotationQ2 => _data.Slice(0x18, 0x4).Float();
-        public Single RotationQ3 => _data.Slice(0x1C, 0x4).Float();
-        public Single RotationQ4 => _data.Slice(0x20, 0x4).Float();
+        public Single Width => _structData.Slice(0x0, 0x4).Float();
+        public Single Height => _structData.Slice(0x4, 0x4).Float();
+        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
+        public Single RotationQ1 => _structData.Slice(0x14, 0x4).Float();
+        public Single RotationQ2 => _structData.Slice(0x18, 0x4).Float();
+        public Single RotationQ3 => _structData.Slice(0x1C, 0x4).Float();
+        public Single RotationQ4 => _structData.Slice(0x20, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1382,10 +1382,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected BoundingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1396,10 +1396,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new BoundingBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x24),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x24;
             ret.CustomFactoryEnd(
                 stream: stream,

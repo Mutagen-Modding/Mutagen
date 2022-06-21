@@ -41,8 +41,8 @@ partial class PlacedPrimitiveBinaryOverlay
     public partial P3Float GetBoundsCustom(int location)
     {
         return new P3Float(
-            _data.Slice(location).Float() * 2,
-            _data.Slice(location + 4).Float() * 2,
-            _data.Slice(location + 8).Float() * 2);
+            _structData.Slice(location).Float() * 2,
+            _structData.Slice(location + 4).Float() * 2,
+            _structData.Slice(location + 8).Float() * 2);
     }
 }

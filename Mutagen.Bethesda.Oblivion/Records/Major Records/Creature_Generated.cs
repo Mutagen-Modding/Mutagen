@@ -3983,7 +3983,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -3995,62 +3995,62 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<String>? Models { get; private set; }
         #region NIFT
         private int? _NIFTLocation;
-        public ReadOnlyMemorySlice<Byte>? NIFT => _NIFTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NIFTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? NIFT => _NIFTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NIFTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        public ICreatureConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? CreatureConfigurationBinaryOverlay.CreatureConfigurationFactory(new OverlayStream(_data.Slice(_ConfigurationLocation!.Value.Min), _package), _package) : default;
+        public ICreatureConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? CreatureConfigurationBinaryOverlay.CreatureConfigurationFactory(_recordData.Slice(_ConfigurationLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<IItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
+        public IFormLinkNullableGetter<IItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region AIData
         private RangeInt32? _AIDataLocation;
-        public ICreatureAIDataGetter? AIData => _AIDataLocation.HasValue ? CreatureAIDataBinaryOverlay.CreatureAIDataFactory(new OverlayStream(_data.Slice(_AIDataLocation!.Value.Min), _package), _package) : default;
+        public ICreatureAIDataGetter? AIData => _AIDataLocation.HasValue ? CreatureAIDataBinaryOverlay.CreatureAIDataFactory(_recordData.Slice(_AIDataLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = Array.Empty<IFormLinkGetter<IAIPackageGetter>>();
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public ICreatureDataGetter? Data => _DataLocation.HasValue ? CreatureDataBinaryOverlay.CreatureDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public ICreatureDataGetter? Data => _DataLocation.HasValue ? CreatureDataBinaryOverlay.CreatureDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region AttackReach
         private int? _AttackReachLocation;
-        public Byte? AttackReach => _AttackReachLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _AttackReachLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? AttackReach => _AttackReachLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttackReachLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region TurningSpeed
         private int? _TurningSpeedLocation;
-        public Single? TurningSpeed => _TurningSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TurningSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? TurningSpeed => _TurningSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TurningSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region BaseScale
         private int? _BaseScaleLocation;
-        public Single? BaseScale => _BaseScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _BaseScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? BaseScale => _BaseScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region FootWeight
         private int? _FootWeightLocation;
-        public Single? FootWeight => _FootWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FootWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? FootWeight => _FootWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FootWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region BloodSpray
         private int? _BloodSprayLocation;
-        public String? BloodSpray => _BloodSprayLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BloodSprayLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? BloodSpray => _BloodSprayLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BloodSprayLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region BloodDecal
         private int? _BloodDecalLocation;
-        public String? BloodDecal => _BloodDecalLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BloodDecalLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? BloodDecal => _BloodDecalLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BloodDecalLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region InheritsSoundFrom
         private int? _InheritsSoundFromLocation;
-        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => _InheritsSoundFromLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICreatureGetter>.Null;
+        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => _InheritsSoundFromLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InheritsSoundFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICreatureGetter>.Null;
         #endregion
         public IReadOnlyList<ICreatureSoundGetter> Sounds { get; private set; } = Array.Empty<ICreatureSoundGetter>();
         partial void CustomFactoryEnd(
@@ -4060,10 +4060,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected CreatureBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -4075,13 +4075,16 @@ namespace Mutagen.Bethesda.Oblivion
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CreatureBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

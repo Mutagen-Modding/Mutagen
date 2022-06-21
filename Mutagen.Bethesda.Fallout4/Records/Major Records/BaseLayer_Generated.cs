@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Header
         private RangeInt32? _HeaderLocation;
-        public ILayerHeaderGetter? Header => _HeaderLocation.HasValue ? LayerHeaderBinaryOverlay.LayerHeaderFactory(new OverlayStream(_data.Slice(_HeaderLocation!.Value.Min), _package), _package) : default;
+        public ILayerHeaderGetter? Header => _HeaderLocation.HasValue ? LayerHeaderBinaryOverlay.LayerHeaderFactory(_recordData.Slice(_HeaderLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1156,10 +1156,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected BaseLayerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1170,10 +1170,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new BaseLayerBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

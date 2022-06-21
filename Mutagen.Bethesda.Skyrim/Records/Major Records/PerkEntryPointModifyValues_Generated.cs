@@ -1316,9 +1316,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public PerkEntryPointModifyValue.ModificationType Modification => (PerkEntryPointModifyValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
-        public Single? Value => _data.Length >= 10 ? _data.Slice(0x6, 0x4).Float() : default(Single?);
-        public Single? Value2 => _data.Length >= 14 ? _data.Slice(0xA, 0x4).Float() : default(Single?);
+        public PerkEntryPointModifyValue.ModificationType Modification => (PerkEntryPointModifyValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x2, 0x4));
+        public Single? Value => _structData.Length >= 10 ? _structData.Slice(0x6, 0x4).Float() : default(Single?);
+        public Single? Value2 => _structData.Length >= 14 ? _structData.Slice(0xA, 0x4).Float() : default(Single?);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1326,10 +1326,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected PerkEntryPointModifyValuesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1340,10 +1340,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkEntryPointModifyValuesBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

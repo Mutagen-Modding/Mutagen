@@ -1771,20 +1771,20 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Single EyeAdaptSpeed => _data.Slice(0x0, 0x4).Float();
-        public Single BlurRadius => _data.Slice(0x4, 0x4).Float();
-        public Single BlurPasses => _data.Slice(0x8, 0x4).Float();
-        public Single EmissiveMult => _data.Slice(0xC, 0x4).Float();
-        public Single TargetLum => _data.Slice(0x10, 0x4).Float();
-        public Single UpperLumClamp => _data.Slice(0x14, 0x4).Float();
-        public Single BrightScale => _data.Slice(0x18, 0x4).Float();
-        public Single BrightClamp => _data.Slice(0x1C, 0x4).Float();
-        public Single LumRampNoTex => _data.Slice(0x20, 0x4).Float();
-        public Single LumRampMin => _data.Slice(0x24, 0x4).Float();
-        public Single LumRampMax => _data.Slice(0x28, 0x4).Float();
-        public Single SunlightDimmer => _data.Slice(0x2C, 0x4).Float();
-        public Single GrassDimmer => _data.Slice(0x30, 0x4).Float();
-        public Single TreeDimmer => _data.Slice(0x34, 0x4).Float();
+        public Single EyeAdaptSpeed => _structData.Slice(0x0, 0x4).Float();
+        public Single BlurRadius => _structData.Slice(0x4, 0x4).Float();
+        public Single BlurPasses => _structData.Slice(0x8, 0x4).Float();
+        public Single EmissiveMult => _structData.Slice(0xC, 0x4).Float();
+        public Single TargetLum => _structData.Slice(0x10, 0x4).Float();
+        public Single UpperLumClamp => _structData.Slice(0x14, 0x4).Float();
+        public Single BrightScale => _structData.Slice(0x18, 0x4).Float();
+        public Single BrightClamp => _structData.Slice(0x1C, 0x4).Float();
+        public Single LumRampNoTex => _structData.Slice(0x20, 0x4).Float();
+        public Single LumRampMin => _structData.Slice(0x24, 0x4).Float();
+        public Single LumRampMax => _structData.Slice(0x28, 0x4).Float();
+        public Single SunlightDimmer => _structData.Slice(0x2C, 0x4).Float();
+        public Single GrassDimmer => _structData.Slice(0x30, 0x4).Float();
+        public Single TreeDimmer => _structData.Slice(0x34, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1792,10 +1792,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor();
         protected HDRDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1806,11 +1806,16 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x38,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new HDRDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x38 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

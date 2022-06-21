@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region PhaseFragments
-        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments => BinaryOverlayList.FactoryByLazyParse<IScenePhaseFragmentGetter>(_data.Slice(0x1), _package, countLength: 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
+        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments => BinaryOverlayList.FactoryByLazyParse<IScenePhaseFragmentGetter>(_structData.Slice(0x1), _package, countLength: 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
         protected int PhaseFragmentsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1224,10 +1224,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SceneScriptFragmentsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1238,10 +1238,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SceneScriptFragmentsBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += ret.PhaseFragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -69,7 +69,8 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
-        Accessor dataAccessor,
+        Accessor structDataAccessor,
+        Accessor recordDataAccessor,
         int? passedLength,
         string passedLengthAccessor,
         DataType data = null)
@@ -80,6 +81,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
+        Accessor dataAccessor,
         int? passedLength,
         string passedLengthAccessor)
     {

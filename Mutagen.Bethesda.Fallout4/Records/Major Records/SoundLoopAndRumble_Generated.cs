@@ -1218,10 +1218,10 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Byte Unknown => _data.Span[0x0];
-        public SoundDescriptor.LoopType Loop => (SoundDescriptor.LoopType)_data.Span.Slice(0x1, 0x1)[0];
-        public Byte Sidechain => _data.Span[0x2];
-        public Byte RumbleValues => _data.Span[0x3];
+        public Byte Unknown => _structData.Span[0x0];
+        public SoundDescriptor.LoopType Loop => (SoundDescriptor.LoopType)_structData.Span.Slice(0x1, 0x1)[0];
+        public Byte Sidechain => _structData.Span[0x2];
+        public Byte RumbleValues => _structData.Span[0x3];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1229,10 +1229,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected SoundLoopAndRumbleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1243,11 +1243,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundLoopAndRumbleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x4 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

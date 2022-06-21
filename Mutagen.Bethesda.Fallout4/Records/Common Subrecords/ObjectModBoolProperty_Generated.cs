@@ -905,9 +905,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Boolean Value => _data.Slice(0x5, 0x1)[0] >= 1;
-        public Boolean Value2 => _data.Slice(0x6, 0x1)[0] >= 1;
-        public ObjectModProperty.BoolFunctionType FunctionType => (ObjectModProperty.BoolFunctionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x7, 0x4));
+        public Boolean Value => _structData.Slice(0x5, 0x1)[0] >= 1;
+        public Boolean Value2 => _structData.Slice(0x6, 0x1)[0] >= 1;
+        public ObjectModProperty.BoolFunctionType FunctionType => (ObjectModProperty.BoolFunctionType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x7, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -915,10 +915,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ObjectModBoolPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -929,10 +929,16 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xB,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ObjectModBoolPropertyBinaryOverlay<T>(
-                bytes: stream.RemainingMemory.Slice(0, 0xB),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xB;
             ret.CustomFactoryEnd(
                 stream: stream,

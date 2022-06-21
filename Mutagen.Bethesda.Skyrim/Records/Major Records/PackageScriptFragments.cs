@@ -71,20 +71,20 @@ partial class PackageScriptFragmentsBinaryWriteTranslation
     
 partial class PackageScriptFragmentsBinaryOverlay
 {
-    Flag Flags => (Flag)_data.Span.Slice(0x1, 0x1)[0];
+    Flag Flags => (Flag)_structData.Span.Slice(0x1, 0x1)[0];
 
-    public string FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x2), lengthLength: 2, _package.MetaData.Encodings.NonTranslated);
+    public string FileName => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x2), lengthLength: 2, _package.MetaData.Encodings.NonTranslated);
 
     public IScriptFragmentGetter? OnBegin { get; private set; }
 
     public IScriptFragmentGetter? OnEnd { get; private set; }
 
     int _onEndEnd;
-    public IScriptFragmentGetter? OnChange => Flags.HasFlag(Flag.OnChange) ? ScriptFragmentBinaryOverlay.ScriptFragmentFactory(_data.Slice(_onEndEnd), _package) : default;
+    public IScriptFragmentGetter? OnChange => Flags.HasFlag(Flag.OnChange) ? ScriptFragmentBinaryOverlay.ScriptFragmentFactory(_structData.Slice(_onEndEnd), _package) : default;
 
     partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
     {
-        var fileNameEnd = 0x2 + BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2)) + 2;
+        var fileNameEnd = 0x2 + BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2)) + 2;
         stream.Position = fileNameEnd;
         int onBeginEnd;
         if (Flags.HasFlag(Flag.OnBegin))

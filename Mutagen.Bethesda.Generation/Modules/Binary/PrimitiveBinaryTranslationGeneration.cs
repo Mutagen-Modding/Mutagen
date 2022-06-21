@@ -221,7 +221,8 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
-        Accessor dataAccessor,
+        Accessor structDataAccessor,  
+        Accessor recordDataAccessor, 
         int? currentPosition,
         string passedLengthAccessor,
         DataType? dataType = null)
@@ -239,7 +240,6 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                     sb,
                     objGen,
                     typeGen,
-                    dataAccessor,
                     currentPosition,
                     passedLengthAccessor,
                     dataType);
@@ -254,15 +254,15 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         if (data.RecordType.HasValue)
         {
             if (dataType != null) throw new ArgumentException();
-            dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-            sb.AppendLine($"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {typeGen.GetDefault(getter: true)};");
+            recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
+            sb.AppendLine($"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, recordDataAccessor, "_package")} : {typeGen.GetDefault(getter: true)};");
         }
         else
         {
             var expectedLen = await this.ExpectedLength(objGen, typeGen);
             if (this.CustomWrapper != null)
             {
-                if (CustomWrapper(sb, objGen, typeGen, dataAccessor, passedLengthAccessor)) return;
+                if (CustomWrapper(sb, objGen, typeGen, structDataAccessor, passedLengthAccessor)) return;
             }
             if (dataType == null)
             {
@@ -277,22 +277,22 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                     else
                     {
                         string passed = int.TryParse(passedLengthAccessor.TrimStart("0x"), System.Globalization.NumberStyles.HexNumber, null, out var passedInt) ? (passedInt + expectedLen.Value).ToString() : $"({passedLengthAccessor} + {expectedLen.Value})";
-                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
+                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {structDataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
                     }
                 }
                 else if (data.IsAfterBreak)
                 {
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Length <= {passedLengthAccessor} ? default : {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? default : {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
                 }
                 else
                 {
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
                 }
             }
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice(_{typeGen.Name}Location{(expectedLen.HasValue ? $", {expectedLen.Value}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{recordDataAccessor}.Slice(_{typeGen.Name}Location{(expectedLen.HasValue ? $", {expectedLen.Value}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
             }
         }
     }

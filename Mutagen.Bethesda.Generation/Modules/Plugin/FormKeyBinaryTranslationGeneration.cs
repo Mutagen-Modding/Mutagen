@@ -23,7 +23,8 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
-        Accessor dataAccessor,
+        Accessor structDataAccessor,  
+        Accessor recordDataAccessor, 
         int? currentPosition,
         string passedLengthAccessor,
         DataType dataType)
@@ -36,7 +37,7 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
             throw new NotImplementedException();
         }
         var posStr = dataType == null ? $"{passedLengthAccessor}" : $"_{dataType.GetFieldData().RecordType}Location + {passedLengthAccessor}";
-        sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({dataAccessor}.Span.Slice({posStr}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!);");
+        sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({structDataAccessor}.Span.Slice({posStr}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!);");
     }
 
     public override void GenerateCopyInRet(

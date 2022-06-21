@@ -1636,17 +1636,17 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Single DamageMult => _data.Slice(0x0, 0x4).Float();
-        public Single Chance => _data.Slice(0x4, 0x4).Float();
-        public IFormLinkGetter<ISpellRecordGetter> Spell => new FormLink<ISpellRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
-        public Single AttackAngle => _data.Slice(0x10, 0x4).Float();
-        public Single StrikeAngle => _data.Slice(0x14, 0x4).Float();
-        public Single Stagger => _data.Slice(0x18, 0x4).Float();
-        public IFormLinkGetter<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
-        public Single Knockdown => _data.Slice(0x20, 0x4).Float();
-        public Single RecoveryTime => _data.Slice(0x24, 0x4).Float();
-        public Single StaminaMult => _data.Slice(0x28, 0x4).Float();
+        public Single DamageMult => _structData.Slice(0x0, 0x4).Float();
+        public Single Chance => _structData.Slice(0x4, 0x4).Float();
+        public IFormLinkGetter<ISpellRecordGetter> Spell => new FormLink<ISpellRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
+        public Single AttackAngle => _structData.Slice(0x10, 0x4).Float();
+        public Single StrikeAngle => _structData.Slice(0x14, 0x4).Float();
+        public Single Stagger => _structData.Slice(0x18, 0x4).Float();
+        public IFormLinkGetter<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4))));
+        public Single Knockdown => _structData.Slice(0x20, 0x4).Float();
+        public Single RecoveryTime => _structData.Slice(0x24, 0x4).Float();
+        public Single StaminaMult => _structData.Slice(0x28, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1654,10 +1654,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected AttackDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1668,11 +1668,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x2C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AttackDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x2C + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

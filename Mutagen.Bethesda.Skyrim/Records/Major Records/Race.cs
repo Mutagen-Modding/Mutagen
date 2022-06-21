@@ -140,7 +140,7 @@ partial class RaceBinaryOverlay
             var loc = _bipedObjectNamesLoc.Value;
             for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
             {
-                if (!_package.MetaData.Constants.TrySubrecord(_data.Slice(loc), RecordTypes.NAME, out var subHeader)) break;
+                if (!_package.MetaData.Constants.TrySubrecord(_recordData.Slice(loc), RecordTypes.NAME, out var subHeader)) break;
                 BipedObject type = (BipedObject)i;
                 var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content, _package.MetaData.Encodings.NonTranslated);
                 if (!string.IsNullOrEmpty(val))
@@ -180,7 +180,7 @@ partial class RaceBinaryOverlay
     {
         var ret = new FaceFxPhonemes();
         if (_faceFxPhonemesLoc == null) return ret;
-        var frame = new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_faceFxPhonemesLoc.Value), _package.MetaData));
+        var frame = new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_faceFxPhonemesLoc.Value), _package.MetaData));
         FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, ret);
         return ret;
     }
@@ -188,20 +188,20 @@ partial class RaceBinaryOverlay
     public partial Race.Flag GetFlagsCustom()
     {
         if (!_DATALocation.HasValue) return default;
-        var flag = (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4));
+        var flag = (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 4));
 
         // Clear out upper flags
         flag &= ((Race.Flag)0x00000000FFFFFFFF);
 
         // Set upper flags
-        ulong flags2 = BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Flags2Location, 4));
+        ulong flags2 = BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_Flags2Location, 4));
         flags2 <<= 32;
         flag |= ((Race.Flag)flags2);
         return flag;
     }
 
     private int? _BodyTemplateLocation;
-    public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
+    public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_recordData.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
     public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
 
     partial void BodyTemplateCustomParse(OverlayStream stream, long finalPos, int offset)

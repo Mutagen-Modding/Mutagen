@@ -37,7 +37,7 @@ partial class DialogResponseBinaryOverlay
 {
     public partial UInt16 GetInterruptPercentageCustom()
     { 
-        return _tnamOverride ?? (_InterruptPercentage_IsSet? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_InterruptPercentageLocation, 2)) : default);
+        return _tnamOverride ?? (_InterruptPercentage_IsSet? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_InterruptPercentageLocation, 2)) : default);
     }
 
     private bool _InterruptPercentage_IsSet => _TRDALocation.HasValue;

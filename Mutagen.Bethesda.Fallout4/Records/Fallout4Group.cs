@@ -63,7 +63,7 @@ partial class Fallout4GroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
     {
         _recordCache = GroupMajorRecordCacheWrapper<T>.Factory(
             stream,
-            _data,
+            _recordData,
             _package,
             offset);
     }

@@ -1068,10 +1068,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected HolotapeProgramBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1082,11 +1082,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new HolotapeProgramBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.File = BinaryStringUtility.ParseUnknownLengthString(ret._data, package.MetaData.Encodings.NonTranslated);
+            ret.File = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
             ret.FileEndingPos = ret.File.Length + 1;
             stream.Position += ret.FileEndingPos;
             ret.CustomFactoryEnd(

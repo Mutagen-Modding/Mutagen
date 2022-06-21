@@ -2538,56 +2538,56 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Type
         private int? _TypeLocation;
-        public SoundDescriptor.DescriptorType? Type => _TypeLocation.HasValue ? (SoundDescriptor.DescriptorType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundDescriptor.DescriptorType?);
+        public SoundDescriptor.DescriptorType? Type => _TypeLocation.HasValue ? (SoundDescriptor.DescriptorType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundDescriptor.DescriptorType?);
         #endregion
         #region Category
         private int? _CategoryLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> Category => _CategoryLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CategoryLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Category => _CategoryLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CategoryLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
         #endregion
         #region AlternateSoundFor
         private int? _AlternateSoundForLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => _AlternateSoundForLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateSoundForLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => _AlternateSoundForLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlternateSoundForLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<String> SoundFiles { get; private set; } = Array.Empty<String>();
         #region OutputModel
         private int? _OutputModelLocation;
-        public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => _OutputModelLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OutputModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
+        public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => _OutputModelLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OutputModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
         #endregion
         #region String
         private int? _StringLocation;
-        public String? String => _StringLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _StringLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? String => _StringLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StringLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoopAndRumble
         private RangeInt32? _LoopAndRumbleLocation;
-        public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(new OverlayStream(_data.Slice(_LoopAndRumbleLocation!.Value.Min), _package), _package) : default;
+        public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(_recordData.Slice(_LoopAndRumbleLocation!.Value.Min), _package) : default;
         #endregion
         private RangeInt32? _BNAMLocation;
         public SoundDescriptor.BNAMDataType BNAMDataTypeState { get; private set; }
         #region PercentFrequencyShift
         private int _PercentFrequencyShiftLocation => _BNAMLocation!.Value.Min;
         private bool _PercentFrequencyShift_IsSet => _BNAMLocation.HasValue;
-        public Percent PercentFrequencyShift => _PercentFrequencyShift_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_PercentFrequencyShiftLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent PercentFrequencyShift => _PercentFrequencyShift_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PercentFrequencyShiftLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region PercentFrequencyVariance
         private int _PercentFrequencyVarianceLocation => _BNAMLocation!.Value.Min + 0x1;
         private bool _PercentFrequencyVariance_IsSet => _BNAMLocation.HasValue;
-        public Percent PercentFrequencyVariance => _PercentFrequencyVariance_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_PercentFrequencyVarianceLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent PercentFrequencyVariance => _PercentFrequencyVariance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PercentFrequencyVarianceLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Priority
         private int _PriorityLocation => _BNAMLocation!.Value.Min + 0x2;
         private bool _Priority_IsSet => _BNAMLocation.HasValue;
-        public SByte Priority => _Priority_IsSet ? (sbyte)_data.Slice(_PriorityLocation, 1)[0] : default;
+        public SByte Priority => _Priority_IsSet ? (sbyte)_recordData.Slice(_PriorityLocation, 1)[0] : default;
         #endregion
         #region Variance
         private int _VarianceLocation => _BNAMLocation!.Value.Min + 0x3;
         private bool _Variance_IsSet => _BNAMLocation.HasValue;
-        public SByte Variance => _Variance_IsSet ? (sbyte)_data.Slice(_VarianceLocation, 1)[0] : default;
+        public SByte Variance => _Variance_IsSet ? (sbyte)_recordData.Slice(_VarianceLocation, 1)[0] : default;
         #endregion
         #region StaticAttenuation
         private int _StaticAttenuationLocation => _BNAMLocation!.Value.Min + 0x4;
         private bool _StaticAttenuation_IsSet => _BNAMLocation.HasValue;
-        public Single StaticAttenuation => _StaticAttenuation_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_StaticAttenuationLocation, 2), FloatIntegerType.UShort, 0.01) : default;
+        public Single StaticAttenuation => _StaticAttenuation_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_StaticAttenuationLocation, 2), FloatIntegerType.UShort, 0.01) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2596,10 +2596,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected SoundDescriptorBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -2611,13 +2611,16 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams = default)
         {
             stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SoundDescriptorBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,

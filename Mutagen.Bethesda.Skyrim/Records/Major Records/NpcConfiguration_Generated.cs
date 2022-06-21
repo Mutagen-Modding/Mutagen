@@ -1660,19 +1660,19 @@ namespace Mutagen.Bethesda.Skyrim
         public partial NpcConfiguration.Flag GetFlagsCustom(int location);
         public NpcConfiguration.Flag Flags => GetFlagsCustom(location: 0x0);
         #endregion
-        public Int16 MagickaOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
-        public Int16 StaminaOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
+        public Int16 MagickaOffset => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x4, 0x2));
+        public Int16 StaminaOffset => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x6, 0x2));
         #region Level
         public partial IANpcLevelGetter GetLevelCustom(int location);
         public IANpcLevelGetter Level => GetLevelCustom(location: 0x8);
         #endregion
-        public Int16 CalcMinLevel => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
-        public Int16 CalcMaxLevel => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xC, 0x2));
-        public Int16 SpeedMultiplier => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xE, 0x2));
-        public Int16 DispositionBase => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x10, 0x2));
-        public NpcConfiguration.TemplateFlag TemplateFlags => (NpcConfiguration.TemplateFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x12, 0x2));
-        public Int16 HealthOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x14, 0x2));
-        public Int16 BleedoutOverride => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x16, 0x2));
+        public Int16 CalcMinLevel => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xA, 0x2));
+        public Int16 CalcMaxLevel => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xC, 0x2));
+        public Int16 SpeedMultiplier => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xE, 0x2));
+        public Int16 DispositionBase => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x10, 0x2));
+        public NpcConfiguration.TemplateFlag TemplateFlags => (NpcConfiguration.TemplateFlag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x12, 0x2));
+        public Int16 HealthOffset => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x14, 0x2));
+        public Int16 BleedoutOverride => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x16, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1680,10 +1680,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected NpcConfigurationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1694,11 +1694,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x18,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NpcConfigurationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,

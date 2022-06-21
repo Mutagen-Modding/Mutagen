@@ -34,6 +34,6 @@ partial class ScriptMetaSummaryBinaryOverlay
 {
     public partial int GetCompiledSizeCustom(int location)
     {
-        return BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(location));
+        return BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(location));
     }
 }

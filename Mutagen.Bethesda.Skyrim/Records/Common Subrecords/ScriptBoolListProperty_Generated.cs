@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Data
-        public IReadOnlyList<Boolean> Data => BinaryOverlayList.FactoryByCountLength<Boolean>(_data, _package, 1, countLength: 4, (s, p) => s[0] >= 1);
+        public IReadOnlyList<Boolean> Data => BinaryOverlayList.FactoryByCountLength<Boolean>(_structData, _package, 1, countLength: 4, (s, p) => s[0] >= 1);
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1200,10 +1200,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected ScriptBoolListPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1214,11 +1214,17 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ScriptBoolListPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.DataEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 1 + 4;
+            ret.DataEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 1 + 4;
             stream.Position += ret.DataEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

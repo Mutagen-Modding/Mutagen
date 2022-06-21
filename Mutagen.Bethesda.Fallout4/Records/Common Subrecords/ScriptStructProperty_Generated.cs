@@ -1202,7 +1202,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Members
-        public IReadOnlyList<IScriptEntryStructGetter> Members => BinaryOverlayList.FactoryByCountLength<IScriptEntryStructGetter>(_data, _package, 0, countLength: 4, (s, p) => ScriptEntryStructBinaryOverlay.ScriptEntryStructFactory(s, p));
+        public IReadOnlyList<IScriptEntryStructGetter> Members => BinaryOverlayList.FactoryByCountLength<IScriptEntryStructGetter>(_structData, _package, 0, countLength: 4, (s, p) => ScriptEntryStructBinaryOverlay.ScriptEntryStructFactory(s, p));
         protected int MembersEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1212,10 +1212,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor();
         protected ScriptStructPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1226,11 +1226,17 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ScriptStructPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.MembersEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 0 + 4;
+            ret.MembersEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 0 + 4;
             stream.Position += ret.MembersEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

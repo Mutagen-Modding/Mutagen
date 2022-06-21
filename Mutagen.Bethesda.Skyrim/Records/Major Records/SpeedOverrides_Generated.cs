@@ -1606,17 +1606,17 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public Single LeftWalk => _data.Slice(0x0, 0x4).Float();
-        public Single LeftRun => _data.Slice(0x4, 0x4).Float();
-        public Single RightWalk => _data.Slice(0x8, 0x4).Float();
-        public Single RightRun => _data.Slice(0xC, 0x4).Float();
-        public Single ForwardWalk => _data.Slice(0x10, 0x4).Float();
-        public Single ForwardRun => _data.Slice(0x14, 0x4).Float();
-        public Single BackWalk => _data.Slice(0x18, 0x4).Float();
-        public Single BackRun => _data.Slice(0x1C, 0x4).Float();
-        public Single RotateWalk => _data.Slice(0x20, 0x4).Float();
-        public Single RotateRun => _data.Slice(0x24, 0x4).Float();
-        public Single Unknown => _data.Slice(0x28, 0x4).Float();
+        public Single LeftWalk => _structData.Slice(0x0, 0x4).Float();
+        public Single LeftRun => _structData.Slice(0x4, 0x4).Float();
+        public Single RightWalk => _structData.Slice(0x8, 0x4).Float();
+        public Single RightRun => _structData.Slice(0xC, 0x4).Float();
+        public Single ForwardWalk => _structData.Slice(0x10, 0x4).Float();
+        public Single ForwardRun => _structData.Slice(0x14, 0x4).Float();
+        public Single BackWalk => _structData.Slice(0x18, 0x4).Float();
+        public Single BackRun => _structData.Slice(0x1C, 0x4).Float();
+        public Single RotateWalk => _structData.Slice(0x20, 0x4).Float();
+        public Single RotateRun => _structData.Slice(0x24, 0x4).Float();
+        public Single Unknown => _structData.Slice(0x28, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1624,10 +1624,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor();
         protected SpeedOverridesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1638,11 +1638,16 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x2C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SpeedOverridesBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, translationParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x2C + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
