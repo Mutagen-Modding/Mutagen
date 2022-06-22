@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Loqui;
+﻿using Loqui;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
@@ -14,54 +13,47 @@ public static class Warmup
     private static object _lock = new();
     private static bool _warmedUp = false;
 
+    private static List<GameCategory> _registrations = new();
+
     /// <summary>
     /// Will initialize internal registrations.<br/>
     /// Not required to call, but can be used to warm up ahead of time.
     /// </summary>
-    public static void Init()
+    public static IReadOnlyList<GameCategory> Init()
     {
         lock (_lock)
         {
-            if (_warmedUp) return;
+            if (_warmedUp) return _registrations;
             
             List<IProtocolRegistration> protocols = new()
             {
                 new ProtocolDefinition_Bethesda()
             };
 
-            HashSet<string> assemblies = new(); 
-            foreach (var assemb in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var category in EnumExt<GameCategory>.Values)
             {
                 try
                 {
-                    var name = assemb.FullName;
-                    if (name == null) continue;
-                    if (!name.StartsWith("Mutagen.Bethesda")) continue;
-                    assemblies.Add(name);
+                    var assemblyName = $"Mutagen.Bethesda.{category}";
+                    var obj = Activator.CreateInstance(
+                        assemblyName,
+                        $"Loqui.ProtocolDefinition_{category}");
+                    var regis = obj?.Unwrap() as IProtocolRegistration;
+                    if (regis == null) continue;
+                    protocols.Add(regis);
+                    _registrations.Add(category);
                 }
                 catch
                 {
                 }
             }
             
-            foreach (var category in EnumExt<GameCategory>.Values)
-            {
-                var assemblyName = $"Mutagen.Bethesda.{category}";
-                if (!assemblies.Contains(assemblyName)) continue;
-                var obj = Activator.CreateInstance(
-                    assemblyName,
-                    $"Loqui.ProtocolDefinition_{category}");
-                var regis = obj?.Unwrap() as IProtocolRegistration;
-                if (regis == null) continue;
-                protocols.Add(regis);
-            }
-            
             Initialization.SpinUp(protocols.ToArray());
             MetaInterfaceMapping.Warmup();
             OverrideMaskRegistrations.Warmup();
             _warmedUp = true;
+            
+            return _registrations;
         }
     }
-    
-    
 }
