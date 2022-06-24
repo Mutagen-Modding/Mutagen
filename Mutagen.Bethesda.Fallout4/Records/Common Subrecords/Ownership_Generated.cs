@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Fallout4
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Unknown = dataFrame.ReadInt32();
-                    item.NoCrime = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.NoCrime = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4,
                         importantByteLength: 1);

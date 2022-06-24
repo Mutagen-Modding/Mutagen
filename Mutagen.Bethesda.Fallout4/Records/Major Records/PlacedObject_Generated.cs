@@ -7365,7 +7365,7 @@ namespace Mutagen.Bethesda.Fallout4
             PlacedObjectBinaryWriteTranslation.WriteBinaryBoundData(
                 writer: writer,
                 item: item);
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsMultiBoundPrimitive,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBP));
@@ -7439,7 +7439,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.AcousticRestriction,
                 header: translationParams.ConvertToCustom(RecordTypes.XASP));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsActivationPoint,
                 header: translationParams.ConvertToCustom(RecordTypes.XATP));
@@ -7447,7 +7447,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.AmmoCount,
                 header: translationParams.ConvertToCustom(RecordTypes.XAMC));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsLinkedRefTransient,
                 header: translationParams.ConvertToCustom(RecordTypes.XLKT));
@@ -7544,7 +7544,7 @@ namespace Mutagen.Bethesda.Fallout4
                         writer: subWriter,
                         item: subItem);
                 });
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));
@@ -7606,7 +7606,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.FavorCost,
                 header: translationParams.ConvertToCustom(RecordTypes.XFVC));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.OpenByDefault,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM));

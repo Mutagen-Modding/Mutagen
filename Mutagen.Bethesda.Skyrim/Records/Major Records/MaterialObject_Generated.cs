@@ -2235,7 +2235,7 @@ namespace Mutagen.Bethesda.Skyrim
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break2;
                         return (int)MaterialObject_FieldIndex.Flags;
                     }
-                    item.HasSnow = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.HasSnow = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4);
                     return (int)MaterialObject_FieldIndex.HasSnow;

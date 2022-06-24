@@ -8,6 +8,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<bool>
 {
+    public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
+    {
+        return $"{Typename(typeGen)}BinaryTranslation{(NeedsGenerics ? $"<{Module.ReaderClass}>" : null)}.Instance";
+    }
+    
     public BooleanBinaryTranslationGeneration() 
         : base(expectedLen: 1)
     {

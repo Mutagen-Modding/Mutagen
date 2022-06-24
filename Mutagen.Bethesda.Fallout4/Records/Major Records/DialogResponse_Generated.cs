@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.CameraPath,
                 header: translationParams.ConvertToCustom(RecordTypes.SRAF));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.StopOnSceneEnd,
                 header: translationParams.ConvertToCustom(RecordTypes.WZMD));

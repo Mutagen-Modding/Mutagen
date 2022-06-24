@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Fallout4
                 maleMarker: RecordTypes.MCHT,
                 femaleMarker: RecordTypes.FCHT,
                 transl: StringBinaryTranslation.Instance.WriteNullable);
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
                 writer: writer,
                 item: item.IsFamily,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA),
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IsFamily = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.IsFamily = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         byteLength: 4);
                     return (int)AssociationType_FieldIndex.IsFamily;

@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.EnvironmentType,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
                 writer: writer,
                 item: item.IsInterior,
                 header: translationParams.ConvertToCustom(RecordTypes.XTRI));

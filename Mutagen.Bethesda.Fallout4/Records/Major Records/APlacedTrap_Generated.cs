@@ -3678,7 +3678,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.AmmoCount,
                 header: translationParams.ConvertToCustom(RecordTypes.XAMC));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsLinkedRefTransient,
                 header: translationParams.ConvertToCustom(RecordTypes.XLKT));
@@ -3724,7 +3724,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.MultiBoundReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));

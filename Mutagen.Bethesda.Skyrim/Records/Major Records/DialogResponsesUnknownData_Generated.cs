@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.QNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.NEXT,
                 header: translationParams.ConvertToCustom(RecordTypes.NEXT));

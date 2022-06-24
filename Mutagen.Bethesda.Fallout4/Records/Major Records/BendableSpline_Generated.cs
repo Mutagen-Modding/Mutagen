@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Fallout4
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.DefaultNumberOfTiles = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.DefaultNumberOfSlices = dataFrame.ReadUInt16();
-                    item.DefaultNumberOfTilesIsRelativeToLength = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.DefaultNumberOfTilesIsRelativeToLength = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 2);
                     item.DefaultColor = dataFrame.ReadColor(ColorBinaryType.AlphaFloat);

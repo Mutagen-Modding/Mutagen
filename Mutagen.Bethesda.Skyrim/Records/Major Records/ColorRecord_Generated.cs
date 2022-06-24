@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Color,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.Write(
                 writer: writer,
                 item: item.Playable,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Playable = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Playable = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         byteLength: 4);
                     return (int)ColorRecord_FieldIndex.Playable;

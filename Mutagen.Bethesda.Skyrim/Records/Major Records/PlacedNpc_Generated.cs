@@ -3572,7 +3572,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.LocationReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XLRL));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));
@@ -3621,7 +3621,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.MultiboundReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox2,
                 header: translationParams.ConvertToCustom(RecordTypes.XIBS));

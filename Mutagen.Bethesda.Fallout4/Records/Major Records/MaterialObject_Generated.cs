@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Fallout4
                         return (int)MaterialObject_FieldIndex.NormalDampener;
                     }
                     item.SinglePassColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
-                    item.IsSinglePass = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.IsSinglePass = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4);
                     return (int)MaterialObject_FieldIndex.IsSinglePass;

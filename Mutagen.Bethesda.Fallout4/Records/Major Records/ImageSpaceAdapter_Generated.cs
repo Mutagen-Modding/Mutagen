@@ -12099,14 +12099,14 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Animatable = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Animatable = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4);
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
-                    item.RadialBlurUseTarget = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.RadialBlurUseTarget = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4);
                     item.RadialBlurCenter = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);

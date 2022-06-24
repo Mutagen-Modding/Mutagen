@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Fallout4
             IAAudioEffect item,
             MutagenFrame frame)
         {
-            item.Enabled = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.Enabled = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                 reader: frame,
                 byteLength: 4);
         }

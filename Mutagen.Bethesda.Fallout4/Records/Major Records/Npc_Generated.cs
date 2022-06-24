@@ -9446,14 +9446,14 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Assistance = EnumBinaryTranslation<Npc.AssistanceType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
-                    item.AggroRadiusBehaviorEnabled = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.AggroRadiusBehaviorEnabled = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 2,
                         importantByteLength: 1);
                     item.AggroRadiusWarn = dataFrame.ReadUInt32();
                     item.AggroRadiusWarnOrAttack = dataFrame.ReadUInt32();
                     item.AggroRadiusAttack = dataFrame.ReadUInt32();
-                    item.NoSlowApproach = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.NoSlowApproach = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4,
                         importantByteLength: 1);

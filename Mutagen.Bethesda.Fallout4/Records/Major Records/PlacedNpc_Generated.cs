@@ -3952,11 +3952,11 @@ namespace Mutagen.Bethesda.Fallout4
                     writer: writer,
                     translationParams: translationParams);
             }
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsActivationPoint,
                 header: translationParams.ConvertToCustom(RecordTypes.XATP));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsLinkedRefTransient,
                 header: translationParams.ConvertToCustom(RecordTypes.XLKT));
@@ -3990,7 +3990,7 @@ namespace Mutagen.Bethesda.Fallout4
                         writer: subWriter,
                         item: subItem);
                 });
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));
@@ -4039,7 +4039,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.MultiboundReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox2,
                 header: translationParams.ConvertToCustom(RecordTypes.XIBS));

@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 items: item.Data,
                 countLengthLength: 4,
-                transl: BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                transl: BooleanBinaryTranslation<MutagenFrame>.Instance.Write);
         }
 
         public void Write(
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Boolean>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
+                    transl: BooleanBinaryTranslation<MutagenFrame>.Instance.Parse));
         }
 
     }

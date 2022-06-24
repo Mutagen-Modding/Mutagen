@@ -2400,7 +2400,7 @@ namespace Mutagen.Bethesda.Fallout4
                         writer: subWriter,
                         translationParams: conv);
                 });
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.Write(
                 writer: writer,
                 item: item.OnLocalMap,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
