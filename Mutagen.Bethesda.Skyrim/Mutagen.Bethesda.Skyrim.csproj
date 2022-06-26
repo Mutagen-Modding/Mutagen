@@ -34,6 +34,21 @@
     <Compile Include="Assets\SkyrimDeformedModelAssetType.cs" />
     <Compile Include="Assets\SkyrimModelAssetType.cs" />
     <Compile Include="Assets\SkyrimMusicAssetType.cs" />
+    <Compile Include="Assets\SkyrimScriptCompiledAssetType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Assets\SkyrimScriptSourceAssetType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Assets\SkyrimSeqAssetType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Assets\SkyrimSoundAssetType.cs" />
     <Compile Include="Assets\SkyrimTextureAssetType.cs" />
     <Compile Include="Constants.cs" />

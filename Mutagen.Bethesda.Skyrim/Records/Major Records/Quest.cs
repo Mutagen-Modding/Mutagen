@@ -5,7 +5,11 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Skyrim.Assets;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -46,6 +50,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
+        public partial class QuestCommon
+        {
+            public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IQuestGetter obj, ILinkCache linkCache)
+            {
+                if ((obj.Flags & Quest.Flag.StartGameEnabled) != 0) yield return new AssetLink<SkyrimSeqAssetType>(SkyrimSeqAssetType.Instance, Path.Combine($"{obj.FormKey.ModKey.Name}.seq"));
+            }
+        }
+    
         public partial class QuestBinaryCreateTranslation
         {
             public static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item)
