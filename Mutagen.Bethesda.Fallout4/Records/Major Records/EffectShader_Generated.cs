@@ -4699,7 +4699,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown2
         private int _Unknown2Location => _DNAMLocation!.Value.Min + UnknownVersioningOffset + 0x5D;
         private bool _Unknown2_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 106;
-        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _recordData.Span.Slice(_Unknown2Location, 152).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _recordData.Span.Slice(_Unknown2Location, 152).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         int Unknown2VersioningOffset => UnknownVersioningOffset + (_package.FormVersion!.FormVersion!.Value >= 106 ? -152 : 0);
         #endregion
         #region HolesAnimationStartTime
@@ -4725,7 +4725,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown3
         private int _Unknown3Location => _DNAMLocation!.Value.Min + Unknown2VersioningOffset + 0x105;
         private bool _Unknown3_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 106;
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 44).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 44).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         int Unknown3VersioningOffset => Unknown2VersioningOffset + (_package.FormVersion!.FormVersion!.Value >= 106 ? -44 : 0);
         #endregion
         #region AmbientSound
@@ -4782,7 +4782,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown5
         private int _Unknown5Location => _DNAMLocation!.Value.Min + Unknown4VersioningOffset + 0x156;
         private bool _Unknown5_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 106;
-        public ReadOnlyMemorySlice<Byte> Unknown5 => _Unknown5_IsSet ? _recordData.Span.Slice(_Unknown5Location, 40).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown5 => _Unknown5_IsSet ? _recordData.Span.Slice(_Unknown5Location, 40).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         int Unknown5VersioningOffset => Unknown4VersioningOffset + (_package.FormVersion!.FormVersion!.Value >= 106 ? -40 : 0);
         #endregion
         #region Flags

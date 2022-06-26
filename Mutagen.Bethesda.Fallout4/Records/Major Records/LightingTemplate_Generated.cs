@@ -3272,7 +3272,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unused
         private int _UnusedLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Unused_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 32).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 32).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         #region FogFarColor
         private int _FogFarColorLocation => _DATALocation!.Value.Min + 0x48;

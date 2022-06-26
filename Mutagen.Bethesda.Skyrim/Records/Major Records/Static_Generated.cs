@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unused
         private int _UnusedLocation => _DNAMLocation!.Value.Min + 0x9;
         private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
-        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;

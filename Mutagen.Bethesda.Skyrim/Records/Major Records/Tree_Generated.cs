@@ -2545,7 +2545,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         private int _UnknownLocation => _CNAMLocation!.Value.Min + 0x8;
         private bool _Unknown_IsSet => _CNAMLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 32).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 32).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         #region LeafAmplitude
         private int _LeafAmplitudeLocation => _CNAMLocation!.Value.Min + 0x28;
