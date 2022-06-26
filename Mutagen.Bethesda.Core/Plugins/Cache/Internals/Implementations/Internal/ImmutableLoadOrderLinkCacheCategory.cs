@@ -280,13 +280,13 @@ internal class ImmutableLoadOrderLinkCacheCategory<TKey>
 
     public IEnumerable<LinkCacheItem> AllIdentifiers(Type type, CancellationToken? cancel)
     {
-        if (!_hasAny || (cancel?.IsCancellationRequested ?? true))
+        if (!_hasAny || (cancel?.IsCancellationRequested ?? false))
         {
             return Enumerable.Empty<LinkCacheItem>();
         }
 
         DepthCache<TKey, LinkCacheItem> cache = GetTypeCache(type);
-        if (cancel?.IsCancellationRequested ?? true)
+        if (cancel?.IsCancellationRequested ?? false)
         {
             return Enumerable.Empty<LinkCacheItem>();
         }

@@ -7,7 +7,6 @@
   - [Sample API](#sample-api)
   - [Seeing Mutagen in Action](#seeing-mutagen-in-action)
     - [Synthesis](#synthesis)
-    - [Example Project](#example-project)
   - [Installing Mutagen](#installing-mutagen)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
