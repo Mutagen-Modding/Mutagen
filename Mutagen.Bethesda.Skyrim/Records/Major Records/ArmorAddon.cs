@@ -1,4 +1,3 @@
-using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records;
@@ -7,6 +6,11 @@ using Noggog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Skyrim.Assets;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -18,6 +22,42 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
+        public partial class ArmorAddonCommon
+        {
+            public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IArmorAddonGetter obj, ILinkCache linkCache)
+            {
+                IEnumerable<IAssetLink> TryToAddWeightModel(string path) {
+                    var name = Path.GetFileNameWithoutExtension(path);
+                    if (name.Length < 3) yield break;
+                    
+                    var dir = Path.GetDirectoryName(path);
+                    var nameWithoutEnding = Path.GetFileNameWithoutExtension(path)[..2];
+
+                    if (Path.GetFileNameWithoutExtension(path).EndsWith("_1")) {
+                        yield return new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, $"{dir}{nameWithoutEnding}_0.{SkyrimModelAssetType.Instance.FileExtensions.First()}");
+                    } else if (Path.GetFileNameWithoutExtension(path).EndsWith("_0")) {
+                        yield return new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, $"{dir}{nameWithoutEnding}_1.{SkyrimModelAssetType.Instance.FileExtensions.First()}");
+                    }
+                }
+                
+                if (obj.WorldModel?.Female != null) {
+                    foreach (var assetLink in TryToAddWeightModel(obj.WorldModel.Female.File.RawPath)) yield return assetLink;
+                }
+                
+                if (obj.WorldModel?.Male != null) {
+                    foreach (var assetLink in TryToAddWeightModel(obj.WorldModel.Male.File.RawPath)) yield return assetLink;
+                }
+                
+                if (obj.FirstPersonModel?.Female != null) {
+                    foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Female.File.RawPath)) yield return assetLink;
+                }
+                
+                if (obj.FirstPersonModel?.Male != null) {
+                    foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Male.File.RawPath)) yield return assetLink;
+                }
+            }
+        }
+        
         public class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
         {
             internal byte _male;
